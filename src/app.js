@@ -174,6 +174,22 @@ function initPerformanceTrendChart() {
                 legend: {
                     position: 'top',
                 },
+                datalabels: {
+                    display: function(context) {
+                        // Only show labels for every 3rd point to avoid clutter
+                        return context.dataIndex % 3 === 0;
+                    },
+                    color: function(context) {
+                        return context.datasetIndex === 0 ? '#667eea' : '#e74c3c';
+                    },
+                    font: { weight: 'bold', size: 10 },
+                    anchor: 'end',
+                    align: 'top',
+                    offset: 2,
+                    formatter: function(value) {
+                        return '$' + value;
+                    }
+                },
                 tooltip: {
                     enabled: true,
                     backgroundColor: 'rgba(44, 62, 80, 0.95)',
@@ -302,6 +318,9 @@ function initMonteCarloChart() {
                 legend: {
                     display: false
                 },
+                datalabels: {
+                    display: false // Histogram - too many bars for labels
+                },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
@@ -373,6 +392,13 @@ function initLeakagePieChart() {
                         }
                     }
                 },
+                datalabels: {
+                    color: '#fff',
+                    font: { weight: 'bold', size: 14 },
+                    formatter: function(value) {
+                        return value + '%';
+                    }
+                },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
@@ -429,6 +455,13 @@ function initCostPieChart() {
                         }
                     }
                 },
+                datalabels: {
+                    color: '#fff',
+                    font: { weight: 'bold', size: 11 },
+                    formatter: function(value) {
+                        return value + '%';
+                    }
+                },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
@@ -480,6 +513,19 @@ function initQualityTrendChart() {
             plugins: {
                 legend: {
                     position: 'top',
+                },
+                datalabels: {
+                    display: true,
+                    color: function(context) {
+                        return context.datasetIndex === 0 ? '#667eea' : '#95a5a6';
+                    },
+                    font: { weight: 'bold', size: 10 },
+                    anchor: 'end',
+                    align: 'top',
+                    offset: 2,
+                    formatter: function(value) {
+                        return value.toFixed(1) + '%';
+                    }
                 }
             },
             scales: {
@@ -538,6 +584,9 @@ function initCostTrendChart() {
             plugins: {
                 legend: {
                     position: 'top',
+                },
+                datalabels: {
+                    display: false // Stacked bar - labels would overlap
                 }
             },
             scales: {
@@ -600,6 +649,9 @@ function initRAFDistChart() {
             plugins: {
                 legend: {
                     display: false
+                },
+                datalabels: {
+                    display: false // Histogram - too many bars for labels
                 }
             },
             scales: {
@@ -766,6 +818,19 @@ function initEpisodeCostChart() {
                 legend: {
                     display: true,
                     position: 'top'
+                },
+                datalabels: {
+                    display: function(context) {
+                        return context.datasetIndex === 0; // Only show for bars, not the benchmark line
+                    },
+                    color: '#2c3e50',
+                    font: { weight: 'bold', size: 11 },
+                    anchor: 'end',
+                    align: 'top',
+                    offset: 4,
+                    formatter: function(value) {
+                        return '$' + (value / 1000).toFixed(1) + 'K';
+                    }
                 },
                 tooltip: {
                     callbacks: {
@@ -1098,6 +1163,19 @@ function initProviderCostChart(providers, hospitalAvg, nationalBenchmark) {
                     position: 'bottom',
                     labels: { boxWidth: 12, padding: 8, font: { size: 10 } }
                 },
+                datalabels: {
+                    display: function(context) {
+                        return context.datasetIndex === 0; // Only bars
+                    },
+                    color: '#2c3e50',
+                    font: { weight: 'bold', size: 10 },
+                    anchor: 'end',
+                    align: 'top',
+                    offset: 2,
+                    formatter: function(value) {
+                        return '$' + (value / 1000).toFixed(1) + 'K';
+                    }
+                },
                 tooltip: {
                     callbacks: {
                         title: function(context) {
@@ -1168,6 +1246,16 @@ function initOpportunityChart(providers, hospitalAvg) {
             indexAxis: 'y',
             plugins: {
                 legend: { display: false },
+                datalabels: {
+                    color: '#fff',
+                    font: { weight: 'bold', size: 10 },
+                    anchor: 'end',
+                    align: 'start',
+                    offset: 8,
+                    formatter: function(value) {
+                        return '$' + (value / 1000).toFixed(0) + 'K';
+                    }
+                },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
@@ -3474,6 +3562,16 @@ function renderMonthlyTrendChart(measureCode, monthlyData) {
             maintainAspectRatio: false,
             plugins: {
                 legend: { display: false },
+                datalabels: {
+                    color: '#C84E28',
+                    font: { weight: 'bold', size: 10 },
+                    anchor: 'end',
+                    align: 'top',
+                    offset: 2,
+                    formatter: function(value) {
+                        return value.toFixed(1) + '%';
+                    }
+                },
                 tooltip: { enabled: true }
             },
             scales: {
@@ -3507,6 +3605,16 @@ function renderRegionalChart(measureCode, regionalData) {
             maintainAspectRatio: false,
             plugins: {
                 legend: { display: false },
+                datalabels: {
+                    color: '#2c3e50',
+                    font: { weight: 'bold', size: 11 },
+                    anchor: 'end',
+                    align: 'top',
+                    offset: 4,
+                    formatter: function(value) {
+                        return value.toFixed(1) + '%';
+                    }
+                },
                 tooltip: {
                     callbacks: {
                         afterLabel: function(context) {
