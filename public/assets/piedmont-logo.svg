@@ -1,15 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="50" height="50">
-  <defs>
-    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#C84E28"/>
-      <stop offset="50%" style="stop-color:#E87722"/>
-      <stop offset="100%" style="stop-color:#F7A828"/>
-    </linearGradient>
-  </defs>
-  <!-- Outer rounded square -->
-  <rect x="2" y="2" width="46" height="46" rx="8" ry="8" fill="url(#logoGradient)"/>
-  <!-- Inner white square outline (rotated 45 degrees) -->
-  <rect x="14" y="14" width="22" height="22" rx="3" ry="3"
-        fill="none" stroke="white" stroke-width="3"
-        transform="rotate(45 25 25)"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="40" height="40" fill="none" aria-label="Piedmont Logo">
+  <!-- Top Left Segment (Red) -->
+  <path
+    d="M 10 48 V 22 C 10 15 15 10 22 10 H 48"
+    stroke="#A13D29" stroke-width="16" stroke-linecap="butt" stroke-linejoin="round"
+  />
+
+  <!-- Top Right Segment (Orange) -->
+  <path
+    d="M 52 10 H 78 C 85 10 90 15 90 22 V 48"
+    stroke="#DA7B34" stroke-width="16" stroke-linecap="butt" stroke-linejoin="round"
+  />
+
+  <!-- Bottom Right Segment (Gold) -->
+  <path
+    d="M 90 52 V 78 C 90 85 85 90 78 90 H 52"
+    stroke="#EAA63C" stroke-width="16" stroke-linecap="butt" stroke-linejoin="round"
+  />
+
+  <!-- Bottom Left Segment (Yellow) -->
+  <path
+    d="M 48 90 H 22 C 15 90 10 85 10 78 V 52"
+    stroke="#F1BF4A" stroke-width="16" stroke-linecap="butt" stroke-linejoin="round"
+  />
 </svg>
