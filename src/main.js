@@ -10,6 +10,7 @@ import Chart from 'chart.js/auto'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
 import * as d3 from 'd3'
 import { sankey, sankeyLinkHorizontal } from 'd3-sankey'
+import * as topojson from 'topojson-client'
 
 // Register the datalabels plugin globally
 Chart.register(ChartDataLabels)
@@ -31,6 +32,7 @@ window.Chart = Chart
 window.d3 = d3
 window.sankey = sankey
 window.sankeyLinkHorizontal = sankeyLinkHorizontal
+window.topojson = topojson
 
 // Import the application logic
 import './app.js'

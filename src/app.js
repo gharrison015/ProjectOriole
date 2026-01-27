@@ -1667,384 +1667,412 @@ function updateLeakageDataByPart(view) {
     }
 }
 
-// Georgia County Leakage Heat Map Data
-const georgiaCountyData = [
-    // Metro Atlanta - High leakage
-    { id: 'fulton', name: 'Fulton County', leakageScore: 0.92, totalLeakage: 12800000, hasMarker: true, x: 285, y: 195,
-      facilities: [
-        { name: 'Emory University Hospital', spend: 4200000, services: [
-            { name: 'Cardiac Surgery', cpt: '33533', isElective: true, spend: 1800000, provider: 'Dr. Smith' },
-            { name: 'Interventional Cardiology', cpt: '92928', isElective: true, spend: 1400000, provider: 'Dr. Johnson' },
-            { name: 'Emergency Cardiac Care', cpt: '99291', isElective: false, spend: 1000000, provider: 'ER Group' }
+// Georgia County Leakage Data (FIPS codes for matching with TopoJSON)
+const georgiaCountyLeakageData = {
+    // FIPS codes for Georgia counties (13XXX format)
+    '13121': { name: 'Fulton', leakageScore: 0.92, totalLeakage: 12800000, hasMarker: true,
+        facilities: [
+            { name: 'Emory University Hospital', spend: 4200000, services: [
+                { name: 'Cardiac Surgery', cpt: '33533', isElective: true, spend: 1800000, provider: 'Dr. Smith' },
+                { name: 'Interventional Cardiology', cpt: '92928', isElective: true, spend: 1400000, provider: 'Dr. Johnson' },
+                { name: 'Emergency Cardiac Care', cpt: '99291', isElective: false, spend: 1000000, provider: 'ER Group' }
+            ]},
+            { name: 'Northside Hospital', spend: 3800000, services: [
+                { name: 'Joint Replacement', cpt: '27447', isElective: true, spend: 2100000, provider: 'Dr. Williams' },
+                { name: 'Spine Surgery', cpt: '22612', isElective: true, spend: 1700000, provider: 'Dr. Brown' }
+            ]},
+            { name: 'Grady Memorial', spend: 2400000, services: [
+                { name: 'Trauma Services', cpt: '99291', isElective: false, spend: 1800000, provider: 'Trauma Team' },
+                { name: 'Emergency Surgery', cpt: '44950', isElective: false, spend: 600000, provider: 'Dr. Davis' }
+            ]},
+            { name: 'Atlanta Medical Center', spend: 2400000, services: [
+                { name: 'Oncology Treatment', cpt: '96413', isElective: false, spend: 1500000, provider: 'Dr. Miller' },
+                { name: 'Radiation Therapy', cpt: '77385', isElective: false, spend: 900000, provider: 'Dr. Wilson' }
+            ]}
         ]},
-        { name: 'Northside Hospital', spend: 3800000, services: [
-            { name: 'Joint Replacement', cpt: '27447', isElective: true, spend: 2100000, provider: 'Dr. Williams' },
-            { name: 'Spine Surgery', cpt: '22612', isElective: true, spend: 1700000, provider: 'Dr. Brown' }
+    '13089': { name: 'DeKalb', leakageScore: 0.85, totalLeakage: 8900000, hasMarker: true,
+        facilities: [
+            { name: 'Emory Decatur Hospital', spend: 3200000, services: [
+                { name: 'Cardiology Consult', cpt: '99243', isElective: true, spend: 1600000, provider: 'Dr. Taylor' },
+                { name: 'Vascular Surgery', cpt: '35301', isElective: true, spend: 1600000, provider: 'Dr. Anderson' }
+            ]},
+            { name: 'DeKalb Medical', spend: 2800000, services: [
+                { name: 'Orthopedic Surgery', cpt: '27130', isElective: true, spend: 1800000, provider: 'Dr. Thomas' },
+                { name: 'Physical Therapy', cpt: '97110', isElective: true, spend: 1000000, provider: 'PT Group' }
+            ]}
         ]},
-        { name: 'Grady Memorial', spend: 2400000, services: [
-            { name: 'Trauma Services', cpt: '99291', isElective: false, spend: 1800000, provider: 'Trauma Team' },
-            { name: 'Emergency Surgery', cpt: '44950', isElective: false, spend: 600000, provider: 'Dr. Davis' }
+    '13067': { name: 'Cobb', leakageScore: 0.78, totalLeakage: 7200000, hasMarker: true,
+        facilities: [
+            { name: 'WellStar Kennestone', spend: 4100000, services: [
+                { name: 'Cardiac Cath', cpt: '93458', isElective: true, spend: 2200000, provider: 'Dr. White' },
+                { name: 'Open Heart Surgery', cpt: '33533', isElective: false, spend: 1900000, provider: 'Dr. Harris' }
+            ]},
+            { name: 'Northside Marietta', spend: 3100000, services: [
+                { name: 'Oncology Services', cpt: '96413', isElective: false, spend: 1800000, provider: 'Dr. Martin' }
+            ]}
         ]},
-        { name: 'Atlanta Medical Center', spend: 2400000, services: [
-            { name: 'Oncology Treatment', cpt: '96413', isElective: false, spend: 1500000, provider: 'Dr. Miller' },
-            { name: 'Radiation Therapy', cpt: '77385', isElective: false, spend: 900000, provider: 'Dr. Wilson' }
-        ]}
-    ]},
-    { id: 'dekalb', name: 'DeKalb County', leakageScore: 0.85, totalLeakage: 8900000, hasMarker: true, x: 310, y: 200,
-      facilities: [
-        { name: 'Emory Decatur Hospital', spend: 3200000, services: [
-            { name: 'Cardiology Consult', cpt: '99243', isElective: true, spend: 1600000, provider: 'Dr. Taylor' },
-            { name: 'Vascular Surgery', cpt: '35301', isElective: true, spend: 1600000, provider: 'Dr. Anderson' }
+    '13135': { name: 'Gwinnett', leakageScore: 0.72, totalLeakage: 6500000, hasMarker: true,
+        facilities: [
+            { name: 'Northside Gwinnett', spend: 3800000, services: [
+                { name: 'Bariatric Surgery', cpt: '43644', isElective: true, spend: 2000000, provider: 'Dr. Garcia' },
+                { name: 'General Surgery', cpt: '47562', isElective: true, spend: 1800000, provider: 'Dr. Martinez' }
+            ]}
         ]},
-        { name: 'DeKalb Medical', spend: 2800000, services: [
-            { name: 'Orthopedic Surgery', cpt: '27130', isElective: true, spend: 1800000, provider: 'Dr. Thomas' },
-            { name: 'Physical Therapy', cpt: '97110', isElective: true, spend: 1000000, provider: 'PT Group' }
+    '13245': { name: 'Richmond', leakageScore: 0.68, totalLeakage: 5400000, hasMarker: true,
+        facilities: [
+            { name: 'Augusta University Medical', spend: 3200000, services: [
+                { name: 'Neurosurgery', cpt: '61510', isElective: true, spend: 1800000, provider: 'Dr. Lewis' },
+                { name: 'Cardiac Surgery', cpt: '33533', isElective: true, spend: 1400000, provider: 'Dr. Lee' }
+            ]}
         ]},
-        { name: 'Emory Hillandale', spend: 2900000, services: [
-            { name: 'Imaging Services', cpt: '70553', isElective: true, spend: 1400000, provider: 'Radiology Group' },
-            { name: 'Outpatient Surgery', cpt: '29881', isElective: true, spend: 1500000, provider: 'Dr. Jackson' }
-        ]}
-    ]},
-    { id: 'cobb', name: 'Cobb County', leakageScore: 0.78, totalLeakage: 7200000, hasMarker: true, x: 255, y: 180,
-      facilities: [
-        { name: 'WellStar Kennestone', spend: 4100000, services: [
-            { name: 'Cardiac Cath', cpt: '93458', isElective: true, spend: 2200000, provider: 'Dr. White' },
-            { name: 'Open Heart Surgery', cpt: '33533', isElective: false, spend: 1900000, provider: 'Dr. Harris' }
+    '13215': { name: 'Muscogee', leakageScore: 0.55, totalLeakage: 4200000, hasMarker: true,
+        facilities: [
+            { name: 'Columbus Regional', spend: 2400000, services: [
+                { name: 'Cardiac Services', cpt: '93458', isElective: true, spend: 1400000, provider: 'Dr. Young' },
+                { name: 'Emergency Services', cpt: '99291', isElective: false, spend: 1000000, provider: 'ER Team' }
+            ]}
         ]},
-        { name: 'Northside Marietta', spend: 3100000, services: [
-            { name: 'Oncology Services', cpt: '96413', isElective: false, spend: 1800000, provider: 'Dr. Martin' },
-            { name: 'Imaging', cpt: '74177', isElective: true, spend: 1300000, provider: 'Imaging Group' }
-        ]}
-    ]},
-    { id: 'gwinnett', name: 'Gwinnett County', leakageScore: 0.72, totalLeakage: 6500000, hasMarker: true, x: 320, y: 175,
-      facilities: [
-        { name: 'Northside Gwinnett', spend: 3800000, services: [
-            { name: 'Bariatric Surgery', cpt: '43644', isElective: true, spend: 2000000, provider: 'Dr. Garcia' },
-            { name: 'General Surgery', cpt: '47562', isElective: true, spend: 1800000, provider: 'Dr. Martinez' }
+    '13021': { name: 'Bibb', leakageScore: 0.52, totalLeakage: 3800000, hasMarker: true,
+        facilities: [
+            { name: 'Atrium Health Navicent', spend: 2200000, services: [
+                { name: 'Trauma Services', cpt: '99291', isElective: false, spend: 1400000, provider: 'Trauma Team' },
+                { name: 'Cardiac Care', cpt: '93458', isElective: true, spend: 800000, provider: 'Dr. Wright' }
+            ]}
         ]},
-        { name: 'Eastside Medical', spend: 2700000, services: [
-            { name: 'Orthopedics', cpt: '27447', isElective: true, spend: 1700000, provider: 'Dr. Robinson' },
-            { name: 'Pain Management', cpt: '64483', isElective: true, spend: 1000000, provider: 'Dr. Clark' }
-        ]}
-    ]},
-    // Augusta Area
-    { id: 'richmond', name: 'Richmond County', leakageScore: 0.68, totalLeakage: 5400000, hasMarker: true, x: 450, y: 220,
-      facilities: [
-        { name: 'Augusta University Medical', spend: 3200000, services: [
-            { name: 'Neurosurgery', cpt: '61510', isElective: true, spend: 1800000, provider: 'Dr. Lewis' },
-            { name: 'Cardiac Surgery', cpt: '33533', isElective: true, spend: 1400000, provider: 'Dr. Lee' }
+    '13051': { name: 'Chatham', leakageScore: 0.61, totalLeakage: 4800000, hasMarker: true,
+        facilities: [
+            { name: 'Memorial Health Savannah', spend: 2800000, services: [
+                { name: 'Cardiac Surgery', cpt: '33533', isElective: true, spend: 1600000, provider: 'Dr. Scott' },
+                { name: 'Neurology', cpt: '95816', isElective: true, spend: 1200000, provider: 'Dr. Green' }
+            ]}
         ]},
-        { name: 'Doctors Hospital Augusta', spend: 2200000, services: [
-            { name: 'Orthopedic Surgery', cpt: '27130', isElective: true, spend: 1400000, provider: 'Dr. Walker' },
-            { name: 'Spine Surgery', cpt: '22612', isElective: true, spend: 800000, provider: 'Dr. Hall' }
-        ]}
-    ]},
-    // Columbus Area
-    { id: 'muscogee', name: 'Muscogee County', leakageScore: 0.55, totalLeakage: 4200000, hasMarker: false, x: 145, y: 320,
-      facilities: [
-        { name: 'Columbus Regional', spend: 2400000, services: [
-            { name: 'Cardiac Services', cpt: '93458', isElective: true, spend: 1400000, provider: 'Dr. Young' },
-            { name: 'Emergency Services', cpt: '99291', isElective: false, spend: 1000000, provider: 'ER Team' }
-        ]},
-        { name: 'St. Francis Hospital', spend: 1800000, services: [
-            { name: 'Oncology', cpt: '96413', isElective: false, spend: 1200000, provider: 'Dr. King' },
-            { name: 'Imaging', cpt: '74177', isElective: true, spend: 600000, provider: 'Radiology' }
-        ]}
-    ]},
-    // Macon Area
-    { id: 'bibb', name: 'Bibb County', leakageScore: 0.52, totalLeakage: 3800000, hasMarker: false, x: 300, y: 290,
-      facilities: [
-        { name: 'Atrium Health Navicent', spend: 2200000, services: [
-            { name: 'Trauma Services', cpt: '99291', isElective: false, spend: 1400000, provider: 'Trauma Team' },
-            { name: 'Cardiac Care', cpt: '93458', isElective: true, spend: 800000, provider: 'Dr. Wright' }
-        ]},
-        { name: 'Coliseum Medical', spend: 1600000, services: [
-            { name: 'Orthopedics', cpt: '27447', isElective: true, spend: 1000000, provider: 'Dr. Lopez' },
-            { name: 'General Surgery', cpt: '47562', isElective: true, spend: 600000, provider: 'Dr. Hill' }
-        ]}
-    ]},
-    // Savannah Area
-    { id: 'chatham', name: 'Chatham County', leakageScore: 0.61, totalLeakage: 4800000, hasMarker: false, x: 490, y: 310,
-      facilities: [
-        { name: 'Memorial Health Savannah', spend: 2800000, services: [
-            { name: 'Cardiac Surgery', cpt: '33533', isElective: true, spend: 1600000, provider: 'Dr. Scott' },
-            { name: 'Neurology', cpt: '95816', isElective: true, spend: 1200000, provider: 'Dr. Green' }
-        ]},
-        { name: 'St. Josephs Candler', spend: 2000000, services: [
-            { name: 'Oncology', cpt: '96413', isElective: false, spend: 1200000, provider: 'Dr. Adams' },
-            { name: 'Surgery', cpt: '44950', isElective: true, spend: 800000, provider: 'Dr. Nelson' }
-        ]}
-    ]},
-    // Medium leakage counties
-    { id: 'clayton', name: 'Clayton County', leakageScore: 0.48, totalLeakage: 2900000, hasMarker: false, x: 290, y: 225,
-      facilities: [
-        { name: 'Southern Regional', spend: 1700000, services: [
-            { name: 'Emergency Care', cpt: '99291', isElective: false, spend: 1000000, provider: 'ER Group' },
-            { name: 'General Surgery', cpt: '44950', isElective: true, spend: 700000, provider: 'Dr. Baker' }
-        ]},
-        { name: 'Spivey Station Imaging', spend: 1200000, services: [
-            { name: 'MRI Services', cpt: '70553', isElective: true, spend: 800000, provider: 'Imaging Group' },
-            { name: 'CT Scans', cpt: '74177', isElective: true, spend: 400000, provider: 'Radiology' }
-        ]}
-    ]},
-    { id: 'henry', name: 'Henry County', leakageScore: 0.42, totalLeakage: 2400000, hasMarker: false, x: 305, y: 240,
-      facilities: [
-        { name: 'Piedmont Henry', spend: 1400000, services: [
-            { name: 'Cardiac Services', cpt: '93458', isElective: true, spend: 800000, provider: 'Dr. Carter' },
-            { name: 'Orthopedics', cpt: '27447', isElective: true, spend: 600000, provider: 'Dr. Mitchell' }
-        ]},
-        { name: 'Henry Medical Center', spend: 1000000, services: [
-            { name: 'Emergency Services', cpt: '99291', isElective: false, spend: 600000, provider: 'ER Team' },
-            { name: 'Imaging', cpt: '74177', isElective: true, spend: 400000, provider: 'Radiology' }
-        ]}
-    ]},
-    { id: 'fayette', name: 'Fayette County', leakageScore: 0.38, totalLeakage: 2100000, hasMarker: false, x: 270, y: 245,
-      facilities: [
-        { name: 'Piedmont Fayette', spend: 1300000, services: [
-            { name: 'Joint Replacement', cpt: '27447', isElective: true, spend: 800000, provider: 'Dr. Perez' },
-            { name: 'General Surgery', cpt: '47562', isElective: true, spend: 500000, provider: 'Dr. Roberts' }
-        ]},
-        { name: 'Fayette Imaging', spend: 800000, services: [
-            { name: 'Diagnostic Imaging', cpt: '70553', isElective: true, spend: 500000, provider: 'Radiology' },
-            { name: 'Lab Services', cpt: '80053', isElective: true, spend: 300000, provider: 'Lab Group' }
-        ]}
-    ]},
-    // Lower leakage counties
-    { id: 'cherokee', name: 'Cherokee County', leakageScore: 0.32, totalLeakage: 1800000, hasMarker: false, x: 280, y: 150,
-      facilities: [
-        { name: 'Northside Cherokee', spend: 1100000, services: [
-            { name: 'Orthopedics', cpt: '27447', isElective: true, spend: 700000, provider: 'Dr. Turner' },
-            { name: 'Surgery', cpt: '44950', isElective: true, spend: 400000, provider: 'Dr. Phillips' }
-        ]},
-        { name: 'Canton Imaging', spend: 700000, services: [
-            { name: 'MRI', cpt: '70553', isElective: true, spend: 400000, provider: 'Imaging Group' },
-            { name: 'X-Ray', cpt: '73030', isElective: true, spend: 300000, provider: 'Radiology' }
-        ]}
-    ]},
-    { id: 'forsyth', name: 'Forsyth County', leakageScore: 0.28, totalLeakage: 1500000, hasMarker: false, x: 310, y: 145,
-      facilities: [
-        { name: 'Northside Forsyth', spend: 900000, services: [
-            { name: 'Surgery', cpt: '47562', isElective: true, spend: 500000, provider: 'Dr. Campbell' },
-            { name: 'Cardiac', cpt: '93458', isElective: true, spend: 400000, provider: 'Dr. Parker' }
-        ]},
-        { name: 'Forsyth Imaging', spend: 600000, services: [
-            { name: 'Imaging Services', cpt: '74177', isElective: true, spend: 400000, provider: 'Radiology' },
-            { name: 'Lab', cpt: '80053', isElective: true, spend: 200000, provider: 'Lab Group' }
-        ]}
-    ]},
-    { id: 'coweta', name: 'Coweta County', leakageScore: 0.25, totalLeakage: 1200000, hasMarker: false, x: 235, y: 260,
-      facilities: [
-        { name: 'Piedmont Newnan', spend: 800000, services: [
-            { name: 'Surgery', cpt: '44950', isElective: true, spend: 500000, provider: 'Dr. Evans' },
-            { name: 'Imaging', cpt: '70553', isElective: true, spend: 300000, provider: 'Radiology' }
-        ]},
-        { name: 'Newnan Outpatient', spend: 400000, services: [
-            { name: 'Outpatient Services', cpt: '99213', isElective: true, spend: 250000, provider: 'Dr. Edwards' },
-            { name: 'Lab', cpt: '80053', isElective: true, spend: 150000, provider: 'Lab Group' }
-        ]}
-    ]},
-    // Additional counties with lower leakage for fuller map
-    { id: 'douglas', name: 'Douglas County', leakageScore: 0.22, totalLeakage: 950000, hasMarker: false, x: 230, y: 210,
-      facilities: [{ name: 'WellStar Douglas', spend: 950000, services: [{ name: 'General Services', cpt: '99213', isElective: true, spend: 950000, provider: 'Various' }]}]},
-    { id: 'paulding', name: 'Paulding County', leakageScore: 0.18, totalLeakage: 720000, hasMarker: false, x: 225, y: 175,
-      facilities: [{ name: 'WellStar Paulding', spend: 720000, services: [{ name: 'General Services', cpt: '99213', isElective: true, spend: 720000, provider: 'Various' }]}]},
-    { id: 'newton', name: 'Newton County', leakageScore: 0.20, totalLeakage: 850000, hasMarker: false, x: 345, y: 225,
-      facilities: [{ name: 'Piedmont Newton', spend: 850000, services: [{ name: 'General Services', cpt: '99213', isElective: true, spend: 850000, provider: 'Various' }]}]},
-    { id: 'rockdale', name: 'Rockdale County', leakageScore: 0.19, totalLeakage: 780000, hasMarker: false, x: 335, y: 210,
-      facilities: [{ name: 'Piedmont Rockdale', spend: 780000, services: [{ name: 'General Services', cpt: '99213', isElective: true, spend: 780000, provider: 'Various' }]}]},
-    { id: 'hall', name: 'Hall County', leakageScore: 0.35, totalLeakage: 1900000, hasMarker: false, x: 345, y: 140,
-      facilities: [{ name: 'Northeast Georgia Medical', spend: 1900000, services: [{ name: 'Various Services', cpt: '99213', isElective: true, spend: 1900000, provider: 'Various' }]}]},
-    { id: 'columbia', name: 'Columbia County', leakageScore: 0.45, totalLeakage: 2600000, hasMarker: false, x: 465, y: 205,
-      facilities: [{ name: 'Doctors Hospital Augusta', spend: 2600000, services: [{ name: 'Various Services', cpt: '99213', isElective: true, spend: 2600000, provider: 'Various' }]}]},
-    { id: 'houston', name: 'Houston County', leakageScore: 0.30, totalLeakage: 1650000, hasMarker: false, x: 295, y: 320,
-      facilities: [{ name: 'Houston Medical Center', spend: 1650000, services: [{ name: 'Various Services', cpt: '99213', isElective: true, spend: 1650000, provider: 'Various' }]}]},
-    { id: 'dougherty', name: 'Dougherty County', leakageScore: 0.40, totalLeakage: 2200000, hasMarker: false, x: 230, y: 380,
-      facilities: [{ name: 'Phoebe Putney Memorial', spend: 2200000, services: [{ name: 'Various Services', cpt: '99213', isElective: true, spend: 2200000, provider: 'Various' }]}]},
-    { id: 'lowndes', name: 'Lowndes County', leakageScore: 0.36, totalLeakage: 1950000, hasMarker: false, x: 295, y: 420,
-      facilities: [{ name: 'South Georgia Medical', spend: 1950000, services: [{ name: 'Various Services', cpt: '99213', isElective: true, spend: 1950000, provider: 'Various' }]}]},
-    { id: 'glynn', name: 'Glynn County', leakageScore: 0.33, totalLeakage: 1750000, hasMarker: false, x: 490, y: 380,
-      facilities: [{ name: 'Southeast Georgia Health', spend: 1750000, services: [{ name: 'Various Services', cpt: '99213', isElective: true, spend: 1750000, provider: 'Various' }]}]}
-];
+    '13063': { name: 'Clayton', leakageScore: 0.48, totalLeakage: 2900000, hasMarker: false,
+        facilities: [{ name: 'Southern Regional', spend: 1700000, services: [{ name: 'Emergency Care', cpt: '99291', isElective: false, spend: 1000000, provider: 'ER Group' }]}]},
+    '13151': { name: 'Henry', leakageScore: 0.42, totalLeakage: 2400000, hasMarker: false,
+        facilities: [{ name: 'Piedmont Henry', spend: 1400000, services: [{ name: 'Cardiac Services', cpt: '93458', isElective: true, spend: 800000, provider: 'Dr. Carter' }]}]},
+    '13113': { name: 'Fayette', leakageScore: 0.38, totalLeakage: 2100000, hasMarker: false,
+        facilities: [{ name: 'Piedmont Fayette', spend: 1300000, services: [{ name: 'Joint Replacement', cpt: '27447', isElective: true, spend: 800000, provider: 'Dr. Perez' }]}]},
+    '13057': { name: 'Cherokee', leakageScore: 0.32, totalLeakage: 1800000, hasMarker: false,
+        facilities: [{ name: 'Northside Cherokee', spend: 1100000, services: [{ name: 'Orthopedics', cpt: '27447', isElective: true, spend: 700000, provider: 'Dr. Turner' }]}]},
+    '13117': { name: 'Forsyth', leakageScore: 0.28, totalLeakage: 1500000, hasMarker: false,
+        facilities: [{ name: 'Northside Forsyth', spend: 900000, services: [{ name: 'Surgery', cpt: '47562', isElective: true, spend: 500000, provider: 'Dr. Campbell' }]}]},
+    '13077': { name: 'Coweta', leakageScore: 0.25, totalLeakage: 1200000, hasMarker: false,
+        facilities: [{ name: 'Piedmont Newnan', spend: 800000, services: [{ name: 'Surgery', cpt: '44950', isElective: true, spend: 500000, provider: 'Dr. Evans' }]}]},
+    '13097': { name: 'Douglas', leakageScore: 0.22, totalLeakage: 950000, hasMarker: false,
+        facilities: [{ name: 'WellStar Douglas', spend: 950000, services: [{ name: 'General Services', cpt: '99213', isElective: true, spend: 950000, provider: 'Various' }]}]},
+    '13223': { name: 'Paulding', leakageScore: 0.18, totalLeakage: 720000, hasMarker: false,
+        facilities: [{ name: 'WellStar Paulding', spend: 720000, services: [{ name: 'General Services', cpt: '99213', isElective: true, spend: 720000, provider: 'Various' }]}]},
+    '13217': { name: 'Newton', leakageScore: 0.20, totalLeakage: 850000, hasMarker: false,
+        facilities: [{ name: 'Piedmont Newton', spend: 850000, services: [{ name: 'General Services', cpt: '99213', isElective: true, spend: 850000, provider: 'Various' }]}]},
+    '13247': { name: 'Rockdale', leakageScore: 0.19, totalLeakage: 780000, hasMarker: false,
+        facilities: [{ name: 'Piedmont Rockdale', spend: 780000, services: [{ name: 'General Services', cpt: '99213', isElective: true, spend: 780000, provider: 'Various' }]}]},
+    '13139': { name: 'Hall', leakageScore: 0.35, totalLeakage: 1900000, hasMarker: false,
+        facilities: [{ name: 'Northeast Georgia Medical', spend: 1900000, services: [{ name: 'Various Services', cpt: '99213', isElective: true, spend: 1900000, provider: 'Various' }]}]},
+    '13073': { name: 'Columbia', leakageScore: 0.45, totalLeakage: 2600000, hasMarker: false,
+        facilities: [{ name: 'Doctors Hospital Augusta', spend: 2600000, services: [{ name: 'Various Services', cpt: '99213', isElective: true, spend: 2600000, provider: 'Various' }]}]},
+    '13153': { name: 'Houston', leakageScore: 0.30, totalLeakage: 1650000, hasMarker: false,
+        facilities: [{ name: 'Houston Medical Center', spend: 1650000, services: [{ name: 'Various Services', cpt: '99213', isElective: true, spend: 1650000, provider: 'Various' }]}]},
+    '13095': { name: 'Dougherty', leakageScore: 0.40, totalLeakage: 2200000, hasMarker: false,
+        facilities: [{ name: 'Phoebe Putney Memorial', spend: 2200000, services: [{ name: 'Various Services', cpt: '99213', isElective: true, spend: 2200000, provider: 'Various' }]}]},
+    '13185': { name: 'Lowndes', leakageScore: 0.36, totalLeakage: 1950000, hasMarker: false,
+        facilities: [{ name: 'South Georgia Medical', spend: 1950000, services: [{ name: 'Various Services', cpt: '99213', isElective: true, spend: 1950000, provider: 'Various' }]}]},
+    '13127': { name: 'Glynn', leakageScore: 0.33, totalLeakage: 1750000, hasMarker: false,
+        facilities: [{ name: 'Southeast Georgia Health', spend: 1750000, services: [{ name: 'Various Services', cpt: '99213', isElective: true, spend: 1750000, provider: 'Various' }]}]},
+    '13059': { name: 'Clarke', leakageScore: 0.29, totalLeakage: 1400000, hasMarker: false,
+        facilities: [{ name: 'Piedmont Athens', spend: 1400000, services: [{ name: 'General Services', cpt: '99213', isElective: true, spend: 1400000, provider: 'Various' }]}]},
+    '13013': { name: 'Barrow', leakageScore: 0.24, totalLeakage: 1100000, hasMarker: false,
+        facilities: [{ name: 'Piedmont Barrow', spend: 1100000, services: [{ name: 'General Services', cpt: '99213', isElective: true, spend: 1100000, provider: 'Various' }]}]},
+    '13313': { name: 'Whitfield', leakageScore: 0.31, totalLeakage: 1600000, hasMarker: false,
+        facilities: [{ name: 'Hamilton Medical', spend: 1600000, services: [{ name: 'General Services', cpt: '99213', isElective: true, spend: 1600000, provider: 'Various' }]}]},
+    '13115': { name: 'Floyd', leakageScore: 0.34, totalLeakage: 1750000, hasMarker: false,
+        facilities: [{ name: 'Floyd Medical Center', spend: 1750000, services: [{ name: 'General Services', cpt: '99213', isElective: true, spend: 1750000, provider: 'Various' }]}]},
+    '13047': { name: 'Catoosa', leakageScore: 0.27, totalLeakage: 1250000, hasMarker: false,
+        facilities: [{ name: 'Hutcheson Medical', spend: 1250000, services: [{ name: 'General Services', cpt: '99213', isElective: true, spend: 1250000, provider: 'Various' }]}]},
+    '13015': { name: 'Bartow', leakageScore: 0.23, totalLeakage: 1050000, hasMarker: false,
+        facilities: [{ name: 'Cartersville Medical', spend: 1050000, services: [{ name: 'General Services', cpt: '99213', isElective: true, spend: 1050000, provider: 'Various' }]}]}
+};
 
-// Geographic Map Visualization - County Heat Map
+// Geographic Map Visualization - Real Georgia County Boundaries using TopoJSON
 function initializeGeographicMap() {
-    const container = document.getElementById('leakage-svg');
+    const container = document.getElementById('georgia-map-container');
     if (!container) return;
 
-    // Clear existing content
-    d3.select('#leakage-svg').html('');
+    container.innerHTML = '<div style="display: flex; justify-content: center; align-items: center; height: 100%; color: #666;">Loading Georgia county map...</div>';
 
-    const width = 600;
-    const height = 500;
+    // Load Georgia counties TopoJSON from CDN
+    const topoJsonUrl = 'https://cdn.jsdelivr.net/npm/us-atlas@3/counties-10m.json';
 
-    const svg = d3.select('#leakage-svg')
+    fetch(topoJsonUrl)
+        .then(response => response.json())
+        .then(us => {
+            // Filter to only Georgia counties (FIPS codes starting with 13)
+            const georgiaCounties = {
+                type: 'GeometryCollection',
+                geometries: us.objects.counties.geometries.filter(d => d.id.toString().startsWith('13'))
+            };
+
+            renderGeorgiaMap(container, us, georgiaCounties);
+        })
+        .catch(error => {
+            console.error('Error loading TopoJSON:', error);
+            // Fallback to SVG-based Georgia map
+            renderFallbackGeorgiaMap(container);
+        });
+}
+
+function renderGeorgiaMap(container, us, georgiaCounties) {
+    container.innerHTML = '';
+
+    const width = container.clientWidth || 700;
+    const height = 600;
+
+    const svg = d3.select(container)
+        .append('svg')
+        .attr('width', '100%')
+        .attr('height', height)
         .attr('viewBox', `0 0 ${width} ${height}`)
-        .style('background', '#f8f9fa');
+        .style('background', 'linear-gradient(135deg, #fdfbf7 0%, #fef9f3 100%)');
 
-    // Color scale for heat map (beige to deep orange)
+    // Color scale - beige to deep orange (matching reference image)
     const colorScale = d3.scaleSequential()
         .domain([0, 1])
-        .interpolator(d3.interpolateRgb('#fef3e2', '#d35400'));
+        .interpolator(t => d3.interpolateRgb('#fef3e2', '#c0392b')(t));
 
-    // Draw Georgia state outline (simplified path)
-    const georgiaPath = 'M 120 80 L 180 70 L 260 65 L 340 68 L 400 75 L 460 85 L 500 100 L 520 140 L 530 190 L 525 250 L 510 310 L 490 370 L 460 420 L 400 450 L 320 460 L 250 455 L 180 440 L 130 400 L 100 340 L 90 270 L 95 200 L 105 140 Z';
+    // Create projection centered on Georgia
+    const projection = d3.geoMercator()
+        .center([-83.5, 32.7])
+        .scale(5500)
+        .translate([width / 2, height / 2]);
 
-    // Draw state background
-    svg.append('path')
-        .attr('d', georgiaPath)
-        .attr('fill', '#fff')
-        .attr('stroke', '#95a5a6')
-        .attr('stroke-width', 2);
+    const path = d3.geoPath().projection(projection);
 
-    // Create a group for the map content
-    const mapGroup = svg.append('g');
+    // Convert TopoJSON to GeoJSON
+    const counties = topojson.feature(us, georgiaCounties);
 
-    // Draw county heat regions using circles for simplicity
-    const countyGroups = mapGroup.selectAll('.county')
-        .data(georgiaCountyData)
+    // Draw counties
+    const countyPaths = svg.append('g')
+        .selectAll('path')
+        .data(counties.features)
         .enter()
-        .append('g')
-        .attr('class', 'county')
-        .attr('transform', d => `translate(${d.x}, ${d.y})`)
-        .style('cursor', 'pointer')
-        .on('click', function(event, d) {
-            showCountyDrillDown(d);
+        .append('path')
+        .attr('d', path)
+        .attr('fill', d => {
+            const fips = d.id.toString();
+            const countyData = georgiaCountyLeakageData[fips];
+            if (countyData) {
+                return colorScale(countyData.leakageScore);
+            }
+            // Default low leakage color for counties without data
+            return colorScale(Math.random() * 0.15 + 0.05);
         })
+        .attr('stroke', '#fff')
+        .attr('stroke-width', 0.5)
+        .style('cursor', 'pointer')
         .on('mouseenter', function(event, d) {
-            d3.select(this).select('circle').attr('stroke-width', 3);
+            d3.select(this)
+                .attr('stroke', '#2c3e50')
+                .attr('stroke-width', 2)
+                .raise();
             showCountyTooltip(event, d);
         })
         .on('mouseleave', function() {
-            d3.select(this).select('circle').attr('stroke-width', 1);
+            d3.select(this)
+                .attr('stroke', '#fff')
+                .attr('stroke-width', 0.5);
             hideCountyTooltip();
+        })
+        .on('click', function(event, d) {
+            const fips = d.id.toString();
+            const countyData = georgiaCountyLeakageData[fips];
+            if (countyData) {
+                showCountyDrillDown({ ...countyData, fips });
+            }
         });
 
-    // Add county heat circles
-    countyGroups.append('circle')
-        .attr('r', d => 15 + d.leakageScore * 20)
-        .attr('fill', d => colorScale(d.leakageScore))
+    // Add state border
+    svg.append('path')
+        .datum(topojson.mesh(us, georgiaCounties, (a, b) => a === b))
+        .attr('fill', 'none')
         .attr('stroke', '#8b4513')
-        .attr('stroke-width', 1)
-        .attr('opacity', 0.85);
+        .attr('stroke-width', 2)
+        .attr('d', path);
 
     // Add white pin markers for high-leakage counties
-    countyGroups.filter(d => d.hasMarker)
+    const markerData = Object.entries(georgiaCountyLeakageData)
+        .filter(([fips, data]) => data.hasMarker)
+        .map(([fips, data]) => {
+            const county = counties.features.find(f => f.id.toString() === fips);
+            if (county) {
+                const centroid = path.centroid(county);
+                return { ...data, fips, centroid };
+            }
+            return null;
+        })
+        .filter(d => d !== null);
+
+    const markers = svg.append('g')
+        .selectAll('.marker')
+        .data(markerData)
+        .enter()
         .append('g')
         .attr('class', 'marker')
-        .attr('transform', d => `translate(0, ${-15 - d.leakageScore * 20})`)
-        .each(function() {
-            const g = d3.select(this);
-            // Pin drop marker
-            g.append('path')
-                .attr('d', 'M 0 0 L -6 -12 A 6 6 0 1 1 6 -12 Z')
-                .attr('fill', '#fff')
-                .attr('stroke', '#2c3e50')
-                .attr('stroke-width', 1.5);
-            g.append('circle')
-                .attr('cx', 0)
-                .attr('cy', -14)
-                .attr('r', 3)
-                .attr('fill', '#e74c3c');
+        .attr('transform', d => `translate(${d.centroid[0]}, ${d.centroid[1] - 15})`)
+        .style('cursor', 'pointer')
+        .on('click', function(event, d) {
+            showCountyDrillDown(d);
         });
 
-    // Add legend
-    const legend = svg.append('g')
-        .attr('transform', 'translate(20, 380)');
+    // Pin drop shape
+    markers.append('path')
+        .attr('d', 'M 0 0 C -4 -4 -8 -10 -8 -16 A 8 8 0 1 1 8 -16 C 8 -10 4 -4 0 0 Z')
+        .attr('fill', '#fff')
+        .attr('stroke', '#2c3e50')
+        .attr('stroke-width', 1.5)
+        .style('filter', 'drop-shadow(0 2px 3px rgba(0,0,0,0.3))');
 
+    // Red dot in center of pin
+    markers.append('circle')
+        .attr('cx', 0)
+        .attr('cy', -16)
+        .attr('r', 4)
+        .attr('fill', '#e74c3c');
+
+    // Add legend
+    addMapLegend(svg, width, height, colorScale);
+
+    // Create tooltip
+    createMapTooltip();
+}
+
+function renderFallbackGeorgiaMap(container) {
+    // Fallback SVG-based map if TopoJSON fails to load
+    container.innerHTML = `
+        <div style="text-align: center; padding: 2rem; color: #666;">
+            <p>Unable to load detailed county map.</p>
+            <p>Please check your internet connection and refresh the page.</p>
+        </div>
+    `;
+}
+
+function addMapLegend(svg, width, height, colorScale) {
+    const legend = svg.append('g')
+        .attr('transform', `translate(20, ${height - 140})`);
+
+    // Legend background
     legend.append('rect')
-        .attr('x', 0)
-        .attr('y', 0)
-        .attr('width', 150)
-        .attr('height', 100)
+        .attr('x', -10)
+        .attr('y', -10)
+        .attr('width', 180)
+        .attr('height', 130)
         .attr('fill', 'rgba(255,255,255,0.95)')
         .attr('stroke', '#ddd')
-        .attr('rx', 4);
+        .attr('rx', 8)
+        .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))');
 
     legend.append('text')
-        .attr('x', 10)
-        .attr('y', 18)
-        .attr('font-size', '11px')
+        .attr('x', 0)
+        .attr('y', 10)
+        .attr('font-size', '12px')
         .attr('font-weight', 'bold')
+        .attr('fill', '#2c3e50')
         .text('Leakage Intensity');
 
-    // Gradient legend
-    const gradientId = 'leakage-gradient';
+    // Gradient bar
+    const gradientId = 'legend-gradient-' + Math.random().toString(36).substr(2, 9);
     const defs = svg.append('defs');
-    const gradient = defs.append('linearGradient')
+    const linearGradient = defs.append('linearGradient')
         .attr('id', gradientId)
         .attr('x1', '0%')
         .attr('x2', '100%');
 
-    gradient.append('stop').attr('offset', '0%').attr('stop-color', '#fef3e2');
-    gradient.append('stop').attr('offset', '100%').attr('stop-color', '#d35400');
+    linearGradient.append('stop').attr('offset', '0%').attr('stop-color', '#fef3e2');
+    linearGradient.append('stop').attr('offset', '50%').attr('stop-color', '#e67e22');
+    linearGradient.append('stop').attr('offset', '100%').attr('stop-color', '#c0392b');
 
     legend.append('rect')
-        .attr('x', 10)
-        .attr('y', 28)
-        .attr('width', 100)
-        .attr('height', 12)
+        .attr('x', 0)
+        .attr('y', 25)
+        .attr('width', 140)
+        .attr('height', 15)
         .attr('fill', `url(#${gradientId})`)
-        .attr('stroke', '#999');
+        .attr('stroke', '#999')
+        .attr('rx', 2);
 
-    legend.append('text').attr('x', 10).attr('y', 52).attr('font-size', '9px').text('Low');
-    legend.append('text').attr('x', 90).attr('y', 52).attr('font-size', '9px').text('High');
+    legend.append('text').attr('x', 0).attr('y', 55).attr('font-size', '10px').attr('fill', '#666').text('Low');
+    legend.append('text').attr('x', 60).attr('y', 55).attr('font-size', '10px').attr('fill', '#666').text('Medium');
+    legend.append('text').attr('x', 120).attr('y', 55).attr('font-size', '10px').attr('fill', '#666').text('High');
 
     // Marker legend
-    legend.append('path')
-        .attr('d', 'M 20 72 L 14 60 A 6 6 0 1 1 26 60 Z')
+    const markerLegend = legend.append('g').attr('transform', 'translate(0, 70)');
+
+    markerLegend.append('path')
+        .attr('d', 'M 10 0 C 6 -4 2 -8 2 -12 A 8 8 0 1 1 18 -12 C 18 -8 14 -4 10 0 Z')
         .attr('fill', '#fff')
         .attr('stroke', '#2c3e50')
-        .attr('stroke-width', 1);
-    legend.append('circle')
-        .attr('cx', 20)
-        .attr('cy', 58)
-        .attr('r', 2)
+        .attr('stroke-width', 1)
+        .attr('transform', 'scale(0.7)');
+
+    markerLegend.append('circle')
+        .attr('cx', 7)
+        .attr('cy', -8)
+        .attr('r', 2.5)
         .attr('fill', '#e74c3c');
-    legend.append('text')
-        .attr('x', 35)
-        .attr('y', 68)
-        .attr('font-size', '9px')
+
+    markerLegend.append('text')
+        .attr('x', 25)
+        .attr('y', -3)
+        .attr('font-size', '10px')
+        .attr('fill', '#2c3e50')
         .text('High Leakage Area');
 
+    // Click instruction
     legend.append('text')
-        .attr('x', 10)
-        .attr('y', 90)
-        .attr('font-size', '8px')
-        .attr('fill', '#666')
+        .attr('x', 0)
+        .attr('y', 105)
+        .attr('font-size', '9px')
+        .attr('fill', '#999')
         .text('Click county for details');
+}
 
-    // Add title
-    svg.append('text')
-        .attr('x', width / 2)
-        .attr('y', 25)
-        .attr('text-anchor', 'middle')
-        .attr('font-size', '14px')
-        .attr('font-weight', 'bold')
-        .attr('fill', '#2c3e50')
-        .text('Georgia County Leakage Heat Map');
-
-    // Create tooltip
+function createMapTooltip() {
     if (!document.getElementById('county-tooltip')) {
         const tooltip = document.createElement('div');
         tooltip.id = 'county-tooltip';
-        tooltip.style.cssText = 'position: fixed; background: rgba(44,62,80,0.95); color: #fff; padding: 10px 14px; border-radius: 6px; font-size: 12px; pointer-events: none; z-index: 1000; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.3);';
+        tooltip.style.cssText = `
+            position: fixed;
+            background: rgba(44, 62, 80, 0.95);
+            color: #fff;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            pointer-events: none;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            max-width: 250px;
+        `;
         document.body.appendChild(tooltip);
     }
 }
 
-function showCountyTooltip(event, county) {
+function showCountyTooltip(event, d) {
     const tooltip = document.getElementById('county-tooltip');
     if (!tooltip) return;
 
-    tooltip.innerHTML = `
-        <div style="font-weight: bold; margin-bottom: 4px;">${county.name}</div>
-        <div>Leakage: $${(county.totalLeakage / 1000000).toFixed(1)}M</div>
-        <div>Score: ${(county.leakageScore * 100).toFixed(0)}%</div>
-        <div style="font-size: 10px; margin-top: 4px; opacity: 0.8;">Click for details</div>
-    `;
-    tooltip.style.display = 'block';
-    tooltip.style.left = (event.clientX + 15) + 'px';
-    tooltip.style.top = (event.clientY - 10) + 'px';
+    const fips = d.id ? d.id.toString() : d.fips;
+    const countyData = georgiaCountyLeakageData[fips] || d;
+
+    if (countyData && countyData.name) {
+        tooltip.innerHTML = `
+            <div style="font-weight: bold; margin-bottom: 6px; font-size: 14px;">${countyData.name} County</div>
+            <div style="margin-bottom: 4px;">Leakage: <strong style="color: #e74c3c;">$${(countyData.totalLeakage / 1000000).toFixed(1)}M</strong></div>
+            <div style="margin-bottom: 4px;">Score: <strong>${(countyData.leakageScore * 100).toFixed(0)}%</strong></div>
+            <div style="font-size: 10px; margin-top: 6px; opacity: 0.8; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 6px;">Click for facility details</div>
+        `;
+        tooltip.style.display = 'block';
+        tooltip.style.left = (event.clientX + 15) + 'px';
+        tooltip.style.top = (event.clientY - 10) + 'px';
+    }
 }
 
 function hideCountyTooltip() {
