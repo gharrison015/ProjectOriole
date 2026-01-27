@@ -17,7 +17,19 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeProjectionControls();
     initializeLeakageInteractions();
     initializeQualityDateSlider();
+    setLastUpdatedDate();
 });
+
+// Set Last Updated date to yesterday (24hr old data)
+function setLastUpdatedDate() {
+    const lastUpdatedEl = document.getElementById('last-updated-date');
+    if (lastUpdatedEl) {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const options = { month: 'short', day: 'numeric', year: 'numeric' };
+        lastUpdatedEl.textContent = yesterday.toLocaleDateString('en-US', options);
+    }
+}
 
 function initializeTabs() {
     const navItems = document.querySelectorAll('.nav-item');
