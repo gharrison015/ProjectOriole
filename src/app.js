@@ -675,12 +675,15 @@ function initRAFDistChart() {
 
 // Piedmont Hospital Joint Replacement Data
 const piedmontHospitalData = {
+    // Hospital avgCost = exact weighted average of provider costs
+    // Hospital episodes = sum of provider cases
+    // All providers have ≥10 cases for consistent drill-down analysis
     hospitals: [
         {
             name: 'Piedmont Atlanta',
             shortName: 'Atlanta',
-            avgCost: 26200,
-            episodes: 89,
+            avgCost: 26073,  // (32×24800 + 28×26100 + 18×28400 + 11×25900) / 89
+            episodes: 89,    // 32 + 28 + 18 + 11
             nationalBenchmark: 27500,
             providers: [
                 { name: 'Dr. Mitchell', cases: 32, avgCost: 24800, qualityScore: 94.2, complications: 2.1, readmit30: 3.8, los: 2.1, patientSat: 4.7 },
@@ -692,8 +695,8 @@ const piedmontHospitalData = {
         {
             name: 'Piedmont Newnan',
             shortName: 'Newnan',
-            avgCost: 28900,
-            episodes: 67,
+            avgCost: 28963,  // (24×27200 + 22×29800 + 21×30100) / 67
+            episodes: 67,    // 24 + 22 + 21
             nationalBenchmark: 27500,
             providers: [
                 { name: 'Dr. Anderson', cases: 24, avgCost: 27200, qualityScore: 90.5, complications: 3.8, readmit30: 4.8, los: 2.4, patientSat: 4.4 },
@@ -704,8 +707,8 @@ const piedmontHospitalData = {
         {
             name: 'Piedmont Fayette',
             shortName: 'Fayette',
-            avgCost: 31200,
-            episodes: 54,
+            avgCost: 31198,  // (19×29500 + 18×32800 + 17×31400) / 54
+            episodes: 54,    // 19 + 18 + 17
             nationalBenchmark: 27500,
             providers: [
                 { name: 'Dr. Brown', cases: 19, avgCost: 29500, qualityScore: 89.1, complications: 4.2, readmit30: 5.5, los: 2.6, patientSat: 4.3 },
@@ -716,8 +719,8 @@ const piedmontHospitalData = {
         {
             name: 'Piedmont Henry',
             shortName: 'Henry',
-            avgCost: 25800,
-            episodes: 48,
+            avgCost: 25654,  // (22×24500 + 15×26800 + 11×26400) / 48
+            episodes: 48,    // 22 + 15 + 11
             nationalBenchmark: 27500,
             providers: [
                 { name: 'Dr. Taylor', cases: 22, avgCost: 24500, qualityScore: 95.2, complications: 1.8, readmit30: 3.2, los: 1.9, patientSat: 4.9 },
@@ -728,8 +731,8 @@ const piedmontHospitalData = {
         {
             name: 'Piedmont Mountainside',
             shortName: 'Mountainside',
-            avgCost: 29400,
-            episodes: 42,
+            avgCost: 29376,  // (18×28200 + 14×30800 + 10×29500) / 42
+            episodes: 42,    // 18 + 14 + 10
             nationalBenchmark: 27500,
             providers: [
                 { name: 'Dr. Johnson', cases: 18, avgCost: 28200, qualityScore: 89.8, complications: 4.0, readmit30: 5.2, los: 2.5, patientSat: 4.2 },
@@ -740,13 +743,13 @@ const piedmontHospitalData = {
         {
             name: 'Piedmont Columbus',
             shortName: 'Columbus',
-            avgCost: 33500,
-            episodes: 38,
+            avgCost: 33477,  // (16×32200 + 13×34800 + 10×33800) / 39
+            episodes: 39,    // 16 + 13 + 10
             nationalBenchmark: 27500,
             providers: [
                 { name: 'Dr. Robinson', cases: 16, avgCost: 32200, qualityScore: 83.5, complications: 7.2, readmit30: 8.5, los: 3.8, patientSat: 3.6 },
                 { name: 'Dr. Harris', cases: 13, avgCost: 34800, qualityScore: 81.2, complications: 8.5, readmit30: 9.2, los: 4.2, patientSat: 3.4 },
-                { name: 'Dr. Thompson', cases: 9, avgCost: 33800, qualityScore: 82.8, complications: 7.8, readmit30: 8.8, los: 4.0, patientSat: 3.5 }
+                { name: 'Dr. Thompson', cases: 10, avgCost: 33800, qualityScore: 82.8, complications: 7.8, readmit30: 8.8, los: 4.0, patientSat: 3.5 }
             ]
         }
     ],
@@ -2961,15 +2964,17 @@ function drillDownEpisode(episodeType) {
 
     const episodeName = episodeNames[episodeType] || episodeType;
 
-    // Provider-level episode cost data (Piedmont Health System hospitals)
+    // Hospital-level episode cost data (Piedmont Health System)
+    // Joint replacement data matches piedmontHospitalData exactly
+    // Variance = (avgCost - benchmarkCost) / benchmarkCost × 100
     const providerData = {
         'joint': [
-            { provider: 'Piedmont Atlanta', episodes: 89, avgCost: 24500, benchmarkCost: 26800, variance: -8.6, postAcuteUtil: 32, readmitRate: 5.6 },
-            { provider: 'Piedmont Newnan', episodes: 67, avgCost: 28200, benchmarkCost: 26800, variance: 5.2, postAcuteUtil: 45, readmitRate: 7.2 },
-            { provider: 'Piedmont Fayette', episodes: 54, avgCost: 31500, benchmarkCost: 26800, variance: 17.5, postAcuteUtil: 58, readmitRate: 8.9 },
-            { provider: 'Piedmont Henry', episodes: 48, avgCost: 26800, benchmarkCost: 26800, variance: 0.0, postAcuteUtil: 38, readmitRate: 6.1 },
-            { provider: 'Piedmont Mountainside', episodes: 42, avgCost: 29400, benchmarkCost: 26800, variance: 9.7, postAcuteUtil: 48, readmitRate: 7.8 },
-            { provider: 'Piedmont Columbus', episodes: 38, avgCost: 33200, benchmarkCost: 26800, variance: 23.9, postAcuteUtil: 67, readmitRate: 11.2 }
+            { provider: 'Piedmont Atlanta', episodes: 89, avgCost: 26073, benchmarkCost: 27500, variance: -5.2, postAcuteUtil: 32, readmitRate: 5.6 },
+            { provider: 'Piedmont Newnan', episodes: 67, avgCost: 28963, benchmarkCost: 27500, variance: 5.3, postAcuteUtil: 45, readmitRate: 7.2 },
+            { provider: 'Piedmont Fayette', episodes: 54, avgCost: 31198, benchmarkCost: 27500, variance: 13.4, postAcuteUtil: 58, readmitRate: 8.9 },
+            { provider: 'Piedmont Henry', episodes: 48, avgCost: 25654, benchmarkCost: 27500, variance: -6.7, postAcuteUtil: 38, readmitRate: 6.1 },
+            { provider: 'Piedmont Mountainside', episodes: 42, avgCost: 29376, benchmarkCost: 27500, variance: 6.8, postAcuteUtil: 48, readmitRate: 7.8 },
+            { provider: 'Piedmont Columbus', episodes: 39, avgCost: 33477, benchmarkCost: 27500, variance: 21.7, postAcuteUtil: 67, readmitRate: 11.2 }
         ],
         'chf': [
             { provider: 'Piedmont Atlanta', episodes: 234, avgCost: 12800, benchmarkCost: 14200, variance: -9.9, postAcuteUtil: 22, readmitRate: 18.2 },
