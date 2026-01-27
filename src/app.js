@@ -4243,6 +4243,213 @@ function showInsightsModal(tabType) {
 // Make showInsightsModal globally available
 window.showInsightsModal = showInsightsModal;
 
+// Toggle between ACO and HEDIS measures with flip animation
+function toggleMeasuresView(view) {
+    const flipCard = document.getElementById('measures-flip-card');
+    const acoToggle = document.getElementById('aco-toggle');
+    const hedisToggle = document.getElementById('hedis-toggle');
+
+    if (!flipCard || !acoToggle || !hedisToggle) return;
+
+    if (view === 'hedis') {
+        flipCard.classList.add('flipped');
+        acoToggle.classList.remove('active');
+        hedisToggle.classList.add('active');
+    } else {
+        flipCard.classList.remove('flipped');
+        acoToggle.classList.add('active');
+        hedisToggle.classList.remove('active');
+    }
+}
+
+// Make toggleMeasuresView globally available
+window.toggleMeasuresView = toggleMeasuresView;
+
+// HEDIS Measure Detail Modal
+function showHedisMeasureDetail(measureCode) {
+    const hedisData = {
+        'BCS': {
+            name: 'Breast Cancer Screening',
+            description: 'The percentage of women 50-74 years of age who had a mammogram to screen for breast cancer.',
+            denominator: 8234,
+            numerator: 6775,
+            compliance: 82.3,
+            stars: 4,
+            gaps: ['2,847 women due for screening in next 90 days', '1,459 women overdue for screening']
+        },
+        'COA': {
+            name: 'Care for Older Adults - Medication Review',
+            description: 'The percentage of adults 66+ who had a medication review during the measurement year.',
+            denominator: 12456,
+            numerator: 9587,
+            compliance: 76.9,
+            stars: 4,
+            gaps: ['AWV scheduled for 2,341 patients - review medications during visit', '528 patients with polypharmacy at high risk']
+        },
+        'COL': {
+            name: 'Colorectal Cancer Screening',
+            description: 'The percentage of adults 45-75 years of age who had appropriate screening for colorectal cancer.',
+            denominator: 15823,
+            numerator: 12152,
+            compliance: 76.8,
+            stars: 4,
+            gaps: ['3,671 patients due for FIT/colonoscopy', '1,234 patients with scheduled appointments - order screening']
+        },
+        'CBP': {
+            name: 'Controlling High Blood Pressure',
+            description: 'The percentage of patients 18-85 years of age with hypertension whose BP was adequately controlled (<140/90).',
+            denominator: 9847,
+            numerator: 7129,
+            compliance: 72.4,
+            stars: 4,
+            gaps: ['2,718 patients with uncontrolled BP', '892 patients need medication adjustment', '456 patients lost to follow-up']
+        },
+        'HBD': {
+            name: 'Diabetes Care - Blood Sugar Controlled',
+            description: 'The percentage of patients 18-75 with diabetes whose HbA1c was <8.0% during the measurement year.',
+            denominator: 6234,
+            numerator: 5099,
+            compliance: 81.8,
+            stars: 5,
+            gaps: ['1,135 patients with HbA1c ≥8%', '234 patients without HbA1c in past 12 months']
+        },
+        'EED': {
+            name: 'Eye Exam for Patients with Diabetes',
+            description: 'The percentage of patients 18-75 with diabetes who had a retinal eye exam during the measurement year.',
+            denominator: 6234,
+            numerator: 4295,
+            compliance: 68.9,
+            stars: 3,
+            gaps: ['1,939 patients overdue for eye exam', 'Partner with ophthalmology for in-office retinal imaging']
+        },
+        'FMC': {
+            name: 'Follow-up After ED Visit (Multiple Chronic Conditions)',
+            description: 'The percentage of ED visits for patients with multiple chronic conditions who had a follow-up visit within 7 days.',
+            denominator: 2847,
+            numerator: 1823,
+            compliance: 64.0,
+            stars: 3,
+            gaps: ['1,024 patients did not receive timely follow-up', 'Implement post-ED discharge outreach program']
+        },
+        'SPC': {
+            name: 'Medication Adherence - Cholesterol (Statin)',
+            description: 'The percentage of patients with a statin prescription who achieved PDC ≥80% during the measurement year.',
+            denominator: 7892,
+            numerator: 6945,
+            compliance: 88.0,
+            stars: 5,
+            gaps: ['947 patients with adherence gaps', '312 patients flagged for pharmacy outreach']
+        },
+        'SPD': {
+            name: 'Medication Adherence - Diabetes Medications',
+            description: 'The percentage of patients with diabetes medication prescription who achieved PDC ≥80%.',
+            denominator: 5123,
+            numerator: 4406,
+            compliance: 86.0,
+            stars: 5,
+            gaps: ['717 patients with adherence gaps', 'Consider 90-day fills and mail order']
+        },
+        'SPH': {
+            name: 'Medication Adherence - Hypertension (RASA)',
+            description: 'The percentage of patients with RASA prescription who achieved PDC ≥80% during the measurement year.',
+            denominator: 8456,
+            numerator: 7272,
+            compliance: 86.0,
+            stars: 5,
+            gaps: ['1,184 patients with adherence gaps', 'Simplify regimens where possible']
+        },
+        'OMW': {
+            name: 'Osteoporosis Management in Women Who Had a Fracture',
+            description: 'The percentage of women 67-85 who suffered a fracture and received osteoporosis therapy within 6 months.',
+            denominator: 892,
+            numerator: 445,
+            compliance: 49.9,
+            stars: 2,
+            gaps: ['447 women did not receive appropriate therapy', 'Review fracture liaison service protocols']
+        },
+        'PCR': {
+            name: 'Plan All-Cause Readmissions',
+            description: 'The risk-adjusted ratio of observed to expected 30-day readmissions (lower is better, shown as % avoided).',
+            denominator: 4567,
+            numerator: 4170,
+            compliance: 91.3,
+            stars: 4,
+            gaps: ['397 potentially preventable readmissions', 'Focus on CHF and COPD transitions']
+        },
+        'STC': {
+            name: 'Statin Therapy - Cardiovascular Disease',
+            description: 'The percentage of patients with CVD who received statin therapy during the measurement year.',
+            denominator: 5234,
+            numerator: 3884,
+            compliance: 74.2,
+            stars: 3,
+            gaps: ['1,350 patients without statin therapy', '423 patients with documented contraindication/intolerance']
+        },
+        'SUPD': {
+            name: 'Statin Use in Persons with Diabetes',
+            description: 'The percentage of patients 40-75 with diabetes who received statin therapy.',
+            denominator: 6234,
+            numerator: 5236,
+            compliance: 84.0,
+            stars: 4,
+            gaps: ['998 diabetic patients without statin', 'Review for guideline-directed therapy']
+        },
+        'TRC': {
+            name: 'Transitions of Care',
+            description: 'The percentage of discharges with a timely notification, receipt of discharge info, and engagement.',
+            denominator: 3456,
+            numerator: 2419,
+            compliance: 70.0,
+            stars: 3,
+            gaps: ['1,037 transitions without complete documentation', 'Enhance discharge summary workflows']
+        }
+    };
+
+    const data = hedisData[measureCode];
+    if (!data) return;
+
+    const starsHtml = '⭐'.repeat(data.stars) + '<span style="opacity:0.3">' + '⭐'.repeat(5 - data.stars) + '</span>';
+
+    const modalContent = `
+        <div class="modal-header" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 1.5rem; border-radius: 12px 12px 0 0; margin: -1.5rem -1.5rem 1.5rem -1.5rem;">
+            <h2 style="margin: 0 0 0.5rem 0; font-size: 1.5rem;">${data.name}</h2>
+            <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">${data.description}</p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+            <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                <div style="font-size: 0.8rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.5px;">Denominator</div>
+                <div style="font-size: 1.8rem; font-weight: 700; color: #2c3e50;">${data.denominator.toLocaleString()}</div>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                <div style="font-size: 0.8rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.5px;">Numerator</div>
+                <div style="font-size: 1.8rem; font-weight: 700; color: #2c3e50;">${data.numerator.toLocaleString()}</div>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: #e8f5e9; border-radius: 8px;">
+                <div style="font-size: 0.8rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.5px;">Compliance</div>
+                <div style="font-size: 1.8rem; font-weight: 700; color: #27ae60;">${data.compliance}%</div>
+            </div>
+            <div style="text-align: center; padding: 1rem; background: #fff8e1; border-radius: 8px;">
+                <div style="font-size: 0.8rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.5px;">Star Rating</div>
+                <div style="font-size: 1.2rem; margin-top: 0.25rem;">${starsHtml}</div>
+            </div>
+        </div>
+
+        <div style="background: #fef9e7; border-left: 4px solid #f39c12; padding: 1rem 1.25rem; border-radius: 0 8px 8px 0;">
+            <h4 style="margin: 0 0 0.75rem 0; color: #2c3e50; font-size: 1rem;">Gap Closure Opportunities</h4>
+            <ul style="margin: 0; padding-left: 1.25rem; color: #5a6c7d; line-height: 1.8;">
+                ${data.gaps.map(gap => `<li>${gap}</li>`).join('')}
+            </ul>
+        </div>
+    `;
+
+    document.getElementById('modal-body').innerHTML = modalContent;
+    document.getElementById('modal').style.display = 'block';
+}
+
+// Make showHedisMeasureDetail globally available
+window.showHedisMeasureDetail = showHedisMeasureDetail;
+
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         closeModal();
