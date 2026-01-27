@@ -108,8 +108,8 @@ function initPerformanceTrendChart() {
     const py2026ActualData = [855, 849, null, null, null, null, null, null, null, null, null, null]; // Jan-Feb actual
     const py2026ProjectedData = [null, 849, 843, 839, 837, 835, 832, 830, 834, 837, 839, 839]; // Mar-Dec projected (connects from Feb)
 
-    // Benchmark for PY2026
-    const benchmarkData = [868, 867, 866, 865, 864, 863, 862, 861, 861, 864, 864, 865];
+    // Benchmark for PY2026 (static target throughout the year)
+    const benchmarkData = [864, 864, 864, 864, 864, 864, 864, 864, 864, 864, 864, 864];
 
     performanceTrendChart = new Chart(ctx, {
         type: 'line',
