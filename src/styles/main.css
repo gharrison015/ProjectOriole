@@ -60,12 +60,14 @@ body {
 }
 
 .piedmont-tagline {
-    font-family: 'Brush Script MT', cursive;
-    font-size: 1.4rem;
-    color: var(--piedmont-dark);
-    font-style: italic;
-    opacity: 0.85;
-    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+}
+
+.piedmont-tagline img {
+    height: 24px;
+    width: auto;
+    display: block;
 }
 
 .mssp-timeline {
