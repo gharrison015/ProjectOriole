@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthcare Analytics Platform - MSSP ACO Dashboard</title>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="top-header">
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
+            <div class="header-left">
+                <div class="piedmont-logo">
+                    <img src="/assets/piedmont-logo.svg" alt="Piedmont Logo" style="width: 40px; height: 40px;">
+                    <h1 style="font-size: 1.5rem; font-weight: 700; color: var(--piedmont-dark); margin: 0;">Piedmont-Test</h1>
+                </div>
+                <div class="piedmont-tagline">
+                    <img src="/realchange.png" alt="Real change lives here">
+                </div>
+                <div class="mssp-timeline">
+                    <div class="timeline-step">
+                        <div class="timeline-dot active"></div>
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="timeline-label">Track 2</span>
+                            <span class="timeline-date">Current</span>
+                        </div>
+                    </div>
+                    <div class="timeline-line"></div>
+                    <div class="timeline-step">
+                        <div class="timeline-dot future"></div>
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="timeline-label">Election</span>
+                            <span class="timeline-date">June 2026</span>
+                        </div>
+                    </div>
+                    <div class="timeline-line"></div>
+                    <div class="timeline-step">
+                        <div class="timeline-dot future"></div>
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="timeline-label">Final Inclusion</span>
+                            <span class="timeline-date">Dec 31, 2026</span>
+                        </div>
+                    </div>
+                    <div class="timeline-line"></div>
+                    <div class="timeline-step">
+                        <div class="timeline-dot future"></div>
+                        <div style="display: flex; flex-direction: column;">
+                            <span class="timeline-label">PY2027 Start</span>
+                            <span class="timeline-date">Jan 1, 2027</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-box">
+                    <span class="stat-label">Attributed Lives</span>
+                    <span class="stat-value">47,823</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Measurement Year</span>
+                    <span class="stat-value">2024</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-label">Last Updated</span>
+                    <span class="stat-value">Apr 15, 2024</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="mobile-overlay" onclick="toggleMobileMenu()"></div>
+        <div class="main-content">
+            <nav class="sidebar">
+                <ul class="nav-menu">
+                    <li class="nav-item active" data-tab="performance">📊 Performance Overview</li>
+                    <li class="nav-item" data-tab="projections">🔮 Projections & Forecasts</li>
+                    <li class="nav-item" data-tab="quality">✅ Quality Metrics</li>
+                    <li class="nav-item" data-tab="tcoc">💰 Total Cost of Care</li>
+                    <li class="nav-item" data-tab="leakage">📉 Keepage / Leakage</li>
+                    <li class="nav-item" data-tab="hcc">📋 Risk Adjustment (HCC)</li>
+                    <li class="nav-item" data-tab="episodes">🏥 Episodes & Variation</li>
+                </ul>
+            </nav>
+
+            <main class="dashboard-main">
+                <!-- Performance Overview Tab -->
+                <div id="performance-tab" class="tab-content active">
+                    <div class="tab-header">
+                        <h2>Performance Overview</h2>
+                        <p>Executive dashboard showing MSSP ACO performance vs benchmarks</p>
+                    </div>
+
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <div class="kpi-label tooltip-hover" title="Per Member Per Month (PMPM) Spend: Total medical spending divided by member months. Formula: Total Claims / (Members × 12 months). Source: Internal claims data">
+                                Total PMPM Spend <span class="tooltip-icon">ⓘ</span>
+                            </div>
+                            <div class="kpi-value">$847.32</div>
+                            <div class="kpi-change positive">↓ 2.3% vs Benchmark ($866.50)</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label tooltip-hover" title="Projected Savings: Expected savings for the performance year. Formula: (Benchmark PMPM - Actual PMPM) × Member Months - Shared Savings Percentage. Source: CMS benchmark data and internal actuarial projections">
+                                Projected Savings <span class="tooltip-icon">ⓘ</span>
+                            </div>
+                            <div class="kpi-value">$11.2M</div>
+                            <div class="kpi-change positive">↑ $700K vs Target ($10.5M)</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label tooltip-hover" title="Quality Score: Composite score across all MSSP ACO quality measures. Formula: Weighted average of domain scores (Preventive Health, Chronic Care, Patient Experience, Care Coordination). Source: CMS Quality Payment Program">
+                                Quality Score <span class="tooltip-icon">ⓘ</span>
+                            </div>
+                            <div class="kpi-value">87.4%</div>
+                            <div class="kpi-change positive">↑ 5.2 pts vs National (82.1%)</div>
+                        </div>
+                        <div class="kpi-card">
+                            <div class="kpi-label tooltip-hover" title="Network Leakage: Percentage of total spend going to out-of-network providers. Formula: (OON Spend / Total Spend) × 100. Reducing leakage improves margins and care coordination. Source: Claims data with network attribution">
+                                Network Leakage <span class="tooltip-icon">ⓘ</span>
+                            </div>
+                            <div class="kpi-value">23.7%</div>
+                            <div class="kpi-change negative">$4.2M Opportunity</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-section">
+                        <h3>PMPM Trend vs Benchmark</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="trendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="table-section">
+                        <h3>Market Performance Summary - Click to Drill Down</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Market Region</th>
+                                    <th>Lives</th>
+                                    <th>PMPM</th>
+                                    <th>vs Benchmark</th>
+                                    <th>Quality</th>
+                                    <th>Leakage</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr onclick="drillDownMarket('atlanta-north')" class="clickable">
+                                    <td><strong>Atlanta North</strong></td>
+                                    <td>12,456</td>
+                                    <td>$823.45</td>
+                                    <td class="good">-$43.05 (-5.0%)</td>
+                                    <td>89.2%</td>
+                                    <td class="good">18.3%</td>
+                                    <td><button class="btn-small">View Details →</button></td>
+                                </tr>
+                                <tr onclick="drillDownMarket('atlanta-south')" class="clickable">
+                                    <td><strong>Atlanta South</strong></td>
+                                    <td>15,234</td>
+                                    <td>$871.22</td>
+                                    <td class="warning">+$4.72 (+0.5%)</td>
+                                    <td>86.1%</td>
+                                    <td class="bad">27.4%</td>
+                                    <td><button class="btn-small">View Details →</button></td>
+                                </tr>
+                                <tr onclick="drillDownMarket('columbus')" class="clickable">
+                                    <td><strong>Columbus</strong></td>
+                                    <td>8,923</td>
+                                    <td>$834.67</td>
+                                    <td class="good">-$31.83 (-3.7%)</td>
+                                    <td>88.5%</td>
+                                    <td>21.2%</td>
+                                    <td><button class="btn-small">View Details →</button></td>
+                                </tr>
+                                <tr onclick="drillDownMarket('augusta')" class="clickable">
+                                    <td><strong>Augusta</strong></td>
+                                    <td>6,734</td>
+                                    <td>$892.18</td>
+                                    <td class="bad">+$25.68 (+3.0%)</td>
+                                    <td>84.3%</td>
+                                    <td class="bad">31.8%</td>
+                                    <td><button class="btn-small">View Details →</button></td>
+                                </tr>
+                                <tr onclick="drillDownMarket('macon')" class="clickable">
+                                    <td><strong>Macon</strong></td>
+                                    <td>4,476</td>
+                                    <td>$851.34</td>
+                                    <td class="warning">-$15.16 (-1.7%)</td>
+                                    <td>85.9%</td>
+                                    <td>19.6%</td>
+                                    <td><button class="btn-small">View Details →</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="alert-box">
+                        <h4>Executive Insights</h4>
+                        <ul>
+                            <li><strong>Overall:</strong> Tracking 2.3% below benchmark - on track for shared savings</li>
+                            <li><strong>Risk Areas:</strong> Augusta market elevated spend (+3.0%) and high leakage (31.8%)</li>
+                            <li><strong>April Decision:</strong> Recommend continuing MSSP participation for 2025</li>
+                            <li><strong>Actions:</strong> Focus leakage reduction in Augusta and Atlanta South ($2.1M opportunity)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Projections Tab -->
+                <div id="projections-tab" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Projections & Forecasts</h2>
+                        <p>Actuarial modeling with scenario analysis for April gut-check decision</p>
+                    </div>
+
+                    <div class="controls-panel">
+                        <h3>Scenario Variables - Adjust to Model Different Outcomes</h3>
+                        <div class="control-grid">
+                            <div class="control-item">
+                                <label>Lives Growth: <span id="lives-val">+2.0%</span></label>
+                                <input type="range" id="lives-slider" min="-10" max="10" value="2" step="0.5">
+                            </div>
+                            <div class="control-item">
+                                <label>Risk Score Change: <span id="risk-val">0.0%</span></label>
+                                <input type="range" id="risk-slider" min="-5" max="5" value="0" step="0.1">
+                            </div>
+                            <div class="control-item">
+                                <label>Utilization Trend: <span id="util-val">-1.0%</span></label>
+                                <input type="range" id="util-slider" min="-10" max="10" value="-1" step="0.5">
+                            </div>
+                            <div class="control-item">
+                                <label>Leakage Reduction: <span id="leak-val">2.0%</span></label>
+                                <input type="range" id="leak-slider" min="0" max="10" value="2" step="0.5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="projection-results">
+                        <div class="result-card highlight">
+                            <h3>Projected Year-End Performance (Dec 2024)</h3>
+                            <div class="metric-row">
+                                <div class="metric">
+                                    <div class="label">Projected Total Spend</div>
+                                    <div class="value" id="proj-spend">$486.7M</div>
+                                    <div class="sub">95% CI: $481.2M - $492.1M</div>
+                                </div>
+                                <div class="metric">
+                                    <div class="label">Projected Benchmark</div>
+                                    <div class="value">$498.3M</div>
+                                    <div class="sub">Based on historical data</div>
+                                </div>
+                                <div class="metric success">
+                                    <div class="label">Projected Shared Savings</div>
+                                    <div class="value" id="proj-savings">$11.6M</div>
+                                    <div class="sub" id="prob-text">70% probability</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="result-card">
+                            <h3>Confidence Levels</h3>
+                            <div class="confidence-item">
+                                <span>Break Even or Better</span>
+                                <div class="bar"><div class="fill good" style="width:85%" id="bar-break">85%</div></div>
+                            </div>
+                            <div class="confidence-item">
+                                <span>Achieve Target ($10.5M+)</span>
+                                <div class="bar"><div class="fill good" style="width:70%" id="bar-target">70%</div></div>
+                            </div>
+                            <div class="confidence-item">
+                                <span>Risk of Loss</span>
+                                <div class="bar danger"><div class="fill bad" style="width:15%" id="bar-loss">15%</div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-section">
+                        <h3>Monte Carlo Simulation (10,000 iterations)</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="monteChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="alert-box success">
+                        <h4>April Gut-Check Recommendation</h4>
+                        <p><strong>CONTINUE MSSP ACO PARTICIPATION</strong></p>
+                        <p>85% probability of break-even or better. Projected $11.6M savings exceeds $10.5M target with 70% confidence.</p>
+                        <p><strong>Key Assumptions:</strong> +2% lives growth, -1% utilization trend, no major risk score deterioration, -2% leakage reduction</p>
+                        <p><strong>Limitations:</strong> Does not account for CMS policy changes or major market disruptions. Monthly monitoring recommended.</p>
+                    </div>
+                </div>
+
+                <!-- Quality Metrics Tab -->
+                <div id="quality-tab" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Quality Metrics - MSSP ACO PY2025</h2>
+                        <p>Performance on CMS quality measures with drill-down capability</p>
+                    </div>
+
+                    <div class="quality-summary-grid">
+                        <div class="quality-summary-card">
+                            <h4>Overall Quality Score</h4>
+                            <div class="quality-score-large">87.4%</div>
+                            <div class="quality-rating">⭐⭐⭐⭐ (4-Star Equivalent)</div>
+                            <div class="quality-detail">Based on 33 quality measures</div>
+                        </div>
+                        <div class="quality-summary-card">
+                            <h4>Measures Achieved</h4>
+                            <div class="quality-score-large">28/33</div>
+                            <div class="quality-rating">84.8% Achievement Rate</div>
+                            <div class="quality-detail">5 measures need improvement</div>
+                        </div>
+                        <div class="quality-summary-card">
+                            <h4>Quality Payment Impact</h4>
+                            <div class="quality-score-large">+2.5%</div>
+                            <div class="quality-rating success">Performance Bonus</div>
+                            <div class="quality-detail">Est. +$1.2M in shared savings</div>
+                        </div>
+                    </div>
+
+                    <div class="table-section">
+                        <h3>ACO Quality Measures by Domain <span style="font-size: 0.8rem; color: var(--piedmont-gray); font-weight: normal;">(Click measure to view performance dashboard)</span></h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Domain</th>
+                                    <th>Measure</th>
+                                    <th>Performance</th>
+                                    <th>Benchmark</th>
+                                    <th>Gap</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="domain-header">
+                                    <td colspan="6"><strong>Patient/Caregiver Experience (ACO-01 to ACO-34)</strong></td>
+                                </tr>
+                                <tr class="clickable" onclick="showMeasureDashboard('ACO-34', 'Getting Timely Care', 89.2, 82.5)">
+                                    <td></td>
+                                    <td>Getting Timely Care (ACO-34)</td>
+                                    <td class="good"><strong>89.2%</strong></td>
+                                    <td>82.5%</td>
+                                    <td class="good">+6.7 pts</td>
+                                    <td><span class="badge success">Achieved</span></td>
+                                </tr>
+
+                                <tr class="domain-header">
+                                    <td colspan="6"><strong>Care Coordination/Patient Safety</strong></td>
+                                </tr>
+                                <tr class="clickable" onclick="showMeasureDashboard('ACO-43', 'Risk-Standardized Acute Admission', 12.4, 14.2)">
+                                    <td></td>
+                                    <td>Risk-Standardized Acute Admission (ACO-43)</td>
+                                    <td class="good"><strong>12.4%</strong></td>
+                                    <td>14.2%</td>
+                                    <td class="good">-1.8 pts</td>
+                                    <td><span class="badge success">Achieved</span></td>
+                                </tr>
+                                <tr class="clickable" onclick="showMeasureDashboard('ACO-38', 'All-Cause Unplanned Admissions', 8.7, 9.3)">
+                                    <td></td>
+                                    <td>All-Cause Unplanned Admissions (ACO-38)</td>
+                                    <td class="good"><strong>8.7%</strong></td>
+                                    <td>9.3%</td>
+                                    <td class="good">-0.6 pts</td>
+                                    <td><span class="badge success">Achieved</span></td>
+                                </tr>
+
+                                <tr class="domain-header">
+                                    <td colspan="6"><strong>Preventive Health</strong></td>
+                                </tr>
+                                <tr class="clickable" onclick="showMeasureDashboard('ACO-17', 'Breast Cancer Screening', 82.3, 75.8)">
+                                    <td></td>
+                                    <td>Breast Cancer Screening (ACO-17)</td>
+                                    <td class="good"><strong>82.3%</strong></td>
+                                    <td>75.8%</td>
+                                    <td class="good">+6.5 pts</td>
+                                    <td><span class="badge success">Achieved</span></td>
+                                </tr>
+                                <tr class="clickable" onclick="showMeasureDashboard('ACO-19', 'Colorectal Cancer Screening', 76.8, 69.2)">
+                                    <td></td>
+                                    <td>Colorectal Cancer Screening (ACO-19)</td>
+                                    <td class="good"><strong>76.8%</strong></td>
+                                    <td>69.2%</td>
+                                    <td class="good">+7.6 pts</td>
+                                    <td><span class="badge success">Achieved</span></td>
+                                </tr>
+                                <tr class="clickable" onclick="showMeasureDashboard('ACO-AWV', 'Annual Wellness Visit', 58.4, 62.1)">
+                                    <td></td>
+                                    <td>Annual Wellness Visit (ACO-43)</td>
+                                    <td class="warning"><strong>58.4%</strong></td>
+                                    <td>62.1%</td>
+                                    <td class="bad">-3.7 pts</td>
+                                    <td><span class="badge warning">Need Improvement</span></td>
+                                </tr>
+
+                                <tr class="domain-header">
+                                    <td colspan="6"><strong>At-Risk Population - Diabetes</strong></td>
+                                </tr>
+                                <tr class="clickable" onclick="showMeasureDashboard('ACO-16', 'Diabetes: HbA1c Poor Control', 18.2, 22.4)">
+                                    <td></td>
+                                    <td>Diabetes: HbA1c Poor Control (ACO-16)</td>
+                                    <td class="good"><strong>18.2%</strong></td>
+                                    <td>22.4%</td>
+                                    <td class="good">-4.2 pts</td>
+                                    <td><span class="badge success">Achieved</span></td>
+                                </tr>
+                                <tr class="clickable" onclick="showMeasureDashboard('ACO-18', 'Diabetes: Eye Exam', 68.9, 61.3)">
+                                    <td></td>
+                                    <td>Diabetes: Eye Exam (ACO-18)</td>
+                                    <td class="good"><strong>68.9%</strong></td>
+                                    <td>61.3%</td>
+                                    <td class="good">+7.6 pts</td>
+                                    <td><span class="badge success">Achieved</span></td>
+                                </tr>
+
+                                <tr class="domain-header">
+                                    <td colspan="6"><strong>At-Risk Population - Hypertension</strong></td>
+                                </tr>
+                                <tr class="clickable" onclick="showMeasureDashboard('ACO-08', 'Controlling High Blood Pressure', 72.4, 67.8)">
+                                    <td></td>
+                                    <td>Controlling High Blood Pressure (ACO-08)</td>
+                                    <td class="good"><strong>72.4%</strong></td>
+                                    <td>67.8%</td>
+                                    <td class="good">+4.6 pts</td>
+                                    <td><span class="badge success">Achieved</span></td>
+                                </tr>
+
+                                <tr class="domain-header">
+                                    <td colspan="6"><strong>At-Risk Population - Heart Failure</strong></td>
+                                </tr>
+                                <tr class="clickable" onclick="showMeasureDashboard('ACO-14', 'Statin Therapy - Cardiovascular Disease', 74.2, 78.5)">
+                                    <td></td>
+                                    <td>Statin Therapy - Cardiovascular Disease (ACO-14)</td>
+                                    <td class="warning"><strong>74.2%</strong></td>
+                                    <td>78.5%</td>
+                                    <td class="bad">-4.3 pts</td>
+                                    <td><span class="badge warning">Need Improvement</span></td>
+                                </tr>
+
+                                <tr class="domain-header">
+                                    <td colspan="6"><strong>Behavioral Health</strong></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>Depression Screening and Follow-up (ACO-40)</td>
+                                    <td class="good"><strong>81.2%</strong></td>
+                                    <td>74.6%</td>
+                                    <td class="good">+6.6 pts</td>
+                                    <td><span class="badge success">Achieved</span></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td>Screening for Social Drivers of Health (ACO-46)</td>
+                                    <td class="warning"><strong>52.8%</strong></td>
+                                    <td>58.3%</td>
+                                    <td class="bad">-5.5 pts</td>
+                                    <td><span class="badge warning">Need Improvement</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="chart-section">
+                        <h3>Quality Performance Trends</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="qualityTrendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="alert-box info">
+                        <h4>Quality Improvement Opportunities</h4>
+                        <ul>
+                            <li><strong>Annual Wellness Visits:</strong> 3.7 pts below benchmark. Close gap with 177 additional AWVs to gain quality points</li>
+                            <li><strong>Statin Therapy:</strong> 4.3 pts below benchmark. Target 205 patients with CVD not on statins</li>
+                            <li><strong>Social Determinants Screening:</strong> New measure for PY2025. Need to screen 263 additional patients</li>
+                            <li><strong>Estimated Impact:</strong> Closing these 3 gaps could increase quality score to 91.2% and add $400K in quality bonus</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Total Cost of Care Tab -->
+                <div id="tcoc-tab" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Total Cost of Care Analysis</h2>
+                        <p>Cost driver breakdown with actionable intervention opportunities</p>
+                    </div>
+
+                    <div class="tcoc-summary-grid">
+                        <div class="tcoc-card">
+                            <div class="tcoc-label">Total Annual Spend</div>
+                            <div class="tcoc-value">$486.7M</div>
+                            <div class="tcoc-detail">47,823 attributed lives</div>
+                        </div>
+                        <div class="tcoc-card">
+                            <div class="tcoc-label">PMPM (Per Member Per Month)</div>
+                            <div class="tcoc-value">$847.32</div>
+                            <div class="tcoc-detail good">$19.18 below benchmark</div>
+                        </div>
+                        <div class="tcoc-card">
+                            <div class="tcoc-label">PMPY (Per Member Per Year)</div>
+                            <div class="tcoc-value">$10,168</div>
+                            <div class="tcoc-detail">CMS benchmark: $10,398</div>
+                        </div>
+                    </div>
+
+                    <div class="cost-breakdown-section">
+                        <div class="cost-chart-container">
+                            <h3>Cost Distribution by Category</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="costPieChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="cost-details">
+                            <h3>Cost Category Details</h3>
+                            <div class="cost-category-list">
+                                <div class="cost-category-item">
+                                    <div class="category-header">
+                                        <span class="category-name">Inpatient Facility</span>
+                                        <span class="category-amount">$187.2M (38.5%)</span>
+                                    </div>
+                                    <div class="category-pmpm">PMPM: $326.23 | Admits per 1000: 142</div>
+                                </div>
+                                <div class="cost-category-item">
+                                    <div class="category-header">
+                                        <span class="category-name">Outpatient Services</span>
+                                        <span class="category-amount">$143.8M (29.5%)</span>
+                                    </div>
+                                    <div class="category-pmpm">PMPM: $250.72 | Visits per member: 8.4</div>
+                                </div>
+                                <div class="cost-category-item">
+                                    <div class="category-header">
+                                        <span class="category-name">Professional Services</span>
+                                        <span class="category-amount">$89.4M (18.4%)</span>
+                                    </div>
+                                    <div class="category-pmpm">PMPM: $155.87 | Visits per member: 6.2</div>
+                                </div>
+                                <div class="cost-category-item">
+                                    <div class="category-header">
+                                        <span class="category-name">Pharmacy</span>
+                                        <span class="category-amount">$48.7M (10.0%)</span>
+                                    </div>
+                                    <div class="category-pmpm">PMPM: $84.93 | Scripts PMPY: 24.3</div>
+                                </div>
+                                <div class="cost-category-item">
+                                    <div class="category-header">
+                                        <span class="category-name">Post-Acute Care (SNF/HH)</span>
+                                        <span class="category-amount">$17.6M (3.6%)</span>
+                                    </div>
+                                    <div class="category-pmpm">PMPM: $30.57 | Days per 1000: 87</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-section">
+                        <h3>Avoidable ED Visits by Market - High Impact Opportunity</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Market Region</th>
+                                    <th>Total ED Visits</th>
+                                    <th>Avoidable Visits</th>
+                                    <th>Avoidable %</th>
+                                    <th>Cost Impact</th>
+                                    <th>Opportunity</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr onclick="drillDownEDMarket('atlanta-south')" class="clickable">
+                                    <td><strong>Atlanta South</strong></td>
+                                    <td>4,231</td>
+                                    <td class="bad">1,523</td>
+                                    <td class="bad">36.0%</td>
+                                    <td class="bad">$1,868,271</td>
+                                    <td>$1,400K savings potential</td>
+                                    <td><button class="btn-small">View Details →</button></td>
+                                </tr>
+                                <tr onclick="drillDownEDMarket('augusta')" class="clickable">
+                                    <td><strong>Augusta</strong></td>
+                                    <td>2,187</td>
+                                    <td class="bad">789</td>
+                                    <td class="bad">36.1%</td>
+                                    <td class="bad">$967,803</td>
+                                    <td>$725K savings potential</td>
+                                    <td><button class="btn-small">View Details →</button></td>
+                                </tr>
+                                <tr onclick="drillDownEDMarket('atlanta-north')" class="clickable">
+                                    <td><strong>Atlanta North</strong></td>
+                                    <td>3,456</td>
+                                    <td class="warning">967</td>
+                                    <td class="warning">28.0%</td>
+                                    <td class="warning">$1,186,309</td>
+                                    <td>$890K savings potential</td>
+                                    <td><button class="btn-small">View Details →</button></td>
+                                </tr>
+                                <tr onclick="drillDownEDMarket('columbus')" class="clickable">
+                                    <td><strong>Columbus</strong></td>
+                                    <td>2,534</td>
+                                    <td class="good">658</td>
+                                    <td class="good">26.0%</td>
+                                    <td>$807,066</td>
+                                    <td>$605K savings potential</td>
+                                    <td><button class="btn-small">View Details →</button></td>
+                                </tr>
+                                <tr onclick="drillDownEDMarket('macon')" class="clickable">
+                                    <td><strong>Macon</strong></td>
+                                    <td>1,245</td>
+                                    <td class="warning">349</td>
+                                    <td class="warning">28.0%</td>
+                                    <td>$428,223</td>
+                                    <td>$321K savings potential</td>
+                                    <td><button class="btn-small">View Details →</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="chart-section">
+                        <h3>Cost Trend Analysis - Last 12 Months</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="costTrendChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="alert-box warning">
+                        <h4>Cost Reduction Opportunities - $3.9M Annual Impact</h4>
+                        <ul>
+                            <li><strong>Avoidable ED Visits:</strong> 4,286 visits at avg $1,227/visit = $5.3M spend. 75% reduction = <strong>$3.9M savings</strong></li>
+                            <li><strong>30-Day Readmissions:</strong> 487 readmissions at avg $18,500 = $9.0M. 20% reduction = <strong>$1.8M savings</strong></li>
+                            <li><strong>SNF Utilization:</strong> Days per 1000 at 87 vs benchmark 75. Reduction = <strong>$2.1M savings</strong></li>
+                            <li><strong>High-Cost Imaging:</strong> Outpatient MRI/CT rate 15% above benchmark = <strong>$1.4M opportunity</strong></li>
+                            <li><strong>Total Opportunity:</strong> $9.2M in identified cost reduction initiatives</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Leakage Tab -->
+                <div id="leakage-tab" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Network Leakage Analysis</h2>
+                        <p>Comprehensive view of out-of-network spend with geographic and referral pattern analysis</p>
+                    </div>
+
+                    <div class="leakage-filter-bar">
+                        <label>View:</label>
+                        <button class="filter-btn active" onclick="setLeakageView('all')">All Claims</button>
+                        <button class="filter-btn" onclick="setLeakageView('parta')">Part A Only</button>
+                        <button class="filter-btn" onclick="setLeakageView('partb')">Part B Only</button>
+                    </div>
+
+                    <div class="leakage-summary-section">
+                        <div class="leakage-chart-box" onclick="toggleNetworkView()">
+                            <h3>Network Distribution <span class="clickable-hint">(Click to filter)</span></h3>
+                            <div class="chart-wrapper">
+                                <canvas id="leakagePie"></canvas>
+                            </div>
+                        </div>
+                        <div class="leakage-metrics-box">
+                            <h3>Key Metrics</h3>
+                            <div class="metric-grid">
+                                <div class="metric-item">
+                                    <div class="metric-label">In-Network Spend</div>
+                                    <div class="metric-value good" id="in-network-spend">$371.4M</div>
+                                    <div class="metric-pct" id="in-network-pct">76.3%</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Out-of-Network Spend</div>
+                                    <div class="metric-value bad" id="oon-spend">$115.3M</div>
+                                    <div class="metric-pct" id="oon-pct">23.7%</div>
+                                </div>
+                                <div class="metric-item">
+                                    <div class="metric-label">Target Leakage (20%)</div>
+                                    <div class="metric-value">$97.3M</div>
+                                    <div class="metric-note">Industry benchmark</div>
+                                </div>
+                                <div class="metric-item highlight">
+                                    <div class="metric-label">Recovery Opportunity</div>
+                                    <div class="metric-value warning">$18.0M</div>
+                                    <div class="metric-note">If reduced to 20% target</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-section">
+                        <h3>Top 5 Out-of-Network Providers (Where Leakage Goes)</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>OON Provider/Facility</th>
+                                    <th>Specialty/Type</th>
+                                    <th>Total OON Spend</th>
+                                    <th>Patient Count</th>
+                                    <th>Avg Cost/Patient</th>
+                                    <th>Primary Service</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Atlanta Cardiology Associates</strong></td>
+                                    <td>Cardiology Group</td>
+                                    <td class="bad">$12,347,892</td>
+                                    <td>1,234</td>
+                                    <td>$10,009</td>
+                                    <td>Interventional Cardiology</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Peachtree Advanced Imaging</strong></td>
+                                    <td>Imaging Center</td>
+                                    <td class="bad">$8,923,441</td>
+                                    <td>3,421</td>
+                                    <td>$2,608</td>
+                                    <td>MRI / CT Scans</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Southern Orthopedic Specialists</strong></td>
+                                    <td>Orthopedic Surgery</td>
+                                    <td class="bad">$7,654,223</td>
+                                    <td>892</td>
+                                    <td>$8,582</td>
+                                    <td>Joint Replacement</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Georgia Pain Management Center</strong></td>
+                                    <td>Pain Management</td>
+                                    <td class="bad">$5,234,887</td>
+                                    <td>1,567</td>
+                                    <td>$3,340</td>
+                                    <td>Injections / Procedures</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Metro Neurology Group</strong></td>
+                                    <td>Neurology</td>
+                                    <td class="bad">$4,892,334</td>
+                                    <td>1,098</td>
+                                    <td>$4,456</td>
+                                    <td>Neurology Consults</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-section">
+                        <h3>Top 5 PCP Attributed Providers with Highest Leakage</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>PCP Name</th>
+                                    <th>Market</th>
+                                    <th>Attributed Lives</th>
+                                    <th>Total Spend</th>
+                                    <th>OON Spend</th>
+                                    <th>Leakage %</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr onclick="drillDownPCPLeakage('martinez')" class="clickable">
+                                    <td><strong>Dr. Robert Martinez</strong></td>
+                                    <td>Augusta</td>
+                                    <td>1,247</td>
+                                    <td>$14,234,887</td>
+                                    <td class="bad">$5,892,334</td>
+                                    <td class="bad">41.4%</td>
+                                    <td><button class="btn-small">View Flow →</button></td>
+                                </tr>
+                                <tr onclick="drillDownPCPLeakage('williams')" class="clickable">
+                                    <td><strong>Dr. Amanda Williams</strong></td>
+                                    <td>Atlanta South</td>
+                                    <td>1,523</td>
+                                    <td>$17,892,441</td>
+                                    <td class="bad">$7,234,556</td>
+                                    <td class="bad">40.4%</td>
+                                    <td><button class="btn-small">View Flow →</button></td>
+                                </tr>
+                                <tr onclick="drillDownPCPLeakage('chen')" class="clickable">
+                                    <td><strong>Dr. Michael Chen</strong></td>
+                                    <td>Atlanta South</td>
+                                    <td>1,389</td>
+                                    <td>$15,667,223</td>
+                                    <td class="bad">$6,123,445</td>
+                                    <td class="bad">39.1%</td>
+                                    <td><button class="btn-small">View Flow →</button></td>
+                                </tr>
+                                <tr onclick="drillDownPCPLeakage('thompson')" class="clickable">
+                                    <td><strong>Dr. David Thompson</strong></td>
+                                    <td>Augusta</td>
+                                    <td>982</td>
+                                    <td>$11,234,665</td>
+                                    <td class="bad">$4,234,887</td>
+                                    <td class="bad">37.7%</td>
+                                    <td><button class="btn-small">View Flow →</button></td>
+                                </tr>
+                                <tr onclick="drillDownPCPLeakage('patel')" class="clickable">
+                                    <td><strong>Dr. Sarah Patel</strong></td>
+                                    <td>Atlanta South</td>
+                                    <td>1,298</td>
+                                    <td>$14,556,332</td>
+                                    <td class="bad">$5,334,221</td>
+                                    <td class="bad">36.6%</td>
+                                    <td><button class="btn-small">View Flow →</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="geo-section">
+                        <h3>Geographic Leakage Pattern - Patient Origin vs Care Location</h3>
+                        <div id="leakage-map" class="map-container">
+                            <svg id="leakage-svg" width="100%" height="500"></svg>
+                        </div>
+                        <div class="map-legend">
+                            <div class="legend-item"><span class="dot green"></span> Low Leakage (&lt;20%)</div>
+                            <div class="legend-item"><span class="dot yellow"></span> Moderate Leakage (20-30%)</div>
+                            <div class="legend-item"><span class="dot red"></span> High Leakage (&gt;30%)</div>
+                        </div>
+                    </div>
+
+                    <div class="sankey-section" id="sankey-container">
+                        <h3>Referral Flow Analysis (Click PCP in table above to view)</h3>
+                        <p class="section-note">Sankey diagram showing flow from attributed PCP → Rendering Provider, filterable by service line and Part A/B</p>
+                        <div id="sankey-diagram"></div>
+                    </div>
+
+                    <div class="alert-box info">
+                        <h4>Leakage Reduction Strategy - $18M Opportunity</h4>
+                        <ul>
+                            <li><strong>Contract Expansion:</strong> Negotiate with Atlanta Cardiology Associates ($12.3M) and Peachtree Imaging ($8.9M) to bring in-network</li>
+                            <li><strong>PCP Education:</strong> Target Dr. Martinez, Dr. Williams, and Dr. Chen for referral pattern optimization (combined 40% leakage rate)</li>
+                            <li><strong>Network Recruitment:</strong> Add orthopedic and pain management specialists in Augusta market</li>
+                            <li><strong>Geographic Gaps:</strong> High leakage in southern Augusta zip codes - consider adding access points</li>
+                            <li><strong>Service Line Focus:</strong> Cardiology (32%), Imaging (23%), Orthopedics (19%) represent 74% of total leakage</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- HCC Tab -->
+                <div id="hcc-tab" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Risk Adjustment & HCC Analytics</h2>
+                        <p>RAF score optimization and coding opportunity identification</p>
+                    </div>
+
+                    <div class="hcc-summary-grid">
+                        <div class="hcc-summary-card">
+                            <h4>Average RAF Score</h4>
+                            <div class="hcc-value">1.247</div>
+                            <div class="hcc-detail">National Avg: 1.195</div>
+                            <div class="hcc-trend good">+4.4% above benchmark</div>
+                        </div>
+                        <div class="hcc-summary-card">
+                            <h4>Revenue Impact</h4>
+                            <div class="hcc-value">$5.2M</div>
+                            <div class="hcc-detail">Additional CMS revenue</div>
+                            <div class="hcc-trend">vs. unadjusted baseline</div>
+                        </div>
+                        <div class="hcc-summary-card warning">
+                            <h4>Suspected HCCs</h4>
+                            <div class="hcc-value">3,421</div>
+                            <div class="hcc-detail">Require documentation</div>
+                            <div class="hcc-trend bad">$2.8M opportunity</div>
+                        </div>
+                        <div class="hcc-summary-card">
+                            <h4>Capture Rate</h4>
+                            <div class="hcc-value">76.3%</div>
+                            <div class="hcc-detail">Industry Avg: 72.1%</div>
+                            <div class="hcc-trend good">+4.2 pts above avg</div>
+                        </div>
+                    </div>
+
+                    <div class="table-section">
+                        <h3>Top HCC Coding Opportunities by Provider</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Provider Name</th>
+                                    <th>Specialty</th>
+                                    <th>Panel Size</th>
+                                    <th>Avg RAF</th>
+                                    <th>Suspect HCCs</th>
+                                    <th>Revenue Opportunity</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr onclick="drillDownHCC('johnson')" class="clickable">
+                                    <td><strong>Dr. Sarah Johnson</strong></td>
+                                    <td>Internal Medicine</td>
+                                    <td>1,847</td>
+                                    <td>1.189</td>
+                                    <td class="warning">427</td>
+                                    <td class="warning">$687,450</td>
+                                    <td><button class="btn-small">View Gaps →</button></td>
+                                </tr>
+                                <tr onclick="drillDownHCC('anderson')" class="clickable">
+                                    <td><strong>Dr. Michael Anderson</strong></td>
+                                    <td>Family Medicine</td>
+                                    <td>1,923</td>
+                                    <td>1.256</td>
+                                    <td class="warning">398</td>
+                                    <td class="warning">$542,340</td>
+                                    <td><button class="btn-small">View Gaps →</button></td>
+                                </tr>
+                                <tr onclick="drillDownHCC('brown')" class="clickable">
+                                    <td><strong>Dr. Jennifer Brown</strong></td>
+                                    <td>Internal Medicine</td>
+                                    <td>1,654</td>
+                                    <td>1.178</td>
+                                    <td class="warning">312</td>
+                                    <td class="warning">$498,720</td>
+                                    <td><button class="btn-small">View Gaps →</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="table-section">
+                        <h3>Top Suspected HCC Categories</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>HCC Category</th>
+                                    <th>HCC Code</th>
+                                    <th>Suspect Count</th>
+                                    <th>RAF Weight</th>
+                                    <th>Revenue Impact</th>
+                                    <th>Common ICD-10</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Diabetes with Chronic Complications</strong></td>
+                                    <td>HCC 18</td>
+                                    <td class="warning">487</td>
+                                    <td>0.318</td>
+                                    <td class="warning">$842,336</td>
+                                    <td>E11.65, E11.21, E11.36</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Chronic Obstructive Pulmonary Disease</strong></td>
+                                    <td>HCC 111</td>
+                                    <td class="warning">392</td>
+                                    <td>0.328</td>
+                                    <td class="warning">$698,944</td>
+                                    <td>J44.0, J44.1</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Congestive Heart Failure</strong></td>
+                                    <td>HCC 85</td>
+                                    <td class="warning">341</td>
+                                    <td>0.331</td>
+                                    <td class="warning">$613,051</td>
+                                    <td>I50.9, I50.23, I50.33</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Vascular Disease</strong></td>
+                                    <td>HCC 108</td>
+                                    <td class="warning">298</td>
+                                    <td>0.288</td>
+                                    <td class="warning">$466,176</td>
+                                    <td>I70.0, I73.9</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="chart-section">
+                        <h3>RAF Score Distribution</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="rafDistChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="alert-box success">
+                        <h4>Risk Adjustment Action Plan - $2.8M Revenue Opportunity</h4>
+                        <ul>
+                            <li><strong>Provider Outreach:</strong> Focus on Dr. Johnson (427 suspects), Dr. Anderson (398 suspects), Dr. Brown (312 suspects)</li>
+                            <li><strong>Diagnosis Categories:</strong> Prioritize Diabetes w/complications (HCC 18), COPD (HCC 111), CHF (HCC 85) = 71% of opportunity</li>
+                            <li><strong>Documentation Training:</strong> Q1 focus on chronic disease specificity and annual recapture</li>
+                            <li><strong>Technology Support:</strong> Deploy EMR alerts for suspect HCCs during encounters</li>
+                            <li><strong>Financial Impact:</strong> $2.8M in additional CMS revenue if 100% capture achieved (conservative 70% = $1.96M)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Episodes Tab -->
+                <div id="episodes-tab" class="tab-content">
+                    <div class="tab-header">
+                        <h2>Episodes of Care & Clinical Variation</h2>
+                        <p>Episode-based analytics identifying cost variation and standardization opportunities</p>
+                    </div>
+
+                    <div class="episodes-info-box">
+                        <h4>About Episode Grouping</h4>
+                        <p>Episodes are created using virtual bundle logic to group all services related to a clinical condition or procedure within a defined time window. This enables comparison of total cost of care across providers for clinically similar patient cohorts.</p>
+                    </div>
+
+                    <div class="table-section">
+                        <h3>Top Episode Types by Volume and Cost Variation</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Episode Type</th>
+                                    <th>Episode Count</th>
+                                    <th>Avg Cost per Episode</th>
+                                    <th>Std Deviation</th>
+                                    <th>Variation %</th>
+                                    <th>Opportunity</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr onclick="drillDownEpisode('joint')" class="clickable">
+                                    <td><strong>Joint Replacement (Hip/Knee)</strong></td>
+                                    <td>342</td>
+                                    <td>$28,456</td>
+                                    <td class="bad">$8,234</td>
+                                    <td class="bad">28.9%</td>
+                                    <td>High variation - standardize</td>
+                                    <td><button class="btn-small">View Details →</button></td>
+                                </tr>
+                                <tr onclick="drillDownEpisode('chf')" class="clickable">
+                                    <td><strong>Congestive Heart Failure</strong></td>
+                                    <td>568</td>
+                                    <td>$18,923</td>
+                                    <td class="warning">$5,122</td>
+                                    <td class="warning">27.1%</td>
+                                    <td>Post-acute variation</td>
+                                    <td><button class="btn-small">View Details →</button></td>
+                                </tr>
+                                <tr onclick="drillDownEpisode('pci')" class="clickable">
+                                    <td><strong>Percutaneous Coronary Intervention</strong></td>
+                                    <td>234</td>
+                                    <td>$32,667</td>
+                                    <td class="bad">$9,445</td>
+                                    <td class="bad">28.9%</td>
+                                    <td>Device/implant variation</td>
+                                    <td><button class="btn-small">View Details →</button></td>
+                                </tr>
+                                <tr onclick="drillDownEpisode('copd')" class="clickable">
+                                    <td><strong>COPD Exacerbation</strong></td>
+                                    <td>487</td>
+                                    <td>$12,334</td>
+                                    <td class="warning">$3,221</td>
+                                    <td class="warning">26.1%</td>
+                                    <td>LOS and readmission variation</td>
+                                    <td><button class="btn-small">View Details →</button></td>
+                                </tr>
+                                <tr onclick="drillDownEpisode('pneumonia')" class="clickable">
+                                    <td><strong>Pneumonia</strong></td>
+                                    <td>623</td>
+                                    <td>$9,876</td>
+                                    <td class="good">$1,892</td>
+                                    <td class="good">19.2%</td>
+                                    <td>Good standardization</td>
+                                    <td><button class="btn-small">View Details →</button></td>
+                                </tr>
+                                <tr onclick="drillDownEpisode('spine')" class="clickable">
+                                    <td><strong>Spinal Fusion</strong></td>
+                                    <td>156</td>
+                                    <td>$45,223</td>
+                                    <td class="bad">$14,667</td>
+                                    <td class="bad">32.4%</td>
+                                    <td>Highest variation - prioritize</td>
+                                    <td><button class="btn-small">View Details →</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="chart-section">
+                        <h3>Episode Cost Distribution - Joint Replacement Example</h3>
+                        <div class="chart-wrapper">
+                            <canvas id="episodeCostChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="table-section">
+                        <h3>Post-Acute Utilization by Episode Type</h3>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Episode Type</th>
+                                    <th>SNF Rate</th>
+                                    <th>Avg SNF Days</th>
+                                    <th>SNF Cost PMPM</th>
+                                    <th>Home Health Rate</th>
+                                    <th>Avg HH Visits</th>
+                                    <th>Total PAC Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Joint Replacement</strong></td>
+                                    <td class="bad">42.1%</td>
+                                    <td class="bad">18.2</td>
+                                    <td class="bad">$4,234</td>
+                                    <td>68.3%</td>
+                                    <td>12.4</td>
+                                    <td class="bad">$7,892</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Congestive Heart Failure</strong></td>
+                                    <td class="warning">28.4%</td>
+                                    <td>14.2</td>
+                                    <td class="warning">$2,234</td>
+                                    <td>71.2%</td>
+                                    <td>15.3</td>
+                                    <td class="warning">$4,556</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Spinal Fusion</strong></td>
+                                    <td class="bad">38.5%</td>
+                                    <td class="bad">16.7</td>
+                                    <td class="bad">$3,667</td>
+                                    <td>62.8%</td>
+                                    <td>11.8</td>
+                                    <td class="bad">$6,223</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="alert-box warning">
+                        <h4>Clinical Variation Reduction Opportunities - $4.2M Impact</h4>
+                        <ul>
+                            <li><strong>Joint Replacement Standardization:</strong> 28.9% cost variation. Reduce to 15% through clinical pathways = <strong>$1.8M savings</strong></li>
+                            <li><strong>Post-Acute Optimization:</strong> SNF rate 42.1% vs benchmark 28%. Increase home health = <strong>$1.2M savings</strong></li>
+                            <li><strong>Spinal Fusion Protocol:</strong> Highest variation at 32.4%. Standardize surgeon selection and implant choices = <strong>$900K savings</strong></li>
+                            <li><strong>CHF Readmission Reduction:</strong> 30-day readmit rate 18.2% vs benchmark 14%. Improve transitions = <strong>$600K savings</strong></li>
+                            <li><strong>Total Episode Opportunity:</strong> $4.5M through clinical standardization and care pathway optimization</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Quality Patient Detail Modal -->
+    <div id="quality-patient-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeQualityPatientModal()">&times;</span>
+            <div id="quality-patient-modal-body"></div>
+        </div>
+    </div>
+
+    <script type="module" src="/src/main.js"></script>
+</body>
+</html>
