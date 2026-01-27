@@ -880,12 +880,11 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>Market Region</th>
-                                    <th>Total ED Visits</th>
-                                    <th>Avoidable Visits</th>
-                                    <th>Avoidable %</th>
-                                    <th>Cost Impact</th>
-                                    <th>Opportunity</th>
+                                    <th class="tooltip-header" title="Geographic service area based on attributed patient residence. Markets defined by Piedmont regional boundaries.">Market Region <span class="th-info">ⓘ</span></th>
+                                    <th class="tooltip-header" title="Count of all ED visits by attributed patients in the measurement period. Source: Claims data with ED revenue codes (0450-0459, 0981).">Total ED Visits <span class="th-info">ⓘ</span></th>
+                                    <th class="tooltip-header" title="ED visits classified as avoidable per NYU ED Algorithm. Includes conditions treatable in primary care, urgent care, or via telehealth (URI, UTI, minor injuries, non-emergent back pain).">Avoidable Visits <span class="th-info">ⓘ</span></th>
+                                    <th class="tooltip-header" title="Percentage of total ED visits classified as avoidable. Formula: (Avoidable Visits ÷ Total ED Visits) × 100. Benchmark: &lt;25% is considered good performance.">Avoidable % <span class="th-info">ⓘ</span></th>
+                                    <th class="tooltip-header" title="Total allowed amount for avoidable ED visits. Formula: Avoidable Visits × Avg Cost/Visit. Includes facility fees + professional fees. Represents actual paid claims.">Cost Impact <span class="th-info">ⓘ</span></th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -896,7 +895,6 @@
                                     <td class="bad">1,523</td>
                                     <td class="bad">36.0%</td>
                                     <td class="bad">$1,868,271</td>
-                                    <td>$1,400K savings potential</td>
                                     <td><button class="btn-small">View Details →</button></td>
                                 </tr>
                                 <tr onclick="drillDownEDMarket('augusta')" class="clickable">
@@ -905,7 +903,6 @@
                                     <td class="bad">789</td>
                                     <td class="bad">36.1%</td>
                                     <td class="bad">$967,803</td>
-                                    <td>$725K savings potential</td>
                                     <td><button class="btn-small">View Details →</button></td>
                                 </tr>
                                 <tr onclick="drillDownEDMarket('atlanta-north')" class="clickable">
@@ -914,7 +911,6 @@
                                     <td class="warning">967</td>
                                     <td class="warning">28.0%</td>
                                     <td class="warning">$1,186,309</td>
-                                    <td>$890K savings potential</td>
                                     <td><button class="btn-small">View Details →</button></td>
                                 </tr>
                                 <tr onclick="drillDownEDMarket('columbus')" class="clickable">
@@ -923,7 +919,6 @@
                                     <td class="good">658</td>
                                     <td class="good">26.0%</td>
                                     <td>$807,066</td>
-                                    <td>$605K savings potential</td>
                                     <td><button class="btn-small">View Details →</button></td>
                                 </tr>
                                 <tr onclick="drillDownEDMarket('macon')" class="clickable">
@@ -932,7 +927,6 @@
                                     <td class="warning">349</td>
                                     <td class="warning">28.0%</td>
                                     <td>$428,223</td>
-                                    <td>$321K savings potential</td>
                                     <td><button class="btn-small">View Details →</button></td>
                                 </tr>
                             </tbody>
