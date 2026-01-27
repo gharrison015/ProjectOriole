@@ -39,15 +39,15 @@
         }
 
         .logo svg {
-            height: 32px;
-            width: auto;
+            height: 36px;
+            width: 36px;
         }
 
         .logo-text {
             font-size: 1.5rem;
             font-weight: 700;
             color: #fff;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
         }
 
         .tagline {
@@ -373,9 +373,15 @@
     <!-- Header with Logo -->
     <header class="header">
         <div class="logo">
-            <svg viewBox="0 0 180 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <text x="0" y="28" fill="white" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="26" font-weight="700" letter-spacing="3">GUIDEHOUSE</text>
+            <!-- Guidehouse Arrow Logo -->
+            <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Guidehouse Logo">
+                <!-- Right side of the arrow (Bright Green) -->
+                <path d="M50 10L90 90L50 70V10Z" fill="#A6D831" />
+                <!-- Left side of the arrow (White/Light Gray) -->
+                <path d="M50 10L10 90L50 70V10Z" fill="#FFFFFF" />
             </svg>
+            <!-- Guidehouse Text -->
+            <span class="logo-text">GUIDEHOUSE</span>
         </div>
         <div class="tagline">outwit complexity™</div>
     </header>
