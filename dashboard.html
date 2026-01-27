@@ -1173,13 +1173,26 @@
                         </div>
                     </div>
 
-                    <div class="table-section">
-                        <h3>Top HCC Coding Opportunities by Provider</h3>
-                        <table class="data-table">
+                    <div class="table-section" id="hcc-provider-section">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h3 style="margin: 0;">HCC Coding Opportunities by Provider</h3>
+                            <div class="measures-toggle" style="background: #f0f3f7; border-radius: 8px; padding: 3px;">
+                                <button class="toggle-btn active" id="hcc-top-toggle" onclick="toggleHCCProviderView('top')" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                    Top 3 Providers
+                                </button>
+                                <button class="toggle-btn" id="hcc-all-toggle" onclick="toggleHCCProviderView('all')" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                                    All Providers (Ranked)
+                                </button>
+                            </div>
+                        </div>
+                        <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 1rem;">Click column headers to sort. Higher Avg RAF indicates more complex patient populations requiring additional support.</p>
+                        <table class="data-table" id="hcc-provider-table">
                             <thead>
                                 <tr>
+                                    <th class="sortable" data-sort="number" style="width: 50px;">Rank</th>
                                     <th class="sortable" data-sort="string">Provider Name</th>
                                     <th class="sortable" data-sort="string">Specialty</th>
+                                    <th class="sortable" data-sort="string">Market</th>
                                     <th class="sortable" data-sort="number">Panel Size</th>
                                     <th class="sortable" data-sort="number">Avg RAF</th>
                                     <th class="sortable" data-sort="number">Suspect HCCs</th>
@@ -1187,32 +1200,172 @@
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr onclick="drillDownHCC('johnson')" class="clickable">
+                            <tbody id="hcc-provider-tbody">
+                                <!-- Top 3 providers (always visible) -->
+                                <tr onclick="drillDownHCC('johnson')" class="clickable" data-provider-type="top">
+                                    <td>1</td>
                                     <td><strong>Dr. Sarah Johnson</strong></td>
                                     <td>Internal Medicine</td>
+                                    <td>Atlanta North</td>
                                     <td>1,847</td>
                                     <td>1.189</td>
                                     <td class="warning">427</td>
                                     <td class="warning">$687,450</td>
                                     <td><button class="btn-small">View Gaps →</button></td>
                                 </tr>
-                                <tr onclick="drillDownHCC('anderson')" class="clickable">
+                                <tr onclick="drillDownHCC('anderson')" class="clickable" data-provider-type="top">
+                                    <td>2</td>
                                     <td><strong>Dr. Michael Anderson</strong></td>
                                     <td>Family Medicine</td>
+                                    <td>Atlanta South</td>
                                     <td>1,923</td>
                                     <td>1.256</td>
                                     <td class="warning">398</td>
                                     <td class="warning">$542,340</td>
                                     <td><button class="btn-small">View Gaps →</button></td>
                                 </tr>
-                                <tr onclick="drillDownHCC('brown')" class="clickable">
+                                <tr onclick="drillDownHCC('brown')" class="clickable" data-provider-type="top">
+                                    <td>3</td>
                                     <td><strong>Dr. Jennifer Brown</strong></td>
                                     <td>Internal Medicine</td>
+                                    <td>Columbus</td>
                                     <td>1,654</td>
                                     <td>1.178</td>
                                     <td class="warning">312</td>
                                     <td class="warning">$498,720</td>
+                                    <td><button class="btn-small">View Gaps →</button></td>
+                                </tr>
+                                <!-- Additional providers (hidden by default) -->
+                                <tr onclick="drillDownHCC('patel')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
+                                    <td>4</td>
+                                    <td><strong>Dr. Raj Patel</strong></td>
+                                    <td>Internal Medicine</td>
+                                    <td>Augusta</td>
+                                    <td>1,567</td>
+                                    <td class="bad">1.412</td>
+                                    <td class="warning">289</td>
+                                    <td class="warning">$467,230</td>
+                                    <td><button class="btn-small">View Gaps →</button></td>
+                                </tr>
+                                <tr onclick="drillDownHCC('kim')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
+                                    <td>5</td>
+                                    <td><strong>Dr. Susan Kim</strong></td>
+                                    <td>Family Medicine</td>
+                                    <td>Atlanta North</td>
+                                    <td>1,432</td>
+                                    <td>1.145</td>
+                                    <td class="warning">256</td>
+                                    <td class="warning">$412,890</td>
+                                    <td><button class="btn-small">View Gaps →</button></td>
+                                </tr>
+                                <tr onclick="drillDownHCC('rodriguez')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
+                                    <td>6</td>
+                                    <td><strong>Dr. Carlos Rodriguez</strong></td>
+                                    <td>Internal Medicine</td>
+                                    <td>Macon</td>
+                                    <td>1,298</td>
+                                    <td class="bad">1.387</td>
+                                    <td class="warning">234</td>
+                                    <td class="warning">$378,540</td>
+                                    <td><button class="btn-small">View Gaps →</button></td>
+                                </tr>
+                                <tr onclick="drillDownHCC('wilson')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
+                                    <td>7</td>
+                                    <td><strong>Dr. Emily Wilson</strong></td>
+                                    <td>Family Medicine</td>
+                                    <td>Atlanta South</td>
+                                    <td>1,756</td>
+                                    <td>1.098</td>
+                                    <td>198</td>
+                                    <td>$321,780</td>
+                                    <td><button class="btn-small">View Gaps →</button></td>
+                                </tr>
+                                <tr onclick="drillDownHCC('chen')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
+                                    <td>8</td>
+                                    <td><strong>Dr. David Chen</strong></td>
+                                    <td>Internal Medicine</td>
+                                    <td>Columbus</td>
+                                    <td>1,189</td>
+                                    <td class="bad">1.356</td>
+                                    <td>187</td>
+                                    <td>$298,450</td>
+                                    <td><button class="btn-small">View Gaps →</button></td>
+                                </tr>
+                                <tr onclick="drillDownHCC('martinez')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
+                                    <td>9</td>
+                                    <td><strong>Dr. Maria Martinez</strong></td>
+                                    <td>Family Medicine</td>
+                                    <td>Augusta</td>
+                                    <td>1,345</td>
+                                    <td>1.234</td>
+                                    <td>176</td>
+                                    <td>$287,340</td>
+                                    <td><button class="btn-small">View Gaps →</button></td>
+                                </tr>
+                                <tr onclick="drillDownHCC('thompson')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
+                                    <td>10</td>
+                                    <td><strong>Dr. James Thompson</strong></td>
+                                    <td>Internal Medicine</td>
+                                    <td>Atlanta North</td>
+                                    <td>1,456</td>
+                                    <td>1.067</td>
+                                    <td>165</td>
+                                    <td>$267,890</td>
+                                    <td><button class="btn-small">View Gaps →</button></td>
+                                </tr>
+                                <tr onclick="drillDownHCC('nguyen')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
+                                    <td>11</td>
+                                    <td><strong>Dr. Lisa Nguyen</strong></td>
+                                    <td>Family Medicine</td>
+                                    <td>Macon</td>
+                                    <td>987</td>
+                                    <td class="bad">1.423</td>
+                                    <td>154</td>
+                                    <td>$249,780</td>
+                                    <td><button class="btn-small">View Gaps →</button></td>
+                                </tr>
+                                <tr onclick="drillDownHCC('jackson')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
+                                    <td>12</td>
+                                    <td><strong>Dr. Robert Jackson</strong></td>
+                                    <td>Internal Medicine</td>
+                                    <td>Atlanta South</td>
+                                    <td>1,234</td>
+                                    <td>1.156</td>
+                                    <td>143</td>
+                                    <td>$232,450</td>
+                                    <td><button class="btn-small">View Gaps →</button></td>
+                                </tr>
+                                <tr onclick="drillDownHCC('lee')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
+                                    <td>13</td>
+                                    <td><strong>Dr. Michelle Lee</strong></td>
+                                    <td>Family Medicine</td>
+                                    <td>Columbus</td>
+                                    <td>1,098</td>
+                                    <td>1.089</td>
+                                    <td>132</td>
+                                    <td>$214,670</td>
+                                    <td><button class="btn-small">View Gaps →</button></td>
+                                </tr>
+                                <tr onclick="drillDownHCC('garcia')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
+                                    <td>14</td>
+                                    <td><strong>Dr. Anthony Garcia</strong></td>
+                                    <td>Internal Medicine</td>
+                                    <td>Augusta</td>
+                                    <td>876</td>
+                                    <td class="bad">1.478</td>
+                                    <td>121</td>
+                                    <td>$198,340</td>
+                                    <td><button class="btn-small">View Gaps →</button></td>
+                                </tr>
+                                <tr onclick="drillDownHCC('white')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
+                                    <td>15</td>
+                                    <td><strong>Dr. Patricia White</strong></td>
+                                    <td>Family Medicine</td>
+                                    <td>Atlanta North</td>
+                                    <td>1,567</td>
+                                    <td>1.012</td>
+                                    <td>98</td>
+                                    <td>$156,780</td>
                                     <td><button class="btn-small">View Gaps →</button></td>
                                 </tr>
                             </tbody>

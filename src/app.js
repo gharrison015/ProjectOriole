@@ -3921,87 +3921,193 @@ function collapseAllSankeyNodes() {
 }
 
 function drillDownHCC(providerId) {
-    const providerNames = {
-        'johnson': 'Dr. Johnson',
-        'anderson': 'Dr. Anderson',
-        'brown': 'Dr. Brown'
+    // Provider-specific data
+    const providerData = {
+        'johnson': {
+            name: 'Dr. Sarah Johnson',
+            specialty: 'Internal Medicine',
+            market: 'Atlanta North',
+            panelSize: 1847,
+            avgRAF: 1.189,
+            patients: [
+                { mrn: 'MRN384729', firstName: 'Robert', lastName: 'Williams', age: 72, awvCompleted: true, awvDate: '2024-08-15', openHCCs: ['HCC 85 (CHF)', 'HCC 111 (COPD)'], suspectedHCCs: ['HCC 19 (Diabetes with complications)'], nextAppt: '2024-11-22', rafCurrent: 2.84, rafPotential: 3.12, revenueOpp: 3280 },
+                { mrn: 'MRN291847', firstName: 'Mary', lastName: 'Thompson', age: 68, awvCompleted: false, awvDate: null, openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 108 (Vascular Disease)', 'HCC 111 (COPD)'], nextAppt: '2024-12-05', rafCurrent: 1.92, rafPotential: 2.45, revenueOpp: 6201 },
+                { mrn: 'MRN573921', firstName: 'James', lastName: 'Davis', age: 75, awvCompleted: true, awvDate: '2024-09-03', openHCCs: ['HCC 85 (CHF)', 'HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 88 (Arrhythmia)'], nextAppt: '2024-11-18', rafCurrent: 3.15, rafPotential: 3.48, revenueOpp: 3861 },
+                { mrn: 'MRN684012', firstName: 'Patricia', lastName: 'Garcia', age: 70, awvCompleted: false, awvDate: null, openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 85 (CHF)', 'HCC 59 (Major Depression)'], nextAppt: 'Not scheduled', rafCurrent: 1.67, rafPotential: 2.34, revenueOpp: 7839 },
+                { mrn: 'MRN492847', firstName: 'Linda', lastName: 'Martinez', age: 66, awvCompleted: true, awvDate: '2024-07-22', openHCCs: ['HCC 18 (Diabetes)', 'HCC 23 (Obesity)'], suspectedHCCs: ['HCC 19 (Diabetes with complications)'], nextAppt: '2024-11-29', rafCurrent: 1.82, rafPotential: 2.08, revenueOpp: 3042 }
+            ]
+        },
+        'anderson': {
+            name: 'Dr. Michael Anderson',
+            specialty: 'Family Medicine',
+            market: 'Atlanta South',
+            panelSize: 1923,
+            avgRAF: 1.256,
+            patients: [
+                { mrn: 'MRN782341', firstName: 'Dorothy', lastName: 'Clark', age: 74, awvCompleted: false, awvDate: null, openHCCs: ['HCC 85 (CHF)'], suspectedHCCs: ['HCC 111 (COPD)', 'HCC 18 (Diabetes)'], nextAppt: '2024-11-30', rafCurrent: 2.12, rafPotential: 2.89, revenueOpp: 9009 },
+                { mrn: 'MRN293847', firstName: 'William', lastName: 'Harris', age: 69, awvCompleted: true, awvDate: '2024-06-18', openHCCs: ['HCC 18 (Diabetes)', 'HCC 108 (Vascular Disease)'], suspectedHCCs: ['HCC 85 (CHF)'], nextAppt: '2024-12-12', rafCurrent: 2.45, rafPotential: 2.92, revenueOpp: 5499 },
+                { mrn: 'MRN847291', firstName: 'Helen', lastName: 'Robinson', age: 77, awvCompleted: false, awvDate: null, openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 59 (Major Depression)', 'HCC 19 (Diabetes with complications)'], nextAppt: 'Not scheduled', rafCurrent: 1.78, rafPotential: 2.56, revenueOpp: 9126 },
+                { mrn: 'MRN192847', firstName: 'Richard', lastName: 'Lewis', age: 71, awvCompleted: true, awvDate: '2024-09-22', openHCCs: ['HCC 85 (CHF)', 'HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 88 (Arrhythmia)'], nextAppt: '2024-11-15', rafCurrent: 3.02, rafPotential: 3.35, revenueOpp: 3861 }
+            ]
+        },
+        'brown': {
+            name: 'Dr. Jennifer Brown',
+            specialty: 'Internal Medicine',
+            market: 'Columbus',
+            panelSize: 1654,
+            avgRAF: 1.178,
+            patients: [
+                { mrn: 'MRN647382', firstName: 'Barbara', lastName: 'Walker', age: 73, awvCompleted: true, awvDate: '2024-07-11', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 19 (Diabetes with complications)'], nextAppt: '2024-12-02', rafCurrent: 1.56, rafPotential: 1.92, revenueOpp: 4212 },
+                { mrn: 'MRN847192', firstName: 'Thomas', lastName: 'Hall', age: 67, awvCompleted: false, awvDate: null, openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 108 (Vascular Disease)'], nextAppt: '2024-11-28', rafCurrent: 1.89, rafPotential: 2.23, revenueOpp: 3978 },
+                { mrn: 'MRN293817', firstName: 'Susan', lastName: 'Young', age: 70, awvCompleted: true, awvDate: '2024-08-05', openHCCs: ['HCC 85 (CHF)'], suspectedHCCs: ['HCC 59 (Major Depression)'], nextAppt: '2024-12-18', rafCurrent: 2.34, rafPotential: 2.67, revenueOpp: 3861 },
+                { mrn: 'MRN819273', firstName: 'Charles', lastName: 'King', age: 76, awvCompleted: false, awvDate: null, openHCCs: ['HCC 18 (Diabetes)', 'HCC 111 (COPD)'], suspectedHCCs: ['HCC 85 (CHF)', 'HCC 88 (Arrhythmia)'], nextAppt: 'Not scheduled', rafCurrent: 2.67, rafPotential: 3.45, revenueOpp: 9126 }
+            ]
+        },
+        'patel': {
+            name: 'Dr. Raj Patel',
+            specialty: 'Internal Medicine',
+            market: 'Augusta',
+            panelSize: 1567,
+            avgRAF: 1.412,
+            patients: [
+                { mrn: 'MRN928374', firstName: 'Margaret', lastName: 'Adams', age: 78, awvCompleted: false, awvDate: null, openHCCs: ['HCC 85 (CHF)', 'HCC 111 (COPD)'], suspectedHCCs: ['HCC 18 (Diabetes)', 'HCC 108 (Vascular Disease)'], nextAppt: '2024-11-20', rafCurrent: 2.89, rafPotential: 3.67, revenueOpp: 9126 },
+                { mrn: 'MRN192384', firstName: 'George', lastName: 'Nelson', age: 81, awvCompleted: true, awvDate: '2024-05-22', openHCCs: ['HCC 18 (Diabetes)', 'HCC 85 (CHF)'], suspectedHCCs: ['HCC 59 (Major Depression)'], nextAppt: '2024-12-08', rafCurrent: 3.12, rafPotential: 3.45, revenueOpp: 3861 },
+                { mrn: 'MRN847293', firstName: 'Ruth', lastName: 'Hill', age: 75, awvCompleted: false, awvDate: null, openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 85 (CHF)', 'HCC 19 (Diabetes with complications)'], nextAppt: 'Not scheduled', rafCurrent: 1.98, rafPotential: 2.89, revenueOpp: 10647 }
+            ]
+        },
+        'kim': {
+            name: 'Dr. Susan Kim',
+            specialty: 'Family Medicine',
+            market: 'Atlanta North',
+            panelSize: 1432,
+            avgRAF: 1.145,
+            patients: [
+                { mrn: 'MRN384721', firstName: 'Paul', lastName: 'Moore', age: 69, awvCompleted: true, awvDate: '2024-08-30', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 19 (Diabetes with complications)'], nextAppt: '2024-11-25', rafCurrent: 1.45, rafPotential: 1.81, revenueOpp: 4212 },
+                { mrn: 'MRN927384', firstName: 'Nancy', lastName: 'Taylor', age: 72, awvCompleted: false, awvDate: null, openHCCs: ['HCC 85 (CHF)'], suspectedHCCs: ['HCC 111 (COPD)', 'HCC 108 (Vascular Disease)'], nextAppt: '2024-12-15', rafCurrent: 2.01, rafPotential: 2.78, revenueOpp: 9009 },
+                { mrn: 'MRN182937', firstName: 'Edward', lastName: 'Thomas', age: 66, awvCompleted: true, awvDate: '2024-07-18', openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 59 (Major Depression)'], nextAppt: '2024-11-19', rafCurrent: 1.67, rafPotential: 2.00, revenueOpp: 3861 }
+            ]
+        },
+        'rodriguez': {
+            name: 'Dr. Carlos Rodriguez',
+            specialty: 'Internal Medicine',
+            market: 'Macon',
+            panelSize: 1298,
+            avgRAF: 1.387,
+            patients: [
+                { mrn: 'MRN738291', firstName: 'Betty', lastName: 'Jackson', age: 79, awvCompleted: false, awvDate: null, openHCCs: ['HCC 85 (CHF)', 'HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 111 (COPD)', 'HCC 88 (Arrhythmia)'], nextAppt: '2024-11-27', rafCurrent: 3.01, rafPotential: 3.89, revenueOpp: 10296 },
+                { mrn: 'MRN291837', firstName: 'Kenneth', lastName: 'White', age: 74, awvCompleted: true, awvDate: '2024-06-25', openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 85 (CHF)'], nextAppt: '2024-12-20', rafCurrent: 2.23, rafPotential: 2.70, revenueOpp: 5499 }
+            ]
+        },
+        'wilson': {
+            name: 'Dr. Emily Wilson',
+            specialty: 'Family Medicine',
+            market: 'Atlanta South',
+            panelSize: 1756,
+            avgRAF: 1.098,
+            patients: [
+                { mrn: 'MRN472839', firstName: 'Donald', lastName: 'Harris', age: 68, awvCompleted: true, awvDate: '2024-09-12', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 19 (Diabetes with complications)'], nextAppt: '2024-12-05', rafCurrent: 1.34, rafPotential: 1.70, revenueOpp: 4212 },
+                { mrn: 'MRN839271', firstName: 'Carol', lastName: 'Martin', age: 71, awvCompleted: false, awvDate: null, openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 108 (Vascular Disease)'], nextAppt: '2024-11-22', rafCurrent: 1.78, rafPotential: 2.12, revenueOpp: 3978 },
+                { mrn: 'MRN192738', firstName: 'Steven', lastName: 'Lee', age: 65, awvCompleted: true, awvDate: '2024-08-20', openHCCs: ['HCC 85 (CHF)'], suspectedHCCs: ['HCC 59 (Major Depression)'], nextAppt: '2024-12-18', rafCurrent: 2.12, rafPotential: 2.45, revenueOpp: 3861 }
+            ]
+        },
+        'chen': {
+            name: 'Dr. David Chen',
+            specialty: 'Internal Medicine',
+            market: 'Columbus',
+            panelSize: 1189,
+            avgRAF: 1.356,
+            patients: [
+                { mrn: 'MRN629384', firstName: 'Sandra', lastName: 'Wright', age: 76, awvCompleted: false, awvDate: null, openHCCs: ['HCC 85 (CHF)', 'HCC 111 (COPD)'], suspectedHCCs: ['HCC 18 (Diabetes)', 'HCC 59 (Major Depression)'], nextAppt: 'Not scheduled', rafCurrent: 2.56, rafPotential: 3.45, revenueOpp: 10413 },
+                { mrn: 'MRN193847', firstName: 'Anthony', lastName: 'Lopez', age: 73, awvCompleted: true, awvDate: '2024-07-02', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 85 (CHF)'], nextAppt: '2024-11-30', rafCurrent: 1.89, rafPotential: 2.36, revenueOpp: 5499 }
+            ]
+        },
+        'martinez': {
+            name: 'Dr. Maria Martinez',
+            specialty: 'Family Medicine',
+            market: 'Augusta',
+            panelSize: 1345,
+            avgRAF: 1.234,
+            patients: [
+                { mrn: 'MRN847293', firstName: 'Kimberly', lastName: 'Scott', age: 67, awvCompleted: true, awvDate: '2024-09-05', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 19 (Diabetes with complications)', 'HCC 108 (Vascular Disease)'], nextAppt: '2024-12-10', rafCurrent: 1.67, rafPotential: 2.34, revenueOpp: 7839 },
+                { mrn: 'MRN293847', firstName: 'Mark', lastName: 'Green', age: 70, awvCompleted: false, awvDate: null, openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 85 (CHF)'], nextAppt: '2024-11-28', rafCurrent: 2.01, rafPotential: 2.48, revenueOpp: 5499 }
+            ]
+        },
+        'thompson': {
+            name: 'Dr. James Thompson',
+            specialty: 'Internal Medicine',
+            market: 'Atlanta North',
+            panelSize: 1456,
+            avgRAF: 1.067,
+            patients: [
+                { mrn: 'MRN572839', firstName: 'Lisa', lastName: 'Baker', age: 64, awvCompleted: true, awvDate: '2024-08-15', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 19 (Diabetes with complications)'], nextAppt: '2024-11-20', rafCurrent: 1.23, rafPotential: 1.59, revenueOpp: 4212 },
+                { mrn: 'MRN839472', firstName: 'Daniel', lastName: 'Gonzalez', age: 69, awvCompleted: false, awvDate: null, openHCCs: ['HCC 85 (CHF)'], suspectedHCCs: ['HCC 111 (COPD)'], nextAppt: '2024-12-02', rafCurrent: 1.89, rafPotential: 2.34, revenueOpp: 5265 }
+            ]
+        },
+        'nguyen': {
+            name: 'Dr. Lisa Nguyen',
+            specialty: 'Family Medicine',
+            market: 'Macon',
+            panelSize: 987,
+            avgRAF: 1.423,
+            patients: [
+                { mrn: 'MRN638291', firstName: 'Michelle', lastName: 'Carter', age: 77, awvCompleted: false, awvDate: null, openHCCs: ['HCC 85 (CHF)', 'HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 111 (COPD)', 'HCC 108 (Vascular Disease)'], nextAppt: 'Not scheduled', rafCurrent: 2.78, rafPotential: 3.67, revenueOpp: 10413 },
+                { mrn: 'MRN192847', firstName: 'Robert', lastName: 'Mitchell', age: 80, awvCompleted: true, awvDate: '2024-06-10', openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 85 (CHF)'], nextAppt: '2024-11-25', rafCurrent: 2.34, rafPotential: 2.81, revenueOpp: 5499 }
+            ]
+        },
+        'jackson': {
+            name: 'Dr. Robert Jackson',
+            specialty: 'Internal Medicine',
+            market: 'Atlanta South',
+            panelSize: 1234,
+            avgRAF: 1.156,
+            patients: [
+                { mrn: 'MRN473829', firstName: 'Jennifer', lastName: 'Perez', age: 66, awvCompleted: true, awvDate: '2024-09-18', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 108 (Vascular Disease)'], nextAppt: '2024-12-08', rafCurrent: 1.45, rafPotential: 1.79, revenueOpp: 3978 },
+                { mrn: 'MRN829374', firstName: 'Christopher', lastName: 'Roberts', age: 72, awvCompleted: false, awvDate: null, openHCCs: ['HCC 85 (CHF)'], suspectedHCCs: ['HCC 59 (Major Depression)'], nextAppt: '2024-11-30', rafCurrent: 2.12, rafPotential: 2.45, revenueOpp: 3861 }
+            ]
+        },
+        'lee': {
+            name: 'Dr. Michelle Lee',
+            specialty: 'Family Medicine',
+            market: 'Columbus',
+            panelSize: 1098,
+            avgRAF: 1.089,
+            patients: [
+                { mrn: 'MRN582937', firstName: 'Jessica', lastName: 'Turner', age: 63, awvCompleted: true, awvDate: '2024-08-22', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 19 (Diabetes with complications)'], nextAppt: '2024-11-18', rafCurrent: 1.12, rafPotential: 1.48, revenueOpp: 4212 },
+                { mrn: 'MRN738492', firstName: 'Matthew', lastName: 'Phillips', age: 68, awvCompleted: false, awvDate: null, openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 85 (CHF)'], nextAppt: '2024-12-12', rafCurrent: 1.78, rafPotential: 2.25, revenueOpp: 5499 }
+            ]
+        },
+        'garcia': {
+            name: 'Dr. Anthony Garcia',
+            specialty: 'Internal Medicine',
+            market: 'Augusta',
+            panelSize: 876,
+            avgRAF: 1.478,
+            patients: [
+                { mrn: 'MRN839274', firstName: 'Amanda', lastName: 'Campbell', age: 79, awvCompleted: false, awvDate: null, openHCCs: ['HCC 85 (CHF)', 'HCC 111 (COPD)', 'HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 88 (Arrhythmia)', 'HCC 59 (Major Depression)'], nextAppt: 'Not scheduled', rafCurrent: 3.23, rafPotential: 4.12, revenueOpp: 10413 },
+                { mrn: 'MRN192837', firstName: 'Joshua', lastName: 'Parker', age: 82, awvCompleted: true, awvDate: '2024-05-15', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 108 (Vascular Disease)'], nextAppt: '2024-11-22', rafCurrent: 1.89, rafPotential: 2.23, revenueOpp: 3978 }
+            ]
+        },
+        'white': {
+            name: 'Dr. Patricia White',
+            specialty: 'Family Medicine',
+            market: 'Atlanta North',
+            panelSize: 1567,
+            avgRAF: 1.012,
+            patients: [
+                { mrn: 'MRN472839', firstName: 'Ashley', lastName: 'Evans', age: 61, awvCompleted: true, awvDate: '2024-09-25', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 19 (Diabetes with complications)'], nextAppt: '2024-12-05', rafCurrent: 1.01, rafPotential: 1.37, revenueOpp: 4212 },
+                { mrn: 'MRN829473', firstName: 'Andrew', lastName: 'Edwards', age: 65, awvCompleted: false, awvDate: null, openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 108 (Vascular Disease)'], nextAppt: '2024-11-28', rafCurrent: 1.45, rafPotential: 1.79, revenueOpp: 3978 }
+            ]
+        }
     };
 
-    const providerName = providerNames[providerId] || providerId;
+    const provider = providerData[providerId];
+    if (!provider) {
+        showModal(`<h2>Provider Not Found</h2><p>No data available for provider ID: ${providerId}</p>`);
+        return;
+    }
 
-    // Generate patient-level HCC gap data
-    const patients = [
-        {
-            mrn: 'MRN384729',
-            firstName: 'Robert',
-            lastName: 'Williams',
-            age: 72,
-            awvCompleted: true,
-            awvDate: '2024-08-15',
-            openHCCs: ['HCC 85 (CHF)', 'HCC 111 (COPD)'],
-            suspectedHCCs: ['HCC 19 (Diabetes with complications)'],
-            nextAppt: '2024-11-22',
-            rafCurrent: 2.84,
-            rafPotential: 3.12,
-            revenueOpp: 3200
-        },
-        {
-            mrn: 'MRN291847',
-            firstName: 'Mary',
-            lastName: 'Thompson',
-            age: 68,
-            awvCompleted: false,
-            awvDate: null,
-            openHCCs: ['HCC 18 (Diabetes)'],
-            suspectedHCCs: ['HCC 108 (Vascular Disease)', 'HCC 111 (COPD)'],
-            nextAppt: '2024-12-05',
-            rafCurrent: 1.92,
-            rafPotential: 2.45,
-            revenueOpp: 6200
-        },
-        {
-            mrn: 'MRN573921',
-            firstName: 'James',
-            lastName: 'Davis',
-            age: 75,
-            awvCompleted: true,
-            awvDate: '2024-09-03',
-            openHCCs: ['HCC 85 (CHF)', 'HCC 18 (Diabetes)'],
-            suspectedHCCs: ['HCC 88 (Arrhythmia)'],
-            nextAppt: '2024-11-18',
-            rafCurrent: 3.15,
-            rafPotential: 3.48,
-            revenueOpp: 3900
-        },
-        {
-            mrn: 'MRN684012',
-            firstName: 'Patricia',
-            lastName: 'Garcia',
-            age: 70,
-            awvCompleted: false,
-            awvDate: null,
-            openHCCs: ['HCC 111 (COPD)'],
-            suspectedHCCs: ['HCC 85 (CHF)', 'HCC 59 (Major Depression)'],
-            nextAppt: 'Not scheduled',
-            rafCurrent: 1.67,
-            rafPotential: 2.34,
-            revenueOpp: 7800
-        },
-        {
-            mrn: 'MRN492847',
-            firstName: 'Linda',
-            lastName: 'Martinez',
-            age: 66,
-            awvCompleted: true,
-            awvDate: '2024-07-22',
-            openHCCs: ['HCC 18 (Diabetes)', 'HCC 23 (Obesity)'],
-            suspectedHCCs: ['HCC 19 (Diabetes with complications)'],
-            nextAppt: '2024-11-29',
-            rafCurrent: 1.82,
-            rafPotential: 2.08,
-            revenueOpp: 3000
-        }
-    ];
+    const providerName = provider.name;
+    const patients = provider.patients;
 
     // Sort by revenue opportunity descending
     patients.sort((a, b) => b.revenueOpp - a.revenueOpp);
@@ -5430,6 +5536,32 @@ function exportPatientList(measureCode, measureName, filterType, filterValue) {
     document.body.removeChild(link);
 }
 
+// =====================================================
+// HCC PROVIDER TABLE TOGGLE
+// =====================================================
+
+function toggleHCCProviderView(view) {
+    const topToggle = document.getElementById('hcc-top-toggle');
+    const allToggle = document.getElementById('hcc-all-toggle');
+    const expandedRows = document.querySelectorAll('.hcc-expanded-row');
+
+    if (view === 'all') {
+        // Show all providers
+        topToggle.classList.remove('active');
+        allToggle.classList.add('active');
+        expandedRows.forEach(row => {
+            row.style.display = '';
+        });
+    } else {
+        // Show only top 3
+        topToggle.classList.add('active');
+        allToggle.classList.remove('active');
+        expandedRows.forEach(row => {
+            row.style.display = 'none';
+        });
+    }
+}
+
 // Make functions globally available for onclick handlers in HTML
 window.drillDownMarket = drillDownMarket;
 window.showMeasureDashboard = showMeasureDashboard;
@@ -5440,6 +5572,7 @@ window.setLeakageView = setLeakageView;
 window.toggleNetworkView = toggleNetworkView;
 window.drillDownPCPLeakage = drillDownPCPLeakage;
 window.drillDownHCC = drillDownHCC;
+window.toggleHCCProviderView = toggleHCCProviderView;
 window.drillDownEpisode = drillDownEpisode;
 window.closeModal = closeModal;
 window.closeQualityPatientModal = closeQualityPatientModal;
