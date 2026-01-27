@@ -4162,15 +4162,15 @@ function drillDownHCC(providerId) {
                     </div>
                 </div>
             </div>
-            <div class="kpi-card" style="background: white; border: 1px solid #e0e0e0;">
+            <div class="kpi-card clickable-card" style="background: white; border: 1px solid #e0e0e0; cursor: pointer; transition: all 0.2s ease;" onclick="showHCCPatientList('${providerId}', 'awv-incomplete')">
                 <div class="kpi-label" style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase;">
-                    AWV Completion
+                    AWV Incomplete
                 </div>
-                <div class="kpi-value" style="font-size: 1.8rem; font-weight: 700; color: ${awvCompleteCount >= 4 ? '#27ae60' : '#f39c12'}; margin: 0.5rem 0;">
-                    ${((awvCompleteCount / patients.length) * 100).toFixed(0)}%
+                <div class="kpi-value" style="font-size: 1.8rem; font-weight: 700; color: ${(patients.length - awvCompleteCount) > 0 ? '#e74c3c' : '#27ae60'}; margin: 0.5rem 0;">
+                    ${patients.length - awvCompleteCount}
                 </div>
                 <div style="font-size: 0.8rem; color: #6c757d; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #eee;">
-                    ${awvCompleteCount} of ${patients.length} patients
+                    Click to view patient list
                 </div>
             </div>
             <div class="kpi-card" style="background: white; border: 1px solid #e0e0e0;">
@@ -4184,7 +4184,7 @@ function drillDownHCC(providerId) {
                     ~$${Math.round(avgRAFGap * pmpmPerRAF).toLocaleString()} per patient
                 </div>
             </div>
-            <div class="kpi-card" style="background: white; border: 1px solid #e0e0e0;">
+            <div class="kpi-card clickable-card" style="background: white; border: 1px solid #e0e0e0; cursor: pointer; transition: all 0.2s ease;" onclick="showHCCPatientList('${providerId}', 'not-scheduled')">
                 <div class="kpi-label" style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase;">
                     Not Scheduled
                 </div>
@@ -4192,7 +4192,7 @@ function drillDownHCC(providerId) {
                     ${patientsNotScheduled}
                 </div>
                 <div style="font-size: 0.8rem; color: #6c757d; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #eee;">
-                    Priority for outreach
+                    Click to view patient list
                 </div>
             </div>
         </div>
@@ -4286,6 +4286,347 @@ function drillDownHCC(providerId) {
     `;
 
     showModal(modalBody);
+}
+
+// Store HCC provider data globally for use in showHCCPatientList
+const hccProviderData = {
+    'johnson': {
+        name: 'Dr. Sarah Johnson',
+        specialty: 'Internal Medicine',
+        market: 'Atlanta North',
+        panelSize: 1847,
+        avgRAF: 1.189,
+        patients: [
+            { mrn: 'MRN384729', firstName: 'Robert', lastName: 'Williams', age: 72, awvCompleted: true, awvDate: '2024-08-15', openHCCs: ['HCC 85 (CHF)', 'HCC 111 (COPD)'], suspectedHCCs: ['HCC 19 (Diabetes with complications)'], nextAppt: '2024-11-22', rafCurrent: 2.84, rafPotential: 3.12, revenueOpp: 3280 },
+            { mrn: 'MRN291847', firstName: 'Mary', lastName: 'Thompson', age: 68, awvCompleted: false, awvDate: null, openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 108 (Vascular Disease)', 'HCC 111 (COPD)'], nextAppt: '2024-12-05', rafCurrent: 1.92, rafPotential: 2.45, revenueOpp: 6201 },
+            { mrn: 'MRN573921', firstName: 'James', lastName: 'Davis', age: 75, awvCompleted: true, awvDate: '2024-09-03', openHCCs: ['HCC 85 (CHF)', 'HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 88 (Arrhythmia)'], nextAppt: '2024-11-18', rafCurrent: 3.15, rafPotential: 3.48, revenueOpp: 3861 },
+            { mrn: 'MRN684012', firstName: 'Patricia', lastName: 'Garcia', age: 70, awvCompleted: false, awvDate: null, openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 85 (CHF)', 'HCC 59 (Major Depression)'], nextAppt: 'Not scheduled', rafCurrent: 1.67, rafPotential: 2.34, revenueOpp: 7839 },
+            { mrn: 'MRN492847', firstName: 'Linda', lastName: 'Martinez', age: 66, awvCompleted: true, awvDate: '2024-07-22', openHCCs: ['HCC 18 (Diabetes)', 'HCC 23 (Obesity)'], suspectedHCCs: ['HCC 19 (Diabetes with complications)'], nextAppt: '2024-11-29', rafCurrent: 1.82, rafPotential: 2.08, revenueOpp: 3042 }
+        ]
+    },
+    'anderson': {
+        name: 'Dr. Michael Anderson',
+        specialty: 'Family Medicine',
+        market: 'Atlanta South',
+        panelSize: 1923,
+        avgRAF: 1.256,
+        patients: [
+            { mrn: 'MRN782341', firstName: 'Dorothy', lastName: 'Clark', age: 74, awvCompleted: false, awvDate: null, openHCCs: ['HCC 85 (CHF)'], suspectedHCCs: ['HCC 111 (COPD)', 'HCC 18 (Diabetes)'], nextAppt: '2024-11-30', rafCurrent: 2.12, rafPotential: 2.89, revenueOpp: 9009 },
+            { mrn: 'MRN293847', firstName: 'William', lastName: 'Harris', age: 69, awvCompleted: true, awvDate: '2024-06-18', openHCCs: ['HCC 18 (Diabetes)', 'HCC 108 (Vascular Disease)'], suspectedHCCs: ['HCC 85 (CHF)'], nextAppt: '2024-12-12', rafCurrent: 2.45, rafPotential: 2.92, revenueOpp: 5499 },
+            { mrn: 'MRN847291', firstName: 'Helen', lastName: 'Robinson', age: 77, awvCompleted: false, awvDate: null, openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 59 (Major Depression)', 'HCC 19 (Diabetes with complications)'], nextAppt: 'Not scheduled', rafCurrent: 1.78, rafPotential: 2.56, revenueOpp: 9126 },
+            { mrn: 'MRN192847', firstName: 'Richard', lastName: 'Lewis', age: 71, awvCompleted: true, awvDate: '2024-09-22', openHCCs: ['HCC 85 (CHF)', 'HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 88 (Arrhythmia)'], nextAppt: '2024-11-15', rafCurrent: 3.02, rafPotential: 3.35, revenueOpp: 3861 }
+        ]
+    },
+    'brown': {
+        name: 'Dr. Jennifer Brown',
+        specialty: 'Internal Medicine',
+        market: 'Columbus',
+        panelSize: 1654,
+        avgRAF: 1.178,
+        patients: [
+            { mrn: 'MRN647382', firstName: 'Barbara', lastName: 'Walker', age: 73, awvCompleted: true, awvDate: '2024-07-11', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 19 (Diabetes with complications)'], nextAppt: '2024-12-02', rafCurrent: 1.56, rafPotential: 1.92, revenueOpp: 4212 },
+            { mrn: 'MRN847192', firstName: 'Thomas', lastName: 'Hall', age: 67, awvCompleted: false, awvDate: null, openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 108 (Vascular Disease)'], nextAppt: '2024-11-28', rafCurrent: 1.89, rafPotential: 2.23, revenueOpp: 3978 },
+            { mrn: 'MRN293817', firstName: 'Susan', lastName: 'Young', age: 70, awvCompleted: true, awvDate: '2024-08-05', openHCCs: ['HCC 85 (CHF)'], suspectedHCCs: ['HCC 59 (Major Depression)'], nextAppt: '2024-12-18', rafCurrent: 2.34, rafPotential: 2.67, revenueOpp: 3861 },
+            { mrn: 'MRN819273', firstName: 'Charles', lastName: 'King', age: 76, awvCompleted: false, awvDate: null, openHCCs: ['HCC 18 (Diabetes)', 'HCC 111 (COPD)'], suspectedHCCs: ['HCC 85 (CHF)', 'HCC 88 (Arrhythmia)'], nextAppt: 'Not scheduled', rafCurrent: 2.67, rafPotential: 3.45, revenueOpp: 9126 }
+        ]
+    },
+    'patel': {
+        name: 'Dr. Raj Patel',
+        specialty: 'Internal Medicine',
+        market: 'Augusta',
+        panelSize: 1567,
+        avgRAF: 1.412,
+        patients: [
+            { mrn: 'MRN928374', firstName: 'Margaret', lastName: 'Adams', age: 78, awvCompleted: false, awvDate: null, openHCCs: ['HCC 85 (CHF)', 'HCC 111 (COPD)'], suspectedHCCs: ['HCC 18 (Diabetes)', 'HCC 108 (Vascular Disease)'], nextAppt: '2024-11-20', rafCurrent: 2.89, rafPotential: 3.67, revenueOpp: 9126 },
+            { mrn: 'MRN192384', firstName: 'George', lastName: 'Nelson', age: 81, awvCompleted: true, awvDate: '2024-05-22', openHCCs: ['HCC 18 (Diabetes)', 'HCC 85 (CHF)'], suspectedHCCs: ['HCC 59 (Major Depression)'], nextAppt: '2024-12-08', rafCurrent: 3.12, rafPotential: 3.45, revenueOpp: 3861 },
+            { mrn: 'MRN847293', firstName: 'Ruth', lastName: 'Hill', age: 75, awvCompleted: false, awvDate: null, openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 85 (CHF)', 'HCC 19 (Diabetes with complications)'], nextAppt: 'Not scheduled', rafCurrent: 1.98, rafPotential: 2.89, revenueOpp: 10647 }
+        ]
+    },
+    'kim': {
+        name: 'Dr. Susan Kim',
+        specialty: 'Family Medicine',
+        market: 'Atlanta North',
+        panelSize: 1789,
+        avgRAF: 1.134,
+        patients: [
+            { mrn: 'MRN384756', firstName: 'Betty', lastName: 'Wright', age: 69, awvCompleted: true, awvDate: '2024-08-30', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 108 (Vascular Disease)'], nextAppt: '2024-12-15', rafCurrent: 1.45, rafPotential: 1.79, revenueOpp: 3978 },
+            { mrn: 'MRN829374', firstName: 'Donald', lastName: 'Lopez', age: 73, awvCompleted: false, awvDate: null, openHCCs: ['HCC 111 (COPD)', 'HCC 85 (CHF)'], suspectedHCCs: ['HCC 18 (Diabetes)'], nextAppt: '2024-11-25', rafCurrent: 2.56, rafPotential: 2.92, revenueOpp: 4212 },
+            { mrn: 'MRN192736', firstName: 'Sandra', lastName: 'Scott', age: 66, awvCompleted: true, awvDate: '2024-09-12', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 19 (Diabetes with complications)'], nextAppt: '2024-12-22', rafCurrent: 1.23, rafPotential: 1.59, revenueOpp: 4212 }
+        ]
+    },
+    'chen': {
+        name: 'Dr. Lisa Chen',
+        specialty: 'Internal Medicine',
+        market: 'Atlanta South',
+        panelSize: 1456,
+        avgRAF: 1.089,
+        patients: [
+            { mrn: 'MRN736284', firstName: 'Kenneth', lastName: 'Green', age: 68, awvCompleted: false, awvDate: null, openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 111 (COPD)', 'HCC 108 (Vascular Disease)'], nextAppt: '2024-11-18', rafCurrent: 1.34, rafPotential: 2.01, revenueOpp: 7839 },
+            { mrn: 'MRN827364', firstName: 'Nancy', lastName: 'Baker', age: 71, awvCompleted: true, awvDate: '2024-07-28', openHCCs: ['HCC 85 (CHF)'], suspectedHCCs: ['HCC 88 (Arrhythmia)'], nextAppt: '2024-12-05', rafCurrent: 2.12, rafPotential: 2.45, revenueOpp: 3861 },
+            { mrn: 'MRN293847', firstName: 'Steven', lastName: 'Gonzalez', age: 74, awvCompleted: false, awvDate: null, openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 59 (Major Depression)'], nextAppt: 'Not scheduled', rafCurrent: 1.67, rafPotential: 2.0, revenueOpp: 3861 }
+        ]
+    },
+    'martinez': {
+        name: 'Dr. Robert Martinez',
+        specialty: 'Family Medicine',
+        market: 'Columbus',
+        panelSize: 2012,
+        avgRAF: 1.223,
+        patients: [
+            { mrn: 'MRN847293', firstName: 'Lisa', lastName: 'Carter', age: 72, awvCompleted: true, awvDate: '2024-06-15', openHCCs: ['HCC 18 (Diabetes)', 'HCC 111 (COPD)'], suspectedHCCs: ['HCC 85 (CHF)'], nextAppt: '2024-12-01', rafCurrent: 2.34, rafPotential: 2.81, revenueOpp: 5499 },
+            { mrn: 'MRN192847', firstName: 'Paul', lastName: 'Mitchell', age: 69, awvCompleted: false, awvDate: null, openHCCs: ['HCC 85 (CHF)'], suspectedHCCs: ['HCC 108 (Vascular Disease)', 'HCC 88 (Arrhythmia)'], nextAppt: '2024-11-22', rafCurrent: 2.01, rafPotential: 2.68, revenueOpp: 7839 },
+            { mrn: 'MRN736495', firstName: 'Carol', lastName: 'Perez', age: 76, awvCompleted: false, awvDate: null, openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 18 (Diabetes)'], nextAppt: 'Not scheduled', rafCurrent: 1.78, rafPotential: 2.14, revenueOpp: 4212 }
+        ]
+    },
+    'williams': {
+        name: 'Dr. David Williams',
+        specialty: 'Internal Medicine',
+        market: 'Augusta',
+        panelSize: 1678,
+        avgRAF: 1.345,
+        patients: [
+            { mrn: 'MRN928475', firstName: 'Michelle', lastName: 'Roberts', age: 77, awvCompleted: false, awvDate: null, openHCCs: ['HCC 85 (CHF)', 'HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 111 (COPD)', 'HCC 59 (Major Depression)'], nextAppt: '2024-11-28', rafCurrent: 2.67, rafPotential: 3.45, revenueOpp: 9126 },
+            { mrn: 'MRN384756', firstName: 'Edward', lastName: 'Turner', age: 73, awvCompleted: true, awvDate: '2024-08-20', openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 108 (Vascular Disease)'], nextAppt: '2024-12-12', rafCurrent: 1.89, rafPotential: 2.23, revenueOpp: 3978 },
+            { mrn: 'MRN192847', firstName: 'Deborah', lastName: 'Phillips', age: 70, awvCompleted: true, awvDate: '2024-09-05', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 19 (Diabetes with complications)'], nextAppt: '2024-12-18', rafCurrent: 1.56, rafPotential: 1.92, revenueOpp: 4212 },
+            { mrn: 'MRN736284', firstName: 'Mark', lastName: 'Campbell', age: 80, awvCompleted: false, awvDate: null, openHCCs: ['HCC 85 (CHF)', 'HCC 111 (COPD)'], suspectedHCCs: ['HCC 88 (Arrhythmia)'], nextAppt: 'Not scheduled', rafCurrent: 3.12, rafPotential: 3.45, revenueOpp: 3861 }
+        ]
+    },
+    'taylor': {
+        name: 'Dr. Emily Taylor',
+        specialty: 'Family Medicine',
+        market: 'Atlanta North',
+        panelSize: 1534,
+        avgRAF: 1.167,
+        patients: [
+            { mrn: 'MRN827364', firstName: 'Jessica', lastName: 'Parker', age: 64, awvCompleted: true, awvDate: '2024-07-18', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 108 (Vascular Disease)'], nextAppt: '2024-11-30', rafCurrent: 1.12, rafPotential: 1.46, revenueOpp: 3978 },
+            { mrn: 'MRN293817', firstName: 'Kevin', lastName: 'Evans', age: 71, awvCompleted: false, awvDate: null, openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 85 (CHF)', 'HCC 18 (Diabetes)'], nextAppt: '2024-12-08', rafCurrent: 1.78, rafPotential: 2.56, revenueOpp: 9126 },
+            { mrn: 'MRN847192', firstName: 'Donna', lastName: 'Edwards', age: 68, awvCompleted: true, awvDate: '2024-09-22', openHCCs: ['HCC 85 (CHF)'], suspectedHCCs: ['HCC 88 (Arrhythmia)'], nextAppt: '2024-12-15', rafCurrent: 2.23, rafPotential: 2.56, revenueOpp: 3861 }
+        ]
+    },
+    'lee': {
+        name: 'Dr. James Lee',
+        specialty: 'Internal Medicine',
+        market: 'Atlanta South',
+        panelSize: 1423,
+        avgRAF: 1.298,
+        patients: [
+            { mrn: 'MRN192736', firstName: 'Brian', lastName: 'Collins', age: 75, awvCompleted: false, awvDate: null, openHCCs: ['HCC 85 (CHF)', 'HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 111 (COPD)', 'HCC 108 (Vascular Disease)'], nextAppt: 'Not scheduled', rafCurrent: 2.45, rafPotential: 3.23, revenueOpp: 9126 },
+            { mrn: 'MRN736495', firstName: 'Amy', lastName: 'Stewart', age: 69, awvCompleted: true, awvDate: '2024-08-12', openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 59 (Major Depression)'], nextAppt: '2024-11-25', rafCurrent: 1.67, rafPotential: 2.0, revenueOpp: 3861 },
+            { mrn: 'MRN928374', firstName: 'Ronald', lastName: 'Sanchez', age: 78, awvCompleted: false, awvDate: null, openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 19 (Diabetes with complications)', 'HCC 85 (CHF)'], nextAppt: '2024-12-02', rafCurrent: 1.89, rafPotential: 2.67, revenueOpp: 9126 }
+        ]
+    },
+    'moore': {
+        name: 'Dr. Karen Moore',
+        specialty: 'Family Medicine',
+        market: 'Columbus',
+        panelSize: 1345,
+        avgRAF: 1.156,
+        patients: [
+            { mrn: 'MRN384729', firstName: 'Jason', lastName: 'Morris', age: 67, awvCompleted: true, awvDate: '2024-09-08', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 108 (Vascular Disease)'], nextAppt: '2024-12-10', rafCurrent: 1.34, rafPotential: 1.68, revenueOpp: 3978 },
+            { mrn: 'MRN827364', firstName: 'Kimberly', lastName: 'Rogers', age: 72, awvCompleted: false, awvDate: null, openHCCs: ['HCC 111 (COPD)', 'HCC 85 (CHF)'], suspectedHCCs: ['HCC 88 (Arrhythmia)'], nextAppt: '2024-11-28', rafCurrent: 2.34, rafPotential: 2.67, revenueOpp: 3861 },
+            { mrn: 'MRN192847', firstName: 'Gary', lastName: 'Reed', age: 74, awvCompleted: true, awvDate: '2024-07-25', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 19 (Diabetes with complications)'], nextAppt: '2024-12-18', rafCurrent: 1.56, rafPotential: 1.92, revenueOpp: 4212 }
+        ]
+    },
+    'jackson': {
+        name: 'Dr. Thomas Jackson',
+        specialty: 'Internal Medicine',
+        market: 'Augusta',
+        panelSize: 1234,
+        avgRAF: 1.389,
+        patients: [
+            { mrn: 'MRN736284', firstName: 'Angela', lastName: 'Cook', age: 76, awvCompleted: false, awvDate: null, openHCCs: ['HCC 85 (CHF)', 'HCC 111 (COPD)'], suspectedHCCs: ['HCC 18 (Diabetes)', 'HCC 59 (Major Depression)'], nextAppt: '2024-11-22', rafCurrent: 2.78, rafPotential: 3.56, revenueOpp: 9126 },
+            { mrn: 'MRN293847', firstName: 'Timothy', lastName: 'Morgan', age: 71, awvCompleted: true, awvDate: '2024-06-28', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 108 (Vascular Disease)'], nextAppt: '2024-12-05', rafCurrent: 1.45, rafPotential: 1.79, revenueOpp: 3978 },
+            { mrn: 'MRN847192', firstName: 'Stephanie', lastName: 'Bell', age: 79, awvCompleted: false, awvDate: null, openHCCs: ['HCC 85 (CHF)'], suspectedHCCs: ['HCC 88 (Arrhythmia)', 'HCC 111 (COPD)'], nextAppt: 'Not scheduled', rafCurrent: 2.56, rafPotential: 3.23, revenueOpp: 7839 }
+        ]
+    },
+    'garcia': {
+        name: 'Dr. Anthony Garcia',
+        specialty: 'Internal Medicine',
+        market: 'Augusta',
+        panelSize: 876,
+        avgRAF: 1.478,
+        patients: [
+            { mrn: 'MRN839274', firstName: 'Amanda', lastName: 'Campbell', age: 79, awvCompleted: false, awvDate: null, openHCCs: ['HCC 85 (CHF)', 'HCC 111 (COPD)', 'HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 88 (Arrhythmia)', 'HCC 59 (Major Depression)'], nextAppt: 'Not scheduled', rafCurrent: 3.23, rafPotential: 4.12, revenueOpp: 10413 },
+            { mrn: 'MRN192837', firstName: 'Joshua', lastName: 'Parker', age: 82, awvCompleted: true, awvDate: '2024-05-15', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 108 (Vascular Disease)'], nextAppt: '2024-11-22', rafCurrent: 1.89, rafPotential: 2.23, revenueOpp: 3978 }
+        ]
+    },
+    'white': {
+        name: 'Dr. Patricia White',
+        specialty: 'Family Medicine',
+        market: 'Atlanta North',
+        panelSize: 1567,
+        avgRAF: 1.012,
+        patients: [
+            { mrn: 'MRN472839', firstName: 'Ashley', lastName: 'Evans', age: 61, awvCompleted: true, awvDate: '2024-09-25', openHCCs: ['HCC 18 (Diabetes)'], suspectedHCCs: ['HCC 19 (Diabetes with complications)'], nextAppt: '2024-12-05', rafCurrent: 1.01, rafPotential: 1.37, revenueOpp: 4212 },
+            { mrn: 'MRN829473', firstName: 'Andrew', lastName: 'Edwards', age: 65, awvCompleted: false, awvDate: null, openHCCs: ['HCC 111 (COPD)'], suspectedHCCs: ['HCC 108 (Vascular Disease)'], nextAppt: '2024-11-28', rafCurrent: 1.45, rafPotential: 1.79, revenueOpp: 3978 }
+        ]
+    }
+};
+
+function showHCCPatientList(providerId, filterType) {
+    const provider = hccProviderData[providerId];
+    if (!provider) {
+        showModal(`<h2>Provider Not Found</h2><p>No data available for provider ID: ${providerId}</p>`);
+        return;
+    }
+
+    let filteredPatients = [];
+    let listTitle = '';
+    let listDescription = '';
+
+    if (filterType === 'awv-incomplete') {
+        filteredPatients = provider.patients.filter(p => !p.awvCompleted);
+        listTitle = 'Patients Without AWV Completion';
+        listDescription = 'These patients have not completed their Annual Wellness Visit and are priority for outreach.';
+    } else if (filterType === 'not-scheduled') {
+        filteredPatients = provider.patients.filter(p => p.nextAppt === 'Not scheduled');
+        listTitle = 'Patients Not Scheduled';
+        listDescription = 'These patients do not have an upcoming appointment and require immediate scheduling outreach.';
+    }
+
+    // Sort by revenue opportunity descending
+    filteredPatients.sort((a, b) => b.revenueOpp - a.revenueOpp);
+
+    const totalRevOpp = filteredPatients.reduce((sum, p) => sum + p.revenueOpp, 0);
+
+    const modalBody = `
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div>
+                <h2 style="margin: 0;">${provider.name}</h2>
+                <p class="provider-summary" style="margin: 0.25rem 0 0 0;">${listTitle}</p>
+            </div>
+            <button onclick="exportHCCPatientList('${providerId}', '${filterType}')" class="btn btn-primary" style="background: #27ae60; border: none; color: white; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>📥</span> Export to CSV
+            </button>
+        </div>
+        <p style="color: #6c757d; font-size: 0.9rem; margin-bottom: 1.5rem;">${listDescription}</p>
+
+        <div style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; border-left: 4px solid #27ae60;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <span style="font-size: 0.85rem; color: #155724;">Total Patients:</span>
+                    <span style="font-weight: 700; color: #155724; margin-left: 0.5rem; font-size: 1.3rem;">${filteredPatients.length}</span>
+                </div>
+                <div>
+                    <span style="font-size: 0.85rem; color: #155724;">Total Revenue Opportunity:</span>
+                    <span style="font-weight: 700; color: #155724; margin-left: 0.5rem; font-size: 1.3rem;">$${totalRevOpp.toLocaleString()}</span>
+                </div>
+            </div>
+        </div>
+
+        ${filteredPatients.length === 0 ? `
+            <div style="background: #d4edda; border-radius: 12px; padding: 2rem; text-align: center;">
+                <span style="font-size: 2rem;">✓</span>
+                <h3 style="color: #155724; margin: 1rem 0 0.5rem 0;">All Caught Up!</h3>
+                <p style="color: #155724; margin: 0;">No patients in this category for this provider.</p>
+            </div>
+        ` : `
+            <div style="background: white; border-radius: 12px; padding: 1rem; border: 1px solid #e0e0e0; overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                    <thead>
+                        <tr style="background: #f8f9fa;">
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Patient Name</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">MRN</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Age</th>
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Suspected HCCs</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">RAF Gap</th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600; background: #d4edda;">Revenue Opp</th>
+                            ${filterType === 'awv-incomplete' ? '<th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Next Appt</th>' : ''}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${filteredPatients.map(p => {
+                            const rafGap = (p.rafPotential - p.rafCurrent).toFixed(2);
+                            return `
+                            <tr>
+                                <td style="padding: 0.75rem; border-bottom: 1px solid #eee;">
+                                    <strong>${p.firstName} ${p.lastName}</strong>
+                                </td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; font-family: monospace; color: #6c757d;">${p.mrn}</td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee;">${p.age}</td>
+                                <td style="padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.8rem; color: #f39c12;">
+                                    ${p.suspectedHCCs.join('<br>')}
+                                </td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: #C84E28; font-weight: 600;">${rafGap}</td>
+                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; background: #f0fff0; font-weight: 600; color: #155724;">$${p.revenueOpp.toLocaleString()}</td>
+                                ${filterType === 'awv-incomplete' ? `<td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: ${p.nextAppt === 'Not scheduled' ? '#e74c3c' : '#27ae60'};">${p.nextAppt}</td>` : ''}
+                            </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            </div>
+        `}
+
+        <div class="alert-box warning" style="margin-top: 1.5rem;">
+            <h4>Recommended Actions</h4>
+            <ul>
+                ${filterType === 'awv-incomplete' ? `
+                    <li><strong>Schedule AWV:</strong> Contact these ${filteredPatients.length} patients to schedule Annual Wellness Visit</li>
+                    <li><strong>Prepare Gap List:</strong> Generate patient-specific suspected HCC documentation for each AWV</li>
+                    <li><strong>Care Team Alert:</strong> Notify care coordinators to prioritize outreach</li>
+                ` : `
+                    <li><strong>Urgent Outreach:</strong> Contact these ${filteredPatients.length} patients immediately to schedule appointments</li>
+                    <li><strong>Alternative Contact:</strong> Try multiple contact methods (phone, patient portal, mail)</li>
+                    <li><strong>Transportation:</strong> Assess if transportation barriers are preventing scheduling</li>
+                `}
+            </ul>
+        </div>
+
+        <div style="margin-top: 1rem; text-align: center;">
+            <button onclick="drillDownHCC('${providerId}')" class="btn btn-secondary" style="background: #6c757d; border: none; color: white; padding: 0.5rem 1.5rem; border-radius: 6px; cursor: pointer;">
+                ← Back to Provider Details
+            </button>
+        </div>
+    `;
+
+    showModal(modalBody);
+}
+
+function exportHCCPatientList(providerId, filterType) {
+    const provider = hccProviderData[providerId];
+    if (!provider) return;
+
+    let filteredPatients = [];
+    let filename = '';
+
+    if (filterType === 'awv-incomplete') {
+        filteredPatients = provider.patients.filter(p => !p.awvCompleted);
+        filename = `${provider.name.replace(/\s+/g, '_')}_AWV_Incomplete_Patients.csv`;
+    } else if (filterType === 'not-scheduled') {
+        filteredPatients = provider.patients.filter(p => p.nextAppt === 'Not scheduled');
+        filename = `${provider.name.replace(/\s+/g, '_')}_Not_Scheduled_Patients.csv`;
+    }
+
+    // Create CSV content
+    const headers = ['Patient Name', 'MRN', 'Age', 'RAF Current', 'RAF Potential', 'RAF Gap', 'Suspected HCCs', 'Revenue Opportunity', 'Next Appointment'];
+    const rows = filteredPatients.map(p => [
+        `${p.firstName} ${p.lastName}`,
+        p.mrn,
+        p.age,
+        p.rafCurrent.toFixed(2),
+        p.rafPotential.toFixed(2),
+        (p.rafPotential - p.rafCurrent).toFixed(2),
+        `"${p.suspectedHCCs.join('; ')}"`,
+        p.revenueOpp,
+        p.nextAppt
+    ]);
+
+    let csvContent = headers.join(',') + '\n';
+    rows.forEach(row => {
+        csvContent += row.join(',') + '\n';
+    });
+
+    // Create and trigger download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 function drillDownEpisode(episodeType) {

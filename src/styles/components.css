@@ -21,6 +21,33 @@
     box-shadow: 0 4px 12px rgba(0,0,0,0.12);
 }
 
+.kpi-card.clickable-card {
+    cursor: pointer;
+    position: relative;
+}
+
+.kpi-card.clickable-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    border-color: #3498db !important;
+}
+
+.kpi-card.clickable-card::after {
+    content: '→';
+    position: absolute;
+    bottom: 0.75rem;
+    right: 0.75rem;
+    font-size: 1rem;
+    color: #3498db;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+}
+
+.kpi-card.clickable-card:hover::after {
+    opacity: 1;
+    transform: translateX(3px);
+}
+
 .kpi-label {
     font-size: 0.85rem;
     color: #7f8c8d;
