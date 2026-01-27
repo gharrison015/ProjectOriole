@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeTabs();
     initializeCharts();
     initPMPMYearToggle();
+    initMonteCarloScenarioToggle();
     initializeProjectionControls();
     initializeLeakageInteractions();
     initializeQualityDateSlider();
@@ -432,7 +433,43 @@ function updatePerformanceKPIs(selectedYear) {
     }
 }
 
-function initMonteCarloChart() {
+// Monte Carlo scenario descriptions
+const monteCarloScenarios = {
+    1: {
+        name: 'Base Case',
+        description: '<strong>Scenario 1 - Base Case:</strong> No adjustment for utilization or volume changes. Uses current membership and historical utilization patterns.',
+        mean: 9.6,
+        stdDev: 3.2,
+        color: 'rgba(102, 126, 234, 0.6)',
+        borderColor: '#667eea'
+    },
+    2: {
+        name: 'Volume Adjustment',
+        description: '<strong>Scenario 2 - Volume Adjustment:</strong> Varies the number of attributed lives from -5% to +10%, simulating membership fluctuations throughout the performance year.',
+        mean: 8.8,
+        stdDev: 4.1,
+        color: 'rgba(52, 152, 219, 0.6)',
+        borderColor: '#3498db'
+    },
+    3: {
+        name: 'Utilization Variation',
+        description: '<strong>Scenario 3 - Utilization Variation:</strong> Keeps lives constant and varies utilization from -8% to +5%, modeling the impact of care management initiatives.',
+        mean: 10.4,
+        stdDev: 3.8,
+        color: 'rgba(39, 174, 96, 0.6)',
+        borderColor: '#27ae60'
+    },
+    4: {
+        name: 'Risk Corridor (2%)',
+        description: '<strong>Scenario 4 - Risk Corridor:</strong> Applies a 2% risk corridor, limiting both upside gains and downside losses to model symmetric risk sharing.',
+        mean: 7.2,
+        stdDev: 2.4,
+        color: 'rgba(155, 89, 182, 0.6)',
+        borderColor: '#9b59b6'
+    }
+};
+
+function initMonteCarloChart(scenario = 1) {
     const ctx = document.getElementById('monteChart');
     if (!ctx) return;
 
@@ -440,22 +477,51 @@ function initMonteCarloChart() {
         monteCarloChart.destroy();
     }
 
-    // Generate histogram data
-    const bins = 30;
-    const data = [];
-    for (let i = 0; i < bins; i++) {
-        const x = 5 + (i * 0.5);
-        const mean = 11.6;
-        const stdDev = 2.5;
-        const y = Math.exp(-0.5 * Math.pow((x - mean) / stdDev, 2)) * 40;
-        data.push(y);
+    const scenarioConfig = monteCarloScenarios[scenario];
+
+    // Update scenario description
+    const descEl = document.getElementById('scenario-description');
+    if (descEl) {
+        descEl.innerHTML = scenarioConfig.description;
     }
 
+    // Generate histogram data from -$3M to +$15M
+    const minValue = -3;
+    const maxValue = 15;
+    const binWidth = 0.6;
+    const bins = Math.ceil((maxValue - minValue) / binWidth);
+    const data = [];
     const labels = [];
+
     for (let i = 0; i < bins; i++) {
-        const value = 5 + (i * 0.5);
-        labels.push('$' + value.toFixed(1) + 'M');
+        const x = minValue + (i * binWidth) + (binWidth / 2);
+        const y = Math.exp(-0.5 * Math.pow((x - scenarioConfig.mean) / scenarioConfig.stdDev, 2)) * 35;
+        data.push(y);
+
+        const labelValue = minValue + (i * binWidth);
+        if (labelValue < 0) {
+            labels.push('-$' + Math.abs(labelValue).toFixed(1) + 'M');
+        } else {
+            labels.push('$' + labelValue.toFixed(1) + 'M');
+        }
     }
+
+    // Color bars based on positive/negative
+    const backgroundColors = data.map((_, i) => {
+        const value = minValue + (i * binWidth);
+        if (value < 0) {
+            return 'rgba(231, 76, 60, 0.5)';
+        }
+        return scenarioConfig.color;
+    });
+
+    const borderColors = data.map((_, i) => {
+        const value = minValue + (i * binWidth);
+        if (value < 0) {
+            return '#e74c3c';
+        }
+        return scenarioConfig.borderColor;
+    });
 
     monteCarloChart = new Chart(ctx, {
         type: 'bar',
@@ -464,8 +530,8 @@ function initMonteCarloChart() {
             datasets: [{
                 label: 'Frequency',
                 data: data,
-                backgroundColor: 'rgba(102, 126, 234, 0.6)',
-                borderColor: '#667eea',
+                backgroundColor: backgroundColors,
+                borderColor: borderColors,
                 borderWidth: 1
             }]
         },
@@ -477,12 +543,32 @@ function initMonteCarloChart() {
                     display: false
                 },
                 datalabels: {
-                    display: false // Histogram - too many bars for labels
+                    display: false
                 },
                 tooltip: {
                     callbacks: {
+                        title: function(context) {
+                            return context[0].label + ' Shared Savings';
+                        },
                         label: function(context) {
                             return 'Probability: ' + context.parsed.y.toFixed(1) + '%';
+                        }
+                    }
+                },
+                annotation: {
+                    annotations: {
+                        line1: {
+                            type: 'line',
+                            xMin: (scenarioConfig.mean - minValue) / binWidth,
+                            xMax: (scenarioConfig.mean - minValue) / binWidth,
+                            borderColor: '#2c3e50',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            label: {
+                                display: true,
+                                content: 'Mean: $' + scenarioConfig.mean.toFixed(1) + 'M',
+                                position: 'start'
+                            }
                         }
                     }
                 }
@@ -491,13 +577,13 @@ function initMonteCarloChart() {
                 x: {
                     title: {
                         display: true,
-                        text: 'Projected Shared Savings'
+                        text: 'Projected Shared Savings (PY2026)'
                     },
                     ticks: {
                         maxRotation: 45,
                         minRotation: 45,
                         autoSkip: true,
-                        maxTicksLimit: 10
+                        maxTicksLimit: 12
                     }
                 },
                 y: {
@@ -509,6 +595,20 @@ function initMonteCarloChart() {
                 }
             }
         }
+    });
+}
+
+// Initialize Monte Carlo scenario toggle
+function initMonteCarloScenarioToggle() {
+    const toggleBtns = document.querySelectorAll('.scenario-toggle-btn');
+    toggleBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            toggleBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            const scenario = parseInt(this.dataset.scenario);
+            initMonteCarloChart(scenario);
+        });
     });
 }
 

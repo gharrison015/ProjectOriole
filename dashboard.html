@@ -216,18 +216,18 @@
                     <div class="tab-header-row">
                         <div class="tab-header">
                             <h2>Projections</h2>
-                            <p>Current year forecasting and scenario modeling for program participation decisions</p>
+                            <p>PY2026 forecasting and scenario modeling for program participation decisions</p>
                         </div>
                         <button class="insights-btn success" onclick="showInsightsModal('projections')">
                             <span class="insights-btn-icon">💡</span>
-                            PY2027 Recommendation
+                            PY2026 Recommendation
                         </button>
                     </div>
 
                     <!-- Section 1: Forecasting (Static View) -->
                     <div class="section-divider">
-                        <h3 class="section-title">📈 PY2024 Year-End Forecast</h3>
-                        <p class="section-subtitle">Actuarial projection through December 2024 including IBNR estimates</p>
+                        <h3 class="section-title">📈 PY2026 Year-End Forecast</h3>
+                        <p class="section-subtitle">Actuarial projection through December 2026 including IBNR estimates</p>
                     </div>
 
                     <div class="forecast-data-status">
@@ -235,28 +235,21 @@
                             <span class="status-icon complete">✓</span>
                             <div class="status-text">
                                 <strong>Claims Data</strong>
-                                <span>Q1-Q2 2024 Complete</span>
+                                <span>Q1 2026</span>
                             </div>
                         </div>
                         <div class="data-status-item">
                             <span class="status-icon complete">✓</span>
                             <div class="status-text">
                                 <strong>Expenditure Files</strong>
-                                <span>Q1-Q2 2024 Received</span>
+                                <span>Q1 2026 Received</span>
                             </div>
                         </div>
                         <div class="data-status-item">
                             <span class="status-icon pending">◐</span>
                             <div class="status-text">
-                                <strong>IBNR Estimate</strong>
-                                <span>Applied to Q2 claims</span>
-                            </div>
-                        </div>
-                        <div class="data-status-item">
-                            <span class="status-icon">📅</span>
-                            <div class="status-text">
-                                <strong>Projection Period</strong>
-                                <span>Jul - Dec 2024</span>
+                                <strong>IBNR Estimates</strong>
+                                <span>Applied to Q1 claims experience</span>
                             </div>
                         </div>
                     </div>
@@ -264,56 +257,56 @@
                     <div class="forecast-results">
                         <div class="forecast-card primary">
                             <h4>Projected Year-End Spend</h4>
-                            <div class="forecast-value">$486.7M</div>
+                            <div class="forecast-value">$489.2M</div>
                             <div class="forecast-breakdown">
                                 <div class="breakdown-row">
-                                    <span>Paid Claims (Q1-Q2)</span>
-                                    <span>$237.2M</span>
+                                    <span>Paid Claims (Q1)</span>
+                                    <span>$122.8M</span>
                                 </div>
                                 <div class="breakdown-row">
                                     <span>IBNR Reserve</span>
-                                    <span>$18.4M</span>
+                                    <span>$9.6M</span>
                                 </div>
                                 <div class="breakdown-row">
-                                    <span>Projected (Q3-Q4)</span>
-                                    <span>$231.1M</span>
+                                    <span>Projected (Q2-Q4)</span>
+                                    <span>$356.8M</span>
                                 </div>
                             </div>
-                            <div class="forecast-ci">95% CI: $481.2M - $492.1M</div>
+                            <div class="forecast-ci">95% CI: $478.4M - $500.1M</div>
                         </div>
                         <div class="forecast-card">
                             <h4>CMS Benchmark</h4>
-                            <div class="forecast-value">$498.3M</div>
+                            <div class="forecast-value">$498.8M</div>
                             <div class="forecast-breakdown">
                                 <div class="breakdown-row">
                                     <span>Base Benchmark</span>
-                                    <span>$512.1M</span>
+                                    <span>$513.2M</span>
                                 </div>
                                 <div class="breakdown-row">
                                     <span>Risk Adjustment</span>
-                                    <span>-$13.8M</span>
+                                    <span>-$14.4M</span>
                                 </div>
                             </div>
                             <div class="forecast-note">Based on CMS regional rates</div>
                         </div>
                         <div class="forecast-card success">
                             <h4>Projected Shared Savings</h4>
-                            <div class="forecast-value">$11.6M</div>
+                            <div class="forecast-value">$9.6M</div>
                             <div class="forecast-breakdown">
                                 <div class="breakdown-row">
                                     <span>Gross Savings</span>
-                                    <span>$11.6M</span>
+                                    <span>$9.6M</span>
                                 </div>
                                 <div class="breakdown-row">
                                     <span>Quality Multiplier</span>
-                                    <span>87.4%</span>
+                                    <span>82.1%</span>
                                 </div>
                                 <div class="breakdown-row">
                                     <span>Net to ACO (50%)</span>
-                                    <span>$5.1M</span>
+                                    <span>$3.9M</span>
                                 </div>
                             </div>
-                            <div class="forecast-note">Assumes current quality score holds</div>
+                            <div class="forecast-note">Based on preliminary Q1 quality score</div>
                         </div>
                     </div>
 
@@ -322,27 +315,55 @@
                         <div class="methodology-grid">
                             <div class="methodology-item">
                                 <strong>IBNR Model</strong>
-                                <p>Chain ladder development factors based on 36-month claims runout patterns. Q2 claims 94% complete.</p>
+                                <p>Chain ladder development factors based on 36-month claims runout patterns. Q1 claims 92% complete.</p>
                             </div>
                             <div class="methodology-item">
                                 <strong>Trend Factors</strong>
-                                <p>Medical: +3.2% annualized | Pharmacy: +4.8% annualized | Applied to Q3-Q4 projections.</p>
+                                <p>Medical: +3.4% annualized | Pharmacy: +5.1% annualized | Applied to Q2-Q4 projections.</p>
                             </div>
                             <div class="methodology-item">
                                 <strong>Seasonality</strong>
-                                <p>Historical utilization patterns applied: Q3 typically -2.1%, Q4 typically +4.3% vs annual average.</p>
+                                <p>Historical utilization patterns applied: Q2 typically +1.2%, Q3 typically -2.1%, Q4 typically +4.3% vs annual average.</p>
                             </div>
                             <div class="methodology-item">
                                 <strong>Last Updated</strong>
-                                <p>April 15, 2024 using March 2024 claims runout. Next update scheduled for May 15, 2024.</p>
+                                <p>Based on February 2026 claims runout. Refreshed daily with post-adjudicated claims.</p>
                             </div>
                         </div>
                     </div>
 
                     <!-- Section 2: Performance Scenarios -->
                     <div class="section-divider" style="margin-top: 3rem;">
-                        <h3 class="section-title">🔮 PY2027 Program Participation Scenarios</h3>
-                        <p class="section-subtitle">Model different outcomes to inform April election decision: Should we continue in MSSP for PY2027?</p>
+                        <h3 class="section-title">🔮 PY2026 Performance Year Scenarios</h3>
+                        <p class="section-subtitle">Actuarial simulations based on historical ACO performance to model PY2026 outcomes</p>
+                    </div>
+
+                    <!-- Historical ACO Context -->
+                    <div class="aco-performance-context">
+                        <h4>Historical ACO Performance Benchmark</h4>
+                        <p class="context-note">Based on analysis of 500+ MSSP ACOs over 5 performance years (2019-2024)</p>
+                        <div class="performance-bands">
+                            <div class="band-item">
+                                <div class="band-label">Top Quartile</div>
+                                <div class="band-value positive">+$8.2M to +$15.4M</div>
+                                <div class="band-percent">25% of ACOs</div>
+                            </div>
+                            <div class="band-item highlight">
+                                <div class="band-label">Piedmont Position</div>
+                                <div class="band-value">+$9.6M projected</div>
+                                <div class="band-percent">72nd percentile</div>
+                            </div>
+                            <div class="band-item">
+                                <div class="band-label">Median Performance</div>
+                                <div class="band-value">+$4.1M to +$8.2M</div>
+                                <div class="band-percent">50% of ACOs</div>
+                            </div>
+                            <div class="band-item">
+                                <div class="band-label">Bottom Quartile</div>
+                                <div class="band-value negative">-$3.0M to +$4.1M</div>
+                                <div class="band-percent">25% of ACOs</div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="controls-panel">
@@ -351,63 +372,78 @@
                             <div class="control-item">
                                 <label>Lives Growth: <span id="lives-val">+2.0%</span></label>
                                 <input type="range" id="lives-slider" min="-10" max="10" value="2" step="0.5">
+                                <div class="control-context">Historical range: -3% to +8%</div>
                             </div>
                             <div class="control-item">
                                 <label>Risk Score Change: <span id="risk-val">0.0%</span></label>
                                 <input type="range" id="risk-slider" min="-5" max="5" value="0" step="0.1">
+                                <div class="control-context">95% CI: -2.1% to +1.8%</div>
                             </div>
                             <div class="control-item">
                                 <label>Utilization Trend: <span id="util-val">-1.0%</span></label>
                                 <input type="range" id="util-slider" min="-10" max="10" value="-1" step="0.5">
+                                <div class="control-context">ACO mean: -0.8%</div>
                             </div>
                             <div class="control-item">
                                 <label>Leakage Reduction: <span id="leak-val">2.0%</span></label>
                                 <input type="range" id="leak-slider" min="0" max="10" value="2" step="0.5">
+                                <div class="control-context">Top performers: 3-5%</div>
                             </div>
                         </div>
                     </div>
 
                     <div class="projection-results">
                         <div class="result-card highlight">
-                            <h3>Projected PY2027 Performance</h3>
+                            <h3>Projected PY2026 Performance</h3>
                             <div class="metric-row">
                                 <div class="metric">
                                     <div class="label">Projected Total Spend</div>
-                                    <div class="value" id="proj-spend">$502.4M</div>
-                                    <div class="sub">95% CI: $496.8M - $508.1M</div>
+                                    <div class="value" id="proj-spend">$489.2M</div>
+                                    <div class="sub">95% CI: $478.4M - $500.1M</div>
                                 </div>
                                 <div class="metric">
                                     <div class="label">Projected Benchmark</div>
-                                    <div class="value">$514.2M</div>
-                                    <div class="sub">Based on rebased benchmark</div>
+                                    <div class="value">$498.8M</div>
+                                    <div class="sub">Based on CMS benchmark</div>
                                 </div>
                                 <div class="metric success">
                                     <div class="label">Projected Shared Savings</div>
-                                    <div class="value" id="proj-savings">$11.8M</div>
-                                    <div class="sub" id="prob-text">68% probability</div>
+                                    <div class="value" id="proj-savings">$9.6M</div>
+                                    <div class="sub" id="prob-text">72% probability</div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="result-card">
-                            <h3>PY2027 Confidence Levels</h3>
+                            <h3>PY2026 Confidence Levels</h3>
                             <div class="confidence-item">
                                 <span>Break Even or Better</span>
-                                <div class="bar"><div class="fill good" style="width:82%" id="bar-break">82%</div></div>
+                                <div class="bar"><div class="fill good" style="width:85%" id="bar-break">85%</div></div>
                             </div>
                             <div class="confidence-item">
-                                <span>Achieve Target ($10.5M+)</span>
-                                <div class="bar"><div class="fill good" style="width:68%" id="bar-target">68%</div></div>
+                                <span>Achieve Target ($8.0M+)</span>
+                                <div class="bar"><div class="fill good" style="width:72%" id="bar-target">72%</div></div>
                             </div>
                             <div class="confidence-item">
                                 <span>Risk of Loss</span>
-                                <div class="bar danger"><div class="fill bad" style="width:18%" id="bar-loss">18%</div></div>
+                                <div class="bar danger"><div class="fill bad" style="width:15%" id="bar-loss">15%</div></div>
                             </div>
                         </div>
                     </div>
 
                     <div class="chart-section">
-                        <h3>Monte Carlo Simulation - PY2027 Outcomes (10,000 iterations)</h3>
+                        <div class="chart-header-row">
+                            <h3>Monte Carlo Simulation - PY2026 Outcomes (10,000 iterations)</h3>
+                            <div class="scenario-toggle-container">
+                                <button class="scenario-toggle-btn active" data-scenario="1">Base Case</button>
+                                <button class="scenario-toggle-btn" data-scenario="2">Volume Adj</button>
+                                <button class="scenario-toggle-btn" data-scenario="3">Utilization</button>
+                                <button class="scenario-toggle-btn" data-scenario="4">Risk Corridor</button>
+                            </div>
+                        </div>
+                        <div class="scenario-description" id="scenario-description">
+                            <strong>Scenario 1 - Base Case:</strong> No adjustment for utilization or volume changes. Uses current membership and historical utilization patterns.
+                        </div>
                         <div class="chart-wrapper">
                             <canvas id="monteChart"></canvas>
                         </div>

@@ -64,6 +64,127 @@
     cursor: pointer;
 }
 
+.control-context {
+    font-size: 0.75rem;
+    color: #7f8c8d;
+    margin-top: 0.25rem;
+    font-style: italic;
+}
+
+/* ACO Performance Context */
+.aco-performance-context {
+    background: white;
+    padding: 1.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+}
+
+.aco-performance-context h4 {
+    margin: 0 0 0.5rem 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+}
+
+.aco-performance-context .context-note {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    margin-bottom: 1.25rem;
+}
+
+.performance-bands {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+.band-item {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #e9ecef;
+}
+
+.band-item.highlight {
+    background: linear-gradient(135deg, #667eea15 0%, #27ae6015 100%);
+    border-color: #667eea;
+}
+
+.band-label {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.band-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.25rem;
+}
+
+.band-value.positive {
+    color: #27ae60;
+}
+
+.band-value.negative {
+    color: #e74c3c;
+}
+
+.band-percent {
+    font-size: 0.75rem;
+    color: #95a5a6;
+}
+
+/* Monte Carlo Scenario Toggle */
+.scenario-toggle-container {
+    display: flex;
+    gap: 0;
+    background: #e9ecef;
+    border-radius: 6px;
+    padding: 3px;
+}
+
+.scenario-toggle-btn {
+    padding: 0.4rem 0.75rem;
+    border: none;
+    background: transparent;
+    color: #6c757d;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.scenario-toggle-btn:hover {
+    color: #2c3e50;
+}
+
+.scenario-toggle-btn.active {
+    background: #667eea;
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.scenario-description {
+    background: #f8f9fa;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: #495057;
+    margin-bottom: 1rem;
+    border-left: 3px solid #667eea;
+}
+
+.scenario-description strong {
+    color: #2c3e50;
+}
+
 /* Projection Results */
 .projection-results {
     display: grid;
