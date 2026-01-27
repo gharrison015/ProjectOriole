@@ -305,6 +305,25 @@ function initPerformanceTrendChart() {
                         text: 'Month (Current: June 2026)'
                     }
                 }
+            },
+            onClick: function(event, elements) {
+                // Check if clicked on PY2026 Projected PMPM line (dataset index 1)
+                if (elements && elements.length > 0) {
+                    const clickedDatasetIndex = elements[0].datasetIndex;
+                    if (clickedDatasetIndex === 1) {
+                        // Navigate to Projections tab
+                        const projectionsNavItem = document.querySelector('.nav-item[data-tab="projections"]');
+                        if (projectionsNavItem) {
+                            projectionsNavItem.click();
+                        }
+                    }
+                }
+            },
+            onHover: function(event, elements) {
+                const canvas = event.native.target;
+                // Check if hovering over PY2026 Projected PMPM line (dataset index 1)
+                const isOverProjectedLine = elements.some(el => el.datasetIndex === 1);
+                canvas.style.cursor = isOverProjectedLine ? 'pointer' : 'default';
             }
         }
     });
