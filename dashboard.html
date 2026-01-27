@@ -140,12 +140,12 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>Market Region</th>
-                                    <th>Lives</th>
-                                    <th>PMPM</th>
-                                    <th>vs Benchmark</th>
-                                    <th>Quality</th>
-                                    <th>Leakage</th>
+                                    <th class="sortable" data-sort="string">Market Region</th>
+                                    <th class="sortable" data-sort="number">Lives</th>
+                                    <th class="sortable" data-sort="currency">PMPM</th>
+                                    <th class="sortable" data-sort="currency">vs Benchmark</th>
+                                    <th class="sortable" data-sort="percent">Quality</th>
+                                    <th class="sortable" data-sort="percent">Leakage</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -212,6 +212,16 @@
                             <span class="insights-btn-icon">💡</span>
                             PY2027 Recommendation
                         </button>
+                    </div>
+
+                    <!-- Employment Filter Toggle -->
+                    <div class="employment-filter-container" data-tab="projections">
+                        <span class="employment-filter-label">Provider Filter:</span>
+                        <div class="employment-toggle">
+                            <button class="employment-toggle-btn active" data-filter="all" onclick="setEmploymentFilter('projections', 'all')">All Providers</button>
+                            <button class="employment-toggle-btn" data-filter="employed" onclick="setEmploymentFilter('projections', 'employed')">Employed</button>
+                            <button class="employment-toggle-btn" data-filter="non-employed" onclick="setEmploymentFilter('projections', 'non-employed')">Non-Employed</button>
+                        </div>
                     </div>
 
                     <!-- Section 1: Forecasting (Static View) -->
@@ -418,6 +428,16 @@
                         </button>
                     </div>
 
+                    <!-- Employment Filter Toggle -->
+                    <div class="employment-filter-container" data-tab="quality">
+                        <span class="employment-filter-label">Provider Filter:</span>
+                        <div class="employment-toggle">
+                            <button class="employment-toggle-btn active" data-filter="all" onclick="setEmploymentFilter('quality', 'all')">All Providers</button>
+                            <button class="employment-toggle-btn" data-filter="employed" onclick="setEmploymentFilter('quality', 'employed')">Employed</button>
+                            <button class="employment-toggle-btn" data-filter="non-employed" onclick="setEmploymentFilter('quality', 'non-employed')">Non-Employed</button>
+                        </div>
+                    </div>
+
                     <!-- MSSP Quality Score Summary -->
                     <div class="quality-summary-grid">
                         <div class="quality-summary-card">
@@ -522,12 +542,12 @@
                                     <table class="data-table">
                                         <thead>
                                             <tr>
-                                                <th>Domain</th>
-                                                <th>Measure</th>
-                                                <th>Performance</th>
-                                                <th>Benchmark</th>
-                                                <th>Gap</th>
-                                                <th>Status</th>
+                                                <th class="sortable" data-sort="string">Domain</th>
+                                                <th class="sortable" data-sort="string">Measure</th>
+                                                <th class="sortable" data-sort="percent">Performance</th>
+                                                <th class="sortable" data-sort="percent">Benchmark</th>
+                                                <th class="sortable" data-sort="string">Gap</th>
+                                                <th class="sortable" data-sort="string">Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -666,11 +686,11 @@
                                     <table class="data-table">
                                         <thead>
                                             <tr>
-                                                <th>Measure</th>
-                                                <th>Denominator</th>
-                                                <th>Numerator</th>
-                                                <th>Compliance</th>
-                                                <th>Star Rating</th>
+                                                <th class="sortable" data-sort="string">Measure</th>
+                                                <th class="sortable" data-sort="number">Denominator</th>
+                                                <th class="sortable" data-sort="number">Numerator</th>
+                                                <th class="sortable" data-sort="percent">Compliance</th>
+                                                <th class="sortable" data-sort="string">Star Rating</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -808,6 +828,16 @@
                         </button>
                     </div>
 
+                    <!-- Employment Filter Toggle -->
+                    <div class="employment-filter-container" data-tab="tcoc">
+                        <span class="employment-filter-label">Provider Filter:</span>
+                        <div class="employment-toggle">
+                            <button class="employment-toggle-btn active" data-filter="all" onclick="setEmploymentFilter('tcoc', 'all')">All Providers</button>
+                            <button class="employment-toggle-btn" data-filter="employed" onclick="setEmploymentFilter('tcoc', 'employed')">Employed</button>
+                            <button class="employment-toggle-btn" data-filter="non-employed" onclick="setEmploymentFilter('tcoc', 'non-employed')">Non-Employed</button>
+                        </div>
+                    </div>
+
                     <div class="tcoc-summary-grid">
                         <div class="tcoc-card">
                             <div class="tcoc-label">Total Annual Spend</div>
@@ -880,11 +910,11 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th class="tooltip-header" title="Geographic service area based on attributed patient residence. Markets defined by Piedmont regional boundaries.">Market Region <span class="th-info">ⓘ</span></th>
-                                    <th class="tooltip-header" title="Count of all ED visits by attributed patients in the measurement period. Source: Claims data with ED revenue codes (0450-0459, 0981).">Total ED Visits <span class="th-info">ⓘ</span></th>
-                                    <th class="tooltip-header" title="ED visits classified as avoidable per NYU ED Algorithm. Includes conditions treatable in primary care, urgent care, or via telehealth (URI, UTI, minor injuries, non-emergent back pain).">Avoidable Visits <span class="th-info">ⓘ</span></th>
-                                    <th class="tooltip-header" title="Percentage of total ED visits classified as avoidable. Formula: (Avoidable Visits ÷ Total ED Visits) × 100. Benchmark: &lt;25% is considered good performance.">Avoidable % <span class="th-info">ⓘ</span></th>
-                                    <th class="tooltip-header" title="Total allowed amount for avoidable ED visits. Formula: Avoidable Visits × Avg Cost/Visit. Includes facility fees + professional fees. Represents actual paid claims.">Cost Impact <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="string" title="Geographic service area based on attributed patient residence. Markets defined by Piedmont regional boundaries.">Market Region <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="number" title="Count of all ED visits by attributed patients in the measurement period. Source: Claims data with ED revenue codes (0450-0459, 0981).">Total ED Visits <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="number" title="ED visits classified as avoidable per NYU ED Algorithm. Includes conditions treatable in primary care, urgent care, or via telehealth (URI, UTI, minor injuries, non-emergent back pain).">Avoidable Visits <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="percent" title="Percentage of total ED visits classified as avoidable. Formula: (Avoidable Visits ÷ Total ED Visits) × 100. Benchmark: &lt;25% is considered good performance.">Avoidable % <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="currency" title="Total allowed amount for avoidable ED visits. Formula: Avoidable Visits × Avg Cost/Visit. Includes facility fees + professional fees. Represents actual paid claims.">Cost Impact <span class="th-info">ⓘ</span></th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -955,6 +985,16 @@
                         </button>
                     </div>
 
+                    <!-- Employment Filter Toggle -->
+                    <div class="employment-filter-container" data-tab="leakage">
+                        <span class="employment-filter-label">Provider Filter:</span>
+                        <div class="employment-toggle">
+                            <button class="employment-toggle-btn active" data-filter="all" onclick="setEmploymentFilter('leakage', 'all')">All Providers</button>
+                            <button class="employment-toggle-btn" data-filter="employed" onclick="setEmploymentFilter('leakage', 'employed')">Employed</button>
+                            <button class="employment-toggle-btn" data-filter="non-employed" onclick="setEmploymentFilter('leakage', 'non-employed')">Non-Employed</button>
+                        </div>
+                    </div>
+
                     <div class="leakage-filter-bar">
                         <label>View:</label>
                         <button class="filter-btn active" onclick="setLeakageView('all')">All Claims</button>
@@ -1001,12 +1041,12 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>OON Provider/Facility</th>
-                                    <th>Specialty/Type</th>
-                                    <th>Total OON Spend</th>
-                                    <th>Patient Count</th>
-                                    <th>Avg Cost/Patient</th>
-                                    <th>Primary Service</th>
+                                    <th class="sortable" data-sort="string">OON Provider/Facility</th>
+                                    <th class="sortable" data-sort="string">Specialty/Type</th>
+                                    <th class="sortable" data-sort="currency">Total OON Spend</th>
+                                    <th class="sortable" data-sort="number">Patient Count</th>
+                                    <th class="sortable" data-sort="currency">Avg Cost/Patient</th>
+                                    <th class="sortable" data-sort="string">Primary Service</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1059,12 +1099,12 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>PCP Name</th>
-                                    <th>Market</th>
-                                    <th>Attributed Lives</th>
-                                    <th>Total Spend</th>
-                                    <th>OON Spend</th>
-                                    <th>Leakage %</th>
+                                    <th class="sortable" data-sort="string">PCP Name</th>
+                                    <th class="sortable" data-sort="string">Market</th>
+                                    <th class="sortable" data-sort="number">Attributed Lives</th>
+                                    <th class="sortable" data-sort="currency">Total Spend</th>
+                                    <th class="sortable" data-sort="currency">OON Spend</th>
+                                    <th class="sortable" data-sort="percent">Leakage %</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -1146,6 +1186,16 @@
                         </button>
                     </div>
 
+                    <!-- Employment Filter Toggle -->
+                    <div class="employment-filter-container" data-tab="hcc">
+                        <span class="employment-filter-label">Provider Filter:</span>
+                        <div class="employment-toggle">
+                            <button class="employment-toggle-btn active" data-filter="all" onclick="setEmploymentFilter('hcc', 'all')">All Providers</button>
+                            <button class="employment-toggle-btn" data-filter="employed" onclick="setEmploymentFilter('hcc', 'employed')">Employed</button>
+                            <button class="employment-toggle-btn" data-filter="non-employed" onclick="setEmploymentFilter('hcc', 'non-employed')">Non-Employed</button>
+                        </div>
+                    </div>
+
                     <div class="hcc-summary-grid">
                         <div class="hcc-summary-card">
                             <h4>Average RAF Score</h4>
@@ -1178,12 +1228,12 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>Provider Name</th>
-                                    <th>Specialty</th>
-                                    <th>Panel Size</th>
-                                    <th>Avg RAF</th>
-                                    <th>Suspect HCCs</th>
-                                    <th>Revenue Opportunity</th>
+                                    <th class="sortable" data-sort="string">Provider Name</th>
+                                    <th class="sortable" data-sort="string">Specialty</th>
+                                    <th class="sortable" data-sort="number">Panel Size</th>
+                                    <th class="sortable" data-sort="number">Avg RAF</th>
+                                    <th class="sortable" data-sort="number">Suspect HCCs</th>
+                                    <th class="sortable" data-sort="currency">Revenue Opportunity</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -1224,12 +1274,12 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>HCC Category</th>
-                                    <th>HCC Code</th>
-                                    <th>Suspect Count</th>
-                                    <th>RAF Weight</th>
-                                    <th>Revenue Impact</th>
-                                    <th>Common ICD-10</th>
+                                    <th class="sortable" data-sort="string">HCC Category</th>
+                                    <th class="sortable" data-sort="string">HCC Code</th>
+                                    <th class="sortable" data-sort="number">Suspect Count</th>
+                                    <th class="sortable" data-sort="number">RAF Weight</th>
+                                    <th class="sortable" data-sort="currency">Revenue Impact</th>
+                                    <th class="sortable" data-sort="string">Common ICD-10</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -1291,6 +1341,16 @@
                         </button>
                     </div>
 
+                    <!-- Employment Filter Toggle -->
+                    <div class="employment-filter-container" data-tab="episodes">
+                        <span class="employment-filter-label">Provider Filter:</span>
+                        <div class="employment-toggle">
+                            <button class="employment-toggle-btn active" data-filter="all" onclick="setEmploymentFilter('episodes', 'all')">All Providers</button>
+                            <button class="employment-toggle-btn" data-filter="employed" onclick="setEmploymentFilter('episodes', 'employed')">Employed</button>
+                            <button class="employment-toggle-btn" data-filter="non-employed" onclick="setEmploymentFilter('episodes', 'non-employed')">Non-Employed</button>
+                        </div>
+                    </div>
+
                     <div class="episodes-info-box">
                         <h4>About Episode Grouping</h4>
                         <p>Episodes are created using virtual bundle logic to group all services related to a clinical condition or procedure within a defined time window. This enables comparison of total cost of care across providers for clinically similar patient cohorts.</p>
@@ -1301,12 +1361,12 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>Episode Type</th>
-                                    <th class="tooltip-header" title="Total number of episodes grouped using virtual bundle methodology within the measurement period">Episode Count <span class="th-info">ⓘ</span></th>
-                                    <th class="tooltip-header" title="Mean total cost per episode including facility, professional, ancillary, and post-acute services. Formula: Total Episode Costs ÷ Episode Count">Avg Cost per Episode <span class="th-info">ⓘ</span></th>
-                                    <th class="tooltip-header" title="Standard deviation of episode costs showing dispersion from mean. Higher values indicate greater cost variation. Formula: √(Σ(x - μ)² / N)">Std Deviation <span class="th-info">ⓘ</span></th>
-                                    <th class="tooltip-header" title="Coefficient of variation showing relative cost dispersion. Formula: (Standard Deviation ÷ Average Cost) × 100. Target: &lt;20%">Variation % <span class="th-info">ⓘ</span></th>
-                                    <th class="tooltip-header" title="Clinical and financial standardization opportunity based on variation analysis">Opportunity <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable" data-sort="string">Episode Type</th>
+                                    <th class="sortable tooltip-header" data-sort="number" title="Total number of episodes grouped using virtual bundle methodology within the measurement period">Episode Count <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="currency" title="Mean total cost per episode including facility, professional, ancillary, and post-acute services. Formula: Total Episode Costs ÷ Episode Count">Avg Cost per Episode <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="currency" title="Standard deviation of episode costs showing dispersion from mean. Higher values indicate greater cost variation. Formula: √(Σ(x - μ)² / N)">Std Deviation <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="percent" title="Coefficient of variation showing relative cost dispersion. Formula: (Standard Deviation ÷ Average Cost) × 100. Target: &lt;20%">Variation % <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="string" title="Clinical and financial standardization opportunity based on variation analysis">Opportunity <span class="th-info">ⓘ</span></th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -1390,13 +1450,13 @@
                         <table class="data-table">
                             <thead>
                                 <tr>
-                                    <th>Episode Type</th>
-                                    <th class="tooltip-header" title="Percentage of episodes with skilled nursing facility discharge. National benchmark for joint replacement: 28%. Formula: SNF Discharges ÷ Total Episodes × 100">SNF Rate <span class="th-info">ⓘ</span></th>
-                                    <th class="tooltip-header" title="Average length of stay in skilled nursing facility. Target: ≤14 days for joint replacement. Formula: Total SNF Days ÷ SNF Admissions">Avg SNF Days <span class="th-info">ⓘ</span></th>
-                                    <th class="tooltip-header" title="Average SNF cost per member per month for patients using SNF services. Formula: Total SNF Costs ÷ Member Months">SNF Cost PMPM <span class="th-info">ⓘ</span></th>
-                                    <th class="tooltip-header" title="Percentage of episodes utilizing home health services. Higher rates often indicate appropriate care setting optimization. Formula: HH Episodes ÷ Total Episodes × 100">Home Health Rate <span class="th-info">ⓘ</span></th>
-                                    <th class="tooltip-header" title="Average number of home health visits per episode. Formula: Total HH Visits ÷ HH Episodes">Avg HH Visits <span class="th-info">ⓘ</span></th>
-                                    <th class="tooltip-header" title="Total post-acute care cost including SNF, home health, inpatient rehab, and LTACH. Formula: SNF Cost + Home Health Cost + IRF Cost + LTACH Cost">Total PAC Cost <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable" data-sort="string">Episode Type</th>
+                                    <th class="sortable tooltip-header" data-sort="percent" title="Percentage of episodes with skilled nursing facility discharge. National benchmark for joint replacement: 28%. Formula: SNF Discharges ÷ Total Episodes × 100">SNF Rate <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="number" title="Average length of stay in skilled nursing facility. Target: ≤14 days for joint replacement. Formula: Total SNF Days ÷ SNF Admissions">Avg SNF Days <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="currency" title="Average SNF cost per member per month for patients using SNF services. Formula: Total SNF Costs ÷ Member Months">SNF Cost PMPM <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="percent" title="Percentage of episodes utilizing home health services. Higher rates often indicate appropriate care setting optimization. Formula: HH Episodes ÷ Total Episodes × 100">Home Health Rate <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="number" title="Average number of home health visits per episode. Formula: Total HH Visits ÷ HH Episodes">Avg HH Visits <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="currency" title="Total post-acute care cost including SNF, home health, inpatient rehab, and LTACH. Formula: SNF Cost + Home Health Cost + IRF Cost + LTACH Cost">Total PAC Cost <span class="th-info">ⓘ</span></th>
                                 </tr>
                             </thead>
                             <tbody>

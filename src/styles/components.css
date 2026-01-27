@@ -1254,3 +1254,129 @@
     border-top-color: #2c3e50;
     z-index: 1001;
 }
+
+/* Employment Filter Toggle */
+.employment-filter-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.employment-filter-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #2c3e50;
+    white-space: nowrap;
+}
+
+.employment-toggle {
+    display: inline-flex;
+    background: #f0f3f7;
+    border-radius: 8px;
+    padding: 3px;
+    gap: 3px;
+}
+
+.employment-toggle-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #5a6c7d;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.employment-toggle-btn:hover {
+    color: #2c3e50;
+}
+
+.employment-toggle-btn.active {
+    background: white;
+    color: var(--piedmont-primary);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.employment-toggle-btn.active.employed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.employment-toggle-btn.active.non-employed {
+    background: #fff3cd;
+    color: #856404;
+}
+
+/* Sortable Table Headers */
+.data-table th.sortable {
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    padding-right: 1.75rem;
+    transition: background 0.2s;
+}
+
+.data-table th.sortable:hover {
+    background: #e9ecef;
+}
+
+.data-table th.sortable::after {
+    content: '⇅';
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.75rem;
+    color: #95a5a6;
+    opacity: 0.6;
+}
+
+.data-table th.sortable.sort-asc::after {
+    content: '↑';
+    color: var(--piedmont-primary);
+    opacity: 1;
+}
+
+.data-table th.sortable.sort-desc::after {
+    content: '↓';
+    color: var(--piedmont-primary);
+    opacity: 1;
+}
+
+.data-table th.sortable.tooltip-header {
+    padding-right: 2.5rem;
+}
+
+.data-table th.sortable.tooltip-header::after {
+    right: 1.5rem;
+}
+
+/* Mobile responsive for employment filter */
+@media (max-width: 768px) {
+    .employment-filter-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.75rem;
+        padding: 1rem;
+    }
+
+    .employment-toggle {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .employment-toggle-btn {
+        flex: 1;
+        text-align: center;
+        padding: 0.6rem 0.75rem;
+        font-size: 0.8rem;
+    }
+}

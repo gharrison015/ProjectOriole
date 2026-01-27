@@ -5464,3 +5464,188 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 window.toggleMobileMenu = toggleMobileMenu;
+
+// =====================================================
+// SORTABLE TABLE COLUMNS
+// =====================================================
+
+// Initialize sortable columns on page load
+document.addEventListener('DOMContentLoaded', function() {
+    initializeSortableColumns();
+});
+
+function initializeSortableColumns() {
+    const sortableHeaders = document.querySelectorAll('.data-table th.sortable');
+
+    sortableHeaders.forEach(header => {
+        header.addEventListener('click', function() {
+            const table = this.closest('table');
+            const tbody = table.querySelector('tbody');
+            const headerRow = this.closest('tr');
+            const columnIndex = Array.from(headerRow.children).indexOf(this);
+            const sortType = this.dataset.sort || 'string';
+
+            // Determine sort direction
+            const currentDirection = this.classList.contains('sort-asc') ? 'asc' :
+                                    this.classList.contains('sort-desc') ? 'desc' : 'none';
+            const newDirection = currentDirection === 'asc' ? 'desc' : 'asc';
+
+            // Remove sort classes from all headers in this table
+            headerRow.querySelectorAll('th.sortable').forEach(th => {
+                th.classList.remove('sort-asc', 'sort-desc');
+            });
+
+            // Add new sort class
+            this.classList.add(newDirection === 'asc' ? 'sort-asc' : 'sort-desc');
+
+            // Get all rows (excluding domain-header rows which are used as section dividers)
+            const rows = Array.from(tbody.querySelectorAll('tr:not(.domain-header)'));
+
+            // Sort rows
+            rows.sort((a, b) => {
+                const aCell = a.children[columnIndex];
+                const bCell = b.children[columnIndex];
+
+                if (!aCell || !bCell) return 0;
+
+                let aVal = aCell.textContent.trim();
+                let bVal = bCell.textContent.trim();
+
+                // Parse values based on sort type
+                switch (sortType) {
+                    case 'number':
+                        aVal = parseFloat(aVal.replace(/[^0-9.-]/g, '')) || 0;
+                        bVal = parseFloat(bVal.replace(/[^0-9.-]/g, '')) || 0;
+                        break;
+                    case 'currency':
+                        aVal = parseFloat(aVal.replace(/[^0-9.-]/g, '')) || 0;
+                        bVal = parseFloat(bVal.replace(/[^0-9.-]/g, '')) || 0;
+                        break;
+                    case 'percent':
+                        aVal = parseFloat(aVal.replace(/[^0-9.-]/g, '')) || 0;
+                        bVal = parseFloat(bVal.replace(/[^0-9.-]/g, '')) || 0;
+                        break;
+                    default: // string
+                        aVal = aVal.toLowerCase();
+                        bVal = bVal.toLowerCase();
+                }
+
+                if (aVal < bVal) return newDirection === 'asc' ? -1 : 1;
+                if (aVal > bVal) return newDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            // Reorder rows in DOM
+            rows.forEach(row => tbody.appendChild(row));
+        });
+    });
+}
+
+// =====================================================
+// EMPLOYMENT FILTER
+// =====================================================
+
+// Store current employment filter state per tab
+const employmentFilterState = {
+    projections: 'all',
+    quality: 'all',
+    tcoc: 'all',
+    leakage: 'all',
+    hcc: 'all',
+    episodes: 'all'
+};
+
+function setEmploymentFilter(tab, filter) {
+    // Update state
+    employmentFilterState[tab] = filter;
+
+    // Update button states
+    const container = document.querySelector(`.employment-filter-container[data-tab="${tab}"]`);
+    if (container) {
+        container.querySelectorAll('.employment-toggle-btn').forEach(btn => {
+            btn.classList.remove('active', 'employed', 'non-employed');
+            if (btn.dataset.filter === filter) {
+                btn.classList.add('active');
+                if (filter === 'employed') {
+                    btn.classList.add('employed');
+                } else if (filter === 'non-employed') {
+                    btn.classList.add('non-employed');
+                }
+            }
+        });
+    }
+
+    // Apply filter to the tab content
+    applyEmploymentFilter(tab, filter);
+}
+
+function applyEmploymentFilter(tab, filter) {
+    // This function would filter data based on employment status
+    // For now, it updates visual indicators and could be extended to filter actual data
+
+    const tabContent = document.getElementById(`${tab}-tab`);
+    if (!tabContent) return;
+
+    // Add data attribute to track current filter
+    tabContent.dataset.employmentFilter = filter;
+
+    // Get all tables in this tab
+    const tables = tabContent.querySelectorAll('.data-table');
+
+    tables.forEach(table => {
+        const rows = table.querySelectorAll('tbody tr:not(.domain-header)');
+
+        rows.forEach(row => {
+            // Check if row has employment data attribute
+            const employmentStatus = row.dataset.employment;
+
+            if (filter === 'all') {
+                row.style.display = '';
+            } else if (employmentStatus) {
+                if (employmentStatus === filter) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+            // If no employment data, row remains visible
+        });
+    });
+
+    // Update summary cards if they exist with filtered data
+    updateTabSummaryForFilter(tab, filter);
+}
+
+function updateTabSummaryForFilter(tab, filter) {
+    // This would update KPI cards and summary sections based on filter
+    // Implementation would depend on actual data structure
+    // For demo purposes, we can show a visual indicator
+
+    const tabContent = document.getElementById(`${tab}-tab`);
+    if (!tabContent) return;
+
+    // Find any filter status indicator
+    let statusIndicator = tabContent.querySelector('.filter-status-indicator');
+
+    if (filter !== 'all') {
+        if (!statusIndicator) {
+            statusIndicator = document.createElement('div');
+            statusIndicator.className = 'filter-status-indicator';
+            statusIndicator.style.cssText = 'background: #e8f4fd; padding: 0.5rem 1rem; border-radius: 6px; margin-bottom: 1rem; font-size: 0.85rem; color: #2c3e50; display: flex; align-items: center; gap: 0.5rem;';
+
+            const filterContainer = tabContent.querySelector('.employment-filter-container');
+            if (filterContainer && filterContainer.nextElementSibling) {
+                filterContainer.parentNode.insertBefore(statusIndicator, filterContainer.nextElementSibling);
+            }
+        }
+
+        const filterLabel = filter === 'employed' ? 'Employed Providers Only' : 'Non-Employed Providers Only';
+        statusIndicator.innerHTML = `<span style="font-weight: 600;">🔍 Filter Active:</span> ${filterLabel} <button onclick="setEmploymentFilter('${tab}', 'all')" style="margin-left: auto; background: none; border: 1px solid #3498db; color: #3498db; padding: 0.25rem 0.75rem; border-radius: 4px; cursor: pointer; font-size: 0.8rem;">Clear Filter</button>`;
+    } else {
+        if (statusIndicator) {
+            statusIndicator.remove();
+        }
+    }
+}
+
+window.setEmploymentFilter = setEmploymentFilter;
