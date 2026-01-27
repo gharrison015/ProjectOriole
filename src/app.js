@@ -100,8 +100,9 @@ function initPerformanceTrendChart() {
         performanceTrendChart.destroy();
     }
 
-    // PY2025 data (full year - historical)
-    const py2025Data = [862, 858, 851, 847, 845, 843, 840, 838, 842, 845, 847, 847];
+    // PY2025 data - Jan-Oct are actual (solid), Nov-Dec are incomplete runout (dotted)
+    const py2025ActualData = [862, 858, 851, 847, 845, 843, 840, 838, 842, 845, null, null]; // Jan-Oct actual
+    const py2025ProjectedData = [null, null, null, null, null, null, null, null, null, 845, 847, 847]; // Nov-Dec incomplete (connects from Oct)
 
     // PY2026 data - Jan/Feb are actual (solid), Mar-Dec are projected (dotted)
     const py2026ActualData = [855, 849, null, null, null, null, null, null, null, null, null, null]; // Jan-Feb actual
@@ -150,8 +151,23 @@ function initPerformanceTrendChart() {
                     spanGaps: true
                 },
                 {
-                    label: 'PY2025 PMPM',
-                    data: py2025Data,
+                    label: 'PY2025 Actual PMPM',
+                    data: py2025ActualData,
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.05)',
+                    tension: 0.4,
+                    fill: false,
+                    pointRadius: 5,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: '#667eea',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    borderWidth: 2.5,
+                    spanGaps: false
+                },
+                {
+                    label: 'PY2025 Incomplete PMPM',
+                    data: py2025ProjectedData,
                     borderColor: '#667eea',
                     backgroundColor: 'rgba(102, 126, 234, 0.05)',
                     tension: 0.4,
@@ -162,7 +178,8 @@ function initPerformanceTrendChart() {
                     pointBorderColor: '#fff',
                     pointBorderWidth: 2,
                     borderDash: [5, 5],
-                    borderWidth: 2
+                    borderWidth: 2,
+                    spanGaps: true
                 },
                 {
                     label: 'PY2026 Benchmark',
@@ -205,8 +222,9 @@ function initPerformanceTrendChart() {
                         return false;
                     },
                     color: function(context) {
+                        // 0,1 = PY2026 (green), 2,3 = PY2025 (purple), 4 = Benchmark (red)
                         if (context.datasetIndex <= 1) return '#27ae60';
-                        if (context.datasetIndex === 2) return '#667eea';
+                        if (context.datasetIndex <= 3) return '#667eea';
                         return '#e74c3c';
                     },
                     font: { weight: 'bold', size: 10 },
@@ -250,11 +268,15 @@ function initPerformanceTrendChart() {
                                 label += ': ';
                             }
                             label += '$' + context.parsed.y.toFixed(2);
-                            // Add indicator for actual vs projected
+                            // Add indicator for actual vs projected/incomplete
                             if (context.datasetIndex === 0) {
                                 label += ' (Actual)';
                             } else if (context.datasetIndex === 1) {
                                 label += ' (Projected)';
+                            } else if (context.datasetIndex === 2) {
+                                label += ' (Actual)';
+                            } else if (context.datasetIndex === 3) {
+                                label += ' (Incomplete Runout)';
                             }
                             return label;
                         },
@@ -266,7 +288,11 @@ function initPerformanceTrendChart() {
                                 py2026Value = py2026ProjectedData[dataIndex];
                             }
                             const benchmarkValue = benchmarkData[dataIndex];
-                            const py2025Value = py2025Data[dataIndex];
+                            // Get PY2025 value (actual or incomplete)
+                            let py2025Value = py2025ActualData[dataIndex];
+                            if (py2025Value === null) {
+                                py2025Value = py2025ProjectedData[dataIndex];
+                            }
 
                             let result = [];
                             if (py2026Value !== null && benchmarkValue) {
