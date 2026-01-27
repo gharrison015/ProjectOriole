@@ -631,10 +631,10 @@ const piedmontHospitalData = {
             episodes: 89,
             nationalBenchmark: 27500,
             providers: [
-                { name: 'Dr. Sarah Mitchell', cases: 32, avgCost: 24800, qualityScore: 94.2, complications: 2.1, readmit30: 3.8, los: 2.1, patientSat: 4.7 },
-                { name: 'Dr. James Chen', cases: 28, avgCost: 26100, qualityScore: 91.8, complications: 3.2, readmit30: 4.2, los: 2.3, patientSat: 4.5 },
-                { name: 'Dr. Robert Williams', cases: 18, avgCost: 28400, qualityScore: 88.5, complications: 4.8, readmit30: 5.1, los: 2.8, patientSat: 4.2 },
-                { name: 'Dr. Maria Garcia', cases: 11, avgCost: 25900, qualityScore: 93.1, complications: 2.5, readmit30: 3.5, los: 2.0, patientSat: 4.8 }
+                { name: 'Dr. Mitchell', cases: 32, avgCost: 24800, qualityScore: 94.2, complications: 2.1, readmit30: 3.8, los: 2.1, patientSat: 4.7 },
+                { name: 'Dr. Chen', cases: 28, avgCost: 26100, qualityScore: 91.8, complications: 3.2, readmit30: 4.2, los: 2.3, patientSat: 4.5 },
+                { name: 'Dr. Williams', cases: 18, avgCost: 28400, qualityScore: 88.5, complications: 4.8, readmit30: 5.1, los: 2.8, patientSat: 4.2 },
+                { name: 'Dr. Garcia', cases: 11, avgCost: 25900, qualityScore: 93.1, complications: 2.5, readmit30: 3.5, los: 2.0, patientSat: 4.8 }
             ]
         },
         {
@@ -644,9 +644,9 @@ const piedmontHospitalData = {
             episodes: 67,
             nationalBenchmark: 27500,
             providers: [
-                { name: 'Dr. Thomas Anderson', cases: 24, avgCost: 27200, qualityScore: 90.5, complications: 3.8, readmit30: 4.8, los: 2.4, patientSat: 4.4 },
-                { name: 'Dr. Lisa Park', cases: 22, avgCost: 29800, qualityScore: 87.2, complications: 5.1, readmit30: 6.2, los: 3.1, patientSat: 4.1 },
-                { name: 'Dr. David Kim', cases: 21, avgCost: 30100, qualityScore: 85.8, complications: 5.8, readmit30: 6.8, los: 3.3, patientSat: 3.9 }
+                { name: 'Dr. Anderson', cases: 24, avgCost: 27200, qualityScore: 90.5, complications: 3.8, readmit30: 4.8, los: 2.4, patientSat: 4.4 },
+                { name: 'Dr. Park', cases: 22, avgCost: 29800, qualityScore: 87.2, complications: 5.1, readmit30: 6.2, los: 3.1, patientSat: 4.1 },
+                { name: 'Dr. Kim', cases: 21, avgCost: 30100, qualityScore: 85.8, complications: 5.8, readmit30: 6.8, los: 3.3, patientSat: 3.9 }
             ]
         },
         {
@@ -656,9 +656,9 @@ const piedmontHospitalData = {
             episodes: 54,
             nationalBenchmark: 27500,
             providers: [
-                { name: 'Dr. Michael Brown', cases: 19, avgCost: 29500, qualityScore: 89.1, complications: 4.2, readmit30: 5.5, los: 2.6, patientSat: 4.3 },
-                { name: 'Dr. Jennifer Lee', cases: 18, avgCost: 32800, qualityScore: 84.5, complications: 6.5, readmit30: 7.2, los: 3.5, patientSat: 3.8 },
-                { name: 'Dr. William Davis', cases: 17, avgCost: 31400, qualityScore: 86.2, complications: 5.5, readmit30: 6.0, los: 3.0, patientSat: 4.0 }
+                { name: 'Dr. Brown', cases: 19, avgCost: 29500, qualityScore: 89.1, complications: 4.2, readmit30: 5.5, los: 2.6, patientSat: 4.3 },
+                { name: 'Dr. Lee', cases: 18, avgCost: 32800, qualityScore: 84.5, complications: 6.5, readmit30: 7.2, los: 3.5, patientSat: 3.8 },
+                { name: 'Dr. Davis', cases: 17, avgCost: 31400, qualityScore: 86.2, complications: 5.5, readmit30: 6.0, los: 3.0, patientSat: 4.0 }
             ]
         },
         {
@@ -668,9 +668,9 @@ const piedmontHospitalData = {
             episodes: 48,
             nationalBenchmark: 27500,
             providers: [
-                { name: 'Dr. Elizabeth Taylor', cases: 22, avgCost: 24500, qualityScore: 95.2, complications: 1.8, readmit30: 3.2, los: 1.9, patientSat: 4.9 },
-                { name: 'Dr. Christopher Moore', cases: 15, avgCost: 26800, qualityScore: 92.4, complications: 2.8, readmit30: 4.0, los: 2.2, patientSat: 4.6 },
-                { name: 'Dr. Amanda White', cases: 11, avgCost: 26400, qualityScore: 91.8, complications: 3.0, readmit30: 4.5, los: 2.3, patientSat: 4.5 }
+                { name: 'Dr. Taylor', cases: 22, avgCost: 24500, qualityScore: 95.2, complications: 1.8, readmit30: 3.2, los: 1.9, patientSat: 4.9 },
+                { name: 'Dr. Moore', cases: 15, avgCost: 26800, qualityScore: 92.4, complications: 2.8, readmit30: 4.0, los: 2.2, patientSat: 4.6 },
+                { name: 'Dr. White', cases: 11, avgCost: 26400, qualityScore: 91.8, complications: 3.0, readmit30: 4.5, los: 2.3, patientSat: 4.5 }
             ]
         },
         {
@@ -680,9 +680,9 @@ const piedmontHospitalData = {
             episodes: 42,
             nationalBenchmark: 27500,
             providers: [
-                { name: 'Dr. Richard Johnson', cases: 18, avgCost: 28200, qualityScore: 89.8, complications: 4.0, readmit30: 5.2, los: 2.5, patientSat: 4.2 },
-                { name: 'Dr. Patricia Martinez', cases: 14, avgCost: 30800, qualityScore: 86.5, complications: 5.2, readmit30: 6.5, los: 3.2, patientSat: 4.0 },
-                { name: 'Dr. Steven Clark', cases: 10, avgCost: 29500, qualityScore: 88.2, complications: 4.5, readmit30: 5.8, los: 2.8, patientSat: 4.1 }
+                { name: 'Dr. Johnson', cases: 18, avgCost: 28200, qualityScore: 89.8, complications: 4.0, readmit30: 5.2, los: 2.5, patientSat: 4.2 },
+                { name: 'Dr. Martinez', cases: 14, avgCost: 30800, qualityScore: 86.5, complications: 5.2, readmit30: 6.5, los: 3.2, patientSat: 4.0 },
+                { name: 'Dr. Clark', cases: 10, avgCost: 29500, qualityScore: 88.2, complications: 4.5, readmit30: 5.8, los: 2.8, patientSat: 4.1 }
             ]
         },
         {
@@ -692,9 +692,9 @@ const piedmontHospitalData = {
             episodes: 38,
             nationalBenchmark: 27500,
             providers: [
-                { name: 'Dr. Nancy Robinson', cases: 16, avgCost: 32200, qualityScore: 83.5, complications: 7.2, readmit30: 8.5, los: 3.8, patientSat: 3.6 },
-                { name: 'Dr. Kevin Harris', cases: 13, avgCost: 34800, qualityScore: 81.2, complications: 8.5, readmit30: 9.2, los: 4.2, patientSat: 3.4 },
-                { name: 'Dr. Sandra Thompson', cases: 9, avgCost: 33800, qualityScore: 82.8, complications: 7.8, readmit30: 8.8, los: 4.0, patientSat: 3.5 }
+                { name: 'Dr. Robinson', cases: 16, avgCost: 32200, qualityScore: 83.5, complications: 7.2, readmit30: 8.5, los: 3.8, patientSat: 3.6 },
+                { name: 'Dr. Harris', cases: 13, avgCost: 34800, qualityScore: 81.2, complications: 8.5, readmit30: 9.2, los: 4.2, patientSat: 3.4 },
+                { name: 'Dr. Thompson', cases: 9, avgCost: 33800, qualityScore: 82.8, complications: 7.8, readmit30: 8.8, los: 4.0, patientSat: 3.5 }
             ]
         }
     ],
@@ -1050,7 +1050,7 @@ function initProviderCostChart(providers, hospitalAvg, nationalBenchmark) {
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: providers.map(p => p.name.split(' ')[1]),
+            labels: providers.map(p => p.name),
             datasets: [
                 {
                     label: 'Avg Cost',
@@ -1141,7 +1141,7 @@ function initOpportunityChart(providers, hospitalAvg) {
     if (!ctx) return;
 
     const opportunities = providers.map(p => ({
-        name: p.name.split(' ')[1],
+        name: p.name,
         opportunity: Math.max(0, (p.avgCost - hospitalAvg) * p.cases)
     })).filter(o => o.opportunity > 0).sort((a, b) => b.opportunity - a.opportunity);
 
@@ -1637,9 +1637,9 @@ function drillDownMarket(marketId) {
             lives: 12456,
             pmpm: 823.45,
             providers: [
-                { name: 'Piedmont Atlanta Hospital', lives: 4234, pmpm: 812.34, quality: 91.2, leakage: 15.2 },
-                { name: 'Northside Hospital', lives: 3892, pmpm: 828.76, quality: 88.7, leakage: 19.4 },
-                { name: 'Emory Johns Creek', lives: 2456, pmpm: 835.21, quality: 89.5, leakage: 18.9 },
+                { name: 'Piedmont Atlanta', lives: 4234, pmpm: 812.34, quality: 91.2, leakage: 15.2 },
+                { name: 'Piedmont Mountainside', lives: 3892, pmpm: 828.76, quality: 88.7, leakage: 19.4 },
+                { name: 'Piedmont Henry', lives: 2456, pmpm: 835.21, quality: 89.5, leakage: 18.9 },
                 { name: 'Community Providers', lives: 1874, pmpm: 819.45, quality: 87.3, leakage: 21.3 }
             ]
         },
@@ -1648,9 +1648,9 @@ function drillDownMarket(marketId) {
             lives: 15234,
             pmpm: 871.22,
             providers: [
-                { name: 'Piedmont Fayette Hospital', lives: 5123, pmpm: 856.32, quality: 87.1, leakage: 24.8 },
-                { name: 'Southern Regional Medical', lives: 4567, pmpm: 883.45, quality: 85.3, leakage: 29.2 },
-                { name: 'Wellstar Atlanta Medical', lives: 3234, pmpm: 872.19, quality: 86.7, leakage: 28.1 },
+                { name: 'Piedmont Fayette', lives: 5123, pmpm: 856.32, quality: 87.1, leakage: 24.8 },
+                { name: 'Piedmont Newnan', lives: 4567, pmpm: 883.45, quality: 85.3, leakage: 29.2 },
+                { name: 'Piedmont Henry', lives: 3234, pmpm: 872.19, quality: 86.7, leakage: 28.1 },
                 { name: 'Community Providers', lives: 2310, pmpm: 868.92, quality: 85.9, leakage: 26.5 }
             ]
         },
@@ -1659,9 +1659,9 @@ function drillDownMarket(marketId) {
             lives: 6734,
             pmpm: 892.18,
             providers: [
-                { name: 'Augusta University Medical', lives: 3421, pmpm: 878.45, quality: 85.2, leakage: 28.9 },
-                { name: 'Doctors Hospital', lives: 1876, pmpm: 905.32, quality: 83.7, leakage: 34.2 },
-                { name: 'Trinity Hospital', lives: 982, pmpm: 912.67, quality: 82.9, leakage: 35.8 },
+                { name: 'Piedmont Augusta', lives: 3421, pmpm: 878.45, quality: 85.2, leakage: 28.9 },
+                { name: 'Piedmont McDuffie', lives: 1876, pmpm: 905.32, quality: 83.7, leakage: 34.2 },
+                { name: 'Piedmont Burke', lives: 982, pmpm: 912.67, quality: 82.9, leakage: 35.8 },
                 { name: 'Community Providers', lives: 455, pmpm: 897.23, quality: 84.1, leakage: 31.5 }
             ]
         },
@@ -1670,8 +1670,8 @@ function drillDownMarket(marketId) {
             lives: 8923,
             pmpm: 834.67,
             providers: [
-                { name: 'Piedmont Columbus Regional', lives: 4512, pmpm: 825.34, quality: 89.1, leakage: 19.2 },
-                { name: 'St. Francis Hospital', lives: 2876, pmpm: 841.23, quality: 87.8, leakage: 22.4 },
+                { name: 'Piedmont Columbus', lives: 4512, pmpm: 825.34, quality: 89.1, leakage: 19.2 },
+                { name: 'Piedmont Midland', lives: 2876, pmpm: 841.23, quality: 87.8, leakage: 22.4 },
                 { name: 'Community Providers', lives: 1535, pmpm: 846.78, quality: 88.2, leakage: 23.1 }
             ]
         },
@@ -1680,8 +1680,8 @@ function drillDownMarket(marketId) {
             lives: 4476,
             pmpm: 851.34,
             providers: [
-                { name: 'Atrium Health Navicent', lives: 2834, pmpm: 845.12, quality: 86.5, leakage: 18.4 },
-                { name: 'Medical Center Macon', lives: 1642, pmpm: 862.45, quality: 85.1, leakage: 21.7 }
+                { name: 'Piedmont Macon', lives: 2834, pmpm: 845.12, quality: 86.5, leakage: 18.4 },
+                { name: 'Piedmont Medical Center', lives: 1642, pmpm: 862.45, quality: 85.1, leakage: 21.7 }
             ]
         }
     };
@@ -1963,9 +1963,9 @@ function drillDownEDMarket(marketId) {
     const marketName = marketNames[marketId] || marketId;
 
     const providerData = [
-        { provider: 'Piedmont Fayette Hospital', lives: 5123, totalED: 1437, avoidableED: 492, avoidablePct: 34.2, costPerVisit: 1247, savingsPotential: 613404 },
-        { provider: 'Southern Regional Medical', lives: 4567, totalED: 1279, avoidableED: 428, avoidablePct: 33.5, costPerVisit: 1198, savingsPotential: 512744 },
-        { provider: 'Wellstar Atlanta Medical', lives: 3234, totalED: 906, avoidableED: 299, avoidablePct: 33.0, costPerVisit: 1231, savingsPotential: 368069 },
+        { provider: 'Piedmont Fayette', lives: 5123, totalED: 1437, avoidableED: 492, avoidablePct: 34.2, costPerVisit: 1247, savingsPotential: 613404 },
+        { provider: 'Piedmont Newnan', lives: 4567, totalED: 1279, avoidableED: 428, avoidablePct: 33.5, costPerVisit: 1198, savingsPotential: 512744 },
+        { provider: 'Piedmont Henry', lives: 3234, totalED: 906, avoidableED: 299, avoidablePct: 33.0, costPerVisit: 1231, savingsPotential: 368069 },
         { provider: 'Community Providers', lives: 2310, totalED: 647, avoidableED: 207, avoidablePct: 32.0, costPerVisit: 1219, savingsPotential: 252333 }
     ];
 
@@ -2051,7 +2051,7 @@ let expandedNodes = new Set();
 function createSankeyDiagram(pcpId) {
     const pcpData = {
         'martinez': {
-            name: 'Dr. Robert Martinez',
+            name: 'Dr. Martinez',
             totalOONSpend: 8123456,
             totalSpend: 14234887,
             // Multi-level decomposition data structure
@@ -2122,7 +2122,7 @@ function createSankeyDiagram(pcpId) {
             }
         },
         'williams': {
-            name: 'Dr. Amanda Williams',
+            name: 'Dr. Williams',
             totalOONSpend: 6234500,
             totalSpend: 17892441,
             decomposition: {
@@ -2643,9 +2643,9 @@ function collapseAllSankeyNodes() {
 
 function drillDownHCC(providerId) {
     const providerNames = {
-        'johnson': 'Dr. Sarah Johnson',
-        'anderson': 'Dr. Michael Anderson',
-        'brown': 'Dr. Jennifer Brown'
+        'johnson': 'Dr. Johnson',
+        'anderson': 'Dr. Anderson',
+        'brown': 'Dr. Brown'
     };
 
     const providerName = providerNames[providerId] || providerId;
@@ -2873,21 +2873,45 @@ function drillDownEpisode(episodeType) {
 
     const episodeName = episodeNames[episodeType] || episodeType;
 
-    // Provider-level episode cost data
+    // Provider-level episode cost data (Piedmont Health System hospitals)
     const providerData = {
         'joint': [
-            { provider: 'Piedmont Atlanta Hospital', episodes: 89, avgCost: 24500, benchmarkCost: 26800, variance: -8.6, postAcuteUtil: 32, readmitRate: 5.6 },
-            { provider: 'Northside Hospital', episodes: 72, avgCost: 28200, benchmarkCost: 26800, variance: 5.2, postAcuteUtil: 45, readmitRate: 7.2 },
-            { provider: 'Emory Orthopedics', episodes: 54, avgCost: 31500, benchmarkCost: 26800, variance: 17.5, postAcuteUtil: 58, readmitRate: 8.9 },
-            { provider: 'Wellstar Kennestone', episodes: 41, avgCost: 26800, benchmarkCost: 26800, variance: 0.0, postAcuteUtil: 38, readmitRate: 6.1 },
-            { provider: 'Piedmont Fayette', episodes: 38, avgCost: 29400, benchmarkCost: 26800, variance: 9.7, postAcuteUtil: 48, readmitRate: 7.8 },
-            { provider: 'Southern Regional', episodes: 27, avgCost: 33200, benchmarkCost: 26800, variance: 23.9, postAcuteUtil: 67, readmitRate: 11.2 }
+            { provider: 'Piedmont Atlanta', episodes: 89, avgCost: 24500, benchmarkCost: 26800, variance: -8.6, postAcuteUtil: 32, readmitRate: 5.6 },
+            { provider: 'Piedmont Newnan', episodes: 67, avgCost: 28200, benchmarkCost: 26800, variance: 5.2, postAcuteUtil: 45, readmitRate: 7.2 },
+            { provider: 'Piedmont Fayette', episodes: 54, avgCost: 31500, benchmarkCost: 26800, variance: 17.5, postAcuteUtil: 58, readmitRate: 8.9 },
+            { provider: 'Piedmont Henry', episodes: 48, avgCost: 26800, benchmarkCost: 26800, variance: 0.0, postAcuteUtil: 38, readmitRate: 6.1 },
+            { provider: 'Piedmont Mountainside', episodes: 42, avgCost: 29400, benchmarkCost: 26800, variance: 9.7, postAcuteUtil: 48, readmitRate: 7.8 },
+            { provider: 'Piedmont Columbus', episodes: 38, avgCost: 33200, benchmarkCost: 26800, variance: 23.9, postAcuteUtil: 67, readmitRate: 11.2 }
         ],
         'chf': [
-            { provider: 'Piedmont Atlanta Hospital', episodes: 234, avgCost: 12800, benchmarkCost: 14200, variance: -9.9, postAcuteUtil: 22, readmitRate: 18.2 },
-            { provider: 'Emory University', episodes: 189, avgCost: 15600, benchmarkCost: 14200, variance: 9.9, postAcuteUtil: 31, readmitRate: 21.7 },
-            { provider: 'Northside Hospital', episodes: 156, avgCost: 13900, benchmarkCost: 14200, variance: -2.1, postAcuteUtil: 24, readmitRate: 19.8 },
-            { provider: 'Wellstar Atlanta Medical', episodes: 143, avgCost: 16800, benchmarkCost: 14200, variance: 18.3, postAcuteUtil: 35, readmitRate: 24.5 }
+            { provider: 'Piedmont Atlanta', episodes: 234, avgCost: 12800, benchmarkCost: 14200, variance: -9.9, postAcuteUtil: 22, readmitRate: 18.2 },
+            { provider: 'Piedmont Newnan', episodes: 189, avgCost: 15600, benchmarkCost: 14200, variance: 9.9, postAcuteUtil: 31, readmitRate: 21.7 },
+            { provider: 'Piedmont Fayette', episodes: 156, avgCost: 13900, benchmarkCost: 14200, variance: -2.1, postAcuteUtil: 24, readmitRate: 19.8 },
+            { provider: 'Piedmont Henry', episodes: 143, avgCost: 16800, benchmarkCost: 14200, variance: 18.3, postAcuteUtil: 35, readmitRate: 24.5 }
+        ],
+        'pci': [
+            { provider: 'Piedmont Atlanta', episodes: 98, avgCost: 30200, benchmarkCost: 32000, variance: -5.6, postAcuteUtil: 18, readmitRate: 4.2 },
+            { provider: 'Piedmont Newnan', episodes: 56, avgCost: 34500, benchmarkCost: 32000, variance: 7.8, postAcuteUtil: 24, readmitRate: 5.8 },
+            { provider: 'Piedmont Henry', episodes: 48, avgCost: 32100, benchmarkCost: 32000, variance: 0.3, postAcuteUtil: 20, readmitRate: 4.9 },
+            { provider: 'Piedmont Columbus', episodes: 32, avgCost: 36800, benchmarkCost: 32000, variance: 15.0, postAcuteUtil: 32, readmitRate: 7.2 }
+        ],
+        'copd': [
+            { provider: 'Piedmont Atlanta', episodes: 156, avgCost: 11200, benchmarkCost: 12000, variance: -6.7, postAcuteUtil: 28, readmitRate: 16.5 },
+            { provider: 'Piedmont Fayette', episodes: 134, avgCost: 12800, benchmarkCost: 12000, variance: 6.7, postAcuteUtil: 35, readmitRate: 19.2 },
+            { provider: 'Piedmont Newnan', episodes: 112, avgCost: 13200, benchmarkCost: 12000, variance: 10.0, postAcuteUtil: 38, readmitRate: 21.4 },
+            { provider: 'Piedmont Henry', episodes: 85, avgCost: 11800, benchmarkCost: 12000, variance: -1.7, postAcuteUtil: 30, readmitRate: 17.8 }
+        ],
+        'pneumonia': [
+            { provider: 'Piedmont Atlanta', episodes: 198, avgCost: 9200, benchmarkCost: 9500, variance: -3.2, postAcuteUtil: 22, readmitRate: 12.1 },
+            { provider: 'Piedmont Newnan', episodes: 167, avgCost: 9800, benchmarkCost: 9500, variance: 3.2, postAcuteUtil: 26, readmitRate: 13.8 },
+            { provider: 'Piedmont Fayette', episodes: 142, avgCost: 10200, benchmarkCost: 9500, variance: 7.4, postAcuteUtil: 29, readmitRate: 14.5 },
+            { provider: 'Piedmont Henry', episodes: 116, avgCost: 9600, benchmarkCost: 9500, variance: 1.1, postAcuteUtil: 24, readmitRate: 12.8 }
+        ],
+        'spine': [
+            { provider: 'Piedmont Atlanta', episodes: 62, avgCost: 42500, benchmarkCost: 44000, variance: -3.4, postAcuteUtil: 45, readmitRate: 6.2 },
+            { provider: 'Piedmont Newnan', episodes: 38, avgCost: 48200, benchmarkCost: 44000, variance: 9.5, postAcuteUtil: 58, readmitRate: 8.4 },
+            { provider: 'Piedmont Fayette', episodes: 32, avgCost: 52100, benchmarkCost: 44000, variance: 18.4, postAcuteUtil: 65, readmitRate: 10.2 },
+            { provider: 'Piedmont Columbus', episodes: 24, avgCost: 46800, benchmarkCost: 44000, variance: 6.4, postAcuteUtil: 52, readmitRate: 7.8 }
         ]
     };
 
@@ -3138,11 +3162,11 @@ function getPatientDataForMeasure(measureCode) {
             name: 'Sarah Mitchell',
             dob: '03/15/1968',
             mrn: 'PHC-458921',
-            pcp: 'Dr. James Chen',
+            pcp: 'Dr. Chen',
             riskScore: '1.42',
             caseManager: 'Jennifer Rodriguez, RN',
             openGaps: 3,
-            nextAppt: { date: 'Feb 12, 2026', time: '10:30 AM', provider: 'Dr. James Chen', type: 'Annual Wellness Visit', location: 'Piedmont Primary Care - Buckhead' },
+            nextAppt: { date: 'Feb 12, 2026', time: '10:30 AM', provider: 'Dr. Chen', type: 'Annual Wellness Visit', location: 'Piedmont Primary Care - Buckhead' },
             gaps: [
                 { measureCode: 'ACO-17', measure: 'Breast Cancer Screening', status: 'Open', description: 'Mammogram due for women age 50-74. Last screening: 11/2022', lastAction: 'Reminder letter sent 01/15/2026', daysOpen: 28, complianceDate: '11/30/2026' },
                 { measureCode: 'ACO-AWV', measure: 'Annual Wellness Visit', status: 'Closing Soon', description: 'Medicare Annual Wellness Visit due. Last AWV: 02/2025', lastAction: 'Appointment scheduled', daysOpen: 12, complianceDate: '12/31/2026' },
@@ -3153,7 +3177,7 @@ function getPatientDataForMeasure(measureCode) {
             name: 'Robert Thompson',
             dob: '07/22/1959',
             mrn: 'PHC-392847',
-            pcp: 'Dr. Maria Santos',
+            pcp: 'Dr. Santos',
             riskScore: '2.18',
             caseManager: 'Michael Chen, RN',
             openGaps: 4,
@@ -3169,11 +3193,11 @@ function getPatientDataForMeasure(measureCode) {
             name: 'Linda Patterson',
             dob: '11/08/1962',
             mrn: 'PHC-501234',
-            pcp: 'Dr. James Chen',
+            pcp: 'Dr. Chen',
             riskScore: '1.08',
             caseManager: null,
             openGaps: 2,
-            nextAppt: { date: 'Mar 05, 2026', time: '9:00 AM', provider: 'Dr. James Chen', type: 'Follow-up Visit', location: 'Piedmont Primary Care - Buckhead' },
+            nextAppt: { date: 'Mar 05, 2026', time: '9:00 AM', provider: 'Dr. Chen', type: 'Follow-up Visit', location: 'Piedmont Primary Care - Buckhead' },
             gaps: [
                 { measureCode: 'ACO-19', measure: 'Colorectal Cancer Screening', status: 'Open', description: 'Colonoscopy or FIT test due. Last screening: 2016', lastAction: 'GI referral placed 01/18/2026', daysOpen: 156, complianceDate: '06/30/2026' },
                 { measureCode: 'ACO-17', measure: 'Breast Cancer Screening', status: 'Open', description: 'Mammogram overdue. Last screening: 2023', lastAction: 'Order placed, patient to schedule', daysOpen: 43, complianceDate: '12/31/2026' }
@@ -3183,11 +3207,11 @@ function getPatientDataForMeasure(measureCode) {
             name: 'Maria Gonzalez',
             dob: '05/14/1955',
             mrn: 'PHC-678432',
-            pcp: 'Dr. Maria Santos',
+            pcp: 'Dr. Santos',
             riskScore: '2.45',
             caseManager: 'Jennifer Rodriguez, RN',
             openGaps: 5,
-            nextAppt: { date: 'Feb 08, 2026', time: '11:00 AM', provider: 'Dr. Maria Santos', type: 'Diabetes Management', location: 'Piedmont Primary Care - Midtown' },
+            nextAppt: { date: 'Feb 08, 2026', time: '11:00 AM', provider: 'Dr. Santos', type: 'Diabetes Management', location: 'Piedmont Primary Care - Midtown' },
             gaps: [
                 { measureCode: 'ACO-16', measure: 'Diabetes: HbA1c Poor Control', status: 'Open', description: 'HbA1c 10.2% (Poor Control >9%). Needs intensive management', lastAction: 'Endocrinology referral 01/25/2026', daysOpen: 112, complianceDate: 'Ongoing' },
                 { measureCode: 'ACO-18', measure: 'Diabetes: Eye Exam', status: 'Open', description: 'Diabetic retinopathy screening overdue', lastAction: 'Appointment scheduled 02/28/2026', daysOpen: 78, complianceDate: '12/31/2026' },
@@ -3399,14 +3423,14 @@ function generateRegionalData(avgPerformance) {
 
 function generateProviderRankings(totalPatients, avgPerformance) {
     const providers = [
-        'Dr. James Chen',
-        'Dr. Maria Santos',
-        'Dr. Robert Williams',
-        'Dr. Patricia Anderson',
-        'Dr. Michael Brown',
-        'Dr. Jennifer Davis',
-        'Dr. David Miller',
-        'Dr. Sarah Wilson'
+        'Dr. Chen',
+        'Dr. Santos',
+        'Dr. Williams',
+        'Dr. Anderson',
+        'Dr. Brown',
+        'Dr. Davis',
+        'Dr. Miller',
+        'Dr. Wilson'
     ];
 
     return providers.map(name => {
@@ -3610,7 +3634,7 @@ function generatePatientListData(measureCode, measureName, filterType, filterVal
 
     const firstNames = ['John', 'Mary', 'Robert', 'Patricia', 'Michael', 'Jennifer', 'William', 'Linda', 'David', 'Barbara', 'Richard', 'Susan', 'Joseph', 'Jessica', 'Thomas', 'Sarah', 'Charles', 'Karen', 'Christopher', 'Nancy'];
     const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin'];
-    const pcps = ['Dr. James Chen', 'Dr. Maria Santos', 'Dr. Robert Williams', 'Dr. Patricia Anderson', 'Dr. Michael Brown'];
+    const pcps = ['Dr. Chen', 'Dr. Santos', 'Dr. Williams', 'Dr. Anderson', 'Dr. Brown'];
     const caseManagers = ['Jennifer Rodriguez, RN', 'Michael Chen, RN', 'Sarah Thompson, RN', null, null];
 
     for (let i = 0; i < patientCount; i++) {
