@@ -1173,8 +1173,8 @@ function drillDownHospitalProviders(hospitalIndex) {
         </table>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
-            <div class="alert-box" style="background: #e8f8f5; border-left-color: #27ae60;">
-                <h4 style="color: #1e8449;">🏆 Best Practice Provider</h4>
+            <div class="alert-box" style="background: #1e8449; border-left-color: #145a32; color: #fff;">
+                <h4 style="color: #fff;">🏆 Best Practice Provider</h4>
                 <p><strong>${bestProvider.name}</strong> demonstrates optimal cost-quality balance:</p>
                 <ul>
                     <li><strong>Cost:</strong> $${bestProvider.avgCost.toLocaleString()} (${((bestProvider.avgCost - benchmark.avgCost) / benchmark.avgCost * 100).toFixed(1)}% vs benchmark)</li>
