@@ -66,6 +66,83 @@
     }
 }
 
+/* Chart Header with Toggle */
+.chart-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.chart-header-row h3 {
+    margin: 0;
+}
+
+.year-toggle-container {
+    display: flex;
+    gap: 0;
+    background: #e9ecef;
+    border-radius: 6px;
+    padding: 3px;
+}
+
+.year-toggle-btn {
+    padding: 0.4rem 1rem;
+    border: none;
+    background: transparent;
+    color: #6c757d;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.year-toggle-btn:hover {
+    color: #2c3e50;
+}
+
+.year-toggle-btn.active {
+    background: #fff;
+    color: #2c3e50;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.year-toggle-btn[data-year="PY2025"].active {
+    background: #667eea;
+    color: #fff;
+}
+
+.year-toggle-btn[data-year="PY2026"].active {
+    background: #27ae60;
+    color: #fff;
+}
+
+/* Chart Note */
+.chart-note {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    background: #f8f9fa;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.chart-note .note-icon {
+    font-size: 0.9rem;
+}
+
+.chart-note .note-text {
+    line-height: 1.4;
+}
+
+.chart-note.hidden {
+    display: none;
+}
+
 /* KPI Grid */
 .kpi-grid {
     display: grid;

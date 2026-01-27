@@ -14,6 +14,7 @@ let showingOONOnly = false;
 document.addEventListener('DOMContentLoaded', function() {
     initializeTabs();
     initializeCharts();
+    initPMPMYearToggle();
     initializeProjectionControls();
     initializeLeakageInteractions();
     initializeQualityDateSlider();
@@ -92,7 +93,7 @@ function initializeCharts() {
     initEpisodeCostChart();
 }
 
-function initPerformanceTrendChart() {
+function initPerformanceTrendChart(selectedYear = 'PY2025') {
     const ctx = document.getElementById('trendChart');
     if (!ctx) return;
 
@@ -100,100 +101,109 @@ function initPerformanceTrendChart() {
         performanceTrendChart.destroy();
     }
 
-    // PY2025 data - Jan-Oct are actual (solid), Nov-Dec are incomplete runout (dotted)
-    const py2025ActualData = [862, 858, 851, 847, 845, 843, 840, 838, 842, 845, null, null]; // Jan-Oct actual
-    const py2025ProjectedData = [null, null, null, null, null, null, null, null, null, 845, 847, 847]; // Nov-Dec incomplete (connects from Oct)
+    // Update chart note visibility based on selected year
+    const chartNote = document.getElementById('pmpm-chart-note');
+    if (chartNote) {
+        chartNote.classList.toggle('hidden', selectedYear !== 'PY2025');
+    }
 
-    // PY2026 data - Jan/Feb are actual (solid), Mar-Dec are projected (dotted)
-    const py2026ActualData = [855, 849, null, null, null, null, null, null, null, null, null, null]; // Jan-Feb actual
-    const py2026ProjectedData = [null, 849, 843, 839, 837, 835, 832, 830, 834, 837, 839, 839]; // Mar-Dec projected (connects from Feb)
+    let datasets = [];
+    let tooltipBorderColor = '#667eea';
 
-    // Benchmark for PY2026 (static target throughout the year)
-    const benchmarkData = [864, 864, 864, 864, 864, 864, 864, 864, 864, 864, 864, 864];
+    if (selectedYear === 'PY2025') {
+        // PY2025 data - Jan-Oct are actual (solid), Nov-Dec include IBNR (dotted)
+        const py2025ActualData = [862, 858, 851, 847, 845, 843, 840, 838, 842, 845, null, null];
+        const py2025IBNRData = [null, null, null, null, null, null, null, null, null, 845, 847, 847];
+        const py2025Benchmark = [858, 858, 858, 858, 858, 858, 858, 858, 858, 858, 858, 858];
+
+        datasets = [
+            {
+                label: 'PY2025 Actual PMPM',
+                data: py2025ActualData,
+                borderColor: '#667eea',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                tension: 0.4,
+                fill: false,
+                pointRadius: 5,
+                pointHoverRadius: 8,
+                pointBackgroundColor: '#667eea',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                borderWidth: 3,
+                spanGaps: false
+            },
+            {
+                label: 'PY2025 IBNR PMPM',
+                data: py2025IBNRData,
+                borderColor: '#667eea',
+                backgroundColor: 'rgba(102, 126, 234, 0.05)',
+                tension: 0.4,
+                fill: false,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                pointBackgroundColor: '#667eea',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                borderDash: [5, 5],
+                borderWidth: 2,
+                spanGaps: true
+            },
+            {
+                label: 'PY2025 Benchmark',
+                data: py2025Benchmark,
+                borderColor: '#e74c3c',
+                backgroundColor: 'rgba(231, 76, 60, 0.05)',
+                tension: 0,
+                fill: false,
+                borderDash: [3, 3],
+                pointRadius: 0,
+                pointHoverRadius: 4,
+                borderWidth: 2
+            }
+        ];
+        tooltipBorderColor = '#667eea';
+    } else {
+        // PY2026 data - Only January has actual data (one green dot)
+        const py2026ActualData = [855, null, null, null, null, null, null, null, null, null, null, null];
+        const py2026Benchmark = [864, 864, 864, 864, 864, 864, 864, 864, 864, 864, 864, 864];
+
+        datasets = [
+            {
+                label: 'PY2026 Actual PMPM',
+                data: py2026ActualData,
+                borderColor: '#27ae60',
+                backgroundColor: 'rgba(39, 174, 96, 0.15)',
+                tension: 0.4,
+                fill: false,
+                pointRadius: 8,
+                pointHoverRadius: 10,
+                pointBackgroundColor: '#27ae60',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 3,
+                borderWidth: 0,
+                spanGaps: false
+            },
+            {
+                label: 'PY2026 Benchmark',
+                data: py2026Benchmark,
+                borderColor: '#e74c3c',
+                backgroundColor: 'rgba(231, 76, 60, 0.05)',
+                tension: 0,
+                fill: false,
+                borderDash: [3, 3],
+                pointRadius: 0,
+                pointHoverRadius: 4,
+                borderWidth: 2
+            }
+        ];
+        tooltipBorderColor = '#27ae60';
+    }
 
     performanceTrendChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            datasets: [
-                {
-                    label: 'PY2026 Actual PMPM',
-                    data: py2026ActualData,
-                    borderColor: '#27ae60',
-                    backgroundColor: 'rgba(39, 174, 96, 0.15)',
-                    tension: 0.4,
-                    fill: false,
-                    pointRadius: 6,
-                    pointHoverRadius: 9,
-                    pointBackgroundColor: '#27ae60',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    pointHoverBackgroundColor: '#27ae60',
-                    pointHoverBorderColor: '#fff',
-                    pointHoverBorderWidth: 3,
-                    borderWidth: 3,
-                    spanGaps: false
-                },
-                {
-                    label: 'PY2026 Projected PMPM',
-                    data: py2026ProjectedData,
-                    borderColor: '#27ae60',
-                    backgroundColor: 'rgba(39, 174, 96, 0.08)',
-                    tension: 0.4,
-                    fill: true,
-                    pointRadius: 4,
-                    pointHoverRadius: 7,
-                    pointBackgroundColor: '#27ae60',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    borderDash: [6, 4],
-                    borderWidth: 2,
-                    spanGaps: true
-                },
-                {
-                    label: 'PY2025 Actual PMPM',
-                    data: py2025ActualData,
-                    borderColor: '#667eea',
-                    backgroundColor: 'rgba(102, 126, 234, 0.05)',
-                    tension: 0.4,
-                    fill: false,
-                    pointRadius: 5,
-                    pointHoverRadius: 7,
-                    pointBackgroundColor: '#667eea',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    borderWidth: 2.5,
-                    spanGaps: false
-                },
-                {
-                    label: 'PY2025 Incomplete PMPM',
-                    data: py2025ProjectedData,
-                    borderColor: '#667eea',
-                    backgroundColor: 'rgba(102, 126, 234, 0.05)',
-                    tension: 0.4,
-                    fill: false,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    pointBackgroundColor: '#667eea',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                    borderDash: [5, 5],
-                    borderWidth: 2,
-                    spanGaps: true
-                },
-                {
-                    label: 'PY2026 Benchmark',
-                    data: benchmarkData,
-                    borderColor: '#e74c3c',
-                    backgroundColor: 'rgba(231, 76, 60, 0.05)',
-                    tension: 0.4,
-                    fill: false,
-                    borderDash: [3, 3],
-                    pointRadius: 3,
-                    pointHoverRadius: 5,
-                    borderWidth: 2
-                }
-            ]
+            datasets: datasets
         },
         options: {
             responsive: true,
@@ -208,29 +218,35 @@ function initPerformanceTrendChart() {
                     labels: {
                         usePointStyle: true,
                         padding: 15,
-                        font: { size: 11 }
+                        font: { size: 11 },
+                        filter: function(item) {
+                            // Don't show IBNR in legend separately, it's part of PY2025
+                            return !item.text.includes('IBNR');
+                        }
                     }
                 },
                 datalabels: {
                     display: function(context) {
-                        // Only show labels for key points
                         const datasetIndex = context.datasetIndex;
                         const dataIndex = context.dataIndex;
-                        // Show for PY2026 Actual (Jan, Feb) and PY2026 Projected (Jun, Dec)
-                        if (datasetIndex === 0 && (dataIndex === 0 || dataIndex === 1)) return true;
-                        if (datasetIndex === 1 && (dataIndex === 5 || dataIndex === 11)) return true;
+                        const value = context.dataset.data[dataIndex];
+                        if (value === null) return false;
+
+                        if (selectedYear === 'PY2025') {
+                            // Show labels for Jan, Jun, Oct (actual) and Dec (IBNR)
+                            if (datasetIndex === 0 && (dataIndex === 0 || dataIndex === 5 || dataIndex === 9)) return true;
+                            if (datasetIndex === 1 && dataIndex === 11) return true;
+                        } else {
+                            // PY2026 - only show label for January
+                            if (datasetIndex === 0 && dataIndex === 0) return true;
+                        }
                         return false;
                     },
-                    color: function(context) {
-                        // 0,1 = PY2026 (green), 2,3 = PY2025 (purple), 4 = Benchmark (red)
-                        if (context.datasetIndex <= 1) return '#27ae60';
-                        if (context.datasetIndex <= 3) return '#667eea';
-                        return '#e74c3c';
-                    },
-                    font: { weight: 'bold', size: 10 },
+                    color: selectedYear === 'PY2025' ? '#667eea' : '#27ae60',
+                    font: { weight: 'bold', size: 11 },
                     anchor: 'end',
                     align: 'top',
-                    offset: 2,
+                    offset: 4,
                     formatter: function(value) {
                         if (value === null) return '';
                         return '$' + value;
@@ -241,7 +257,7 @@ function initPerformanceTrendChart() {
                     backgroundColor: 'rgba(44, 62, 80, 0.95)',
                     titleColor: '#fff',
                     bodyColor: '#fff',
-                    borderColor: '#27ae60',
+                    borderColor: tooltipBorderColor,
                     borderWidth: 2,
                     padding: 12,
                     displayColors: true,
@@ -259,7 +275,7 @@ function initPerformanceTrendChart() {
                     callbacks: {
                         title: function(context) {
                             const month = context[0].label;
-                            return month + ' Performance Comparison';
+                            return month + ' ' + selectedYear;
                         },
                         label: function(context) {
                             let label = context.dataset.label || '';
@@ -268,42 +284,38 @@ function initPerformanceTrendChart() {
                                 label += ': ';
                             }
                             label += '$' + context.parsed.y.toFixed(2);
-                            // Add indicator for actual vs projected/incomplete
-                            if (context.datasetIndex === 0) {
-                                label += ' (Actual)';
-                            } else if (context.datasetIndex === 1) {
-                                label += ' (Projected)';
-                            } else if (context.datasetIndex === 2) {
-                                label += ' (Actual)';
-                            } else if (context.datasetIndex === 3) {
-                                label += ' (Incomplete Runout)';
+                            // Add indicator for IBNR
+                            if (context.dataset.label && context.dataset.label.includes('IBNR')) {
+                                label += ' (IBNR adjusted)';
                             }
                             return label;
                         },
                         afterBody: function(context) {
                             const dataIndex = context[0].dataIndex;
-                            // Get PY2026 value (actual or projected)
-                            let py2026Value = py2026ActualData[dataIndex];
-                            if (py2026Value === null) {
-                                py2026Value = py2026ProjectedData[dataIndex];
-                            }
-                            const benchmarkValue = benchmarkData[dataIndex];
-                            // Get PY2025 value (actual or incomplete)
-                            let py2025Value = py2025ActualData[dataIndex];
-                            if (py2025Value === null) {
-                                py2025Value = py2025ProjectedData[dataIndex];
-                            }
-
                             let result = [];
-                            if (py2026Value !== null && benchmarkValue) {
-                                const vsBenchmark = ((py2026Value - benchmarkValue) / benchmarkValue * 100).toFixed(1);
-                                const sign = vsBenchmark > 0 ? '+' : '';
-                                result.push(`\nPY2026 vs Benchmark: ${sign}${vsBenchmark}%`);
-                            }
-                            if (py2026Value !== null && py2025Value) {
-                                const vsLastYear = ((py2026Value - py2025Value) / py2025Value * 100).toFixed(1);
-                                const sign = vsLastYear > 0 ? '+' : '';
-                                result.push(`PY2026 vs PY2025: ${sign}${vsLastYear}%`);
+
+                            if (selectedYear === 'PY2025') {
+                                const actualData = datasets[0].data;
+                                const ibnrData = datasets[1].data;
+                                const benchmarkData = datasets[2].data;
+
+                                let pmpmValue = actualData[dataIndex];
+                                if (pmpmValue === null) pmpmValue = ibnrData[dataIndex];
+
+                                if (pmpmValue !== null && benchmarkData[dataIndex]) {
+                                    const vsBenchmark = ((pmpmValue - benchmarkData[dataIndex]) / benchmarkData[dataIndex] * 100).toFixed(1);
+                                    const sign = vsBenchmark > 0 ? '+' : '';
+                                    result.push(`\nvs Benchmark: ${sign}${vsBenchmark}%`);
+                                }
+                            } else {
+                                const actualData = datasets[0].data;
+                                const benchmarkData = datasets[1].data;
+
+                                if (actualData[dataIndex] !== null && benchmarkData[dataIndex]) {
+                                    const vsBenchmark = ((actualData[dataIndex] - benchmarkData[dataIndex]) / benchmarkData[dataIndex] * 100).toFixed(1);
+                                    const sign = vsBenchmark > 0 ? '+' : '';
+                                    result.push(`\nvs Benchmark: ${sign}${vsBenchmark}%`);
+                                }
                             }
                             return result;
                         }
@@ -328,30 +340,27 @@ function initPerformanceTrendChart() {
                 x: {
                     title: {
                         display: true,
-                        text: 'Month (Current: June 2026)'
+                        text: 'Month'
                     }
                 }
-            },
-            onClick: function(event, elements) {
-                // Check if clicked on PY2026 Projected PMPM line (dataset index 1)
-                if (elements && elements.length > 0) {
-                    const clickedDatasetIndex = elements[0].datasetIndex;
-                    if (clickedDatasetIndex === 1) {
-                        // Navigate to Projections tab
-                        const projectionsNavItem = document.querySelector('.nav-item[data-tab="projections"]');
-                        if (projectionsNavItem) {
-                            projectionsNavItem.click();
-                        }
-                    }
-                }
-            },
-            onHover: function(event, elements) {
-                const canvas = event.native.target;
-                // Check if hovering over PY2026 Projected PMPM line (dataset index 1)
-                const isOverProjectedLine = elements.some(el => el.datasetIndex === 1);
-                canvas.style.cursor = isOverProjectedLine ? 'pointer' : 'default';
             }
         }
+    });
+}
+
+// Initialize year toggle for PMPM chart
+function initPMPMYearToggle() {
+    const toggleBtns = document.querySelectorAll('.year-toggle-btn');
+    toggleBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Update active state
+            toggleBtns.forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+
+            // Reinitialize chart with selected year
+            const selectedYear = this.dataset.year;
+            initPerformanceTrendChart(selectedYear);
+        });
     });
 }
 

@@ -125,9 +125,19 @@
                     </div>
 
                     <div class="chart-section">
-                        <h3>PMPM Trend vs Benchmark</h3>
+                        <div class="chart-header-row">
+                            <h3>PMPM Trend vs Benchmark</h3>
+                            <div class="year-toggle-container">
+                                <button class="year-toggle-btn active" data-year="PY2025">PY2025</button>
+                                <button class="year-toggle-btn" data-year="PY2026">PY2026</button>
+                            </div>
+                        </div>
                         <div class="chart-wrapper">
                             <canvas id="trendChart"></canvas>
+                        </div>
+                        <div class="chart-note" id="pmpm-chart-note">
+                            <span class="note-icon">ℹ️</span>
+                            <span class="note-text">Nov-Dec values include IBNR (Incurred But Not Reported) adjustment for claims lag</span>
                         </div>
                     </div>
 
