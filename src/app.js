@@ -3950,12 +3950,12 @@ const insightsData = {
         ]
     },
     projections: {
-        title: 'April Gut-Check Recommendation',
+        title: 'PY2027 Program Participation Recommendation',
         type: 'success',
-        recommendation: 'CONTINUE MSSP ACO PARTICIPATION',
-        summary: '85% probability of break-even or better. Projected $11.6M savings exceeds $10.5M target with 70% confidence.',
-        assumptions: '+2% lives growth, -1% utilization trend, no major risk score deterioration, -2% leakage reduction',
-        limitations: 'Does not account for CMS policy changes or major market disruptions. Monthly monitoring recommended.'
+        recommendation: 'CONTINUE MSSP ACO PARTICIPATION FOR PY2027',
+        summary: '82% probability of break-even or better in PY2027. Scenario modeling projects $11.8M savings with 68% confidence based on current performance trajectory.',
+        assumptions: 'Based on Q1-Q2 2024 claims data, CMS expenditure files, +2% lives growth, -1% utilization trend, benchmark rebasing impact factored in.',
+        limitations: 'PY2027 projections subject to CMS benchmark methodology changes, regional rate updates, and risk score recalibration. June 2026 election deadline requires monitoring.'
     },
     quality: {
         title: 'Quality Improvement Opportunities',
