@@ -319,14 +319,14 @@
                 display: none;
             }
 
-            /* Mobile carousel - show at top */
+            /* Mobile carousel - show in middle above login */
             .slide-content {
                 display: block;
                 position: fixed;
-                top: 80px;
+                top: 35%;
                 left: 0;
                 right: 0;
-                transform: none;
+                transform: translateY(-50%);
                 text-align: center;
                 max-width: 100%;
                 padding: 0 1.5rem;
@@ -340,7 +340,7 @@
             /* Horizontal carousel indicators for mobile */
             .carousel-indicators {
                 position: fixed;
-                top: 160px;
+                top: calc(35% + 40px);
                 left: 50%;
                 right: auto;
                 bottom: auto;
@@ -370,7 +370,7 @@
 
         @media (max-width: 480px) {
             .slide-content {
-                top: 70px;
+                top: 32%;
                 padding: 0 1rem;
             }
 
@@ -379,7 +379,7 @@
             }
 
             .carousel-indicators {
-                top: 140px;
+                top: calc(32% + 35px);
             }
 
             .login-section {
