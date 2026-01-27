@@ -1583,9 +1583,13 @@ function initializeHistoricalSlider() {
 
     if (!slider || !display) return;
 
-    // Define the date range: Jan 1, 2024 to present (April 15, 2024 as "present" in demo)
-    const startDate = new Date(2024, 0, 1); // Jan 1, 2024
-    const endDate = new Date(2024, 3, 15); // Apr 15, 2024 (present in demo)
+    // Define the date range: Jan 1 of current year to yesterday (always current date - 1 day)
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const startDate = new Date(currentYear, 0, 1); // Jan 1 of current year
+    const endDate = new Date();
+    endDate.setHours(0, 0, 0, 0); // Reset to midnight
+    endDate.setDate(endDate.getDate() - 1); // Yesterday
     const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
 
     // Set max value to total days
@@ -1644,6 +1648,9 @@ function initializeHistoricalSlider() {
             detailEl.textContent = newPts.toLocaleString() + ' new patients';
         }
     });
+
+    // Trigger initial display update
+    slider.dispatchEvent(new Event('input'));
 }
 
 function initializeForecastSlider() {
@@ -1652,8 +1659,9 @@ function initializeForecastSlider() {
 
     if (!slider || !display) return;
 
-    // Define the forecast range: Today (Apr 15, 2024 in demo) to end of PY (Dec 31, 2026)
-    const today = new Date(2024, 3, 15); // Apr 15, 2024 (present in demo)
+    // Define the forecast range: Today to end of PY (Dec 31, 2026)
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Reset to midnight
     const endOfPY = new Date(2026, 11, 31); // Dec 31, 2026
     const totalDays = Math.floor((endOfPY - today) / (1000 * 60 * 60 * 24));
 

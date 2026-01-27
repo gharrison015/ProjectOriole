@@ -74,12 +74,12 @@
             <nav class="sidebar">
                 <ul class="nav-menu">
                     <li class="nav-item active" data-tab="performance">📊 Performance Overview</li>
-                    <li class="nav-item" data-tab="projections">🔮 Projections & Forecasts</li>
-                    <li class="nav-item" data-tab="quality">✅ Quality Metrics</li>
+                    <li class="nav-item" data-tab="projections">🔮 Projections</li>
                     <li class="nav-item" data-tab="tcoc">💰 Total Cost of Care</li>
-                    <li class="nav-item" data-tab="leakage">📉 Keepage / Leakage</li>
-                    <li class="nav-item" data-tab="hcc">📋 Risk Adjustment (HCC)</li>
-                    <li class="nav-item" data-tab="episodes">🏥 Episodes & Variation</li>
+                    <li class="nav-item" data-tab="leakage">🔀 Leakage</li>
+                    <li class="nav-item" data-tab="episodes">🏥 Episodes</li>
+                    <li class="nav-item" data-tab="quality">✅ Quality</li>
+                    <li class="nav-item" data-tab="hcc">📋 Risk Adjustment</li>
                 </ul>
             </nav>
 
@@ -205,7 +205,7 @@
                 <div id="projections-tab" class="tab-content">
                     <div class="tab-header-row">
                         <div class="tab-header">
-                            <h2>Projections & Forecasts</h2>
+                            <h2>Projections</h2>
                             <p>Current year forecasting and scenario modeling for program participation decisions</p>
                         </div>
                         <button class="insights-btn success" onclick="showInsightsModal('projections')">
@@ -405,11 +405,11 @@
 
                 </div>
 
-                <!-- Quality Metrics Tab -->
+                <!-- Quality Tab -->
                 <div id="quality-tab" class="tab-content">
                     <div class="tab-header-row">
                         <div class="tab-header">
-                            <h2>Quality Metrics</h2>
+                            <h2>Quality</h2>
                             <p>MSSP ACO PY2025 performance on CMS quality measures with drill-down capability</p>
                         </div>
                         <button class="insights-btn info" onclick="showInsightsModal('quality')">
@@ -446,7 +446,7 @@
                         <div class="pop-health-column">
                             <div class="compact-slider-header">
                                 <span class="slider-label">📅 Historical (Service Date)</span>
-                                <span class="date-range-display compact" id="quality-historical-display">Jan 1 - Apr 15, 2024</span>
+                                <span class="date-range-display compact" id="quality-historical-display">Jan 1 - Yesterday</span>
                             </div>
                             <div class="compact-slider">
                                 <input type="range" id="quality-historical-slider" min="0" max="105" value="105" class="date-slider">
@@ -952,7 +952,7 @@
                 <div id="leakage-tab" class="tab-content">
                     <div class="tab-header-row">
                         <div class="tab-header">
-                            <h2>Keepage / Leakage</h2>
+                            <h2>Leakage</h2>
                             <p>Comprehensive view of network retention and out-of-network spend with geographic analysis</p>
                         </div>
                         <button class="insights-btn info" onclick="showInsightsModal('leakage')">
@@ -1139,11 +1139,11 @@
 
                 </div>
 
-                <!-- HCC Tab -->
+                <!-- Risk Adjustment Tab -->
                 <div id="hcc-tab" class="tab-content">
                     <div class="tab-header-row">
                         <div class="tab-header">
-                            <h2>Risk Adjustment (HCC)</h2>
+                            <h2>Risk Adjustment</h2>
                             <p>RAF score optimization and coding opportunity identification</p>
                         </div>
                         <button class="insights-btn success" onclick="showInsightsModal('hcc')">
@@ -1288,7 +1288,7 @@
                 <div id="episodes-tab" class="tab-content">
                     <div class="tab-header-row">
                         <div class="tab-header">
-                            <h2>Episodes & Variation</h2>
+                            <h2>Episodes</h2>
                             <p>Episode-based analytics identifying cost variation and standardization opportunities</p>
                         </div>
                         <button class="insights-btn warning" onclick="showInsightsModal('episodes')">
