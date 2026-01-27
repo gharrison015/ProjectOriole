@@ -22,13 +22,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Set Last Updated date to yesterday (24hr old data)
 function setLastUpdatedDate() {
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const options = { month: 'short', day: 'numeric', year: 'numeric' };
+    const formattedDate = yesterday.toLocaleDateString('en-US', options);
+
+    // Set header last updated
     const lastUpdatedEl = document.getElementById('last-updated-date');
     if (lastUpdatedEl) {
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const options = { month: 'short', day: 'numeric', year: 'numeric' };
-        lastUpdatedEl.textContent = yesterday.toLocaleDateString('en-US', options);
+        lastUpdatedEl.textContent = formattedDate;
     }
+
+    // Set data timeframe end dates for all tabs with this indicator
+    const dataEndDateIds = [
+        'quality-data-end-date',
+        'tcoc-data-end-date',
+        'leakage-data-end-date',
+        'episodes-data-end-date',
+        'hcc-data-end-date'
+    ];
+
+    dataEndDateIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            el.textContent = formattedDate;
+        }
+    });
 }
 
 function initializeTabs() {

@@ -1,5 +1,71 @@
 /* Components CSS - Cards, Tables, Buttons, Alerts */
 
+/* Data Timeframe Indicator */
+.data-timeframe {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem 1.25rem;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--piedmont-primary, #667eea);
+    font-size: 0.85rem;
+}
+
+.data-timeframe-icon {
+    font-size: 1.2rem;
+}
+
+.data-timeframe-label {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.data-timeframe-dates {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.data-timeframe-note {
+    margin-left: auto;
+    color: #7f8c8d;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.data-timeframe-note .refresh-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #27ae60;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+@media (max-width: 768px) {
+    .data-timeframe {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.75rem 1rem;
+    }
+
+    .data-timeframe-note {
+        width: 100%;
+        margin-left: 0;
+        margin-top: 0.25rem;
+        padding-top: 0.5rem;
+        border-top: 1px solid #dee2e6;
+    }
+}
+
 /* KPI Grid */
 .kpi-grid {
     display: grid;
