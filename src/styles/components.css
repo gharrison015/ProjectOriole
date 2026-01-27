@@ -752,56 +752,107 @@
     margin: 0;
 }
 
-/* Quality Population Health Metrics */
-.quality-slider-section {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    padding: 1.5rem;
+/* Quality Population Health Metrics - Compact Horizontal Layout */
+.population-health-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
     margin-bottom: 1.5rem;
 }
 
-.quality-slider-section.forecast {
+.pop-health-column {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 1rem 1.25rem;
+}
+
+.pop-health-column.forecast {
     background: linear-gradient(135deg, #fafbff 0%, #ffffff 100%);
     border: 1px solid #e8ecf4;
 }
 
-.slider-section-header {
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid #e9ecef;
+.compact-slider-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
 }
 
-.slider-section-header h4 {
-    font-size: 1rem;
+.slider-label {
+    font-size: 0.85rem;
     font-weight: 600;
     color: #2c3e50;
-    margin: 0 0 0.25rem 0;
 }
 
-.slider-section-header p {
+.date-range-display.compact {
     font-size: 0.8rem;
-    color: #7f8c8d;
-    margin: 0;
+    padding: 0.25rem 0.6rem;
 }
 
-.quality-population-grid.two-col {
-    grid-template-columns: repeat(2, 1fr);
-    margin-bottom: 0;
+.compact-slider {
+    margin-bottom: 0.75rem;
 }
 
-@media (max-width: 768px) {
-    .quality-population-grid.two-col {
+.compact-slider .date-slider {
+    height: 6px;
+}
+
+.pop-cards-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+.quality-pop-card.compact {
+    padding: 0.875rem 1rem;
+    box-shadow: none;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.quality-pop-card.compact .pop-card-header h4 {
+    font-size: 0.7rem;
+}
+
+.quality-pop-card.compact .pop-card-value {
+    font-size: 1.6rem;
+    margin: 0.25rem 0;
+}
+
+.quality-pop-card.compact .pop-card-trend,
+.quality-pop-card.compact .pop-card-sub {
+    font-size: 0.7rem;
+    margin-top: 0.25rem;
+}
+
+.quality-pop-card.compact.highlight {
+    background: linear-gradient(135deg, #e8f4fd 0%, #f8f9fa 100%);
+    border-left: 3px solid #3498db;
+}
+
+.quality-pop-card.compact.opportunity {
+    background: linear-gradient(135deg, #fef9e7 0%, #f8f9fa 100%);
+    border-left: 3px solid #f39c12;
+}
+
+@media (max-width: 1024px) {
+    .population-health-row {
         grid-template-columns: 1fr;
+        gap: 1rem;
     }
 }
 
-.quality-date-filter {
-    background: transparent;
-    padding: 0;
-    border-radius: 0;
-    box-shadow: none;
-    margin-bottom: 1.25rem;
+@media (max-width: 480px) {
+    .pop-cards-row {
+        grid-template-columns: 1fr;
+    }
+
+    .compact-slider-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
 }
 
 /* Forecast slider styling */

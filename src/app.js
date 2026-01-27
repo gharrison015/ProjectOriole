@@ -1697,39 +1697,19 @@ function updateForecastDisplay(slider, display, today, _endOfPY, totalDays, base
     const gapsPerPatient = upcoming > 0 ? (gaps / upcoming).toFixed(1) : '0.0';
     const avgPerDay = Math.round(upcoming / Math.max(days, 1));
 
-    // Calculate window description
-    let windowDesc;
-    if (days <= 30) {
-        windowDesc = 'Next ' + days + ' days';
-    } else if (days <= 90) {
-        windowDesc = 'Next ' + Math.round(days / 30) + ' month' + (days > 45 ? 's' : '');
-    } else {
-        windowDesc = 'Through ' + endFormatted;
-    }
-
     // Update display
     document.getElementById('quality-upcoming-visits').textContent = upcoming.toLocaleString();
     document.getElementById('quality-gap-closure').textContent = gaps.toLocaleString();
 
-    // Update detail text
-    const upcomingDetail = document.getElementById('quality-upcoming-detail');
-    if (upcomingDetail) {
-        upcomingDetail.textContent = windowDesc;
-    }
-
+    // Update sub text
     const upcomingSub = document.getElementById('quality-upcoming-sub');
     if (upcomingSub) {
-        upcomingSub.textContent = 'Avg ' + avgPerDay + ' pts/day scheduled';
-    }
-
-    const gapDetail = document.getElementById('quality-gap-detail');
-    if (gapDetail) {
-        gapDetail.textContent = 'Open gaps for scheduled pts';
+        upcomingSub.textContent = avgPerDay + ' pts/day avg';
     }
 
     const gapSub = document.getElementById('quality-gap-sub');
     if (gapSub) {
-        gapSub.textContent = gapsPerPatient + ' gaps/patient average';
+        gapSub.textContent = gapsPerPatient + ' gaps/pt';
     }
 }
 
