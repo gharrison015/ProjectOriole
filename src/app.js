@@ -3937,6 +3937,147 @@ function closeModal() {
     document.getElementById('modal').style.display = 'none';
 }
 
+// Insights Modal Data
+const insightsData = {
+    performance: {
+        title: 'Executive Insights',
+        type: '',
+        items: [
+            { label: 'Overall', text: 'Tracking 2.3% below benchmark - on track for shared savings' },
+            { label: 'Risk Areas', text: 'Augusta market elevated spend (+3.0%) and high leakage (31.8%)' },
+            { label: 'April Decision', text: 'Recommend continuing MSSP participation for 2025' },
+            { label: 'Actions', text: 'Focus leakage reduction in Augusta and Atlanta South ($2.1M opportunity)' }
+        ]
+    },
+    projections: {
+        title: 'April Gut-Check Recommendation',
+        type: 'success',
+        recommendation: 'CONTINUE MSSP ACO PARTICIPATION',
+        summary: '85% probability of break-even or better. Projected $11.6M savings exceeds $10.5M target with 70% confidence.',
+        assumptions: '+2% lives growth, -1% utilization trend, no major risk score deterioration, -2% leakage reduction',
+        limitations: 'Does not account for CMS policy changes or major market disruptions. Monthly monitoring recommended.'
+    },
+    quality: {
+        title: 'Quality Improvement Opportunities',
+        type: 'info',
+        items: [
+            { label: 'Annual Wellness Visits', text: '3.7 pts below benchmark. Close gap with 177 additional AWVs to gain quality points' },
+            { label: 'Statin Therapy', text: '4.3 pts below benchmark. Target 205 patients with CVD not on statins' },
+            { label: 'Social Determinants Screening', text: 'New measure for PY2025. Need to screen 263 additional patients' },
+            { label: 'Estimated Impact', text: 'Closing these 3 gaps could increase quality score to 91.2% and add $400K in quality bonus' }
+        ]
+    },
+    tcoc: {
+        title: 'Cost Reduction Opportunities',
+        type: 'warning',
+        subtitle: '$3.9M Annual Impact',
+        items: [
+            { label: 'Avoidable ED Visits', text: '4,286 visits at avg $1,227/visit = $5.3M spend. 75% reduction = $3.9M savings' },
+            { label: '30-Day Readmissions', text: '487 readmissions at avg $18,500 = $9.0M. 20% reduction = $1.8M savings' },
+            { label: 'SNF Utilization', text: 'Days per 1000 at 87 vs benchmark 75. Reduction = $2.1M savings' },
+            { label: 'High-Cost Imaging', text: 'Outpatient MRI/CT rate 15% above benchmark = $1.4M opportunity' },
+            { label: 'Total Opportunity', text: '$9.2M in identified cost reduction initiatives' }
+        ]
+    },
+    leakage: {
+        title: 'Leakage Reduction Strategy',
+        type: 'info',
+        subtitle: '$18M Opportunity',
+        items: [
+            { label: 'Contract Expansion', text: 'Negotiate with Atlanta Cardiology Associates ($12.3M) and Peachtree Imaging ($8.9M) to bring in-network' },
+            { label: 'PCP Education', text: 'Target Dr. Martinez, Dr. Williams, and Dr. Chen for referral pattern optimization (combined 40% leakage rate)' },
+            { label: 'Network Recruitment', text: 'Add orthopedic and pain management specialists in Augusta market' },
+            { label: 'Geographic Gaps', text: 'High leakage in southern Augusta zip codes - consider adding access points' },
+            { label: 'Service Line Focus', text: 'Cardiology (32%), Imaging (23%), Orthopedics (19%) represent 74% of total leakage' }
+        ]
+    },
+    hcc: {
+        title: 'Risk Adjustment Action Plan',
+        type: 'success',
+        subtitle: '$2.8M Revenue Opportunity',
+        items: [
+            { label: 'Provider Outreach', text: 'Focus on Dr. Johnson (427 suspects), Dr. Anderson (398 suspects), Dr. Brown (312 suspects)' },
+            { label: 'Diagnosis Categories', text: 'Prioritize Diabetes w/complications (HCC 18), COPD (HCC 111), CHF (HCC 85) = 71% of opportunity' },
+            { label: 'Documentation Training', text: 'Q1 focus on chronic disease specificity and annual recapture' },
+            { label: 'Technology Support', text: 'Deploy EMR alerts for suspect HCCs during encounters' },
+            { label: 'Financial Impact', text: '$2.8M in additional CMS revenue if 100% capture achieved (conservative 70% = $1.96M)' }
+        ]
+    },
+    episodes: {
+        title: 'Clinical Variation Reduction Opportunities',
+        type: 'warning',
+        subtitle: '$4.2M Impact',
+        items: [
+            { label: 'Joint Replacement Standardization', text: '28.9% cost variation. Reduce to 15% through clinical pathways = $1.8M savings' },
+            { label: 'Post-Acute Optimization', text: 'SNF rate 42.1% vs benchmark 28%. Increase home health = $1.2M savings' },
+            { label: 'Spinal Fusion Protocol', text: 'Highest variation at 32.4%. Standardize surgeon selection and implant choices = $900K savings' },
+            { label: 'CHF Readmission Reduction', text: '30-day readmit rate 18.2% vs benchmark 14%. Improve transitions = $600K savings' },
+            { label: 'Total Episode Opportunity', text: '$4.5M through clinical standardization and care pathway optimization' }
+        ]
+    }
+};
+
+function showInsightsModal(tabType) {
+    const data = insightsData[tabType];
+    if (!data) return;
+
+    let bgGradient = 'linear-gradient(135deg, var(--piedmont-primary) 0%, var(--piedmont-orange) 100%)';
+
+    if (data.type === 'success') {
+        bgGradient = 'linear-gradient(135deg, #56ab2f 0%, #a8e063 100%)';
+    } else if (data.type === 'info') {
+        bgGradient = 'linear-gradient(135deg, #3498db 0%, #2980b9 100%)';
+    } else if (data.type === 'warning') {
+        bgGradient = 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)';
+    }
+
+    let html = `
+        <div style="background: ${bgGradient}; color: white; padding: 2rem; border-radius: 12px; margin: -20px; margin-bottom: 0;">
+            <h2 style="margin: 0 0 0.5rem 0; font-size: 1.5rem;">${data.title}</h2>
+            ${data.subtitle ? `<p style="margin: 0; font-size: 1.1rem; opacity: 0.95;">${data.subtitle}</p>` : ''}
+        </div>
+        <div style="padding: 1.5rem 0 0.5rem 0;">
+    `;
+
+    // Special handling for projections tab (recommendation format)
+    if (tabType === 'projections') {
+        html += `
+            <div style="background: #d4edda; border-left: 4px solid #27ae60; padding: 1rem 1.5rem; border-radius: 6px; margin-bottom: 1rem;">
+                <strong style="font-size: 1.1rem; color: #155724;">${data.recommendation}</strong>
+            </div>
+            <p style="margin-bottom: 1rem; line-height: 1.6; color: #2c3e50;">${data.summary}</p>
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px; margin-bottom: 0.75rem;">
+                <strong style="color: #2c3e50;">Key Assumptions:</strong>
+                <p style="margin: 0.5rem 0 0 0; color: #5a6c7d;">${data.assumptions}</p>
+            </div>
+            <div style="background: #fff3cd; padding: 1rem; border-radius: 6px;">
+                <strong style="color: #856404;">Limitations:</strong>
+                <p style="margin: 0.5rem 0 0 0; color: #856404;">${data.limitations}</p>
+            </div>
+        `;
+    } else {
+        // Standard items format
+        html += '<ul style="list-style: none; padding: 0; margin: 0;">';
+        data.items.forEach(item => {
+            html += `
+                <li style="margin-bottom: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 8px; border-left: 4px solid var(--piedmont-primary);">
+                    <strong style="color: #2c3e50; display: block; margin-bottom: 0.25rem;">${item.label}:</strong>
+                    <span style="color: #5a6c7d; line-height: 1.5;">${item.text}</span>
+                </li>
+            `;
+        });
+        html += '</ul>';
+    }
+
+    html += '</div>';
+
+    document.getElementById('modal-body').innerHTML = html;
+    document.getElementById('modal').style.display = 'block';
+}
+
+// Make showInsightsModal globally available
+window.showInsightsModal = showInsightsModal;
+
 document.addEventListener('keydown', function(event) {
     if (event.key === 'Escape') {
         closeModal();

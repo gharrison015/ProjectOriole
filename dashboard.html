@@ -86,9 +86,15 @@
             <main class="dashboard-main">
                 <!-- Performance Overview Tab -->
                 <div id="performance-tab" class="tab-content active">
-                    <div class="tab-header">
-                        <h2>Performance Overview</h2>
-                        <p>Executive dashboard showing MSSP ACO performance vs benchmarks</p>
+                    <div class="tab-header-row">
+                        <div class="tab-header">
+                            <h2>Performance Overview</h2>
+                            <p>Executive dashboard showing MSSP ACO performance vs benchmarks</p>
+                        </div>
+                        <button class="insights-btn" onclick="showInsightsModal('performance')">
+                            <span class="insights-btn-icon">💡</span>
+                            Executive Insights
+                        </button>
                     </div>
 
                     <div class="kpi-grid">
@@ -193,22 +199,19 @@
                         </table>
                     </div>
 
-                    <div class="alert-box">
-                        <h4>Executive Insights</h4>
-                        <ul>
-                            <li><strong>Overall:</strong> Tracking 2.3% below benchmark - on track for shared savings</li>
-                            <li><strong>Risk Areas:</strong> Augusta market elevated spend (+3.0%) and high leakage (31.8%)</li>
-                            <li><strong>April Decision:</strong> Recommend continuing MSSP participation for 2025</li>
-                            <li><strong>Actions:</strong> Focus leakage reduction in Augusta and Atlanta South ($2.1M opportunity)</li>
-                        </ul>
-                    </div>
                 </div>
 
                 <!-- Projections Tab -->
                 <div id="projections-tab" class="tab-content">
-                    <div class="tab-header">
-                        <h2>Projections & Forecasts</h2>
-                        <p>Actuarial modeling with scenario analysis for April gut-check decision</p>
+                    <div class="tab-header-row">
+                        <div class="tab-header">
+                            <h2>Projections & Forecasts</h2>
+                            <p>Actuarial modeling with scenario analysis for April gut-check decision</p>
+                        </div>
+                        <button class="insights-btn success" onclick="showInsightsModal('projections')">
+                            <span class="insights-btn-icon">💡</span>
+                            Gut-Check Recommendation
+                        </button>
                     </div>
 
                     <div class="controls-panel">
@@ -279,20 +282,19 @@
                         </div>
                     </div>
 
-                    <div class="alert-box success">
-                        <h4>April Gut-Check Recommendation</h4>
-                        <p><strong>CONTINUE MSSP ACO PARTICIPATION</strong></p>
-                        <p>85% probability of break-even or better. Projected $11.6M savings exceeds $10.5M target with 70% confidence.</p>
-                        <p><strong>Key Assumptions:</strong> +2% lives growth, -1% utilization trend, no major risk score deterioration, -2% leakage reduction</p>
-                        <p><strong>Limitations:</strong> Does not account for CMS policy changes or major market disruptions. Monthly monitoring recommended.</p>
-                    </div>
                 </div>
 
                 <!-- Quality Metrics Tab -->
                 <div id="quality-tab" class="tab-content">
-                    <div class="tab-header">
-                        <h2>Quality Metrics - MSSP ACO PY2025</h2>
-                        <p>Performance on CMS quality measures with drill-down capability</p>
+                    <div class="tab-header-row">
+                        <div class="tab-header">
+                            <h2>Quality Metrics - MSSP ACO PY2025</h2>
+                            <p>Performance on CMS quality measures with drill-down capability</p>
+                        </div>
+                        <button class="insights-btn info" onclick="showInsightsModal('quality')">
+                            <span class="insights-btn-icon">💡</span>
+                            Improvement Opportunities
+                        </button>
                     </div>
 
                     <div class="quality-summary-grid">
@@ -464,22 +466,19 @@
                         </div>
                     </div>
 
-                    <div class="alert-box info">
-                        <h4>Quality Improvement Opportunities</h4>
-                        <ul>
-                            <li><strong>Annual Wellness Visits:</strong> 3.7 pts below benchmark. Close gap with 177 additional AWVs to gain quality points</li>
-                            <li><strong>Statin Therapy:</strong> 4.3 pts below benchmark. Target 205 patients with CVD not on statins</li>
-                            <li><strong>Social Determinants Screening:</strong> New measure for PY2025. Need to screen 263 additional patients</li>
-                            <li><strong>Estimated Impact:</strong> Closing these 3 gaps could increase quality score to 91.2% and add $400K in quality bonus</li>
-                        </ul>
-                    </div>
                 </div>
 
                 <!-- Total Cost of Care Tab -->
                 <div id="tcoc-tab" class="tab-content">
-                    <div class="tab-header">
-                        <h2>Total Cost of Care Analysis</h2>
-                        <p>Cost driver breakdown with actionable intervention opportunities</p>
+                    <div class="tab-header-row">
+                        <div class="tab-header">
+                            <h2>Total Cost of Care Analysis</h2>
+                            <p>Cost driver breakdown with actionable intervention opportunities</p>
+                        </div>
+                        <button class="insights-btn warning" onclick="showInsightsModal('tcoc')">
+                            <span class="insights-btn-icon">💡</span>
+                            Cost Reduction Opportunities
+                        </button>
                     </div>
 
                     <div class="tcoc-summary-grid">
@@ -620,23 +619,19 @@
                         </div>
                     </div>
 
-                    <div class="alert-box warning">
-                        <h4>Cost Reduction Opportunities - $3.9M Annual Impact</h4>
-                        <ul>
-                            <li><strong>Avoidable ED Visits:</strong> 4,286 visits at avg $1,227/visit = $5.3M spend. 75% reduction = <strong>$3.9M savings</strong></li>
-                            <li><strong>30-Day Readmissions:</strong> 487 readmissions at avg $18,500 = $9.0M. 20% reduction = <strong>$1.8M savings</strong></li>
-                            <li><strong>SNF Utilization:</strong> Days per 1000 at 87 vs benchmark 75. Reduction = <strong>$2.1M savings</strong></li>
-                            <li><strong>High-Cost Imaging:</strong> Outpatient MRI/CT rate 15% above benchmark = <strong>$1.4M opportunity</strong></li>
-                            <li><strong>Total Opportunity:</strong> $9.2M in identified cost reduction initiatives</li>
-                        </ul>
-                    </div>
                 </div>
 
                 <!-- Leakage Tab -->
                 <div id="leakage-tab" class="tab-content">
-                    <div class="tab-header">
-                        <h2>Network Leakage Analysis</h2>
-                        <p>Comprehensive view of out-of-network spend with geographic and referral pattern analysis</p>
+                    <div class="tab-header-row">
+                        <div class="tab-header">
+                            <h2>Network Leakage Analysis</h2>
+                            <p>Comprehensive view of out-of-network spend with geographic and referral pattern analysis</p>
+                        </div>
+                        <button class="insights-btn info" onclick="showInsightsModal('leakage')">
+                            <span class="insights-btn-icon">💡</span>
+                            Leakage Reduction Strategy
+                        </button>
                     </div>
 
                     <div class="leakage-filter-bar">
@@ -815,23 +810,19 @@
                         <div id="sankey-diagram"></div>
                     </div>
 
-                    <div class="alert-box info">
-                        <h4>Leakage Reduction Strategy - $18M Opportunity</h4>
-                        <ul>
-                            <li><strong>Contract Expansion:</strong> Negotiate with Atlanta Cardiology Associates ($12.3M) and Peachtree Imaging ($8.9M) to bring in-network</li>
-                            <li><strong>PCP Education:</strong> Target Dr. Martinez, Dr. Williams, and Dr. Chen for referral pattern optimization (combined 40% leakage rate)</li>
-                            <li><strong>Network Recruitment:</strong> Add orthopedic and pain management specialists in Augusta market</li>
-                            <li><strong>Geographic Gaps:</strong> High leakage in southern Augusta zip codes - consider adding access points</li>
-                            <li><strong>Service Line Focus:</strong> Cardiology (32%), Imaging (23%), Orthopedics (19%) represent 74% of total leakage</li>
-                        </ul>
-                    </div>
                 </div>
 
                 <!-- HCC Tab -->
                 <div id="hcc-tab" class="tab-content">
-                    <div class="tab-header">
-                        <h2>Risk Adjustment & HCC Analytics</h2>
-                        <p>RAF score optimization and coding opportunity identification</p>
+                    <div class="tab-header-row">
+                        <div class="tab-header">
+                            <h2>Risk Adjustment & HCC Analytics</h2>
+                            <p>RAF score optimization and coding opportunity identification</p>
+                        </div>
+                        <button class="insights-btn success" onclick="showInsightsModal('hcc')">
+                            <span class="insights-btn-icon">💡</span>
+                            Risk Adjustment Action Plan
+                        </button>
                     </div>
 
                     <div class="hcc-summary-grid">
@@ -964,23 +955,19 @@
                         </div>
                     </div>
 
-                    <div class="alert-box success">
-                        <h4>Risk Adjustment Action Plan - $2.8M Revenue Opportunity</h4>
-                        <ul>
-                            <li><strong>Provider Outreach:</strong> Focus on Dr. Johnson (427 suspects), Dr. Anderson (398 suspects), Dr. Brown (312 suspects)</li>
-                            <li><strong>Diagnosis Categories:</strong> Prioritize Diabetes w/complications (HCC 18), COPD (HCC 111), CHF (HCC 85) = 71% of opportunity</li>
-                            <li><strong>Documentation Training:</strong> Q1 focus on chronic disease specificity and annual recapture</li>
-                            <li><strong>Technology Support:</strong> Deploy EMR alerts for suspect HCCs during encounters</li>
-                            <li><strong>Financial Impact:</strong> $2.8M in additional CMS revenue if 100% capture achieved (conservative 70% = $1.96M)</li>
-                        </ul>
-                    </div>
                 </div>
 
                 <!-- Episodes Tab -->
                 <div id="episodes-tab" class="tab-content">
-                    <div class="tab-header">
-                        <h2>Episodes of Care & Clinical Variation</h2>
-                        <p>Episode-based analytics identifying cost variation and standardization opportunities</p>
+                    <div class="tab-header-row">
+                        <div class="tab-header">
+                            <h2>Episodes of Care & Clinical Variation</h2>
+                            <p>Episode-based analytics identifying cost variation and standardization opportunities</p>
+                        </div>
+                        <button class="insights-btn warning" onclick="showInsightsModal('episodes')">
+                            <span class="insights-btn-icon">💡</span>
+                            Clinical Variation Opportunities
+                        </button>
                     </div>
 
                     <div class="episodes-info-box">
@@ -1123,16 +1110,6 @@
                         </table>
                     </div>
 
-                    <div class="alert-box warning">
-                        <h4>Clinical Variation Reduction Opportunities - $4.2M Impact</h4>
-                        <ul>
-                            <li><strong>Joint Replacement Standardization:</strong> 28.9% cost variation. Reduce to 15% through clinical pathways = <strong>$1.8M savings</strong></li>
-                            <li><strong>Post-Acute Optimization:</strong> SNF rate 42.1% vs benchmark 28%. Increase home health = <strong>$1.2M savings</strong></li>
-                            <li><strong>Spinal Fusion Protocol:</strong> Highest variation at 32.4%. Standardize surgeon selection and implant choices = <strong>$900K savings</strong></li>
-                            <li><strong>CHF Readmission Reduction:</strong> 30-day readmit rate 18.2% vs benchmark 14%. Improve transitions = <strong>$600K savings</strong></li>
-                            <li><strong>Total Episode Opportunity:</strong> $4.5M through clinical standardization and care pathway optimization</li>
-                        </ul>
-                    </div>
                 </div>
 
             </main>

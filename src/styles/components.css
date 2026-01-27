@@ -151,6 +151,71 @@
     background: #5568d3;
 }
 
+/* Insights Button */
+.insights-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, var(--piedmont-primary) 0%, var(--piedmont-orange) 100%);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.25rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+.insights-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.insights-btn.success {
+    background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+    box-shadow: 0 2px 8px rgba(86, 171, 47, 0.3);
+}
+
+.insights-btn.success:hover {
+    box-shadow: 0 4px 12px rgba(86, 171, 47, 0.4);
+}
+
+.insights-btn.info {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+    box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
+}
+
+.insights-btn.info:hover {
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+}
+
+.insights-btn.warning {
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
+}
+
+.insights-btn.warning:hover {
+    box-shadow: 0 4px 12px rgba(243, 156, 18, 0.4);
+}
+
+.insights-btn-icon {
+    font-size: 1.1rem;
+}
+
+/* Tab Header with Insights Button */
+.tab-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+}
+
+.tab-header-row .tab-header {
+    margin-bottom: 0;
+}
+
 /* Alert Box */
 .alert-box {
     background: linear-gradient(135deg, var(--piedmont-primary) 0%, var(--piedmont-orange) 100%);
