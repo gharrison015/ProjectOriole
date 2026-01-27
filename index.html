@@ -8,6 +8,9 @@
 <body>
     <div class="dashboard-container">
         <header class="top-header">
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Toggle menu">
+                <span class="hamburger-icon"></span>
+            </button>
             <div class="header-left">
                 <div class="piedmont-logo">
                     <img src="/assets/piedmont-logo.svg" alt="Piedmont Logo" style="width: 40px; height: 40px;">
@@ -64,6 +67,7 @@
             </div>
         </header>
 
+        <div class="mobile-overlay" onclick="toggleMobileMenu()"></div>
         <div class="main-content">
             <nav class="sidebar">
                 <ul class="nav-menu">

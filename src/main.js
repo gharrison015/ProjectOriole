@@ -3,6 +3,7 @@ import './styles/main.css'
 import './styles/components.css'
 import './styles/charts.css'
 import './styles/modals.css'
+import './styles/mobile.css'
 
 // Import Chart.js and D3 from npm packages
 import Chart from 'chart.js/auto'

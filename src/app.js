@@ -3192,3 +3192,28 @@ window.showPatientListByMonth = showPatientListByMonth;
 window.showPatientListByRegion = showPatientListByRegion;
 window.showPatientListByProvider = showPatientListByProvider;
 
+
+// Mobile menu toggle function
+function toggleMobileMenu() {
+    document.body.classList.toggle('mobile-menu-open');
+}
+
+// Close mobile menu when a nav item is clicked
+document.addEventListener('DOMContentLoaded', function() {
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Close mobile menu after selecting a tab
+            document.body.classList.remove('mobile-menu-open');
+        });
+    });
+    
+    // Close mobile menu on escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && document.body.classList.contains('mobile-menu-open')) {
+            document.body.classList.remove('mobile-menu-open');
+        }
+    });
+});
+
+window.toggleMobileMenu = toggleMobileMenu;
