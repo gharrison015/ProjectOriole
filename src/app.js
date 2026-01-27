@@ -2200,66 +2200,142 @@ function drillDownEDMarket(marketId) {
 
     const totalSavings = providerData.reduce((sum, p) => sum + p.savingsPotential, 0);
     const totalAvoidable = providerData.reduce((sum, p) => sum + p.avoidableED, 0);
+    const totalEDVisits = providerData.reduce((sum, p) => sum + p.totalED, 0);
     const avgAvoidablePct = (providerData.reduce((sum, p) => sum + p.avoidablePct, 0) / providerData.length).toFixed(1);
+    const avgCostPerVisit = Math.round(providerData.reduce((sum, p) => sum + p.costPerVisit, 0) / providerData.length);
+    const diversionRate = 0.65; // 65% can be diverted to urgent care
+    const diversionSavings = Math.round(totalSavings * diversionRate);
 
     let modalBody = `
         <h2>${marketName} - Avoidable ED Cost Opportunity</h2>
-        <p class="provider-summary">Provider and patient-level drill-down showing savings potential</p>
+        <p class="provider-summary">Provider-level analysis showing savings from diverting avoidable ED visits to lower-cost settings</p>
 
-        <div class="market-kpi-row" style="grid-template-columns: repeat(3, 1fr);">
-            <div class="kpi-box">
-                <div class="kpi-label">Total Avoidable Visits</div>
-                <div class="kpi-value bad">${totalAvoidable}</div>
-            </div>
-            <div class="kpi-box">
-                <div class="kpi-label">Average % Avoidable</div>
-                <div class="kpi-value warning">${avgAvoidablePct}%</div>
-            </div>
-            <div class="kpi-box">
-                <div class="kpi-label">Annual Savings Potential</div>
-                <div class="kpi-value" style="color: #27ae60;">$${totalSavings.toLocaleString()}</div>
+        <!-- Reference Values Bar -->
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; border-left: 4px solid #e74c3c;">
+            <div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+                <div>
+                    <div style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Reference Values</div>
+                </div>
+                <div style="display: flex; gap: 2.5rem; flex-wrap: wrap;">
+                    <div>
+                        <span style="font-size: 0.8rem; color: #495057;">Avg ED Cost/Visit:</span>
+                        <span style="font-weight: 700; color: #e74c3c; margin-left: 0.5rem; font-size: 1.1rem;">$${avgCostPerVisit.toLocaleString()}</span>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.8rem; color: #495057;">Urgent Care Cost:</span>
+                        <span style="font-weight: 700; color: #27ae60; margin-left: 0.5rem; font-size: 1.1rem;">~$150</span>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.8rem; color: #495057;">Diversion Rate:</span>
+                        <span style="font-weight: 700; color: #3498db; margin-left: 0.5rem; font-size: 1.1rem;">65%</span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Provider-Level Avoidable ED Analysis</h3>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Provider</th>
-                    <th>Total ED Visits</th>
-                    <th>Avoidable ED</th>
-                    <th>% Avoidable</th>
-                    <th>Cost per Visit</th>
-                    <th>Savings Potential</th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
+        <!-- KPI Cards -->
+        <div class="kpi-grid" style="grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 1.5rem;">
+            <div class="kpi-card" style="background: white; border: 1px solid #e0e0e0;">
+                <div class="kpi-label" style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase;">
+                    Total Avoidable Visits
+                </div>
+                <div class="kpi-value" style="font-size: 2rem; font-weight: 700; color: #e74c3c; margin: 0.5rem 0;">
+                    ${totalAvoidable.toLocaleString()}
+                </div>
+                <div style="font-size: 0.8rem; color: #6c757d; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #eee;">
+                    <span>${avgAvoidablePct}% of ${totalEDVisits.toLocaleString()} total ED visits</span>
+                </div>
+            </div>
+            <div class="kpi-card" style="background: white; border: 1px solid #e0e0e0;">
+                <div class="kpi-label" style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase;">
+                    Full Savings Potential
+                </div>
+                <div class="kpi-value" style="font-size: 2rem; font-weight: 700; color: #f39c12; margin: 0.5rem 0;">
+                    $${totalSavings.toLocaleString()}
+                </div>
+                <div style="font-size: 0.8rem; color: #6c757d; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #eee;">
+                    <span>If 100% diverted to urgent care</span>
+                    <div style="font-size: 0.7rem; color: #888; margin-top: 0.25rem;">
+                        Formula: Avoidable × Cost/Visit
+                    </div>
+                </div>
+            </div>
+            <div class="kpi-card" style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border: 1px solid #28a745;">
+                <div class="kpi-label" style="font-size: 0.75rem; color: #155724; text-transform: uppercase;">
+                    Realistic Savings (65%)
+                </div>
+                <div class="kpi-value" style="font-size: 2rem; font-weight: 700; color: #155724; margin: 0.5rem 0;">
+                    $${diversionSavings.toLocaleString()}
+                </div>
+                <div style="font-size: 0.8rem; color: #155724; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(40,167,69,0.3);">
+                    <span>65% diversion rate achievable</span>
+                    <div style="font-size: 0.7rem; color: #1e7e34; margin-top: 0.25rem;">
+                        Formula: $${totalSavings.toLocaleString()} × 65%
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    providerData.forEach(provider => {
-        const avoidClass = provider.avoidablePct > 33 ? 'bad' : 'warning';
+        <!-- Savings Calculation Breakdown -->
+        <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; border: 1px solid #e0e0e0;">
+            <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 1.2rem;">📊</span> Savings Calculation Breakdown
+            </h3>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                    <thead>
+                        <tr style="background: #f8f9fa;">
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Provider</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Total ED</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Avoidable</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">% Avoidable</th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600;">Cost/Visit</th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600;">Calculation</th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600; background: #d4edda;">Savings<br>Potential</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${providerData.map(p => `
+                            <tr>
+                                <td style="padding: 0.75rem; border-bottom: 1px solid #eee;"><strong>${p.provider}</strong></td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee;">${p.totalED.toLocaleString()}</td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: #e74c3c; font-weight: 600;">${p.avoidableED}</td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: ${p.avoidablePct > 33 ? '#e74c3c' : '#f39c12'};">${p.avoidablePct}%</td>
+                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee;">$${p.costPerVisit.toLocaleString()}</td>
+                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; font-size: 0.8rem; color: #6c757d;">
+                                    ${p.avoidableED} × $${p.costPerVisit.toLocaleString()}
+                                </td>
+                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; background: #f0fff0; font-weight: 600; color: #155724;">
+                                    $${p.savingsPotential.toLocaleString()}
+                                </td>
+                            </tr>
+                        `).join('')}
+                        <tr style="background: #f8f9fa; font-weight: 700;">
+                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;">TOTAL</td>
+                            <td style="padding: 0.75rem; text-align: center; border-top: 2px solid #dee2e6;">${totalEDVisits.toLocaleString()}</td>
+                            <td style="padding: 0.75rem; text-align: center; border-top: 2px solid #dee2e6; color: #e74c3c;">${totalAvoidable.toLocaleString()}</td>
+                            <td style="padding: 0.75rem; text-align: center; border-top: 2px solid #dee2e6;">${avgAvoidablePct}%</td>
+                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;"></td>
+                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;"></td>
+                            <td style="padding: 0.75rem; text-align: right; border-top: 2px solid #dee2e6; background: #d4edda; color: #155724; font-size: 1.1rem;">$${totalSavings.toLocaleString()}</td>
+                        </tr>
+                        <tr style="background: #d4edda;">
+                            <td colspan="6" style="padding: 0.75rem; font-weight: 600; color: #155724;">
+                                Realistic Savings @ 65% Diversion Rate
+                            </td>
+                            <td style="padding: 0.75rem; text-align: right; font-weight: 700; color: #155724; font-size: 1.1rem;">
+                                $${diversionSavings.toLocaleString()}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-        modalBody += `
-            <tr>
-                <td><strong>${provider.provider}</strong></td>
-                <td>${provider.totalED}</td>
-                <td class="${avoidClass}">${provider.avoidableED}</td>
-                <td class="${avoidClass}">${provider.avoidablePct}%</td>
-                <td>$${provider.costPerVisit.toLocaleString()}</td>
-                <td style="color: #27ae60; font-weight: 600;">$${provider.savingsPotential.toLocaleString()}</td>
-            </tr>
-        `;
-    });
-
-    modalBody += `
-            </tbody>
-        </table>
-
-        <div class="alert-box success" style="margin-top: 2rem;">
-            <h4>Cost Impact & Intervention Strategy</h4>
+        <div class="alert-box success" style="margin-top: 1rem;">
+            <h4>Intervention Strategy</h4>
             <ul>
-                <li><strong>65% Diversion Rate:</strong> Steering avoidable ED to urgent care saves ~$${Math.floor(totalSavings * 0.65).toLocaleString()} annually</li>
-                <li><strong>Target Providers:</strong> Focus on top 2 providers (${providerData[0].provider}, ${providerData[1].provider}) for greatest impact</li>
+                <li><strong>Target Providers:</strong> Focus on ${providerData[0].provider} and ${providerData[1].provider} for greatest impact ($${(providerData[0].savingsPotential + providerData[1].savingsPotential).toLocaleString()} combined)</li>
                 <li><strong>Patient Engagement:</strong> Activate MyChart for top utilizers and promote telehealth options</li>
                 <li><strong>Network Strategy:</strong> Expand urgent care hours and locations in high-utilization areas</li>
             </ul>
@@ -2958,109 +3034,151 @@ function drillDownHCC(providerId) {
 
     const totalRevOpp = patients.reduce((sum, p) => sum + p.revenueOpp, 0);
     const awvCompleteCount = patients.filter(p => p.awvCompleted).length;
-    const avgRAFGap = (patients.reduce((sum, p) => sum + (p.rafPotential - p.rafCurrent), 0) / patients.length).toFixed(2);
+    const totalRAFGap = patients.reduce((sum, p) => sum + (p.rafPotential - p.rafCurrent), 0);
+    const avgRAFGap = (totalRAFGap / patients.length).toFixed(2);
+    const pmpmPerRAF = 11700; // Annual revenue per RAF point (approximate CMS rate)
+    const patientsNotScheduled = patients.filter(p => p.nextAppt === 'Not scheduled').length;
 
     let modalBody = `
         <h2>${providerName} - HCC Coding Gap Opportunities</h2>
-        <p class="provider-summary">Patient-level detail showing documentation opportunities and next steps</p>
+        <p class="provider-summary">Patient-level detail showing revenue opportunity from documenting suspected HCC codes</p>
 
-        <div class="market-kpi-row" style="grid-template-columns: repeat(4, 1fr);">
-            <div class="kpi-box">
-                <div class="kpi-label tooltip-hover" title="Total potential revenue increase from closing all suspected HCC gaps">
-                    Total Revenue Opportunity
-                    <span class="tooltip-icon">ⓘ</span>
+        <!-- Reference Values Bar -->
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; border-left: 4px solid #27ae60;">
+            <div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+                <div>
+                    <div style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Reference Values</div>
                 </div>
-                <div class="kpi-value" style="color: #27ae60;">$${totalRevOpp.toLocaleString()}</div>
-            </div>
-            <div class="kpi-box">
-                <div class="kpi-label tooltip-hover" title="Percentage of patients who have completed Annual Wellness Visit this year">
-                    AWV Completion Rate
-                    <span class="tooltip-icon">ⓘ</span>
+                <div style="display: flex; gap: 2.5rem; flex-wrap: wrap;">
+                    <div>
+                        <span style="font-size: 0.8rem; color: #495057;">Annual Rev per RAF Point:</span>
+                        <span style="font-weight: 700; color: #27ae60; margin-left: 0.5rem; font-size: 1.1rem;">~$${pmpmPerRAF.toLocaleString()}</span>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.8rem; color: #495057;">Total RAF Gap:</span>
+                        <span style="font-weight: 700; color: #C84E28; margin-left: 0.5rem; font-size: 1.1rem;">${totalRAFGap.toFixed(2)}</span>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.8rem; color: #495057;">Patients:</span>
+                        <span style="font-weight: 700; color: #2c3e50; margin-left: 0.5rem; font-size: 1.1rem;">${patients.length}</span>
+                    </div>
                 </div>
-                <div class="kpi-value ${awvCompleteCount >= 4 ? 'good' : 'warning'}">${((awvCompleteCount / patients.length) * 100).toFixed(0)}%</div>
-            </div>
-            <div class="kpi-box">
-                <div class="kpi-label tooltip-hover" title="Average difference between current RAF score and potential RAF score with all gaps closed">
-                    Avg RAF Gap
-                    <span class="tooltip-icon">ⓘ</span>
-                </div>
-                <div class="kpi-value warning">${avgRAFGap}</div>
-            </div>
-            <div class="kpi-box">
-                <div class="kpi-label tooltip-hover" title="Number of patients with suspected HCC codes needing documentation">
-                    Patients with Gaps
-                    <span class="tooltip-icon">ⓘ</span>
-                </div>
-                <div class="kpi-value">${patients.length}</div>
             </div>
         </div>
 
-        <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Patient-Level HCC Gap Analysis</h3>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th class="tooltip-hover" title="Medical Record Number">
-                        MRN
-                        <span class="tooltip-icon">ⓘ</span>
-                    </th>
-                    <th>Patient Name</th>
-                    <th>Age</th>
-                    <th class="tooltip-hover" title="Annual Wellness Visit completed in current year">
-                        AWV Status
-                        <span class="tooltip-icon">ⓘ</span>
-                    </th>
-                    <th class="tooltip-hover" title="Currently documented HCC codes for this patient">
-                        Open HCCs
-                        <span class="tooltip-icon">ⓘ</span>
-                    </th>
-                    <th class="tooltip-hover" title="HCC codes suspected based on claims history but not yet documented">
-                        Suspected HCCs
-                        <span class="tooltip-icon">ⓘ</span>
-                    </th>
-                    <th>Next Appointment</th>
-                    <th class="tooltip-hover" title="Current RAF Score">
-                        RAF Current
-                        <span class="tooltip-icon">ⓘ</span>
-                    </th>
-                    <th class="tooltip-hover" title="Potential RAF Score if all suspected HCCs are documented">
-                        RAF Potential
-                        <span class="tooltip-icon">ⓘ</span>
-                    </th>
-                    <th class="tooltip-hover" title="Annual revenue increase if gaps are closed. Formula: (RAF Potential - RAF Current) × $12,000 (avg reimbursement per RAF point)">
-                        Revenue Opp
-                        <span class="tooltip-icon">ⓘ</span>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
+        <!-- KPI Cards -->
+        <div class="kpi-grid" style="grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 1.5rem;">
+            <div class="kpi-card" style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border: 1px solid #28a745;">
+                <div class="kpi-label" style="font-size: 0.75rem; color: #155724; text-transform: uppercase;">
+                    Total Revenue Opportunity
+                </div>
+                <div class="kpi-value" style="font-size: 1.8rem; font-weight: 700; color: #155724; margin: 0.5rem 0;">
+                    $${totalRevOpp.toLocaleString()}
+                </div>
+                <div style="font-size: 0.8rem; color: #155724; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid rgba(40,167,69,0.3);">
+                    <span>From ${totalRAFGap.toFixed(2)} total RAF gap</span>
+                    <div style="font-size: 0.7rem; color: #1e7e34; margin-top: 0.25rem;">
+                        Formula: RAF Gap × $${pmpmPerRAF.toLocaleString()}/yr
+                    </div>
+                </div>
+            </div>
+            <div class="kpi-card" style="background: white; border: 1px solid #e0e0e0;">
+                <div class="kpi-label" style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase;">
+                    AWV Completion
+                </div>
+                <div class="kpi-value" style="font-size: 1.8rem; font-weight: 700; color: ${awvCompleteCount >= 4 ? '#27ae60' : '#f39c12'}; margin: 0.5rem 0;">
+                    ${((awvCompleteCount / patients.length) * 100).toFixed(0)}%
+                </div>
+                <div style="font-size: 0.8rem; color: #6c757d; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #eee;">
+                    ${awvCompleteCount} of ${patients.length} patients
+                </div>
+            </div>
+            <div class="kpi-card" style="background: white; border: 1px solid #e0e0e0;">
+                <div class="kpi-label" style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase;">
+                    Avg RAF Gap/Patient
+                </div>
+                <div class="kpi-value" style="font-size: 1.8rem; font-weight: 700; color: #f39c12; margin: 0.5rem 0;">
+                    ${avgRAFGap}
+                </div>
+                <div style="font-size: 0.8rem; color: #6c757d; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #eee;">
+                    ~$${Math.round(avgRAFGap * pmpmPerRAF).toLocaleString()} per patient
+                </div>
+            </div>
+            <div class="kpi-card" style="background: white; border: 1px solid #e0e0e0;">
+                <div class="kpi-label" style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase;">
+                    Not Scheduled
+                </div>
+                <div class="kpi-value" style="font-size: 1.8rem; font-weight: 700; color: ${patientsNotScheduled > 0 ? '#e74c3c' : '#27ae60'}; margin: 0.5rem 0;">
+                    ${patientsNotScheduled}
+                </div>
+                <div style="font-size: 0.8rem; color: #6c757d; margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid #eee;">
+                    Priority for outreach
+                </div>
+            </div>
+        </div>
 
-    patients.forEach(patient => {
-        const awvClass = patient.awvCompleted ? 'good' : 'bad';
-        const awvStatus = patient.awvCompleted ? `Yes (${patient.awvDate})` : 'No - Overdue';
-        const apptClass = patient.nextAppt === 'Not scheduled' ? 'bad' : '';
+        <!-- Savings Calculation Breakdown -->
+        <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; border: 1px solid #e0e0e0;">
+            <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 1.2rem;">📊</span> Revenue Calculation Breakdown
+            </h3>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                    <thead>
+                        <tr style="background: #f8f9fa;">
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Patient</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">AWV</th>
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Suspected HCCs</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">RAF<br>Current</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">RAF<br>Potential</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">RAF Gap</th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600;">Calculation</th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600; background: #d4edda;">Revenue<br>Opportunity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${patients.map(p => {
+                            const rafGap = (p.rafPotential - p.rafCurrent).toFixed(2);
+                            return `
+                            <tr>
+                                <td style="padding: 0.75rem; border-bottom: 1px solid #eee;">
+                                    <strong>${p.firstName} ${p.lastName}</strong>
+                                    <div style="font-size: 0.7rem; color: #888;">${p.mrn}</div>
+                                </td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee;">
+                                    <span style="color: ${p.awvCompleted ? '#27ae60' : '#e74c3c'}; font-weight: 600;">${p.awvCompleted ? '✓' : '✗'}</span>
+                                </td>
+                                <td style="padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.8rem; color: #f39c12;">
+                                    ${p.suspectedHCCs.join('<br>')}
+                                </td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee;">${p.rafCurrent.toFixed(2)}</td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: #27ae60; font-weight: 600;">${p.rafPotential.toFixed(2)}</td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: #C84E28; font-weight: 600;">${rafGap}</td>
+                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; font-size: 0.8rem; color: #6c757d;">
+                                    ${rafGap} × $${pmpmPerRAF.toLocaleString()}
+                                </td>
+                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; background: #f0fff0; font-weight: 600; color: #155724;">
+                                    $${p.revenueOpp.toLocaleString()}
+                                </td>
+                            </tr>
+                            `;
+                        }).join('')}
+                        <tr style="background: #f8f9fa; font-weight: 700;">
+                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;">TOTAL</td>
+                            <td style="padding: 0.75rem; text-align: center; border-top: 2px solid #dee2e6;">${awvCompleteCount}/${patients.length}</td>
+                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;"></td>
+                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;"></td>
+                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;"></td>
+                            <td style="padding: 0.75rem; text-align: center; border-top: 2px solid #dee2e6; color: #C84E28;">${totalRAFGap.toFixed(2)}</td>
+                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;"></td>
+                            <td style="padding: 0.75rem; text-align: right; border-top: 2px solid #dee2e6; background: #d4edda; color: #155724; font-size: 1.1rem;">$${totalRevOpp.toLocaleString()}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-        modalBody += `
-            <tr>
-                <td><strong>${patient.mrn}</strong></td>
-                <td>${patient.firstName} ${patient.lastName}</td>
-                <td>${patient.age}</td>
-                <td class="${awvClass}">${awvStatus}</td>
-                <td><small>${patient.openHCCs.join('<br>')}</small></td>
-                <td class="warning"><small>${patient.suspectedHCCs.join('<br>')}</small></td>
-                <td class="${apptClass}">${patient.nextAppt}</td>
-                <td>${patient.rafCurrent.toFixed(2)}</td>
-                <td style="color: #27ae60; font-weight: 600;">${patient.rafPotential.toFixed(2)}</td>
-                <td style="color: #27ae60; font-weight: 600;">$${patient.revenueOpp.toLocaleString()}</td>
-            </tr>
-        `;
-    });
-
-    modalBody += `
-            </tbody>
-        </table>
-
-        <div class="alert-box success" style="margin-top: 2rem;">
+        <div class="alert-box success" style="margin-top: 1rem;">
             <h4>Recommended Actions to Close Gaps</h4>
             <ul>
                 <li><strong>AWV Outreach:</strong> Schedule ${patients.filter(p => !p.awvCompleted).length} patients for Annual Wellness Visit immediately</li>
@@ -3147,141 +3265,168 @@ function drillDownEpisode(episodeType) {
     };
 
     const providers = providerData[episodeType] || providerData['joint'];
+    const benchmarkCost = providers[0].benchmarkCost; // All have same benchmark
 
     // Calculate summary stats
     const totalEpisodes = providers.reduce((sum, p) => sum + p.episodes, 0);
+    const weightedAvgCost = providers.reduce((sum, p) => sum + (p.avgCost * p.episodes), 0) / totalEpisodes;
     const avgVariance = (providers.reduce((sum, p) => sum + p.variance, 0) / providers.length).toFixed(1);
     const highCostProviders = providers.filter(p => p.variance > 10).length;
-    const totalOpportunity = providers.reduce((sum, p) => {
-        if (p.variance > 0) {
-            return sum + (p.avgCost - p.benchmarkCost) * p.episodes;
-        }
-        return sum;
-    }, 0);
+    const providersAboveBenchmark = providers.filter(p => p.avgCost > benchmarkCost).length;
 
-    let modalBody = `
-        <h2>${episodeName} - Provider Cost Variation Analysis</h2>
-        <p class="provider-summary">Detailed drill-down showing cost drivers and clinical pathway opportunities</p>
-
-        <div class="market-kpi-row" style="grid-template-columns: repeat(4, 1fr);">
-            <div class="kpi-box">
-                <div class="kpi-label tooltip-hover" title="Total number of ${episodeName} episodes across all providers">
-                    Total Episodes
-                    <span class="tooltip-icon">ⓘ</span>
-                </div>
-                <div class="kpi-value">${totalEpisodes}</div>
-            </div>
-            <div class="kpi-box">
-                <div class="kpi-label tooltip-hover" title="Average percentage variance from benchmark cost. Formula: ((Avg Cost - Benchmark) / Benchmark) × 100">
-                    Avg Cost Variance
-                    <span class="tooltip-icon">ⓘ</span>
-                </div>
-                <div class="kpi-value ${avgVariance > 0 ? 'bad' : 'good'}">${avgVariance > 0 ? '+' : ''}${avgVariance}%</div>
-            </div>
-            <div class="kpi-box">
-                <div class="kpi-label tooltip-hover" title="Number of providers with cost >10% above benchmark">
-                    High-Cost Providers
-                    <span class="tooltip-icon">ⓘ</span>
-                </div>
-                <div class="kpi-value warning">${highCostProviders}</div>
-            </div>
-            <div class="kpi-box">
-                <div class="kpi-label tooltip-hover" title="Annual savings if all providers performed at benchmark. Formula: Σ(Provider Cost - Benchmark) × Episodes">
-                    Savings Opportunity
-                    <span class="tooltip-icon">ⓘ</span>
-                </div>
-                <div class="kpi-value" style="color: #27ae60;">$${totalOpportunity.toLocaleString()}</div>
-            </div>
-        </div>
-
-        <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Provider-Level Episode Cost Performance</h3>
-        <table class="data-table">
-            <thead>
-                <tr>
-                    <th>Provider</th>
-                    <th class="tooltip-hover" title="Number of episodes">
-                        Episodes
-                        <span class="tooltip-icon">ⓘ</span>
-                    </th>
-                    <th class="tooltip-hover" title="Average cost per episode for this provider">
-                        Avg Cost
-                        <span class="tooltip-icon">ⓘ</span>
-                    </th>
-                    <th class="tooltip-hover" title="Regional benchmark cost for this episode type">
-                        Benchmark
-                        <span class="tooltip-icon">ⓘ</span>
-                    </th>
-                    <th class="tooltip-hover" title="Percentage variance from benchmark. Red = higher cost, Green = lower cost">
-                        % Variance
-                        <span class="tooltip-icon">ⓘ</span>
-                    </th>
-                    <th class="tooltip-hover" title="Percentage of episodes using post-acute care (SNF, Home Health, Rehab)">
-                        Post-Acute %
-                        <span class="tooltip-icon">ⓘ</span>
-                    </th>
-                    <th class="tooltip-hover" title="30-day readmission rate for this episode type">
-                        Readmit %
-                        <span class="tooltip-icon">ⓘ</span>
-                    </th>
-                    <th class="tooltip-hover" title="Annual cost impact if this provider hit benchmark. Formula: (Avg Cost - Benchmark) × Episodes">
-                        Cost Impact
-                        <span class="tooltip-icon">ⓘ</span>
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-    `;
-
-    providers.forEach(provider => {
-        const varianceClass = provider.variance > 10 ? 'bad' : provider.variance < -5 ? 'good' : 'warning';
-        const costImpact = (provider.avgCost - provider.benchmarkCost) * provider.episodes;
-        const impactClass = costImpact > 0 ? 'bad' : 'good';
-
-        modalBody += `
-            <tr>
-                <td><strong>${provider.provider}</strong></td>
-                <td>${provider.episodes}</td>
-                <td>$${provider.avgCost.toLocaleString()}</td>
-                <td>$${provider.benchmarkCost.toLocaleString()}</td>
-                <td class="${varianceClass}">${provider.variance > 0 ? '+' : ''}${provider.variance}%</td>
-                <td class="${provider.postAcuteUtil > 50 ? 'warning' : ''}">${provider.postAcuteUtil}%</td>
-                <td class="${provider.readmitRate > 8 ? 'bad' : 'good'}">${provider.readmitRate}%</td>
-                <td class="${impactClass}">${costImpact > 0 ? '+' : ''}$${Math.abs(costImpact).toLocaleString()}</td>
-            </tr>
-        `;
+    // Calculate opportunity with breakdown
+    const providerBreakdown = providers.map(p => {
+        const vsBenchmark = p.avgCost - benchmarkCost;
+        const savingsOpp = vsBenchmark > 0 ? vsBenchmark * p.episodes : 0;
+        return {
+            ...p,
+            vsBenchmark: vsBenchmark,
+            savingsOpp: savingsOpp
+        };
     });
 
-    // Find key drivers
-    const highestCostProvider = providers.reduce((max, p) => p.variance > max.variance ? p : max);
-    const highestPostAcute = providers.reduce((max, p) => p.postAcuteUtil > max.postAcuteUtil ? p : max);
-    const highestReadmit = providers.reduce((max, p) => p.readmitRate > max.readmitRate ? p : max);
+    const totalOpportunity = providerBreakdown.reduce((sum, p) => sum + p.savingsOpp, 0);
 
-    modalBody += `
-            </tbody>
-        </table>
+    let modalBody = `
+        <h2>${episodeName} - Hospital Cost Variation Analysis</h2>
+        <p class="provider-summary">Hospital-level cost variation showing savings opportunity vs national benchmark</p>
 
-        <div class="alert-box warning" style="margin-top: 2rem;">
-            <h4>Cost Variation Drivers & Opportunities</h4>
-            <ul>
-                <li><strong>Highest Cost Variance:</strong> ${highestCostProvider.provider} is ${highestCostProvider.variance}% above benchmark - investigate clinical protocols and post-acute utilization</li>
-                <li><strong>Post-Acute Overutilization:</strong> ${highestPostAcute.provider} uses post-acute care in ${highestPostAcute.postAcuteUtil}% of cases vs ${providers.reduce((sum, p) => sum + p.postAcuteUtil, 0) / providers.length}% average - promote home-based recovery</li>
-                <li><strong>Readmission Driver:</strong> ${highestReadmit.provider} has ${highestReadmit.readmitRate}% readmission rate - strengthen discharge planning and follow-up</li>
-                <li><strong>Best Practice:</strong> ${providers[0].provider} demonstrates efficient care at $${providers[0].avgCost.toLocaleString()} per episode - share protocols with high-cost providers</li>
-                <li><strong>Quick Win:</strong> If ${highestCostProvider.provider} matched benchmark, would save $${((highestCostProvider.avgCost - highestCostProvider.benchmarkCost) * highestCostProvider.episodes).toLocaleString()} annually</li>
-            </ul>
+        <!-- Reference Values Bar -->
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; border-left: 4px solid #3498db;">
+            <div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+                <div>
+                    <div style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Reference Values</div>
+                </div>
+                <div style="display: flex; gap: 2.5rem; flex-wrap: wrap;">
+                    <div>
+                        <span style="font-size: 0.8rem; color: #495057;">National Benchmark:</span>
+                        <span style="font-weight: 700; color: #3498db; margin-left: 0.5rem; font-size: 1.1rem;">$${benchmarkCost.toLocaleString()}</span>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.8rem; color: #495057;">Network Wtd Avg:</span>
+                        <span style="font-weight: 700; color: ${weightedAvgCost > benchmarkCost ? '#e74c3c' : '#27ae60'}; margin-left: 0.5rem; font-size: 1.1rem;">$${Math.round(weightedAvgCost).toLocaleString()}</span>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.8rem; color: #495057;">Total Episodes:</span>
+                        <span style="font-weight: 700; color: #2c3e50; margin-left: 0.5rem; font-size: 1.1rem;">${totalEpisodes}</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <style>
-            .tooltip-hover {
-                position: relative;
-                cursor: help;
-            }
-            .tooltip-icon {
-                color: #3498db;
-                font-size: 0.8em;
-                margin-left: 4px;
-            }
-        </style>
+        <!-- KPI Cards -->
+        <div class="kpi-grid" style="grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 1.5rem;">
+            <div class="kpi-card" style="background: white; border: 1px solid #e0e0e0;">
+                <div class="kpi-label" style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase;">
+                    Network Weighted Average
+                </div>
+                <div class="kpi-value" style="font-size: 2rem; font-weight: 700; color: ${weightedAvgCost > benchmarkCost ? '#e74c3c' : '#27ae60'}; margin: 0.5rem 0;">
+                    $${Math.round(weightedAvgCost).toLocaleString()}
+                </div>
+                <div style="font-size: 0.8rem; color: #6c757d; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #eee;">
+                    <span>vs Benchmark:</span>
+                    <span style="font-weight: 600; color: ${weightedAvgCost > benchmarkCost ? '#e74c3c' : '#27ae60'}; margin-left: 0.5rem;">
+                        ${weightedAvgCost > benchmarkCost ? '+' : ''}$${Math.round(weightedAvgCost - benchmarkCost).toLocaleString()}
+                    </span>
+                    <span style="margin-left: 0.5rem;">(${avgVariance > 0 ? '+' : ''}${avgVariance}%)</span>
+                </div>
+            </div>
+            <div class="kpi-card" style="background: white; border: 1px solid #e0e0e0;">
+                <div class="kpi-label" style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase;">
+                    High-Cost Hospitals
+                </div>
+                <div class="kpi-value" style="font-size: 2rem; font-weight: 700; color: #f39c12; margin: 0.5rem 0;">
+                    ${highCostProviders}
+                </div>
+                <div style="font-size: 0.8rem; color: #6c757d; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #eee;">
+                    <span>Above benchmark (>10%):</span>
+                    <span style="font-weight: 600; margin-left: 0.5rem;">${highCostProviders} of ${providers.length}</span>
+                </div>
+            </div>
+            <div class="kpi-card" style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border: 1px solid #28a745;">
+                <div class="kpi-label" style="font-size: 0.75rem; color: #155724; text-transform: uppercase;">
+                    Savings Opportunity
+                </div>
+                <div class="kpi-value" style="font-size: 2rem; font-weight: 700; color: #155724; margin: 0.5rem 0;">
+                    $${totalOpportunity.toLocaleString()}
+                </div>
+                <div style="font-size: 0.8rem; color: #155724; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(40,167,69,0.3);">
+                    <span>Target:</span>
+                    <span style="font-weight: 600; margin-left: 0.5rem;">$${benchmarkCost.toLocaleString()} (National)</span>
+                    <div style="font-size: 0.7rem; color: #1e7e34; margin-top: 0.25rem;">
+                        ${providersAboveBenchmark} hospitals above benchmark
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Savings Calculation Breakdown -->
+        <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; border: 1px solid #e0e0e0;">
+            <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 1.2rem;">📊</span> Savings Calculation Breakdown
+            </h3>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                    <thead>
+                        <tr style="background: #f8f9fa;">
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Hospital</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Episodes</th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600;">Avg Cost</th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600;">vs Benchmark<br><span style="font-weight: 400; font-size: 0.7rem;">($${benchmarkCost.toLocaleString()})</span></th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Post-Acute %</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Readmit %</th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600; background: #d4edda;">Savings<br>Opportunity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${providerBreakdown.map(p => `
+                            <tr>
+                                <td style="padding: 0.75rem; border-bottom: 1px solid #eee;"><strong>${p.provider}</strong></td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee;">${p.episodes}</td>
+                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; font-weight: 600;">$${p.avgCost.toLocaleString()}</td>
+                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; color: ${p.vsBenchmark > 0 ? '#e74c3c' : '#27ae60'}; font-weight: 500;">
+                                    ${p.vsBenchmark > 0 ? '+' : ''}$${Math.round(p.vsBenchmark).toLocaleString()}
+                                    <div style="font-size: 0.7rem; color: #888;">× ${p.episodes} episodes</div>
+                                </td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: ${p.postAcuteUtil > 50 ? '#f39c12' : '#495057'};">${p.postAcuteUtil}%</td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: ${p.readmitRate > 8 ? '#e74c3c' : '#27ae60'};">${p.readmitRate}%</td>
+                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; background: #f0fff0; font-weight: 600; color: #155724;">
+                                    ${p.savingsOpp > 0 ? '$' + Math.round(p.savingsOpp).toLocaleString() : '—'}
+                                </td>
+                            </tr>
+                        `).join('')}
+                        <tr style="background: #f8f9fa; font-weight: 700;">
+                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;">TOTAL</td>
+                            <td style="padding: 0.75rem; text-align: center; border-top: 2px solid #dee2e6;">${totalEpisodes}</td>
+                            <td style="padding: 0.75rem; text-align: right; border-top: 2px solid #dee2e6;">$${Math.round(weightedAvgCost).toLocaleString()}</td>
+                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;"></td>
+                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;"></td>
+                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;"></td>
+                            <td style="padding: 0.75rem; text-align: right; border-top: 2px solid #dee2e6; background: #d4edda; color: #155724; font-size: 1.1rem;">$${Math.round(totalOpportunity).toLocaleString()}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+
+    // Find key drivers for insights
+    const highestCostProvider = providerBreakdown.reduce((max, p) => p.variance > max.variance ? p : max);
+    const highestPostAcute = providerBreakdown.reduce((max, p) => p.postAcuteUtil > max.postAcuteUtil ? p : max);
+    const highestReadmit = providerBreakdown.reduce((max, p) => p.readmitRate > max.readmitRate ? p : max);
+    const lowestCostProvider = providerBreakdown.reduce((min, p) => p.avgCost < min.avgCost ? p : min);
+
+    modalBody += `
+        <div class="alert-box warning" style="margin-top: 1.5rem;">
+            <h4>Cost Variation Drivers & Opportunities</h4>
+            <ul>
+                <li><strong>Highest Cost Variance:</strong> ${highestCostProvider.provider} is +${highestCostProvider.variance}% above benchmark - investigate clinical protocols and post-acute utilization</li>
+                <li><strong>Post-Acute Overutilization:</strong> ${highestPostAcute.provider} uses post-acute care in ${highestPostAcute.postAcuteUtil}% of cases - promote home-based recovery</li>
+                <li><strong>Readmission Driver:</strong> ${highestReadmit.provider} has ${highestReadmit.readmitRate}% readmission rate - strengthen discharge planning</li>
+                <li><strong>Best Practice:</strong> ${lowestCostProvider.provider} demonstrates efficient care at $${lowestCostProvider.avgCost.toLocaleString()} per episode</li>
+                <li><strong>Quick Win:</strong> If ${highestCostProvider.provider} matched benchmark, would save $${Math.round(highestCostProvider.savingsOpp).toLocaleString()} annually</li>
+            </ul>
+        </div>
     `;
 
     showModal(modalBody);
