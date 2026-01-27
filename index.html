@@ -13,147 +13,274 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #1a2332 0%, #0d1421 50%, #1a2332 100%);
+            background: #000;
             min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.5rem 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(180deg, rgba(0,0,0,0.7) 0%, transparent 100%);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo svg {
+            height: 32px;
+            width: auto;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 2px;
+        }
+
+        .tagline {
+            color: rgba(255,255,255,0.7);
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: lowercase;
+        }
+
+        /* Hero Carousel */
+        .hero-carousel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .slide-1 .slide-bg {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+
+        .slide-2 .slide-bg {
+            background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 50%, #415a77 100%);
+        }
+
+        .slide-3 .slide-bg {
+            background: linear-gradient(135deg, #212529 0%, #343a40 50%, #495057 100%);
+        }
+
+        .slide-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 50%, rgba(0,0,0,0.2) 100%);
+        }
+
+        /* Slide Content Headlines */
+        .slide-content {
+            position: absolute;
+            top: 50%;
+            right: 8%;
+            transform: translateY(-50%);
+            text-align: right;
+            color: #fff;
+            max-width: 500px;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out 0.5s;
+        }
+
+        .slide.active .slide-content {
+            opacity: 1;
+        }
+
+        .slide-headline {
+            font-size: 2.5rem;
+            font-weight: 300;
+            line-height: 1.2;
+            margin-bottom: 1rem;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .slide-headline strong {
+            font-weight: 600;
+        }
+
+        /* Carousel Indicators */
+        .carousel-indicators {
+            position: fixed;
+            right: 3rem;
+            top: 50%;
+            transform: translateY(-50%);
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #e8ecf1;
+            gap: 1rem;
+            z-index: 50;
         }
 
-        .login-container {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 16px;
+        .indicator {
+            width: 12px;
+            height: 12px;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .indicator:hover {
+            border-color: #fff;
+        }
+
+        .indicator.active {
+            background: #fff;
+            border-color: #fff;
+        }
+
+        /* Login Section - Bottom Left */
+        .login-section {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            z-index: 50;
             padding: 3rem;
+            max-width: 480px;
             width: 100%;
-            max-width: 440px;
-            margin: 1rem;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
 
-        .logo-section {
-            text-align: center;
-            margin-bottom: 2rem;
+        .login-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 2rem;
         }
 
-        .guidehouse-logo {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #ffffff;
-            letter-spacing: 2px;
+        .login-title {
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
             margin-bottom: 0.5rem;
-        }
-
-        .guidehouse-logo span {
-            color: #4a90d9;
-        }
-
-        .platform-name {
-            font-size: 0.9rem;
-            color: #8a9bb3;
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
+        }
+
+        .login-subtitle {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
         }
 
         .disclaimer {
-            background: rgba(74, 144, 217, 0.1);
-            border: 1px solid rgba(74, 144, 217, 0.3);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 2rem;
-            text-align: center;
+            background: rgba(255,255,255,0.05);
+            border-left: 3px solid #3b82f6;
+            padding: 0.75rem 1rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 4px 4px 0;
         }
 
-        .disclaimer-title {
+        .disclaimer-text {
+            color: rgba(255,255,255,0.7);
             font-size: 0.75rem;
-            font-weight: 600;
-            color: #4a90d9;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: rgba(255,255,255,0.8);
+            font-size: 0.75rem;
+            font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-bottom: 0.5rem;
         }
 
-        .disclaimer-text {
-            font-size: 0.85rem;
-            color: #8a9bb3;
-            line-height: 1.5;
-        }
-
-        .login-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .form-group label {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #a0aec0;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
         .form-group input {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 8px;
-            padding: 1rem;
+            width: 100%;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 4px;
+            padding: 0.875rem 1rem;
             font-size: 1rem;
-            color: #ffffff;
+            color: #fff;
             transition: all 0.3s ease;
         }
 
         .form-group input::placeholder {
-            color: #5a6a7a;
+            color: rgba(255,255,255,0.4);
         }
 
         .form-group input:focus {
             outline: none;
-            border-color: #4a90d9;
-            box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.2);
+            border-color: #3b82f6;
+            background: rgba(255,255,255,0.15);
         }
 
         .submit-btn {
-            background: linear-gradient(135deg, #4a90d9 0%, #357abd 100%);
+            width: 100%;
+            background: #3b82f6;
             border: none;
-            border-radius: 8px;
-            padding: 1rem;
-            font-size: 1rem;
+            border-radius: 4px;
+            padding: 0.875rem;
+            font-size: 0.9rem;
             font-weight: 600;
-            color: #ffffff;
+            color: #fff;
             cursor: pointer;
-            transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
+            transition: all 0.3s ease;
         }
 
         .submit-btn:hover {
-            background: linear-gradient(135deg, #5a9fe9 0%, #4a90d9 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px -5px rgba(74, 144, 217, 0.4);
-        }
-
-        .submit-btn:active {
-            transform: translateY(0);
+            background: #2563eb;
         }
 
         .error-message {
-            background: rgba(220, 53, 69, 0.15);
+            background: rgba(220, 53, 69, 0.2);
             border: 1px solid rgba(220, 53, 69, 0.4);
-            border-radius: 8px;
-            padding: 1rem;
+            border-radius: 4px;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            color: #f87171;
+            font-size: 0.85rem;
             text-align: center;
-            color: #f5a5ae;
-            font-size: 0.9rem;
             display: none;
         }
 
@@ -168,78 +295,205 @@
             40%, 80% { transform: translateX(5px); }
         }
 
+        /* Footer */
         .footer {
-            margin-top: 2rem;
-            text-align: center;
-            font-size: 0.75rem;
-            color: #5a6a7a;
+            position: fixed;
+            bottom: 1rem;
+            right: 3rem;
+            color: rgba(255,255,255,0.4);
+            font-size: 0.7rem;
+            z-index: 50;
         }
 
-        /* Mobile responsiveness */
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem 1.5rem;
+            }
+
+            .logo-text {
+                font-size: 1.2rem;
+            }
+
+            .tagline {
+                display: none;
+            }
+
+            .slide-content {
+                display: none;
+            }
+
+            .carousel-indicators {
+                right: 1rem;
+                top: auto;
+                bottom: 50%;
+                transform: translateY(50%);
+            }
+
+            .login-section {
+                padding: 1.5rem;
+                max-width: 100%;
+            }
+
+            .login-card {
+                padding: 1.5rem;
+            }
+
+            .footer {
+                display: none;
+            }
+        }
+
         @media (max-width: 480px) {
-            .login-container {
-                padding: 2rem 1.5rem;
-                margin: 1rem;
+            .login-section {
+                bottom: 0;
+                left: 0;
+                right: 0;
+                padding: 1rem;
             }
 
-            .guidehouse-logo {
-                font-size: 1.6rem;
-            }
-
-            .platform-name {
-                font-size: 0.8rem;
+            .carousel-indicators {
+                display: none;
             }
         }
 
         /* Safe area for iPhone */
         @supports (padding: max(0px)) {
-            body {
-                padding-top: env(safe-area-inset-top);
-                padding-bottom: env(safe-area-inset-bottom);
+            .header {
+                padding-top: max(1.5rem, env(safe-area-inset-top));
+            }
+
+            .login-section {
+                padding-bottom: max(3rem, calc(env(safe-area-inset-bottom) + 1rem));
             }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="logo-section">
-            <div class="guidehouse-logo">GUIDE<span>HOUSE</span></div>
-            <div class="platform-name">MSSP ACO Analytics Platform</div>
+    <!-- Header with Logo -->
+    <header class="header">
+        <div class="logo">
+            <svg viewBox="0 0 180 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <text x="0" y="28" fill="white" font-family="-apple-system, BlinkMacSystemFont, sans-serif" font-size="26" font-weight="700" letter-spacing="3">GUIDEHOUSE</text>
+            </svg>
         </div>
+        <div class="tagline">outwit complexity™</div>
+    </header>
 
-        <div class="disclaimer">
-            <div class="disclaimer-title">Proprietary Demo - Authorized Use Only</div>
-            <div class="disclaimer-text">
-                This platform is for demonstration purposes and contains simulated data.
+    <!-- Hero Carousel -->
+    <div class="hero-carousel">
+        <div class="slide slide-1 active">
+            <div class="slide-bg"></div>
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+                <h2 class="slide-headline">Complex journeys demand<br><strong>a trusted guide.</strong></h2>
             </div>
         </div>
-
-        <form class="login-form" onsubmit="return handleLogin(event)">
-            <div class="form-group">
-                <label for="password">Access Code</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Enter access code"
-                    autocomplete="off"
-                    required
-                >
+        <div class="slide slide-2">
+            <div class="slide-bg"></div>
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+                <h2 class="slide-headline">Data-driven insights for<br><strong>value-based care.</strong></h2>
             </div>
-
-            <div class="error-message" id="error-message">
-                Access Denied. Please contact the administrator.
+        </div>
+        <div class="slide slide-3">
+            <div class="slide-bg"></div>
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+                <h2 class="slide-headline">Transforming healthcare<br><strong>through analytics.</strong></h2>
             </div>
-
-            <button type="submit" class="submit-btn">Enter Platform</button>
-        </form>
-
-        <div class="footer">
-            &copy; 2025 Guidehouse. All Rights Reserved.
         </div>
     </div>
 
+    <!-- Carousel Indicators -->
+    <div class="carousel-indicators">
+        <div class="indicator active" data-slide="0"></div>
+        <div class="indicator" data-slide="1"></div>
+        <div class="indicator" data-slide="2"></div>
+    </div>
+
+    <!-- Login Section - Bottom Left -->
+    <div class="login-section">
+        <div class="login-card">
+            <h3 class="login-title">MSSP ACO Analytics</h3>
+            <p class="login-subtitle">Authorized Access Portal</p>
+
+            <div class="disclaimer">
+                <p class="disclaimer-text">
+                    <strong>PROPRIETARY DEMO</strong> — This platform is for demonstration purposes and contains simulated data. Authorized use only.
+                </p>
+            </div>
+
+            <form onsubmit="return handleLogin(event)">
+                <div class="error-message" id="error-message">
+                    Access Denied. Please contact the administrator.
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Access Code</label>
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="Enter access code"
+                        autocomplete="off"
+                        required
+                    >
+                </div>
+
+                <button type="submit" class="submit-btn">Enter Platform</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        &copy; 2025 Guidehouse. All Rights Reserved.
+    </div>
+
     <script>
+        // Carousel functionality
+        const slides = document.querySelectorAll('.slide');
+        const indicators = document.querySelectorAll('.indicator');
+        let currentSlide = 0;
+        let slideInterval;
+
+        function goToSlide(index) {
+            slides[currentSlide].classList.remove('active');
+            indicators[currentSlide].classList.remove('active');
+
+            currentSlide = index;
+            if (currentSlide >= slides.length) currentSlide = 0;
+            if (currentSlide < 0) currentSlide = slides.length - 1;
+
+            slides[currentSlide].classList.add('active');
+            indicators[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            goToSlide(currentSlide + 1);
+        }
+
+        function startCarousel() {
+            slideInterval = setInterval(nextSlide, 5000);
+        }
+
+        function stopCarousel() {
+            clearInterval(slideInterval);
+        }
+
+        // Indicator clicks
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                stopCarousel();
+                goToSlide(index);
+                startCarousel();
+            });
+        });
+
+        // Start carousel
+        startCarousel();
+
+        // Login functionality
         function handleLogin(event) {
             event.preventDefault();
 
@@ -247,15 +501,12 @@
             const errorMessage = document.getElementById('error-message');
 
             if (password === 'Guidehouse1') {
-                // Success - redirect to dashboard
                 window.location.href = 'dashboard.html';
             } else {
-                // Failed - show error message
                 errorMessage.classList.add('visible');
                 document.getElementById('password').value = '';
                 document.getElementById('password').focus();
 
-                // Hide error after 3 seconds
                 setTimeout(() => {
                     errorMessage.classList.remove('visible');
                 }, 3000);
@@ -264,12 +515,12 @@
             return false;
         }
 
-        // Clear error when user starts typing
+        // Clear error on input
         document.getElementById('password').addEventListener('input', function() {
             document.getElementById('error-message').classList.remove('visible');
         });
 
-        // Auto-focus password field
+        // Auto-focus
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('password').focus();
         });
