@@ -1569,10 +1569,17 @@ function updateBar(elementId, percentage) {
     }
 }
 
-// Quality Metrics Date Slider
+// Quality Metrics Date Sliders
 function initializeQualityDateSlider() {
-    const slider = document.getElementById('quality-date-slider');
-    const display = document.getElementById('quality-date-display');
+    // Initialize Historical Slider (service date-based)
+    initializeHistoricalSlider();
+    // Initialize Forecast Slider (scheduled date-based)
+    initializeForecastSlider();
+}
+
+function initializeHistoricalSlider() {
+    const slider = document.getElementById('quality-historical-slider');
+    const display = document.getElementById('quality-historical-display');
 
     if (!slider || !display) return;
 
@@ -1585,13 +1592,11 @@ function initializeQualityDateSlider() {
     slider.max = totalDays;
     slider.value = totalDays;
 
-    // Base metrics at full period
+    // Base metrics at full period for historical data
     const baseMetrics = {
-        totalVisits: 38247,
-        newPatients: 3213,
-        newPtPct: 8.4,
-        upcomingVisits: 4823,
-        gapClosure: 6847
+        totalVisits: 38247,       // Total face-to-face visits
+        newPatients: 3213,        // New patient unique count
+        faceToFaceVisits: 34520   // Face-to-face visits for MGMA calculation
     };
 
     slider.addEventListener('input', function() {
@@ -1607,15 +1612,18 @@ function initializeQualityDateSlider() {
         // Calculate metrics based on proportion of time selected
         const proportion = days / totalDays;
 
-        // Add some non-linear variation for realism
-        const variance = 0.9 + Math.random() * 0.2;
+        // Add some non-linear variation for realism (but keep it stable for same value)
+        const seedVariance = (days % 7) * 0.02 + 0.95; // Deterministic variance based on days
 
-        const visits = Math.round(baseMetrics.totalVisits * proportion * variance);
-        const newPts = Math.round(baseMetrics.newPatients * proportion * variance);
-        const newPtPct = (newPts / visits * 100).toFixed(1);
+        const visits = Math.round(baseMetrics.totalVisits * proportion * seedVariance);
+        const faceToFace = Math.round(baseMetrics.faceToFaceVisits * proportion * seedVariance);
+        const newPts = Math.round(baseMetrics.newPatients * proportion * seedVariance);
 
-        // Calculate trend vs "prior period" (simulated)
-        const priorPeriodVisits = Math.round(visits * (0.85 + Math.random() * 0.1));
+        // MGMA definition: New Patient % = New Pt Unique Count / Total Face-to-Face Visits
+        const newPtPct = faceToFace > 0 ? (newPts / faceToFace * 100).toFixed(1) : '0.0';
+
+        // Calculate trend vs "prior period" (simulated but consistent)
+        const priorPeriodVisits = Math.round(visits * 0.89);
         const visitsTrend = ((visits - priorPeriodVisits) / priorPeriodVisits * 100).toFixed(1);
 
         // Update display
@@ -1636,6 +1644,93 @@ function initializeQualityDateSlider() {
             detailEl.textContent = newPts.toLocaleString() + ' new patients';
         }
     });
+}
+
+function initializeForecastSlider() {
+    const slider = document.getElementById('quality-forecast-slider');
+    const display = document.getElementById('quality-forecast-display');
+
+    if (!slider || !display) return;
+
+    // Define the forecast range: Today (Apr 15, 2024 in demo) to end of PY (Dec 31, 2026)
+    const today = new Date(2024, 3, 15); // Apr 15, 2024 (present in demo)
+    const endOfPY = new Date(2026, 11, 31); // Dec 31, 2026
+    const totalDays = Math.floor((endOfPY - today) / (1000 * 60 * 60 * 24));
+
+    // Set max value to total days
+    slider.max = totalDays;
+    slider.value = totalDays;
+
+    // Base metrics at full forecast period
+    const baseMetrics = {
+        upcomingVisits: 12847,    // Pts with scheduled visits through end of PY
+        gapClosure: 18247,        // Total gaps for those patients
+        avgPtsPerDay: 50          // Average patients scheduled per day
+    };
+
+    // Initial display
+    updateForecastDisplay(slider, display, today, endOfPY, totalDays, baseMetrics);
+
+    slider.addEventListener('input', function() {
+        updateForecastDisplay(slider, display, today, endOfPY, totalDays, baseMetrics);
+    });
+}
+
+function updateForecastDisplay(slider, display, today, _endOfPY, totalDays, baseMetrics) {
+    const days = parseInt(slider.value);
+    const selectedDate = new Date(today.getTime() + days * 24 * 60 * 60 * 1000);
+
+    // Format the date display
+    const options = { month: 'short', day: 'numeric', year: 'numeric' };
+    const todayFormatted = 'Today';
+    const endFormatted = selectedDate.toLocaleDateString('en-US', options);
+    display.textContent = todayFormatted + ' - ' + endFormatted;
+
+    // Calculate metrics based on proportion of forecast window
+    const proportion = days / totalDays;
+
+    // Deterministic variance based on days for consistency
+    const seedVariance = (days % 5) * 0.015 + 0.97;
+
+    const upcoming = Math.round(baseMetrics.upcomingVisits * proportion * seedVariance);
+    const gaps = Math.round(baseMetrics.gapClosure * proportion * seedVariance);
+    const gapsPerPatient = upcoming > 0 ? (gaps / upcoming).toFixed(1) : '0.0';
+    const avgPerDay = Math.round(upcoming / Math.max(days, 1));
+
+    // Calculate window description
+    let windowDesc;
+    if (days <= 30) {
+        windowDesc = 'Next ' + days + ' days';
+    } else if (days <= 90) {
+        windowDesc = 'Next ' + Math.round(days / 30) + ' month' + (days > 45 ? 's' : '');
+    } else {
+        windowDesc = 'Through ' + endFormatted;
+    }
+
+    // Update display
+    document.getElementById('quality-upcoming-visits').textContent = upcoming.toLocaleString();
+    document.getElementById('quality-gap-closure').textContent = gaps.toLocaleString();
+
+    // Update detail text
+    const upcomingDetail = document.getElementById('quality-upcoming-detail');
+    if (upcomingDetail) {
+        upcomingDetail.textContent = windowDesc;
+    }
+
+    const upcomingSub = document.getElementById('quality-upcoming-sub');
+    if (upcomingSub) {
+        upcomingSub.textContent = 'Avg ' + avgPerDay + ' pts/day scheduled';
+    }
+
+    const gapDetail = document.getElementById('quality-gap-detail');
+    if (gapDetail) {
+        gapDetail.textContent = 'Open gaps for scheduled pts';
+    }
+
+    const gapSub = document.getElementById('quality-gap-sub');
+    if (gapSub) {
+        gapSub.textContent = gapsPerPatient + ' gaps/patient average';
+    }
 }
 
 // Leakage Interactions

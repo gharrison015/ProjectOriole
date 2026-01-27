@@ -753,12 +753,68 @@
 }
 
 /* Quality Population Health Metrics */
-.quality-date-filter {
+.quality-slider-section {
     background: white;
-    padding: 1.5rem;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 1.5rem;
     margin-bottom: 1.5rem;
+}
+
+.quality-slider-section.forecast {
+    background: linear-gradient(135deg, #fafbff 0%, #ffffff 100%);
+    border: 1px solid #e8ecf4;
+}
+
+.slider-section-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.slider-section-header h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 0.25rem 0;
+}
+
+.slider-section-header p {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    margin: 0;
+}
+
+.quality-population-grid.two-col {
+    grid-template-columns: repeat(2, 1fr);
+    margin-bottom: 0;
+}
+
+@media (max-width: 768px) {
+    .quality-population-grid.two-col {
+        grid-template-columns: 1fr;
+    }
+}
+
+.quality-date-filter {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    margin-bottom: 1.25rem;
+}
+
+/* Forecast slider styling */
+.date-slider.forecast {
+    background: linear-gradient(90deg, #e8f4fd 0%, #fef9e7 100%);
+}
+
+.date-slider.forecast::-webkit-slider-thumb {
+    background: linear-gradient(135deg, #3498db 0%, #f39c12 100%);
+}
+
+.date-slider.forecast::-moz-range-thumb {
+    background: linear-gradient(135deg, #3498db 0%, #f39c12 100%);
 }
 
 .date-filter-label {
