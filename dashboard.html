@@ -999,11 +999,11 @@
                             <thead>
                                 <tr>
                                     <th>Episode Type</th>
-                                    <th>Episode Count</th>
-                                    <th>Avg Cost per Episode</th>
-                                    <th>Std Deviation</th>
-                                    <th>Variation %</th>
-                                    <th>Opportunity</th>
+                                    <th class="tooltip-header" title="Total number of episodes grouped using virtual bundle methodology within the measurement period">Episode Count <span class="th-info">ⓘ</span></th>
+                                    <th class="tooltip-header" title="Mean total cost per episode including facility, professional, ancillary, and post-acute services. Formula: Total Episode Costs ÷ Episode Count">Avg Cost per Episode <span class="th-info">ⓘ</span></th>
+                                    <th class="tooltip-header" title="Standard deviation of episode costs showing dispersion from mean. Higher values indicate greater cost variation. Formula: √(Σ(x - μ)² / N)">Std Deviation <span class="th-info">ⓘ</span></th>
+                                    <th class="tooltip-header" title="Coefficient of variation showing relative cost dispersion. Formula: (Standard Deviation ÷ Average Cost) × 100. Target: &lt;20%">Variation % <span class="th-info">ⓘ</span></th>
+                                    <th class="tooltip-header" title="Clinical and financial standardization opportunity based on variation analysis">Opportunity <span class="th-info">ⓘ</span></th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -1067,9 +1067,18 @@
                     </div>
 
                     <div class="chart-section">
-                        <h3>Episode Cost Distribution - Joint Replacement Example</h3>
-                        <div class="chart-wrapper">
+                        <h3>Episode Cost Distribution - Joint Replacement by Piedmont Hospital</h3>
+                        <p style="color: #7f8c8d; margin-bottom: 1rem; font-size: 0.9rem;">
+                            Click on any hospital bar to drill into rendering provider variation, opportunity analysis, and quality outcomes
+                        </p>
+                        <div class="chart-wrapper" style="height: 320px;">
                             <canvas id="episodeCostChart"></canvas>
+                        </div>
+                        <div class="chart-legend" style="margin-top: 1rem; display: flex; gap: 1.5rem; justify-content: center; font-size: 0.8rem;">
+                            <span><span style="display: inline-block; width: 12px; height: 12px; background: rgba(39, 174, 96, 0.7); border-radius: 2px; margin-right: 4px;"></span> Below Benchmark</span>
+                            <span><span style="display: inline-block; width: 12px; height: 12px; background: rgba(241, 196, 15, 0.7); border-radius: 2px; margin-right: 4px;"></span> Near Benchmark (±5%)</span>
+                            <span><span style="display: inline-block; width: 12px; height: 12px; background: rgba(231, 76, 60, 0.7); border-radius: 2px; margin-right: 4px;"></span> Above Benchmark (&gt;15%)</span>
+                            <span><span style="display: inline-block; width: 20px; height: 2px; background: #3498db; border-radius: 1px; margin-right: 4px; vertical-align: middle; border-style: dashed;"></span> National Benchmark ($27,500)</span>
                         </div>
                     </div>
 
@@ -1079,12 +1088,12 @@
                             <thead>
                                 <tr>
                                     <th>Episode Type</th>
-                                    <th>SNF Rate</th>
-                                    <th>Avg SNF Days</th>
-                                    <th>SNF Cost PMPM</th>
-                                    <th>Home Health Rate</th>
-                                    <th>Avg HH Visits</th>
-                                    <th>Total PAC Cost</th>
+                                    <th class="tooltip-header" title="Percentage of episodes with skilled nursing facility discharge. National benchmark for joint replacement: 28%. Formula: SNF Discharges ÷ Total Episodes × 100">SNF Rate <span class="th-info">ⓘ</span></th>
+                                    <th class="tooltip-header" title="Average length of stay in skilled nursing facility. Target: ≤14 days for joint replacement. Formula: Total SNF Days ÷ SNF Admissions">Avg SNF Days <span class="th-info">ⓘ</span></th>
+                                    <th class="tooltip-header" title="Average SNF cost per member per month for patients using SNF services. Formula: Total SNF Costs ÷ Member Months">SNF Cost PMPM <span class="th-info">ⓘ</span></th>
+                                    <th class="tooltip-header" title="Percentage of episodes utilizing home health services. Higher rates often indicate appropriate care setting optimization. Formula: HH Episodes ÷ Total Episodes × 100">Home Health Rate <span class="th-info">ⓘ</span></th>
+                                    <th class="tooltip-header" title="Average number of home health visits per episode. Formula: Total HH Visits ÷ HH Episodes">Avg HH Visits <span class="th-info">ⓘ</span></th>
+                                    <th class="tooltip-header" title="Total post-acute care cost including SNF, home health, inpatient rehab, and LTACH. Formula: SNF Cost + Home Health Cost + IRF Cost + LTACH Cost">Total PAC Cost <span class="th-info">ⓘ</span></th>
                                 </tr>
                             </thead>
                             <tbody>

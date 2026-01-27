@@ -621,6 +621,93 @@ function initRAFDistChart() {
     });
 }
 
+// Piedmont Hospital Joint Replacement Data
+const piedmontHospitalData = {
+    hospitals: [
+        {
+            name: 'Piedmont Atlanta',
+            shortName: 'Atlanta',
+            avgCost: 26200,
+            episodes: 89,
+            nationalBenchmark: 27500,
+            providers: [
+                { name: 'Dr. Sarah Mitchell', cases: 32, avgCost: 24800, qualityScore: 94.2, complications: 2.1, readmit30: 3.8, los: 2.1, patientSat: 4.7 },
+                { name: 'Dr. James Chen', cases: 28, avgCost: 26100, qualityScore: 91.8, complications: 3.2, readmit30: 4.2, los: 2.3, patientSat: 4.5 },
+                { name: 'Dr. Robert Williams', cases: 18, avgCost: 28400, qualityScore: 88.5, complications: 4.8, readmit30: 5.1, los: 2.8, patientSat: 4.2 },
+                { name: 'Dr. Maria Garcia', cases: 11, avgCost: 25900, qualityScore: 93.1, complications: 2.5, readmit30: 3.5, los: 2.0, patientSat: 4.8 }
+            ]
+        },
+        {
+            name: 'Piedmont Newnan',
+            shortName: 'Newnan',
+            avgCost: 28900,
+            episodes: 67,
+            nationalBenchmark: 27500,
+            providers: [
+                { name: 'Dr. Thomas Anderson', cases: 24, avgCost: 27200, qualityScore: 90.5, complications: 3.8, readmit30: 4.8, los: 2.4, patientSat: 4.4 },
+                { name: 'Dr. Lisa Park', cases: 22, avgCost: 29800, qualityScore: 87.2, complications: 5.1, readmit30: 6.2, los: 3.1, patientSat: 4.1 },
+                { name: 'Dr. David Kim', cases: 21, avgCost: 30100, qualityScore: 85.8, complications: 5.8, readmit30: 6.8, los: 3.3, patientSat: 3.9 }
+            ]
+        },
+        {
+            name: 'Piedmont Fayette',
+            shortName: 'Fayette',
+            avgCost: 31200,
+            episodes: 54,
+            nationalBenchmark: 27500,
+            providers: [
+                { name: 'Dr. Michael Brown', cases: 19, avgCost: 29500, qualityScore: 89.1, complications: 4.2, readmit30: 5.5, los: 2.6, patientSat: 4.3 },
+                { name: 'Dr. Jennifer Lee', cases: 18, avgCost: 32800, qualityScore: 84.5, complications: 6.5, readmit30: 7.2, los: 3.5, patientSat: 3.8 },
+                { name: 'Dr. William Davis', cases: 17, avgCost: 31400, qualityScore: 86.2, complications: 5.5, readmit30: 6.0, los: 3.0, patientSat: 4.0 }
+            ]
+        },
+        {
+            name: 'Piedmont Henry',
+            shortName: 'Henry',
+            avgCost: 25800,
+            episodes: 48,
+            nationalBenchmark: 27500,
+            providers: [
+                { name: 'Dr. Elizabeth Taylor', cases: 22, avgCost: 24500, qualityScore: 95.2, complications: 1.8, readmit30: 3.2, los: 1.9, patientSat: 4.9 },
+                { name: 'Dr. Christopher Moore', cases: 15, avgCost: 26800, qualityScore: 92.4, complications: 2.8, readmit30: 4.0, los: 2.2, patientSat: 4.6 },
+                { name: 'Dr. Amanda White', cases: 11, avgCost: 26400, qualityScore: 91.8, complications: 3.0, readmit30: 4.5, los: 2.3, patientSat: 4.5 }
+            ]
+        },
+        {
+            name: 'Piedmont Mountainside',
+            shortName: 'Mountainside',
+            avgCost: 29400,
+            episodes: 42,
+            nationalBenchmark: 27500,
+            providers: [
+                { name: 'Dr. Richard Johnson', cases: 18, avgCost: 28200, qualityScore: 89.8, complications: 4.0, readmit30: 5.2, los: 2.5, patientSat: 4.2 },
+                { name: 'Dr. Patricia Martinez', cases: 14, avgCost: 30800, qualityScore: 86.5, complications: 5.2, readmit30: 6.5, los: 3.2, patientSat: 4.0 },
+                { name: 'Dr. Steven Clark', cases: 10, avgCost: 29500, qualityScore: 88.2, complications: 4.5, readmit30: 5.8, los: 2.8, patientSat: 4.1 }
+            ]
+        },
+        {
+            name: 'Piedmont Columbus',
+            shortName: 'Columbus',
+            avgCost: 33500,
+            episodes: 38,
+            nationalBenchmark: 27500,
+            providers: [
+                { name: 'Dr. Nancy Robinson', cases: 16, avgCost: 32200, qualityScore: 83.5, complications: 7.2, readmit30: 8.5, los: 3.8, patientSat: 3.6 },
+                { name: 'Dr. Kevin Harris', cases: 13, avgCost: 34800, qualityScore: 81.2, complications: 8.5, readmit30: 9.2, los: 4.2, patientSat: 3.4 },
+                { name: 'Dr. Sandra Thompson', cases: 9, avgCost: 33800, qualityScore: 82.8, complications: 7.8, readmit30: 8.8, los: 4.0, patientSat: 3.5 }
+            ]
+        }
+    ],
+    nationalBenchmarks: {
+        avgCost: 27500,
+        qualityScore: 88.0,
+        complications: 4.5,
+        readmit30: 5.5,
+        los: 2.5,
+        patientSat: 4.2
+    }
+};
+
 function initEpisodeCostChart() {
     const ctx = document.getElementById('episodeCostChart');
     if (!ctx) return;
@@ -629,43 +716,86 @@ function initEpisodeCostChart() {
         episodeCostChart.destroy();
     }
 
-    // Box plot simulation with scatter
-    const providers = ['Provider A', 'Provider B', 'Provider C', 'Provider D', 'Provider E', 'Provider F'];
-    const avgCosts = [24500, 28200, 31500, 26800, 29400, 33200];
+    const hospitals = piedmontHospitalData.hospitals;
+    const labels = hospitals.map(h => h.shortName);
+    const avgCosts = hospitals.map(h => h.avgCost);
+    const benchmark = piedmontHospitalData.nationalBenchmarks.avgCost;
 
     episodeCostChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: providers,
-            datasets: [{
-                label: 'Avg Episode Cost',
-                data: avgCosts,
-                backgroundColor: providers.map((p, i) => {
-                    if (avgCosts[i] > 30000) return 'rgba(231, 76, 60, 0.6)';
-                    if (avgCosts[i] < 27000) return 'rgba(39, 174, 96, 0.6)';
-                    return 'rgba(241, 196, 15, 0.6)';
-                }),
-                borderColor: providers.map((p, i) => {
-                    if (avgCosts[i] > 30000) return '#e74c3c';
-                    if (avgCosts[i] < 27000) return '#27ae60';
-                    return '#f1c40f';
-                }),
-                borderWidth: 2
-            }]
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Avg Episode Cost',
+                    data: avgCosts,
+                    backgroundColor: avgCosts.map(cost => {
+                        if (cost > benchmark * 1.15) return 'rgba(231, 76, 60, 0.7)';
+                        if (cost < benchmark * 0.98) return 'rgba(39, 174, 96, 0.7)';
+                        return 'rgba(241, 196, 15, 0.7)';
+                    }),
+                    borderColor: avgCosts.map(cost => {
+                        if (cost > benchmark * 1.15) return '#c0392b';
+                        if (cost < benchmark * 0.98) return '#1e8449';
+                        return '#d4ac0d';
+                    }),
+                    borderWidth: 2
+                },
+                {
+                    label: 'National Benchmark',
+                    data: Array(hospitals.length).fill(benchmark),
+                    type: 'line',
+                    borderColor: '#3498db',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointRadius: 0,
+                    fill: false
+                }
+            ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            onClick: (event, elements) => {
+                if (elements.length > 0 && elements[0].datasetIndex === 0) {
+                    const index = elements[0].index;
+                    drillDownHospitalProviders(index);
+                }
+            },
             plugins: {
                 legend: {
-                    display: false
+                    display: true,
+                    position: 'top'
+                },
+                tooltip: {
+                    callbacks: {
+                        title: function(context) {
+                            const idx = context[0].dataIndex;
+                            return piedmontHospitalData.hospitals[idx].name;
+                        },
+                        label: function(context) {
+                            if (context.datasetIndex === 0) {
+                                const idx = context.dataIndex;
+                                const hospital = piedmontHospitalData.hospitals[idx];
+                                const variance = ((hospital.avgCost - benchmark) / benchmark * 100).toFixed(1);
+                                return [
+                                    `Avg Cost: $${hospital.avgCost.toLocaleString()}`,
+                                    `Episodes: ${hospital.episodes}`,
+                                    `vs Benchmark: ${variance > 0 ? '+' : ''}${variance}%`,
+                                    '',
+                                    '🔍 Click to view provider details'
+                                ];
+                            }
+                            return `National Benchmark: $${context.raw.toLocaleString()}`;
+                        }
+                    }
                 }
             },
             scales: {
                 y: {
                     beginAtZero: false,
-                    min: 20000,
-                    max: 35000,
+                    min: 22000,
+                    max: 38000,
                     ticks: {
                         callback: function(value) {
                             return '$' + (value / 1000) + 'K';
@@ -675,6 +805,391 @@ function initEpisodeCostChart() {
                         display: true,
                         text: 'Cost per Episode'
                     }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Piedmont Hospital (Click bar to drill into providers)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Drill down into hospital-level provider variation
+function drillDownHospitalProviders(hospitalIndex) {
+    const hospital = piedmontHospitalData.hospitals[hospitalIndex];
+    const benchmark = piedmontHospitalData.nationalBenchmarks;
+    const providers = hospital.providers.filter(p => p.cases >= 10);
+
+    // Calculate averages
+    const totalCases = providers.reduce((sum, p) => sum + p.cases, 0);
+    const weightedAvgCost = providers.reduce((sum, p) => sum + (p.avgCost * p.cases), 0) / totalCases;
+    const avgQuality = providers.reduce((sum, p) => sum + p.qualityScore, 0) / providers.length;
+
+    // Calculate opportunity (reduction to hospital average for each provider above average)
+    const hospitalAvg = weightedAvgCost;
+    const totalOpportunity = providers.reduce((sum, p) => {
+        if (p.avgCost > hospitalAvg) {
+            return sum + ((p.avgCost - hospitalAvg) * p.cases);
+        }
+        return sum;
+    }, 0);
+
+    // National opportunity
+    const nationalOpportunity = providers.reduce((sum, p) => {
+        if (p.avgCost > benchmark.avgCost) {
+            return sum + ((p.avgCost - benchmark.avgCost) * p.cases);
+        }
+        return sum;
+    }, 0);
+
+    // Find best provider (lowest cost with good quality)
+    const bestProvider = providers.reduce((best, p) => {
+        const score = (100 - ((p.avgCost / benchmark.avgCost) * 50)) + (p.qualityScore / 2);
+        const bestScore = (100 - ((best.avgCost / benchmark.avgCost) * 50)) + (best.qualityScore / 2);
+        return score > bestScore ? p : best;
+    });
+
+    let modalBody = `
+        <h2>${hospital.name} - Joint Replacement Provider Analysis</h2>
+        <p class="provider-summary">Rendering provider variation for joint replacement episodes (providers with ≥10 cases)</p>
+
+        <div class="market-kpi-row" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="kpi-box">
+                <div class="kpi-label tooltip-trigger" data-tooltip="Total joint replacement cases performed by providers with 10+ cases at ${hospital.name}. Formula: Sum of all qualifying provider cases.">
+                    Total Cases (≥10)
+                    <span class="info-icon">ⓘ</span>
+                </div>
+                <div class="kpi-value">${totalCases}</div>
+            </div>
+            <div class="kpi-box">
+                <div class="kpi-label tooltip-trigger" data-tooltip="Case-weighted average cost across all providers. Formula: Σ(Provider Cost × Cases) ÷ Total Cases">
+                    Wtd Avg Cost
+                    <span class="info-icon">ⓘ</span>
+                </div>
+                <div class="kpi-value ${weightedAvgCost > benchmark.avgCost ? 'bad' : 'good'}">$${Math.round(weightedAvgCost).toLocaleString()}</div>
+            </div>
+            <div class="kpi-box">
+                <div class="kpi-label tooltip-trigger" data-tooltip="Savings if high-cost providers reduced to hospital average. Formula: Σ((Provider Cost - Hospital Avg) × Cases) for providers above average">
+                    Internal Opportunity
+                    <span class="info-icon">ⓘ</span>
+                </div>
+                <div class="kpi-value" style="color: #27ae60;">$${Math.round(totalOpportunity).toLocaleString()}</div>
+            </div>
+            <div class="kpi-box">
+                <div class="kpi-label tooltip-trigger" data-tooltip="Savings if all providers above national benchmark ($${benchmark.avgCost.toLocaleString()}) reduced to benchmark. Formula: Σ((Provider Cost - $27,500) × Cases)">
+                    vs National Benchmark
+                    <span class="info-icon">ⓘ</span>
+                </div>
+                <div class="kpi-value" style="color: #3498db;">$${Math.round(nationalOpportunity).toLocaleString()}</div>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+            <div class="chart-section" style="margin: 0;">
+                <h3 style="margin-bottom: 1rem;">Cost Variation by Provider</h3>
+                <div style="height: 280px;">
+                    <canvas id="providerCostChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-section" style="margin: 0;">
+                <h3 style="margin-bottom: 1rem;">Cost Reduction Opportunity</h3>
+                <div style="height: 280px;">
+                    <canvas id="opportunityChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Provider Performance Detail - Cost & Quality</h3>
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Rendering Provider</th>
+                    <th class="tooltip-trigger" data-tooltip="Number of joint replacement cases performed in the measurement period (≥10 required for inclusion)">
+                        Cases
+                        <span class="info-icon">ⓘ</span>
+                    </th>
+                    <th class="tooltip-trigger" data-tooltip="Average total episode cost including facility, professional, and post-acute care. Formula: Total Episode Costs ÷ Number of Cases">
+                        Avg Cost
+                        <span class="info-icon">ⓘ</span>
+                    </th>
+                    <th class="tooltip-trigger" data-tooltip="Percentage variance from national benchmark ($${benchmark.avgCost.toLocaleString()}). Formula: ((Avg Cost - Benchmark) ÷ Benchmark) × 100">
+                        vs Benchmark
+                        <span class="info-icon">ⓘ</span>
+                    </th>
+                    <th class="tooltip-trigger" data-tooltip="Savings if this provider reduced costs to the hospital average ($${Math.round(hospitalAvg).toLocaleString()}). Formula: MAX(0, (Avg Cost - Hospital Avg) × Cases)">
+                        Opportunity
+                        <span class="info-icon">ⓘ</span>
+                    </th>
+                    <th class="tooltip-trigger" data-tooltip="Composite quality score (0-100) based on complications, readmissions, patient satisfaction, and clinical outcomes. National benchmark: ${benchmark.qualityScore}">
+                        Quality Score
+                        <span class="info-icon">ⓘ</span>
+                    </th>
+                    <th class="tooltip-trigger" data-tooltip="Rate of surgical complications within 90 days including infection, DVT, revision. National benchmark: ${benchmark.complications}%">
+                        Complications
+                        <span class="info-icon">ⓘ</span>
+                    </th>
+                    <th class="tooltip-trigger" data-tooltip="Percentage of patients readmitted within 30 days of discharge. National benchmark: ${benchmark.readmit30}%">
+                        30-Day Readmit
+                        <span class="info-icon">ⓘ</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    providers.forEach(provider => {
+        const variance = ((provider.avgCost - benchmark.avgCost) / benchmark.avgCost * 100).toFixed(1);
+        const opportunity = Math.max(0, (provider.avgCost - hospitalAvg) * provider.cases);
+        const varianceClass = variance > 10 ? 'bad' : variance < -5 ? 'good' : 'warning';
+        const qualityClass = provider.qualityScore >= 92 ? 'good' : provider.qualityScore >= 88 ? 'warning' : 'bad';
+        const compClass = provider.complications <= benchmark.complications ? 'good' : 'bad';
+        const readmitClass = provider.readmit30 <= benchmark.readmit30 ? 'good' : 'bad';
+
+        modalBody += `
+            <tr>
+                <td><strong>${provider.name}</strong></td>
+                <td>${provider.cases}</td>
+                <td>$${provider.avgCost.toLocaleString()}</td>
+                <td class="${varianceClass}">${variance > 0 ? '+' : ''}${variance}%</td>
+                <td style="color: #27ae60;">${opportunity > 0 ? '$' + Math.round(opportunity).toLocaleString() : '-'}</td>
+                <td class="${qualityClass}">${provider.qualityScore.toFixed(1)}</td>
+                <td class="${compClass}">${provider.complications}%</td>
+                <td class="${readmitClass}">${provider.readmit30}%</td>
+            </tr>
+        `;
+    });
+
+    modalBody += `
+            </tbody>
+        </table>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+            <div class="alert-box" style="background: #e8f8f5; border-left-color: #27ae60;">
+                <h4 style="color: #1e8449;">🏆 Best Practice Provider</h4>
+                <p><strong>${bestProvider.name}</strong> demonstrates optimal cost-quality balance:</p>
+                <ul>
+                    <li><strong>Cost:</strong> $${bestProvider.avgCost.toLocaleString()} (${((bestProvider.avgCost - benchmark.avgCost) / benchmark.avgCost * 100).toFixed(1)}% vs benchmark)</li>
+                    <li><strong>Quality Score:</strong> ${bestProvider.qualityScore.toFixed(1)} (benchmark: ${benchmark.qualityScore})</li>
+                    <li><strong>Complications:</strong> ${bestProvider.complications}% (benchmark: ${benchmark.complications}%)</li>
+                    <li><strong>30-Day Readmit:</strong> ${bestProvider.readmit30}% (benchmark: ${benchmark.readmit30}%)</li>
+                </ul>
+                <p style="margin-top: 0.5rem;"><em>Recommend sharing clinical protocols with higher-cost providers</em></p>
+            </div>
+            <div class="alert-box warning">
+                <h4>📊 National Benchmark Comparison</h4>
+                <p>CMS Joint Replacement Bundle benchmarks (2024):</p>
+                <ul>
+                    <li><strong>Target Cost:</strong> $${benchmark.avgCost.toLocaleString()} per episode</li>
+                    <li><strong>Quality Score:</strong> ${benchmark.qualityScore} minimum</li>
+                    <li><strong>Complication Rate:</strong> ≤${benchmark.complications}%</li>
+                    <li><strong>30-Day Readmission:</strong> ≤${benchmark.readmit30}%</li>
+                    <li><strong>Avg Length of Stay:</strong> ${benchmark.los} days</li>
+                </ul>
+            </div>
+        </div>
+
+        <style>
+            .tooltip-trigger {
+                position: relative;
+                cursor: help;
+            }
+            .info-icon {
+                color: #3498db;
+                font-size: 0.8em;
+                margin-left: 4px;
+            }
+            .tooltip-trigger:hover::after {
+                content: attr(data-tooltip);
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%);
+                background: #2c3e50;
+                color: white;
+                padding: 0.75rem 1rem;
+                border-radius: 6px;
+                font-size: 0.75rem;
+                font-weight: normal;
+                white-space: normal;
+                width: 280px;
+                text-align: left;
+                z-index: 1000;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                line-height: 1.4;
+            }
+            .tooltip-trigger:hover::before {
+                content: '';
+                position: absolute;
+                bottom: 100%;
+                left: 50%;
+                transform: translateX(-50%) translateY(8px);
+                border: 8px solid transparent;
+                border-top-color: #2c3e50;
+                z-index: 1001;
+            }
+        </style>
+    `;
+
+    showModal(modalBody);
+
+    // Initialize the provider cost chart after modal is shown
+    setTimeout(() => {
+        initProviderCostChart(providers, hospitalAvg, benchmark.avgCost);
+        initOpportunityChart(providers, hospitalAvg);
+    }, 100);
+}
+
+// Provider cost comparison chart
+function initProviderCostChart(providers, hospitalAvg, nationalBenchmark) {
+    const ctx = document.getElementById('providerCostChart');
+    if (!ctx) return;
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: providers.map(p => p.name.split(' ')[1]),
+            datasets: [
+                {
+                    label: 'Avg Cost',
+                    data: providers.map(p => p.avgCost),
+                    backgroundColor: providers.map(p => {
+                        if (p.avgCost > nationalBenchmark * 1.15) return 'rgba(231, 76, 60, 0.7)';
+                        if (p.avgCost < nationalBenchmark * 0.95) return 'rgba(39, 174, 96, 0.7)';
+                        return 'rgba(241, 196, 15, 0.7)';
+                    }),
+                    borderColor: providers.map(p => {
+                        if (p.avgCost > nationalBenchmark * 1.15) return '#c0392b';
+                        if (p.avgCost < nationalBenchmark * 0.95) return '#1e8449';
+                        return '#d4ac0d';
+                    }),
+                    borderWidth: 2
+                },
+                {
+                    label: 'Hospital Avg',
+                    data: Array(providers.length).fill(hospitalAvg),
+                    type: 'line',
+                    borderColor: '#9b59b6',
+                    borderWidth: 2,
+                    borderDash: [3, 3],
+                    pointRadius: 0,
+                    fill: false
+                },
+                {
+                    label: 'National Benchmark',
+                    data: Array(providers.length).fill(nationalBenchmark),
+                    type: 'line',
+                    borderColor: '#3498db',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    pointRadius: 0,
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'bottom',
+                    labels: { boxWidth: 12, padding: 8, font: { size: 10 } }
+                },
+                tooltip: {
+                    callbacks: {
+                        title: function(context) {
+                            return providers[context[0].dataIndex].name;
+                        },
+                        label: function(context) {
+                            if (context.datasetIndex === 0) {
+                                const p = providers[context.dataIndex];
+                                return [
+                                    `Cost: $${p.avgCost.toLocaleString()}`,
+                                    `Cases: ${p.cases}`,
+                                    `Quality: ${p.qualityScore}`
+                                ];
+                            }
+                            return `${context.dataset.label}: $${Math.round(context.raw).toLocaleString()}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    min: 22000,
+                    max: 38000,
+                    ticks: {
+                        callback: v => '$' + (v/1000) + 'K',
+                        font: { size: 10 }
+                    }
+                },
+                x: {
+                    ticks: { font: { size: 9 } }
+                }
+            }
+        }
+    });
+}
+
+// Opportunity waterfall chart
+function initOpportunityChart(providers, hospitalAvg) {
+    const ctx = document.getElementById('opportunityChart');
+    if (!ctx) return;
+
+    const opportunities = providers.map(p => ({
+        name: p.name.split(' ')[1],
+        opportunity: Math.max(0, (p.avgCost - hospitalAvg) * p.cases)
+    })).filter(o => o.opportunity > 0).sort((a, b) => b.opportunity - a.opportunity);
+
+    if (opportunities.length === 0) {
+        ctx.parentElement.innerHTML = '<p style="text-align: center; color: #7f8c8d; padding: 2rem;">All providers at or below hospital average - no reduction opportunity</p>';
+        return;
+    }
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: opportunities.map(o => o.name),
+            datasets: [{
+                label: 'Savings if Reduced to Hospital Avg',
+                data: opportunities.map(o => o.opportunity),
+                backgroundColor: 'rgba(39, 174, 96, 0.7)',
+                borderColor: '#1e8449',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return `Potential Savings: $${Math.round(context.raw).toLocaleString()}`;
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        callback: v => '$' + (v/1000).toFixed(0) + 'K',
+                        font: { size: 10 }
+                    },
+                    title: {
+                        display: true,
+                        text: 'Savings Opportunity',
+                        font: { size: 10 }
+                    }
+                },
+                y: {
+                    ticks: { font: { size: 10 } }
                 }
             }
         }

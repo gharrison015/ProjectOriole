@@ -506,3 +506,107 @@
     color: #5a6c7d;
     line-height: 1.6;
 }
+
+/* Tooltip Styles for Data Definitions */
+.tooltip-header {
+    position: relative;
+    cursor: help;
+}
+
+.th-info {
+    color: #3498db;
+    font-size: 0.75em;
+    margin-left: 4px;
+    font-weight: normal;
+}
+
+.tooltip-header:hover {
+    background: #eef5fc;
+}
+
+.tooltip-header[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2c3e50;
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: normal;
+    text-transform: none;
+    letter-spacing: normal;
+    white-space: normal;
+    width: 280px;
+    text-align: left;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.tooltip-header[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(8px);
+    border: 8px solid transparent;
+    border-top-color: #2c3e50;
+    z-index: 1001;
+}
+
+/* Info icon for inline tooltips */
+.info-icon {
+    color: #3498db;
+    font-size: 0.8em;
+    margin-left: 4px;
+    cursor: help;
+}
+
+/* Tooltip trigger for modal content */
+.tooltip-trigger {
+    position: relative;
+    cursor: help;
+}
+
+.tooltip-trigger:hover {
+    background: rgba(52, 152, 219, 0.1);
+    border-radius: 4px;
+}
+
+.tooltip-trigger[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2c3e50;
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: normal;
+    text-transform: none;
+    letter-spacing: normal;
+    white-space: normal;
+    width: 300px;
+    text-align: left;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.tooltip-trigger[data-tooltip]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(8px);
+    border: 8px solid transparent;
+    border-top-color: #2c3e50;
+    z-index: 1001;
+}
