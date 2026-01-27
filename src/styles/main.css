@@ -59,26 +59,6 @@ body {
     gap: 0.75rem;
 }
 
-.logo-square {
-    width: 40px;
-    height: 40px;
-    background: linear-gradient(135deg, var(--piedmont-red) 0%, var(--piedmont-orange) 100%);
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-}
-
-.logo-square::before {
-    content: '';
-    width: 24px;
-    height: 24px;
-    border: 3px solid white;
-    border-radius: 3px;
-    transform: rotate(45deg);
-}
-
 .piedmont-tagline {
     font-family: 'Brush Script MT', cursive;
     font-size: 1.4rem;
