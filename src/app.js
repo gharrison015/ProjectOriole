@@ -425,18 +425,22 @@ function initCostPieChart() {
         costPieChart.destroy();
     }
 
+    const labels = ['Inpatient Facility', 'Outpatient Services', 'Professional Services', 'Pharmacy', 'Post-Acute Care'];
+    const shortLabels = ['Inpatient', 'Outpatient', 'Professional', 'Pharmacy', 'Post-Acute'];
+    const data = [38.5, 29.5, 18.4, 10.0, 3.6];
+
     costPieChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-            labels: ['Inpatient Facility', 'Outpatient Services', 'Professional Services', 'Pharmacy', 'Post-Acute Care'],
+            labels: labels,
             datasets: [{
-                data: [38.5, 29.5, 18.4, 10.0, 3.6],
+                data: data,
                 backgroundColor: [
-                    'rgba(102, 126, 234, 0.8)',
-                    'rgba(52, 152, 219, 0.8)',
-                    'rgba(46, 204, 113, 0.8)',
-                    'rgba(241, 196, 15, 0.8)',
-                    'rgba(231, 76, 60, 0.8)'
+                    'rgba(102, 126, 234, 0.9)',
+                    'rgba(52, 152, 219, 0.9)',
+                    'rgba(46, 204, 113, 0.9)',
+                    'rgba(241, 196, 15, 0.9)',
+                    'rgba(231, 76, 60, 0.9)'
                 ],
                 borderWidth: 2,
                 borderColor: '#fff'
@@ -445,22 +449,36 @@ function initCostPieChart() {
         options: {
             responsive: true,
             maintainAspectRatio: true,
+            layout: {
+                padding: {
+                    top: 30,
+                    bottom: 10,
+                    left: 10,
+                    right: 10
+                }
+            },
             plugins: {
+                title: {
+                    display: true,
+                    text: 'Cost Distribution by Category',
+                    font: { size: 14, weight: 'bold' },
+                    color: '#2c3e50',
+                    padding: { bottom: 15 }
+                },
                 legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 15,
-                        font: {
-                            size: 12
-                        }
-                    }
+                    display: false
                 },
                 datalabels: {
-                    color: '#fff',
+                    color: '#2c3e50',
                     font: { weight: 'bold', size: 11 },
-                    formatter: function(value) {
-                        return value + '%';
-                    }
+                    anchor: 'end',
+                    align: 'end',
+                    offset: 8,
+                    formatter: function(value, context) {
+                        return shortLabels[context.dataIndex] + '\n' + value + '%';
+                    },
+                    textAlign: 'center',
+                    clamp: true
                 },
                 tooltip: {
                     callbacks: {
@@ -1486,7 +1504,22 @@ function updateProjectionValues() {
 
     // Update displayed values
     document.getElementById('proj-spend').textContent = '$' + newSpend.toFixed(1) + 'M';
-    document.getElementById('proj-savings').textContent = '$' + newSavings.toFixed(1) + 'M';
+
+    // Update savings with color based on positive/negative
+    const savingsEl = document.getElementById('proj-savings');
+    const savingsMetricEl = savingsEl.closest('.metric');
+    savingsEl.textContent = '$' + newSavings.toFixed(1) + 'M';
+
+    // Update color: green for positive, red for negative
+    if (newSavings >= 0) {
+        savingsEl.style.color = '#27ae60';
+        savingsMetricEl.classList.remove('danger');
+        savingsMetricEl.classList.add('success');
+    } else {
+        savingsEl.style.color = '#e74c3c';
+        savingsMetricEl.classList.remove('success');
+        savingsMetricEl.classList.add('danger');
+    }
 
     // Update probabilities based on savings and risk factors
     let probBreakeven, probTarget, probLoss;
@@ -2471,12 +2504,157 @@ function createSankeyDiagram(pcpId) {
                     }
                 }
             }
+        },
+        'chen': {
+            name: 'Dr. Chen',
+            totalOONSpend: 4567890,
+            totalSpend: 12345678,
+            decomposition: {
+                elective: {
+                    spend: 4567890,
+                    oon: 2345678,
+                    serviceLinesData: {
+                        cardiology: {
+                            spend: 1823456,
+                            oon: 912345,
+                            hospitals: {
+                                'Piedmont Heart': { spend: 911111, oon: false, providers: ['Dr. Adams', 'Dr. Clark'] },
+                                'Northside Cardio': { spend: 567890, oon: true, providers: ['Dr. Nelson'] },
+                                'Emory Heart': { spend: 344455, oon: true, providers: ['Dr. King'] }
+                            }
+                        },
+                        imaging: {
+                            spend: 1456789,
+                            oon: 823456,
+                            hospitals: {
+                                'Peachtree Imaging': { spend: 823456, oon: true, providers: ['Reading Group A'] },
+                                'Piedmont Imaging': { spend: 633333, oon: false, providers: ['Internal'] }
+                            }
+                        },
+                        orthopedics: {
+                            spend: 1287645,
+                            oon: 609877,
+                            hospitals: {
+                                'Atlanta Orthopedic': { spend: 609877, oon: true, providers: ['Dr. Wright'] },
+                                'Piedmont Ortho': { spend: 677768, oon: false, providers: ['Dr. Hill'] }
+                            }
+                        }
+                    }
+                },
+                nonElective: {
+                    spend: 7777788,
+                    oon: 2222212,
+                    serviceLinesData: {
+                        emergency: { spend: 2888888, oon: 888888, hospitals: { 'Piedmont ER': { spend: 2000000, oon: false, providers: ['ER Group'] }, 'Northside ER': { spend: 888888, oon: true, providers: ['ER Group'] } } },
+                        inpatient: { spend: 3456900, oon: 1111111, hospitals: { 'Piedmont Hospital': { spend: 2345789, oon: false, providers: ['Hospitalists'] }, 'Emory University': { spend: 1111111, oon: true, providers: ['Specialists'] } } },
+                        postAcute: { spend: 1432000, oon: 222213, hospitals: { 'Piedmont SNF': { spend: 1209787, oon: false, providers: ['SNF Group'] }, 'External SNF': { spend: 222213, oon: true, providers: ['Various'] } } }
+                    }
+                }
+            }
+        },
+        'thompson': {
+            name: 'Dr. Thompson',
+            totalOONSpend: 5234567,
+            totalSpend: 13456789,
+            decomposition: {
+                elective: {
+                    spend: 5234567,
+                    oon: 2987654,
+                    serviceLinesData: {
+                        orthopedics: {
+                            spend: 2123456,
+                            oon: 1456789,
+                            hospitals: {
+                                'Atlanta Orthopedic': { spend: 987654, oon: true, providers: ['Dr. Baker', 'Dr. Scott'] },
+                                'Resurgens Ortho': { spend: 469135, oon: true, providers: ['Dr. Green'] },
+                                'Piedmont Ortho': { spend: 666667, oon: false, providers: ['Dr. Young'] }
+                            }
+                        },
+                        cardiology: {
+                            spend: 1678901,
+                            oon: 876543,
+                            hospitals: {
+                                'Emory Midtown': { spend: 876543, oon: true, providers: ['Dr. Hall', 'Dr. Allen'] },
+                                'Piedmont Heart': { spend: 802358, oon: false, providers: ['Dr. Robinson'] }
+                            }
+                        },
+                        imaging: {
+                            spend: 1432210,
+                            oon: 654322,
+                            hospitals: {
+                                'Peachtree Imaging': { spend: 654322, oon: true, providers: ['Reading Group B'] },
+                                'Piedmont Imaging': { spend: 777888, oon: false, providers: ['Internal'] }
+                            }
+                        }
+                    }
+                },
+                nonElective: {
+                    spend: 8222222,
+                    oon: 2246913,
+                    serviceLinesData: {
+                        emergency: { spend: 3111111, oon: 911111, hospitals: { 'Piedmont ER': { spend: 2200000, oon: false, providers: ['ER Group'] }, 'External ER': { spend: 911111, oon: true, providers: ['ER Group'] } } },
+                        inpatient: { spend: 3789012, oon: 1123456, hospitals: { 'Piedmont Hospital': { spend: 2665556, oon: false, providers: ['Hospitalists'] }, 'Northside Hospital': { spend: 1123456, oon: true, providers: ['Specialists'] } } },
+                        postAcute: { spend: 1322099, oon: 212346, hospitals: { 'Piedmont SNF': { spend: 1109753, oon: false, providers: ['SNF Group'] }, 'Private SNF': { spend: 212346, oon: true, providers: ['Various'] } } }
+                    }
+                }
+            }
+        },
+        'patel': {
+            name: 'Dr. Patel',
+            totalOONSpend: 3987654,
+            totalSpend: 11234567,
+            decomposition: {
+                elective: {
+                    spend: 4123456,
+                    oon: 1876543,
+                    serviceLinesData: {
+                        imaging: {
+                            spend: 1654321,
+                            oon: 987654,
+                            hospitals: {
+                                'Advanced Imaging': { spend: 654321, oon: true, providers: ['Reading Group C'] },
+                                'Peachtree Imaging': { spend: 333333, oon: true, providers: ['Reading Group A'] },
+                                'Piedmont Imaging': { spend: 666667, oon: false, providers: ['Internal'] }
+                            }
+                        },
+                        cardiology: {
+                            spend: 1345678,
+                            oon: 543210,
+                            hospitals: {
+                                'Northside Cardio': { spend: 543210, oon: true, providers: ['Dr. White'] },
+                                'Piedmont Heart': { spend: 802468, oon: false, providers: ['Dr. Lewis', 'Dr. Walker'] }
+                            }
+                        },
+                        orthopedics: {
+                            spend: 1123457,
+                            oon: 345679,
+                            hospitals: {
+                                'Southern Ortho': { spend: 345679, oon: true, providers: ['Dr. Harris'] },
+                                'Piedmont Ortho': { spend: 777778, oon: false, providers: ['Dr. Martin'] }
+                            }
+                        }
+                    }
+                },
+                nonElective: {
+                    spend: 7111111,
+                    oon: 2111111,
+                    serviceLinesData: {
+                        emergency: { spend: 2666666, oon: 777777, hospitals: { 'Piedmont ER': { spend: 1888889, oon: false, providers: ['ER Group'] }, 'External ER': { spend: 777777, oon: true, providers: ['ER Group'] } } },
+                        inpatient: { spend: 3222222, oon: 1111111, hospitals: { 'Piedmont Hospital': { spend: 2111111, oon: false, providers: ['Hospitalists'] }, 'Emory University': { spend: 1111111, oon: true, providers: ['Specialists'] } } },
+                        postAcute: { spend: 1222223, oon: 222223, hospitals: { 'Piedmont SNF': { spend: 1000000, oon: false, providers: ['SNF Group'] }, 'External SNF': { spend: 222223, oon: true, providers: ['Various'] } } }
+                    }
+                }
+            }
         }
     };
 
     const data = pcpData[pcpId];
     if (!data) {
-        alert('Sankey diagram for PCP: ' + pcpId);
+        // Fallback for unknown PCPs - show message in modal instead of alert
+        showModal(`
+            <h2>Referral Flow Analysis</h2>
+            <p style="color: #7f8c8d; margin: 2rem 0;">Detailed decomposition data is not yet available for this provider. Please select Dr. Martinez, Dr. Williams, Dr. Chen, Dr. Thompson, or Dr. Patel to view the interactive referral flow analysis.</p>
+        `);
         return;
     }
 
