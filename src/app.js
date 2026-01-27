@@ -81,100 +81,83 @@ function initPerformanceTrendChart() {
         performanceTrendChart.destroy();
     }
 
-    // Monthly insights explaining performance drivers
-    const monthlyInsights = [
-        { // Jan
-            reason: 'Higher than target',
-            drivers: ['Post-holiday elective procedure surge', 'Deductible resets driving utilization', 'Flu season ED visits'],
-            impact: 'Increase'
-        },
-        { // Feb
-            reason: 'Improving trend',
-            drivers: ['Care management interventions taking effect', 'Reduced ED utilization vs January', 'Weather-related visit postponements'],
-            impact: 'Decrease'
-        },
-        { // Mar
-            reason: 'Continued improvement',
-            drivers: ['Network leakage reduction efforts (cardiology)', 'Lower inpatient admits per 1K', 'Generic drug initiatives'],
-            impact: 'Decrease'
-        },
-        { // Apr
-            reason: 'Strong performance',
-            drivers: ['SNF utilization down 12%', 'Preventive care outreach working', 'High-cost claimant below trend'],
-            impact: 'Decrease'
-        },
-        { // May
-            reason: 'Best performance YTD',
-            drivers: ['Successful urgent care steering', 'Reduced imaging utilization', 'Value-based contracts performing'],
-            impact: 'Decrease'
-        },
-        { // Jun
-            reason: 'Maintaining low PMPM',
-            drivers: ['Summer seasonality (lower utilization)', 'ACO quality bonuses earned', 'Pharmacy management savings'],
-            impact: 'Decrease'
-        },
-        { // Jul
-            reason: 'Lowest PMPM of year',
-            drivers: ['Vacation season (deferred elective care)', 'Care coordination wins', 'Telehealth adoption up 23%'],
-            impact: 'Decrease'
-        },
-        { // Aug
-            reason: 'Slight increase from July',
-            drivers: ['Back-to-school visits', 'Deferred procedures scheduled', 'Normal seasonal variation'],
-            impact: 'Slight Increase'
-        },
-        { // Sep
-            reason: 'Uptick in utilization',
-            drivers: ['Q3 elective surgery catch-up', 'Specialists returning from summer', 'Medicare annual enrollment prep'],
-            impact: 'Increase'
-        },
-        { // Oct
-            reason: 'Rising toward year-end',
-            drivers: ['Patients hitting out-of-pocket max', 'Pre-winter elective procedures', 'Flu shot season begins'],
-            impact: 'Increase'
-        },
-        { // Nov
-            reason: 'Holiday season impact',
-            drivers: ['Increased ER visits (holidays)', 'Year-end procedure rush', 'Respiratory illness season'],
-            impact: 'Stable'
-        },
-        { // Dec
-            reason: 'Year-end stabilization',
-            drivers: ['Benefit maximization behavior', 'Provider network management', 'Offset by holiday closures'],
-            impact: 'Stable'
-        }
-    ];
+    // PY2025 data (full year - historical)
+    const py2025Data = [862, 858, 851, 847, 845, 843, 840, 838, 842, 845, 847, 847];
+
+    // PY2026 data - Jan/Feb are actual (solid), Mar-Dec are projected (dotted)
+    const py2026ActualData = [855, 849, null, null, null, null, null, null, null, null, null, null]; // Jan-Feb actual
+    const py2026ProjectedData = [null, 849, 843, 839, 837, 835, 832, 830, 834, 837, 839, 839]; // Mar-Dec projected (connects from Feb)
+
+    // Benchmark for PY2026
+    const benchmarkData = [868, 867, 866, 865, 864, 863, 862, 861, 861, 864, 864, 865];
 
     performanceTrendChart = new Chart(ctx, {
         type: 'line',
         data: {
             labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            datasets: [{
-                label: 'Actual PMPM',
-                data: [862, 858, 851, 847, 845, 843, 840, 838, 842, 845, 847, 847],
-                borderColor: '#667eea',
-                backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                tension: 0.4,
-                fill: true,
-                pointRadius: 5,
-                pointHoverRadius: 8,
-                pointBackgroundColor: '#667eea',
-                pointBorderColor: '#fff',
-                pointBorderWidth: 2,
-                pointHoverBackgroundColor: '#667eea',
-                pointHoverBorderColor: '#fff',
-                pointHoverBorderWidth: 3
-            }, {
-                label: 'Benchmark PMPM',
-                data: [870, 869, 868, 867, 866, 865, 864, 863, 863, 866, 866, 867],
-                borderColor: '#e74c3c',
-                backgroundColor: 'rgba(231, 76, 60, 0.1)',
-                tension: 0.4,
-                fill: true,
-                borderDash: [5, 5],
-                pointRadius: 4,
-                pointHoverRadius: 6
-            }]
+            datasets: [
+                {
+                    label: 'PY2026 Actual PMPM',
+                    data: py2026ActualData,
+                    borderColor: '#27ae60',
+                    backgroundColor: 'rgba(39, 174, 96, 0.15)',
+                    tension: 0.4,
+                    fill: false,
+                    pointRadius: 6,
+                    pointHoverRadius: 9,
+                    pointBackgroundColor: '#27ae60',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointHoverBackgroundColor: '#27ae60',
+                    pointHoverBorderColor: '#fff',
+                    pointHoverBorderWidth: 3,
+                    borderWidth: 3,
+                    spanGaps: false
+                },
+                {
+                    label: 'PY2026 Projected PMPM',
+                    data: py2026ProjectedData,
+                    borderColor: '#27ae60',
+                    backgroundColor: 'rgba(39, 174, 96, 0.08)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointHoverRadius: 7,
+                    pointBackgroundColor: '#27ae60',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    borderDash: [6, 4],
+                    borderWidth: 2,
+                    spanGaps: true
+                },
+                {
+                    label: 'PY2025 PMPM',
+                    data: py2025Data,
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.05)',
+                    tension: 0.4,
+                    fill: false,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointBackgroundColor: '#667eea',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    borderDash: [5, 5],
+                    borderWidth: 2
+                },
+                {
+                    label: 'PY2026 Benchmark',
+                    data: benchmarkData,
+                    borderColor: '#e74c3c',
+                    backgroundColor: 'rgba(231, 76, 60, 0.05)',
+                    tension: 0.4,
+                    fill: false,
+                    borderDash: [3, 3],
+                    pointRadius: 3,
+                    pointHoverRadius: 5,
+                    borderWidth: 2
+                }
+            ]
         },
         options: {
             responsive: true,
@@ -186,20 +169,33 @@ function initPerformanceTrendChart() {
             plugins: {
                 legend: {
                     position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 15,
+                        font: { size: 11 }
+                    }
                 },
                 datalabels: {
                     display: function(context) {
-                        // Only show labels for every 3rd point to avoid clutter
-                        return context.dataIndex % 3 === 0;
+                        // Only show labels for key points
+                        const datasetIndex = context.datasetIndex;
+                        const dataIndex = context.dataIndex;
+                        // Show for PY2026 Actual (Jan, Feb) and PY2026 Projected (Jun, Dec)
+                        if (datasetIndex === 0 && (dataIndex === 0 || dataIndex === 1)) return true;
+                        if (datasetIndex === 1 && (dataIndex === 5 || dataIndex === 11)) return true;
+                        return false;
                     },
                     color: function(context) {
-                        return context.datasetIndex === 0 ? '#667eea' : '#e74c3c';
+                        if (context.datasetIndex <= 1) return '#27ae60';
+                        if (context.datasetIndex === 2) return '#667eea';
+                        return '#e74c3c';
                     },
                     font: { weight: 'bold', size: 10 },
                     anchor: 'end',
                     align: 'top',
                     offset: 2,
                     formatter: function(value) {
+                        if (value === null) return '';
                         return '$' + value;
                     }
                 },
@@ -208,7 +204,7 @@ function initPerformanceTrendChart() {
                     backgroundColor: 'rgba(44, 62, 80, 0.95)',
                     titleColor: '#fff',
                     bodyColor: '#fff',
-                    borderColor: '#667eea',
+                    borderColor: '#27ae60',
                     borderWidth: 2,
                     padding: 12,
                     displayColors: true,
@@ -220,43 +216,51 @@ function initPerformanceTrendChart() {
                         size: 12,
                         lineHeight: 1.6
                     },
+                    filter: function(tooltipItem) {
+                        return tooltipItem.raw !== null;
+                    },
                     callbacks: {
                         title: function(context) {
-                            return context[0].label + ' 2024 Performance';
-                        },
-                        afterTitle: function(context) {
-                            const monthIndex = context[0].dataIndex;
-                            const insight = monthlyInsights[monthIndex];
-                            return insight.reason;
+                            const month = context[0].label;
+                            return month + ' Performance Comparison';
                         },
                         label: function(context) {
                             let label = context.dataset.label || '';
+                            if (context.parsed.y === null) return null;
                             if (label) {
                                 label += ': ';
                             }
                             label += '$' + context.parsed.y.toFixed(2);
+                            // Add indicator for actual vs projected
+                            if (context.datasetIndex === 0) {
+                                label += ' (Actual)';
+                            } else if (context.datasetIndex === 1) {
+                                label += ' (Projected)';
+                            }
                             return label;
                         },
-                        afterLabel: function(context) {
-                            if (context.datasetIndex === 0) { // Only show for Actual PMPM line
-                                const actual = context.parsed.y;
-                                const benchmark = context.chart.data.datasets[1].data[context.dataIndex];
-                                const variance = ((actual - benchmark) / benchmark * 100).toFixed(1);
-                                const varSign = variance > 0 ? '+' : '';
-                                return `Variance: ${varSign}${variance}%`;
+                        afterBody: function(context) {
+                            const dataIndex = context[0].dataIndex;
+                            // Get PY2026 value (actual or projected)
+                            let py2026Value = py2026ActualData[dataIndex];
+                            if (py2026Value === null) {
+                                py2026Value = py2026ProjectedData[dataIndex];
                             }
-                            return '';
-                        },
-                        footer: function(context) {
-                            const monthIndex = context[0].dataIndex;
-                            const insight = monthlyInsights[monthIndex];
+                            const benchmarkValue = benchmarkData[dataIndex];
+                            const py2025Value = py2025Data[dataIndex];
 
-                            let footer = '\n━━━━━━━━━━━━━━━━━━━━━\nKey Drivers:\n';
-                            insight.drivers.forEach((driver, idx) => {
-                                footer += `  ${idx + 1}. ${driver}\n`;
-                            });
-                            footer += '\nImpact: ' + insight.impact;
-                            return footer;
+                            let result = [];
+                            if (py2026Value !== null && benchmarkValue) {
+                                const vsBenchmark = ((py2026Value - benchmarkValue) / benchmarkValue * 100).toFixed(1);
+                                const sign = vsBenchmark > 0 ? '+' : '';
+                                result.push(`\nPY2026 vs Benchmark: ${sign}${vsBenchmark}%`);
+                            }
+                            if (py2026Value !== null && py2025Value) {
+                                const vsLastYear = ((py2026Value - py2025Value) / py2025Value * 100).toFixed(1);
+                                const sign = vsLastYear > 0 ? '+' : '';
+                                result.push(`PY2026 vs PY2025: ${sign}${vsLastYear}%`);
+                            }
+                            return result;
                         }
                     }
                 }
@@ -279,7 +283,7 @@ function initPerformanceTrendChart() {
                 x: {
                     title: {
                         display: true,
-                        text: 'Month'
+                        text: 'Month (Current: June 2026)'
                     }
                 }
             }
