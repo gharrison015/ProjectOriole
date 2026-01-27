@@ -920,42 +920,180 @@ function drillDownHospitalProviders(hospitalIndex) {
         return score > bestScore ? p : best;
     });
 
+    // Calculate provider-level details for breakdown
+    const providerBreakdown = providers.map(p => {
+        const vsHospitalAvg = p.avgCost - hospitalAvg;
+        const vsBenchmark = p.avgCost - benchmark.avgCost;
+        const internalOpp = vsHospitalAvg > 0 ? vsHospitalAvg * p.cases : 0;
+        const benchmarkOpp = vsBenchmark > 0 ? vsBenchmark * p.cases : 0;
+        return {
+            name: p.name,
+            cases: p.cases,
+            avgCost: p.avgCost,
+            vsHospitalAvg: vsHospitalAvg,
+            vsBenchmark: vsBenchmark,
+            internalOpp: internalOpp,
+            benchmarkOpp: benchmarkOpp
+        };
+    });
+
+    // Count providers above each threshold
+    const providersAboveHospitalAvg = providerBreakdown.filter(p => p.vsHospitalAvg > 0).length;
+    const providersAboveBenchmark = providerBreakdown.filter(p => p.vsBenchmark > 0).length;
+
     let modalBody = `
         <h2>${hospital.name} - Joint Replacement Provider Analysis</h2>
-        <p class="provider-summary">Rendering provider variation for joint replacement episodes (providers with ≥10 cases)</p>
+        <p class="provider-summary">Cost variation analysis for joint replacement episodes • Providers with ≥10 cases</p>
 
-        <div class="market-kpi-row" style="grid-template-columns: repeat(4, 1fr);">
-            <div class="kpi-box">
-                <div class="kpi-label tooltip-trigger" data-tooltip="Total joint replacement cases performed by providers with 10+ cases at ${hospital.name}. Formula: Sum of all qualifying provider cases.">
-                    Total Cases (≥10)
-                    <span class="info-icon">ⓘ</span>
+        <!-- Reference Values Card -->
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; border-left: 4px solid #3498db;">
+            <div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+                <div>
+                    <div style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Reference Values</div>
                 </div>
-                <div class="kpi-value">${totalCases}</div>
-            </div>
-            <div class="kpi-box">
-                <div class="kpi-label tooltip-trigger" data-tooltip="Case-weighted average cost across all providers. Formula: Σ(Provider Cost × Cases) ÷ Total Cases">
-                    Wtd Avg Cost
-                    <span class="info-icon">ⓘ</span>
+                <div style="display: flex; gap: 2.5rem; flex-wrap: wrap;">
+                    <div>
+                        <span style="font-size: 0.8rem; color: #495057;">National Benchmark:</span>
+                        <span style="font-weight: 700; color: #3498db; margin-left: 0.5rem; font-size: 1.1rem;">$${benchmark.avgCost.toLocaleString()}</span>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.8rem; color: #495057;">Hospital Wtd Avg:</span>
+                        <span style="font-weight: 700; color: #C84E28; margin-left: 0.5rem; font-size: 1.1rem;">$${Math.round(weightedAvgCost).toLocaleString()}</span>
+                    </div>
+                    <div>
+                        <span style="font-size: 0.8rem; color: #495057;">Total Cases:</span>
+                        <span style="font-weight: 700; color: #2c3e50; margin-left: 0.5rem; font-size: 1.1rem;">${totalCases}</span>
+                    </div>
                 </div>
-                <div class="kpi-value ${weightedAvgCost > benchmark.avgCost ? 'bad' : 'good'}">$${Math.round(weightedAvgCost).toLocaleString()}</div>
-            </div>
-            <div class="kpi-box">
-                <div class="kpi-label tooltip-trigger" data-tooltip="Savings if high-cost providers reduced to hospital average. Formula: Σ((Provider Cost - Hospital Avg) × Cases) for providers above average">
-                    Internal Opportunity
-                    <span class="info-icon">ⓘ</span>
-                </div>
-                <div class="kpi-value" style="color: #27ae60;">$${Math.round(totalOpportunity).toLocaleString()}</div>
-            </div>
-            <div class="kpi-box">
-                <div class="kpi-label tooltip-trigger" data-tooltip="Savings if all providers above national benchmark ($${benchmark.avgCost.toLocaleString()}) reduced to benchmark. Formula: Σ((Provider Cost - $27,500) × Cases)">
-                    vs National Benchmark
-                    <span class="info-icon">ⓘ</span>
-                </div>
-                <div class="kpi-value" style="color: #3498db;">$${Math.round(nationalOpportunity).toLocaleString()}</div>
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 1.5rem;">
+        <!-- KPI Cards - CFO Friendly with Calculation Details -->
+        <div class="kpi-grid" style="grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 1.5rem;">
+
+            <!-- Hospital Weighted Average Card -->
+            <div class="kpi-card" style="background: white; border: 1px solid #e0e0e0;">
+                <div class="kpi-label" style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px;">
+                    Hospital Weighted Average
+                </div>
+                <div class="kpi-value" style="font-size: 2rem; font-weight: 700; color: ${weightedAvgCost > benchmark.avgCost ? '#e74c3c' : '#27ae60'}; margin: 0.5rem 0;">
+                    $${Math.round(weightedAvgCost).toLocaleString()}
+                </div>
+                <div style="font-size: 0.8rem; color: #6c757d; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #eee;">
+                    <div style="margin-bottom: 0.25rem;">
+                        <span style="color: #495057;">vs National Benchmark:</span>
+                        <span style="font-weight: 600; color: ${weightedAvgCost > benchmark.avgCost ? '#e74c3c' : '#27ae60'}; margin-left: 0.5rem;">
+                            ${weightedAvgCost > benchmark.avgCost ? '+' : ''}$${Math.round(weightedAvgCost - benchmark.avgCost).toLocaleString()}
+                        </span>
+                    </div>
+                    <div style="font-size: 0.7rem; color: #888; margin-top: 0.5rem;">
+                        Formula: Σ(Cost × Cases) ÷ ${totalCases} cases
+                    </div>
+                </div>
+            </div>
+
+            <!-- Internal Opportunity Card -->
+            <div class="kpi-card" style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border: 1px solid #28a745;">
+                <div class="kpi-label" style="font-size: 0.75rem; color: #155724; text-transform: uppercase; letter-spacing: 0.5px;">
+                    Internal Opportunity
+                </div>
+                <div class="kpi-value" style="font-size: 2rem; font-weight: 700; color: #155724; margin: 0.5rem 0;">
+                    $${Math.round(totalOpportunity).toLocaleString()}
+                </div>
+                <div style="font-size: 0.8rem; color: #155724; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(40,167,69,0.3);">
+                    <div style="margin-bottom: 0.25rem;">
+                        <span>Target:</span>
+                        <span style="font-weight: 600; margin-left: 0.5rem;">Hospital Avg ($${Math.round(hospitalAvg).toLocaleString()})</span>
+                    </div>
+                    <div>
+                        <span>Providers Above Avg:</span>
+                        <span style="font-weight: 600; margin-left: 0.5rem;">${providersAboveHospitalAvg} of ${providers.length}</span>
+                    </div>
+                    <div style="font-size: 0.7rem; color: #1e7e34; margin-top: 0.5rem;">
+                        Formula: Σ(Cost - $${Math.round(hospitalAvg).toLocaleString()}) × Cases
+                    </div>
+                </div>
+            </div>
+
+            <!-- vs National Benchmark Card -->
+            <div class="kpi-card" style="background: linear-gradient(135deg, #cce5ff 0%, #b8daff 100%); border: 1px solid #3498db;">
+                <div class="kpi-label" style="font-size: 0.75rem; color: #004085; text-transform: uppercase; letter-spacing: 0.5px;">
+                    vs National Benchmark
+                </div>
+                <div class="kpi-value" style="font-size: 2rem; font-weight: 700; color: #004085; margin: 0.5rem 0;">
+                    $${Math.round(nationalOpportunity).toLocaleString()}
+                </div>
+                <div style="font-size: 0.8rem; color: #004085; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(52,152,219,0.3);">
+                    <div style="margin-bottom: 0.25rem;">
+                        <span>Target:</span>
+                        <span style="font-weight: 600; margin-left: 0.5rem;">$${benchmark.avgCost.toLocaleString()} (National)</span>
+                    </div>
+                    <div>
+                        <span>Providers Above Benchmark:</span>
+                        <span style="font-weight: 600; margin-left: 0.5rem;">${providersAboveBenchmark} of ${providers.length}</span>
+                    </div>
+                    <div style="font-size: 0.7rem; color: #0056b3; margin-top: 0.5rem;">
+                        Formula: Σ(Cost - $${benchmark.avgCost.toLocaleString()}) × Cases
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculation Breakdown Table -->
+        <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; border: 1px solid #e0e0e0;">
+            <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 1.2rem;">📊</span> Savings Calculation Breakdown
+            </h3>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                    <thead>
+                        <tr style="background: #f8f9fa;">
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Provider</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Cases</th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600;">Avg Cost</th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600;">vs Hosp Avg<br><span style="font-weight: 400; font-size: 0.7rem;">($${Math.round(hospitalAvg).toLocaleString()})</span></th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600; background: #d4edda;">Internal<br>Opportunity</th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600;">vs Benchmark<br><span style="font-weight: 400; font-size: 0.7rem;">($${benchmark.avgCost.toLocaleString()})</span></th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600; background: #cce5ff;">Benchmark<br>Opportunity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${providerBreakdown.map(p => `
+                            <tr>
+                                <td style="padding: 0.75rem; border-bottom: 1px solid #eee;"><strong>${p.name}</strong></td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee;">${p.cases}</td>
+                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; font-weight: 600;">$${p.avgCost.toLocaleString()}</td>
+                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; color: ${p.vsHospitalAvg > 0 ? '#e74c3c' : '#27ae60'}; font-weight: 500;">
+                                    ${p.vsHospitalAvg > 0 ? '+' : ''}$${Math.round(p.vsHospitalAvg).toLocaleString()}
+                                    <div style="font-size: 0.7rem; color: #888;">× ${p.cases} cases</div>
+                                </td>
+                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; background: #f0fff0; font-weight: 600; color: #155724;">
+                                    ${p.internalOpp > 0 ? '$' + Math.round(p.internalOpp).toLocaleString() : '—'}
+                                </td>
+                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; color: ${p.vsBenchmark > 0 ? '#e74c3c' : '#27ae60'}; font-weight: 500;">
+                                    ${p.vsBenchmark > 0 ? '+' : ''}$${Math.round(p.vsBenchmark).toLocaleString()}
+                                    <div style="font-size: 0.7rem; color: #888;">× ${p.cases} cases</div>
+                                </td>
+                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; background: #f0f7ff; font-weight: 600; color: #004085;">
+                                    ${p.benchmarkOpp > 0 ? '$' + Math.round(p.benchmarkOpp).toLocaleString() : '—'}
+                                </td>
+                            </tr>
+                        `).join('')}
+                        <tr style="background: #f8f9fa; font-weight: 700;">
+                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;">TOTAL</td>
+                            <td style="padding: 0.75rem; text-align: center; border-top: 2px solid #dee2e6;">${totalCases}</td>
+                            <td style="padding: 0.75rem; text-align: right; border-top: 2px solid #dee2e6;">$${Math.round(weightedAvgCost).toLocaleString()}</td>
+                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;"></td>
+                            <td style="padding: 0.75rem; text-align: right; border-top: 2px solid #dee2e6; background: #d4edda; color: #155724; font-size: 1.1rem;">$${Math.round(totalOpportunity).toLocaleString()}</td>
+                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;"></td>
+                            <td style="padding: 0.75rem; text-align: right; border-top: 2px solid #dee2e6; background: #cce5ff; color: #004085; font-size: 1.1rem;">$${Math.round(nationalOpportunity).toLocaleString()}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
             <div class="chart-section" style="margin: 0;">
                 <h3 style="margin-bottom: 1rem;">Cost Variation by Provider</h3>
                 <div style="height: 280px;">
