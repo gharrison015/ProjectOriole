@@ -1168,8 +1168,8 @@
     background: #eef5fc;
 }
 
-.tooltip-header[title]:hover::after {
-    content: attr(title);
+.tooltip-header[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
     position: absolute;
     bottom: 100%;
     left: 50%;
@@ -1191,7 +1191,7 @@
     margin-bottom: 8px;
 }
 
-.tooltip-header[title]:hover::before {
+.tooltip-header[data-tooltip]:hover::before {
     content: '';
     position: absolute;
     bottom: 100%;
@@ -1328,7 +1328,8 @@
     background: #e9ecef;
 }
 
-.data-table th.sortable::after {
+/* Sort indicator using ::before to avoid conflict with tooltip ::after */
+.data-table th.sortable::before {
     content: '⇅';
     position: absolute;
     right: 0.5rem;
@@ -1337,25 +1338,27 @@
     font-size: 0.75rem;
     color: #95a5a6;
     opacity: 0.6;
+    z-index: 1;
 }
 
-.data-table th.sortable.sort-asc::after {
+.data-table th.sortable.sort-asc::before {
     content: '↑';
     color: var(--piedmont-primary);
     opacity: 1;
 }
 
-.data-table th.sortable.sort-desc::after {
+.data-table th.sortable.sort-desc::before {
     content: '↓';
     color: var(--piedmont-primary);
     opacity: 1;
 }
 
+/* Headers with both sortable and tooltip - adjust sort indicator position */
 .data-table th.sortable.tooltip-header {
     padding-right: 2.5rem;
 }
 
-.data-table th.sortable.tooltip-header::after {
+.data-table th.sortable.tooltip-header::before {
     right: 1.5rem;
 }
 
