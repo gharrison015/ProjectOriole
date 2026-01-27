@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeCharts();
     initializeProjectionControls();
     initializeLeakageInteractions();
+    initializeQualityDateSlider();
 });
 
 function initializeTabs() {
@@ -1566,6 +1567,75 @@ function updateBar(elementId, percentage) {
         bar.style.width = percentage + '%';
         bar.textContent = percentage + '%';
     }
+}
+
+// Quality Metrics Date Slider
+function initializeQualityDateSlider() {
+    const slider = document.getElementById('quality-date-slider');
+    const display = document.getElementById('quality-date-display');
+
+    if (!slider || !display) return;
+
+    // Define the date range: Jan 1, 2024 to present (April 15, 2024 as "present" in demo)
+    const startDate = new Date(2024, 0, 1); // Jan 1, 2024
+    const endDate = new Date(2024, 3, 15); // Apr 15, 2024 (present in demo)
+    const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+
+    // Set max value to total days
+    slider.max = totalDays;
+    slider.value = totalDays;
+
+    // Base metrics at full period
+    const baseMetrics = {
+        totalVisits: 38247,
+        newPatients: 3213,
+        newPtPct: 8.4,
+        upcomingVisits: 4823,
+        gapClosure: 6847
+    };
+
+    slider.addEventListener('input', function() {
+        const days = parseInt(this.value);
+        const selectedDate = new Date(startDate.getTime() + days * 24 * 60 * 60 * 1000);
+
+        // Format the date display
+        const options = { month: 'short', day: 'numeric', year: 'numeric' };
+        const startFormatted = startDate.toLocaleDateString('en-US', options);
+        const endFormatted = selectedDate.toLocaleDateString('en-US', options);
+        display.textContent = startFormatted + ' - ' + endFormatted;
+
+        // Calculate metrics based on proportion of time selected
+        const proportion = days / totalDays;
+
+        // Add some non-linear variation for realism
+        const variance = 0.9 + Math.random() * 0.2;
+
+        const visits = Math.round(baseMetrics.totalVisits * proportion * variance);
+        const newPts = Math.round(baseMetrics.newPatients * proportion * variance);
+        const newPtPct = (newPts / visits * 100).toFixed(1);
+
+        // Calculate trend vs "prior period" (simulated)
+        const priorPeriodVisits = Math.round(visits * (0.85 + Math.random() * 0.1));
+        const visitsTrend = ((visits - priorPeriodVisits) / priorPeriodVisits * 100).toFixed(1);
+
+        // Update display
+        document.getElementById('quality-total-visits').textContent = visits.toLocaleString();
+        document.getElementById('quality-new-pt-pct').textContent = newPtPct + '%';
+
+        // Update trend display
+        const totalVisitsCard = document.getElementById('quality-total-visits').parentElement;
+        const trendEl = totalVisitsCard.querySelector('.pop-card-trend');
+        if (trendEl) {
+            trendEl.textContent = (visitsTrend >= 0 ? '↑ ' : '↓ ') + Math.abs(visitsTrend) + '% vs prior period';
+            trendEl.className = 'pop-card-trend ' + (visitsTrend >= 0 ? 'positive' : 'negative');
+        }
+
+        const newPtCard = document.getElementById('quality-new-pt-pct').parentElement;
+        const detailEl = newPtCard.querySelector('.pop-card-detail');
+        if (detailEl) {
+            detailEl.textContent = newPts.toLocaleString() + ' new patients';
+        }
+    });
 }
 
 // Leakage Interactions

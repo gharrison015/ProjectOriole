@@ -418,6 +418,7 @@
                         </button>
                     </div>
 
+                    <!-- MSSP Quality Score Summary -->
                     <div class="quality-summary-grid">
                         <div class="quality-summary-card">
                             <h4>Overall Quality Score</h4>
@@ -436,6 +437,65 @@
                             <div class="quality-score-large">+2.5%</div>
                             <div class="quality-rating success">Performance Bonus</div>
                             <div class="quality-detail">Est. +$1.2M in shared savings</div>
+                        </div>
+                    </div>
+
+                    <!-- Population Health Metrics Section -->
+                    <div class="section-divider" style="margin-top: 2rem;">
+                        <h3 class="section-title">📊 Population Health View</h3>
+                        <p class="section-subtitle">Epic/Payer attribution metrics based on PCP panel assignment</p>
+                    </div>
+
+                    <div class="quality-date-filter">
+                        <div class="date-filter-label">
+                            <span>Performance Period:</span>
+                            <span class="date-range-display" id="quality-date-display">Jan 1, 2024 - Apr 15, 2024</span>
+                        </div>
+                        <div class="date-slider-container">
+                            <input type="range" id="quality-date-slider" min="0" max="105" value="105" class="date-slider">
+                            <div class="date-slider-labels">
+                                <span>Jan 1, 2024</span>
+                                <span>Present</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quality-population-grid">
+                        <div class="quality-pop-card" title="Total completed visits within the selected date range. Includes all encounter types (office visits, telehealth, procedures) where the patient was seen by their attributed PCP or care team member.">
+                            <div class="pop-card-header">
+                                <h4>Total Visits</h4>
+                                <span class="tooltip-icon">ⓘ</span>
+                            </div>
+                            <div class="pop-card-value" id="quality-total-visits">38,247</div>
+                            <div class="pop-card-detail">Within selected period</div>
+                            <div class="pop-card-trend positive">↑ 12.3% vs prior period</div>
+                        </div>
+                        <div class="quality-pop-card" title="Percentage of visits from patients new to the practice (first visit within rolling 24 months). Calculated as: (New Patient Visits ÷ Total Visits) × 100. Higher rates indicate practice growth.">
+                            <div class="pop-card-header">
+                                <h4>New Patient %</h4>
+                                <span class="tooltip-icon">ⓘ</span>
+                            </div>
+                            <div class="pop-card-value" id="quality-new-pt-pct">8.4%</div>
+                            <div class="pop-card-detail">3,213 new patients</div>
+                            <div class="pop-card-trend positive">↑ 1.2 pts vs prior year</div>
+                        </div>
+                        <div class="quality-pop-card highlight" title="Attributed patients with scheduled appointments in the next 30 days. Based on current Epic scheduling data as of today. Used to identify proactive gap closure opportunities before the visit.">
+                            <div class="pop-card-header">
+                                <h4>Pts with Upcoming Visits</h4>
+                                <span class="tooltip-icon">ⓘ</span>
+                            </div>
+                            <div class="pop-card-value" id="quality-upcoming-visits">4,823</div>
+                            <div class="pop-card-detail">Next 30 days (as of today)</div>
+                            <div class="pop-card-sub">Avg 161 pts/day scheduled</div>
+                        </div>
+                        <div class="quality-pop-card opportunity" title="Total care gaps identified for patients with upcoming appointments. Calculated as sum of open quality measures (AWV, screenings, immunizations, chronic disease management) for the 4,823 patients scheduled in next 30 days. Represents actionable opportunities to close gaps proactively.">
+                            <div class="pop-card-header">
+                                <h4>Gap Closure Opportunity</h4>
+                                <span class="tooltip-icon">ⓘ</span>
+                            </div>
+                            <div class="pop-card-value" id="quality-gap-closure">6,847</div>
+                            <div class="pop-card-detail">Open gaps for scheduled pts</div>
+                            <div class="pop-card-sub">1.4 gaps/patient average</div>
                         </div>
                     </div>
 

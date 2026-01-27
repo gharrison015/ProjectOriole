@@ -752,6 +752,201 @@
     margin: 0;
 }
 
+/* Quality Population Health Metrics */
+.quality-date-filter {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 1.5rem;
+}
+
+.date-filter-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.date-filter-label > span:first-child {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.date-range-display {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--piedmont-primary);
+    background: #f0f3ff;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+}
+
+.date-slider-container {
+    position: relative;
+}
+
+.date-slider {
+    width: 100%;
+    height: 8px;
+    border-radius: 4px;
+    background: #e9ecef;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.date-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--piedmont-primary);
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transition: transform 0.2s;
+}
+
+.date-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.1);
+}
+
+.date-slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--piedmont-primary);
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.date-slider-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: #7f8c8d;
+}
+
+.quality-population-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.quality-pop-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    position: relative;
+    cursor: help;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.quality-pop-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.quality-pop-card.highlight {
+    background: linear-gradient(135deg, #e8f4fd 0%, #ffffff 100%);
+    border-left: 4px solid #3498db;
+}
+
+.quality-pop-card.opportunity {
+    background: linear-gradient(135deg, #fef9e7 0%, #ffffff 100%);
+    border-left: 4px solid #f39c12;
+}
+
+.pop-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.pop-card-header h4 {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0;
+}
+
+.pop-card-header .tooltip-icon {
+    color: #3498db;
+    font-size: 0.9rem;
+}
+
+.pop-card-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0.5rem 0;
+}
+
+.pop-card-detail {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+}
+
+.pop-card-trend {
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.pop-card-trend.positive {
+    color: #27ae60;
+}
+
+.pop-card-trend.negative {
+    color: #e74c3c;
+}
+
+.pop-card-sub {
+    font-size: 0.75rem;
+    color: #95a5a6;
+    margin-top: 0.25rem;
+}
+
+/* Tooltip for pop cards */
+.quality-pop-card[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2c3e50;
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: normal;
+    white-space: normal;
+    width: 280px;
+    text-align: left;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.quality-pop-card[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(8px);
+    border: 8px solid transparent;
+    border-top-color: #2c3e50;
+    z-index: 1001;
+}
+
 /* Tooltip Styles for Data Definitions */
 .tooltip-header {
     position: relative;
