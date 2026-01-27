@@ -163,8 +163,8 @@ function initPerformanceTrendChart(selectedYear = 'PY2025') {
         ];
         tooltipBorderColor = '#667eea';
     } else {
-        // PY2026 data - Only January has actual data (one green dot)
-        const py2026ActualData = [855, null, null, null, null, null, null, null, null, null, null, null];
+        // PY2026 data - January and February have actual data (two green dots with connecting line)
+        const py2026ActualData = [855, 852, null, null, null, null, null, null, null, null, null, null];
         const py2026Benchmark = [864, 864, 864, 864, 864, 864, 864, 864, 864, 864, 864, 864];
 
         datasets = [
@@ -175,12 +175,12 @@ function initPerformanceTrendChart(selectedYear = 'PY2025') {
                 backgroundColor: 'rgba(39, 174, 96, 0.15)',
                 tension: 0.4,
                 fill: false,
-                pointRadius: 8,
+                pointRadius: 7,
                 pointHoverRadius: 10,
                 pointBackgroundColor: '#27ae60',
                 pointBorderColor: '#fff',
                 pointBorderWidth: 3,
-                borderWidth: 0,
+                borderWidth: 3,
                 spanGaps: false
             },
             {
@@ -237,8 +237,8 @@ function initPerformanceTrendChart(selectedYear = 'PY2025') {
                             if (datasetIndex === 0 && (dataIndex === 0 || dataIndex === 5 || dataIndex === 9)) return true;
                             if (datasetIndex === 1 && dataIndex === 11) return true;
                         } else {
-                            // PY2026 - only show label for January
-                            if (datasetIndex === 0 && dataIndex === 0) return true;
+                            // PY2026 - show labels for January and February
+                            if (datasetIndex === 0 && (dataIndex === 0 || dataIndex === 1)) return true;
                         }
                         return false;
                     },
@@ -360,8 +360,76 @@ function initPMPMYearToggle() {
             // Reinitialize chart with selected year
             const selectedYear = this.dataset.year;
             initPerformanceTrendChart(selectedYear);
+
+            // Update KPI values based on selected year
+            updatePerformanceKPIs(selectedYear);
         });
     });
+}
+
+// Update Performance Overview KPIs based on selected year
+function updatePerformanceKPIs(selectedYear) {
+    const pmpmValue = document.getElementById('perf-pmpm-value');
+    const pmpmChange = document.getElementById('perf-pmpm-change');
+    const savingsValue = document.getElementById('perf-savings-value');
+    const savingsChange = document.getElementById('perf-savings-change');
+    const qualityValue = document.getElementById('perf-quality-value');
+    const qualityChange = document.getElementById('perf-quality-change');
+    const leakageValue = document.getElementById('perf-leakage-value');
+    const leakageChange = document.getElementById('perf-leakage-change');
+    const kpiNote = document.getElementById('performance-kpi-note');
+
+    if (selectedYear === 'PY2025') {
+        // PY2025 values (full year with IBNR)
+        if (pmpmValue) pmpmValue.textContent = '$847.32';
+        if (pmpmChange) {
+            pmpmChange.textContent = '↓ 1.2% vs Benchmark ($858)';
+            pmpmChange.className = 'kpi-change positive';
+        }
+        if (savingsValue) savingsValue.textContent = '$11.2M';
+        if (savingsChange) {
+            savingsChange.textContent = '↑ $700K vs Target ($10.5M)';
+            savingsChange.className = 'kpi-change positive';
+        }
+        if (qualityValue) qualityValue.textContent = '87.4%';
+        if (qualityChange) {
+            qualityChange.textContent = '↑ 5.2 pts vs National (82.1%)';
+            qualityChange.className = 'kpi-change positive';
+        }
+        if (leakageValue) leakageValue.textContent = '23.7%';
+        if (leakageChange) {
+            leakageChange.textContent = '$4.2M Opportunity';
+            leakageChange.className = 'kpi-change negative';
+        }
+        if (kpiNote) kpiNote.classList.remove('hidden');
+    } else {
+        // PY2026 values (2 months of data - Jan & Feb)
+        // Average PMPM from Jan ($855) and Feb ($852) = $853.50
+        if (pmpmValue) pmpmValue.textContent = '$853.50';
+        if (pmpmChange) {
+            pmpmChange.textContent = '↓ 1.2% vs Benchmark ($864)';
+            pmpmChange.className = 'kpi-change positive';
+        }
+        // Projected savings based on 2 months trending (pulled from projections concept)
+        if (savingsValue) savingsValue.textContent = '$9.8M';
+        if (savingsChange) {
+            savingsChange.textContent = 'Projected (2 mo. data)';
+            savingsChange.className = 'kpi-change neutral';
+        }
+        // Quality score slightly lower early in year (less claims data for quality measures)
+        if (qualityValue) qualityValue.textContent = '82.1%';
+        if (qualityChange) {
+            qualityChange.textContent = 'Preliminary (eCQM submissions)';
+            qualityChange.className = 'kpi-change neutral';
+        }
+        // Network leakage slightly lower with limited data
+        if (leakageValue) leakageValue.textContent = '21.4%';
+        if (leakageChange) {
+            leakageChange.textContent = '$680K Opportunity (2 mo.)';
+            leakageChange.className = 'kpi-change negative';
+        }
+        if (kpiNote) kpiNote.classList.add('hidden');
+    }
 }
 
 function initMonteCarloChart() {

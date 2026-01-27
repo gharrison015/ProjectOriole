@@ -93,35 +93,39 @@
                         </button>
                     </div>
 
-                    <div class="kpi-grid">
+                    <div class="kpi-grid" id="performance-kpi-grid">
                         <div class="kpi-card">
                             <div class="kpi-label tooltip-hover" title="Per Member Per Month (PMPM) Spend: Total medical spending divided by member months. Formula: Total Claims / (Members × 12 months). Source: Internal claims data">
                                 Total PMPM Spend <span class="tooltip-icon">ⓘ</span>
                             </div>
-                            <div class="kpi-value">$847.32</div>
-                            <div class="kpi-change positive">↓ 2.3% vs Benchmark ($866.50)</div>
+                            <div class="kpi-value" id="perf-pmpm-value">$847.32</div>
+                            <div class="kpi-change positive" id="perf-pmpm-change">↓ 2.3% vs Benchmark ($858)</div>
                         </div>
                         <div class="kpi-card">
                             <div class="kpi-label tooltip-hover" title="Projected Savings: Expected savings for the performance year. Formula: (Benchmark PMPM - Actual PMPM) × Member Months - Shared Savings Percentage. Source: CMS benchmark data and internal actuarial projections">
                                 Projected Savings <span class="tooltip-icon">ⓘ</span>
                             </div>
-                            <div class="kpi-value">$11.2M</div>
-                            <div class="kpi-change positive">↑ $700K vs Target ($10.5M)</div>
+                            <div class="kpi-value" id="perf-savings-value">$11.2M</div>
+                            <div class="kpi-change positive" id="perf-savings-change">↑ $700K vs Target ($10.5M)</div>
                         </div>
                         <div class="kpi-card">
-                            <div class="kpi-label tooltip-hover" title="Quality Score: Composite score across all MSSP ACO quality measures. Formula: Weighted average of domain scores (Preventive Health, Chronic Care, Patient Experience, Care Coordination). Source: CMS Quality Payment Program">
+                            <div class="kpi-label tooltip-hover" title="Quality Score: Composite score across all MSSP ACO quality measures. Based on eCQM/MIPS clinical submissions from Epic. Subject to fluctuation based on CMS final ruling.">
                                 Quality Score <span class="tooltip-icon">ⓘ</span>
                             </div>
-                            <div class="kpi-value">87.4%</div>
-                            <div class="kpi-change positive">↑ 5.2 pts vs National (82.1%)</div>
+                            <div class="kpi-value" id="perf-quality-value">87.4%</div>
+                            <div class="kpi-change positive" id="perf-quality-change">↑ 5.2 pts vs National (82.1%)</div>
                         </div>
                         <div class="kpi-card">
                             <div class="kpi-label tooltip-hover" title="Network Leakage: Percentage of total spend going to out-of-network providers. Formula: (OON Spend / Total Spend) × 100. Reducing leakage improves margins and care coordination. Source: Claims data with network attribution">
                                 Network Leakage <span class="tooltip-icon">ⓘ</span>
                             </div>
-                            <div class="kpi-value">23.7%</div>
-                            <div class="kpi-change negative">$4.2M Opportunity</div>
+                            <div class="kpi-value" id="perf-leakage-value">23.7%</div>
+                            <div class="kpi-change negative" id="perf-leakage-change">$4.2M Opportunity</div>
                         </div>
+                    </div>
+                    <div class="kpi-note" id="performance-kpi-note">
+                        <span class="note-icon">⚠️</span>
+                        <span class="note-text">Quality Score based on eCQM/MIPS clinical submissions from Epic. Subject to fluctuation based on CMS final ruling.</span>
                     </div>
 
                     <div class="chart-section">
