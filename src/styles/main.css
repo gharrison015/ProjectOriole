@@ -120,21 +120,21 @@ body {
 .timeline-line {
     width: 40px;
     height: 2px;
+    background: #ddd;
+}
+
+.timeline-line.active {
     background: linear-gradient(90deg, var(--piedmont-primary) 0%, #ddd 100%);
     background-size: 200% 100%;
-    animation: flowForward 2s ease-in-out infinite;
-    position: relative;
+    animation: flowForward 1.5s ease-in-out infinite;
 }
 
 @keyframes flowForward {
     0% {
         background-position: 100% 0;
     }
-    50% {
-        background-position: 0% 0;
-    }
     100% {
-        background-position: 100% 0;
+        background-position: 0% 0;
     }
 }
 
