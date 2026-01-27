@@ -1,0 +1,835 @@
+/* Modals CSS - Modals, Patient Details, Tooltips, Responsive, Measure Dashboard */
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    animation: fadeIn 0.2s;
+}
+
+.modal-content {
+    background: white;
+    margin: 5% auto;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 1200px;
+    max-height: 80vh;
+    overflow-y: auto;
+    position: relative;
+}
+
+/* Patient Detail Modal Styles */
+.patient-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.patient-info {
+    flex: 1;
+}
+
+.patient-name {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--piedmont-dark);
+    margin-bottom: 0.5rem;
+}
+
+.patient-meta {
+    display: flex;
+    gap: 2rem;
+    color: var(--piedmont-gray);
+    font-size: 0.9rem;
+}
+
+.patient-meta-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.meta-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+}
+
+.meta-value {
+    font-weight: 600;
+    color: var(--piedmont-dark);
+}
+
+.care-team-badge {
+    background: linear-gradient(135deg, var(--piedmont-primary) 0%, var(--piedmont-orange) 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.care-team-label {
+    font-size: 0.75rem;
+    opacity: 0.9;
+    margin-bottom: 0.25rem;
+}
+
+.care-team-name {
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.gaps-section {
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--piedmont-dark);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.priority-badge {
+    background: #ff6b6b;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.gap-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.gap-item {
+    background: #f8f9fa;
+    border-left: 4px solid var(--piedmont-gray);
+    padding: 1rem 1.5rem;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.gap-item.primary-gap {
+    background: #fff3cd;
+    border-left-color: var(--piedmont-primary);
+    box-shadow: 0 2px 8px rgba(200, 78, 40, 0.1);
+}
+
+.gap-item:hover {
+    transform: translateX(4px);
+}
+
+.gap-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.gap-measure {
+    font-weight: 600;
+    color: var(--piedmont-dark);
+    font-size: 1rem;
+}
+
+.gap-status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.gap-status.open {
+    background: #fee;
+    color: #c0392b;
+}
+
+.gap-status.closing-soon {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.gap-description {
+    color: var(--piedmont-gray);
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.gap-details {
+    display: flex;
+    gap: 2rem;
+    font-size: 0.85rem;
+    color: var(--piedmont-gray);
+}
+
+.appointment-section {
+    background: #e8f4fd;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+}
+
+.appointment-title {
+    font-weight: 600;
+    color: var(--piedmont-dark);
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.appointment-info {
+    display: flex;
+    gap: 2rem;
+}
+
+.appt-detail {
+    display: flex;
+    flex-direction: column;
+}
+
+.appt-label {
+    font-size: 0.75rem;
+    color: var(--piedmont-gray);
+    margin-bottom: 0.25rem;
+}
+
+.appt-value {
+    font-weight: 600;
+    color: var(--piedmont-dark);
+}
+
+.close {
+    position: absolute;
+    right: 1.5rem;
+    top: 1.5rem;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #7f8c8d;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close:hover {
+    color: #2c3e50;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .sidebar {
+        width: 220px;
+    }
+
+    .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .metric-row {
+        grid-template-columns: 1fr;
+    }
+
+    .cost-breakdown-section {
+        grid-template-columns: 1fr;
+    }
+
+    .leakage-summary-section {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        padding: 1rem 0;
+    }
+
+    .kpi-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .header-stats {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .control-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Mobile Header Adjustments */
+    .top-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .header-left {
+        width: 100%;
+    }
+
+    .mssp-timeline {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        font-size: 0.75rem;
+    }
+
+    .timeline-step {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0.25rem;
+    }
+
+    .timeline-line {
+        width: 20px;
+        display: none;
+    }
+
+    .piedmont-tagline {
+        font-size: 1.1rem;
+    }
+
+    /* Mobile Table Adjustments */
+    .data-table {
+        font-size: 0.85rem;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 0.75rem 0.5rem;
+    }
+
+    /* Mobile Modal Adjustments */
+    .modal-content {
+        width: 95%;
+        margin: 2% auto;
+        padding: 1rem;
+        max-height: 90vh;
+    }
+
+    .patient-header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .patient-meta {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .patient-name {
+        font-size: 1.4rem;
+    }
+
+    .gaps-section {
+        margin-bottom: 1rem;
+    }
+
+    .gap-details {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .appointment-info {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    /* Mobile Chart Adjustments */
+    .chart-wrapper {
+        height: 250px;
+    }
+
+    .dashboard-main {
+        padding: 1rem;
+    }
+
+    .tab-header h2 {
+        font-size: 1.5rem;
+    }
+
+    /* Mobile Navigation */
+    .nav-item {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    /* Mobile Grid Adjustments */
+    .quality-summary-grid,
+    .tcoc-summary-grid,
+    .hcc-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .metric-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-header {
+        padding: 0.75rem;
+    }
+
+    .logo-square {
+        width: 32px;
+        height: 32px;
+    }
+
+    .logo-square::before {
+        width: 20px;
+        height: 20px;
+        border: 2px solid white;
+    }
+
+    .piedmont-tagline {
+        font-size: 1rem;
+    }
+
+    .stat-value {
+        font-size: 1.2rem;
+    }
+
+    .kpi-value {
+        font-size: 2rem;
+    }
+
+    .modal-content {
+        width: 98%;
+        padding: 0.75rem;
+    }
+
+    .close {
+        right: 0.75rem;
+        top: 0.75rem;
+        font-size: 1.5rem;
+    }
+}
+
+/* Tooltip Styles */
+.tooltip-hover {
+    position: relative;
+    cursor: help;
+}
+
+.tooltip-hover:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2c3e50;
+    color: #fff;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 0.7rem;
+    white-space: normal;
+    width: 220px;
+    z-index: 99999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    line-height: 1.3;
+    text-align: left;
+    font-weight: normal;
+    pointer-events: none;
+    margin-bottom: 8px;
+}
+
+.tooltip-hover:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #2c3e50;
+    margin-bottom: 2px;
+    z-index: 99999;
+    pointer-events: none;
+}
+
+.tooltip-icon {
+    color: #3498db;
+    font-size: 0.8em;
+    margin-left: 4px;
+    font-weight: normal;
+}
+
+/* Measure Dashboard Styles */
+.measure-dashboard {
+    max-width: 100%;
+}
+
+.measure-header {
+    background: linear-gradient(135deg, var(--piedmont-primary) 0%, var(--piedmont-orange) 100%);
+    color: white;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+.measure-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.measure-code {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.measure-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.measure-summary-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.summary-card-label {
+    font-size: 0.85rem;
+    color: var(--piedmont-gray);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.summary-card-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--piedmont-primary);
+    margin: 0.5rem 0;
+}
+
+.summary-card-detail {
+    font-size: 0.9rem;
+    color: var(--piedmont-gray);
+}
+
+.measure-charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.measure-chart-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.measure-chart-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.chart-card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--piedmont-dark);
+    margin-bottom: 1rem;
+}
+
+.provider-ranking-table {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+}
+
+.ranking-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.ranking-table thead {
+    background: #f8f9fa;
+}
+
+.ranking-table th {
+    padding: 1rem;
+    text-align: left;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #5a6c7d;
+    text-transform: uppercase;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.ranking-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.ranking-table tbody tr {
+    transition: background 0.2s;
+    cursor: pointer;
+}
+
+.ranking-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.rank-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+
+.rank-badge.rank-1 {
+    background: #ffd700;
+    color: #856404;
+}
+
+.rank-badge.rank-2 {
+    background: #c0c0c0;
+    color: #495057;
+}
+
+.rank-badge.rank-3 {
+    background: #cd7f32;
+    color: white;
+}
+
+.rank-badge.rank-other {
+    background: #e9ecef;
+    color: #6c757d;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 24px;
+    background: #e9ecef;
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--piedmont-primary) 0%, var(--piedmont-orange) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: width 0.3s ease;
+}
+
+.opportunity-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.opportunity-badge.high {
+    background: #fee;
+    color: #c0392b;
+}
+
+.opportunity-badge.medium {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.opportunity-badge.low {
+    background: #d4edda;
+    color: #155724;
+}
+
+/* Patient List Styles */
+.patient-list-container {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.list-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.list-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--piedmont-dark);
+}
+
+.export-btn {
+    background: linear-gradient(135deg, var(--piedmont-primary) 0%, var(--piedmont-orange) 100%);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+
+.export-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(200, 78, 40, 0.3);
+}
+
+.patient-list-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.patient-list-table thead {
+    background: #f8f9fa;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.patient-list-table th {
+    padding: 0.75rem;
+    text-align: left;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #5a6c7d;
+    text-transform: uppercase;
+    border-bottom: 2px solid #e9ecef;
+    white-space: nowrap;
+}
+
+.patient-list-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #e9ecef;
+    vertical-align: top;
+}
+
+.patient-list-table tbody tr {
+    transition: background 0.2s;
+}
+
+.patient-list-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.patient-list-table tbody tr.non-compliant {
+    background: #fff5f5;
+}
+
+.gap-indicator {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-weight: 700;
+    font-size: 0.75rem;
+}
+
+.gap-indicator.open {
+    background: #fee;
+    color: #c0392b;
+}
+
+.gap-indicator.closed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.gap-date {
+    font-size: 0.8rem;
+    color: var(--piedmont-gray);
+}
+
+.patient-name-cell {
+    font-weight: 600;
+    color: var(--piedmont-dark);
+}
+
+.compliant-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.compliant-badge.yes {
+    background: #d4edda;
+    color: #155724;
+}
+
+.compliant-badge.no {
+    background: #fee;
+    color: #c0392b;
+}
+
+/* Mobile adjustments for measure dashboard */
+@media (max-width: 768px) {
+    .measure-charts-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .measure-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .patient-list-table {
+        font-size: 0.75rem;
+    }
+
+    .patient-list-table th,
+    .patient-list-table td {
+        padding: 0.5rem;
+    }
+
+    .list-controls {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

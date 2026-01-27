@@ -2989,18 +2989,18 @@ function renderRegionalChart(measureCode, regionalData) {
 
 // Patient List Functions
 function showPatientListByMonth(measureCode, measureName, month) {
-    showPatientList(measureCode, measureName, 'Monthly', month || 'All Months');
+    showQualityPatientList(measureCode, measureName, 'Monthly', month || 'All Months');
 }
 
 function showPatientListByRegion(measureCode, measureName, region) {
-    showPatientList(measureCode, measureName, 'Regional', region || 'All Regions');
+    showQualityPatientList(measureCode, measureName, 'Regional', region || 'All Regions');
 }
 
 function showPatientListByProvider(measureCode, measureName, providerName) {
-    showPatientList(measureCode, measureName, 'Provider', providerName);
+    showQualityPatientList(measureCode, measureName, 'Provider', providerName);
 }
 
-function showPatientList(measureCode, measureName, filterType, filterValue) {
+function showQualityPatientList(measureCode, measureName, filterType, filterValue) {
     const patients = generatePatientListData(measureCode, measureName, filterType, filterValue);
 
     let modalBody = '<div class="patient-list-container">';
@@ -3172,3 +3172,23 @@ function exportPatientList(measureCode, measureName, filterType, filterValue) {
     link.click();
     document.body.removeChild(link);
 }
+
+// Make functions globally available for onclick handlers in HTML
+window.drillDownMarket = drillDownMarket;
+window.showMeasureDashboard = showMeasureDashboard;
+window.drillDownEDMarket = drillDownEDMarket;
+window.setLeakageView = setLeakageView;
+window.toggleNetworkView = toggleNetworkView;
+window.drillDownPCPLeakage = drillDownPCPLeakage;
+window.drillDownHCC = drillDownHCC;
+window.drillDownEpisode = drillDownEpisode;
+window.closeModal = closeModal;
+window.closeQualityPatientModal = closeQualityPatientModal;
+window.drillDownProvider = drillDownProvider;
+window.showPatientList = showPatientList;
+window.showQualityPatientDetail = showQualityPatientDetail;
+window.exportPatientList = exportPatientList;
+window.showPatientListByMonth = showPatientListByMonth;
+window.showPatientListByRegion = showPatientListByRegion;
+window.showPatientListByProvider = showPatientListByProvider;
+

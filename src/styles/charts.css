@@ -1,0 +1,233 @@
+/* Charts CSS - Chart Sections, Projections, Maps, Visualizations */
+
+/* Chart Section */
+.chart-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+}
+
+.chart-section h3 {
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+}
+
+/* CRITICAL FIX for chart height issue */
+.chart-wrapper {
+    position: relative;
+    height: 350px;
+    width: 100%;
+}
+
+.chart-wrapper canvas {
+    max-height: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Projections Controls */
+.controls-panel {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+}
+
+.controls-panel h3 {
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+}
+
+.control-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+}
+
+.control-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.control-item label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #2c3e50;
+    font-size: 0.9rem;
+}
+
+.control-item input[type="range"] {
+    width: 100%;
+    margin-top: 0.5rem;
+    cursor: pointer;
+}
+
+/* Projection Results */
+.projection-results {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.result-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.result-card.highlight {
+    background: linear-gradient(135deg, var(--piedmont-primary) 0%, var(--piedmont-orange) 100%);
+    color: white;
+}
+
+.result-card h3 {
+    margin-bottom: 1.5rem;
+    font-size: 1.3rem;
+}
+
+.metric-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+.metric {
+    display: flex;
+    flex-direction: column;
+}
+
+.metric .label {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    margin-bottom: 0.5rem;
+}
+
+.metric .value {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+}
+
+.metric .sub {
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+.metric.success .value {
+    color: #a8e063;
+}
+
+.confidence-item {
+    margin-bottom: 1.5rem;
+}
+
+.confidence-item span {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #2c3e50;
+}
+
+.bar {
+    background: #e9ecef;
+    height: 32px;
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+
+.bar.danger {
+    background: #fee;
+}
+
+.fill {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: width 0.3s ease;
+    color: white;
+}
+
+.fill.good {
+    background: linear-gradient(90deg, #56ab2f, #a8e063);
+}
+
+.fill.bad {
+    background: linear-gradient(90deg, #e74c3c, #c0392b);
+}
+
+/* Geographic Map */
+.geo-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+}
+
+.map-container {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+    min-height: 500px;
+}
+
+.map-legend {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1rem;
+    justify-content: center;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.dot.green {
+    background: #27ae60;
+}
+
+.dot.yellow {
+    background: #f39c12;
+}
+
+.dot.red {
+    background: #e74c3c;
+}
+
+/* Sankey Section */
+.sankey-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+}
+
+.section-note {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+}
+
+#sankey-diagram {
+    min-height: 400px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 1rem;
+}

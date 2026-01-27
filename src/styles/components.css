@@ -1,0 +1,508 @@
+/* Components CSS - Cards, Tables, Buttons, Alerts */
+
+/* KPI Grid */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.kpi-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.kpi-label {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.kpi-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0.5rem 0;
+}
+
+.kpi-change {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.kpi-change.positive {
+    color: #27ae60;
+}
+
+.kpi-change.negative {
+    color: #e74c3c;
+}
+
+/* Table Section */
+.table-section {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+}
+
+.table-section h3 {
+    margin-bottom: 1.5rem;
+    color: #2c3e50;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.data-table thead {
+    background: #f8f9fa;
+}
+
+.data-table th {
+    padding: 1rem;
+    text-align: left;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #5a6c7d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.data-table td {
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.data-table tbody tr {
+    transition: background 0.2s;
+}
+
+.data-table tbody tr.clickable:hover {
+    background: #f8f9fa;
+    cursor: pointer;
+}
+
+.data-table .good {
+    color: #27ae60;
+    font-weight: 600;
+}
+
+.data-table .warning {
+    color: #f39c12;
+    font-weight: 600;
+}
+
+.data-table .bad {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+.domain-header td {
+    background: #ecf0f1;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+}
+
+.badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge.warning {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.btn-small {
+    background: var(--piedmont-primary);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background 0.2s;
+}
+
+.btn-small:hover {
+    background: #5568d3;
+}
+
+/* Alert Box */
+.alert-box {
+    background: linear-gradient(135deg, var(--piedmont-primary) 0%, var(--piedmont-orange) 100%);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    margin-top: 2rem;
+}
+
+.alert-box.success {
+    background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+}
+
+.alert-box.info {
+    background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+}
+
+.alert-box.warning {
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+}
+
+.alert-box h4 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.alert-box ul {
+    margin-left: 1.5rem;
+}
+
+.alert-box li {
+    margin-bottom: 0.5rem;
+    line-height: 1.6;
+}
+
+.alert-box p {
+    margin-bottom: 0.75rem;
+    line-height: 1.6;
+}
+
+/* Quality Metrics Styles */
+.quality-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.quality-summary-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.quality-score-large {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--piedmont-primary);
+    margin: 1rem 0;
+}
+
+.quality-rating {
+    font-size: 1.1rem;
+    margin: 0.5rem 0;
+    color: #2c3e50;
+}
+
+.quality-rating.success {
+    color: #27ae60;
+}
+
+.quality-rating.trend-up {
+    color: #27ae60;
+}
+
+.quality-detail {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    margin-top: 0.5rem;
+}
+
+/* Total Cost of Care Styles */
+.tcoc-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.tcoc-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.tcoc-label {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+}
+
+.tcoc-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0.5rem 0;
+}
+
+.tcoc-detail {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+.tcoc-detail.good {
+    color: #27ae60;
+    font-weight: 600;
+}
+
+.cost-breakdown-section {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.cost-chart-container {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.cost-details {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.cost-category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.cost-category-item {
+    padding: 1rem;
+    border-left: 4px solid var(--piedmont-primary);
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+.category-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.category-name {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.category-amount {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--piedmont-primary);
+}
+
+.category-pmpm {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+}
+
+/* Leakage Styles */
+.leakage-filter-bar {
+    background: white;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.leakage-filter-bar label {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.filter-btn {
+    padding: 0.5rem 1.5rem;
+    border: 2px solid #e9ecef;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover {
+    border-color: var(--piedmont-primary);
+    color: var(--piedmont-primary);
+}
+
+.filter-btn.active {
+    background: var(--piedmont-primary);
+    color: white;
+    border-color: var(--piedmont-primary);
+}
+
+.leakage-summary-section {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.leakage-chart-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.leakage-chart-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+.clickable-hint {
+    font-size: 0.75rem;
+    color: #7f8c8d;
+    font-weight: 400;
+}
+
+.leakage-metrics-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.metric-item {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+}
+
+.metric-item.highlight {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+}
+
+.metric-label {
+    font-size: 0.85rem;
+    color: #7f8c8d;
+    margin-bottom: 0.5rem;
+}
+
+.metric-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0.25rem 0;
+}
+
+.metric-pct {
+    font-size: 1.1rem;
+    color: #7f8c8d;
+}
+
+.metric-note {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    margin-top: 0.25rem;
+}
+
+/* HCC Styles */
+.hcc-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.hcc-summary-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.hcc-summary-card.warning {
+    background: #fff3cd;
+}
+
+.hcc-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--piedmont-primary);
+    margin: 0.5rem 0;
+}
+
+.hcc-detail {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    margin-top: 0.25rem;
+}
+
+.hcc-trend {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.hcc-trend.good {
+    color: #27ae60;
+}
+
+.hcc-trend.bad {
+    color: #e74c3c;
+}
+
+/* Episodes Styles */
+.episodes-info-box {
+    background: #e8f4fd;
+    padding: 1.5rem;
+    border-radius: 12px;
+    border-left: 4px solid #3498db;
+    margin-bottom: 2rem;
+}
+
+.episodes-info-box h4 {
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+}
+
+.episodes-info-box p {
+    color: #5a6c7d;
+    line-height: 1.6;
+}
