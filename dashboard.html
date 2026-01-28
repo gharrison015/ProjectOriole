@@ -570,7 +570,7 @@
                                                 <td class="warning"><strong>58.4%</strong></td>
                                                 <td>62.1%</td>
                                                 <td class="bad">-3.7 pts</td>
-                                                <td><span class="badge warning">Need Improvement</span></td>
+                                                <td><span class="badge warning pulse-attention">Need Improvement</span></td>
                                             </tr>
 
                                             <tr class="domain-header">
@@ -614,7 +614,7 @@
                                                 <td class="warning"><strong>74.2%</strong></td>
                                                 <td>78.5%</td>
                                                 <td class="bad">-4.3 pts</td>
-                                                <td><span class="badge warning">Need Improvement</span></td>
+                                                <td><span class="badge warning pulse-attention">Need Improvement</span></td>
                                             </tr>
 
                                             <tr class="domain-header">
@@ -634,7 +634,7 @@
                                                 <td class="warning"><strong>52.8%</strong></td>
                                                 <td>58.3%</td>
                                                 <td class="bad">-5.5 pts</td>
-                                                <td><span class="badge warning">Need Improvement</span></td>
+                                                <td><span class="badge warning pulse-attention">Need Improvement</span></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -1388,31 +1388,31 @@
                                 </div>
                                 <div class="ra-card success" title="Patients who have completed an Annual Wellness Visit in the current measurement year.">
                                     <div class="ra-card-label">Numerator <span class="tooltip-icon">ⓘ</span></div>
-                                    <div class="ra-card-value good" id="awv-numerator">23,911</div>
+                                    <div class="ra-card-value good" id="awv-numerator">27,929</div>
                                     <div class="ra-card-detail">Completed AWV</div>
                                 </div>
                                 <div class="ra-card highlight clickable" onclick="showAWVComplianceModal()" title="AWV completion rate for attributed population. AWV is critical for comprehensive HCC documentation.">
                                     <div class="ra-card-label">Compliance <span class="tooltip-icon">ⓘ</span></div>
-                                    <div class="ra-card-value good" id="awv-compliance-rate">50.0%</div>
-                                    <div class="ra-card-detail">23,911 / 47,823</div>
+                                    <div class="ra-card-value good" id="awv-compliance-rate">58.4%</div>
+                                    <div class="ra-card-detail">27,929 / 47,823</div>
                                     <div class="ra-card-action">Click for details →</div>
                                 </div>
                                 <!-- Row 2 -->
                                 <div class="ra-card warning clickable" onclick="showAWVComplianceModal('forecast')" title="Projected AWV revenue from non-compliant patients with scheduled visits. Uses weighted average reimbursement (G0402, G0438, G0439).">
                                     <div class="ra-card-label">Forecast Opportunity <span class="tooltip-icon">ⓘ</span></div>
-                                    <div class="ra-card-value warning" id="awv-forecast-revenue">$362K</div>
-                                    <div class="ra-card-detail" id="awv-forecast-detail">2,412 scheduled</div>
+                                    <div class="ra-card-value warning" id="awv-forecast-revenue">$301K</div>
+                                    <div class="ra-card-detail" id="awv-forecast-detail">2,007 scheduled</div>
                                     <div class="ra-card-action">Click for details →</div>
                                 </div>
                                 <div class="ra-card danger clickable" onclick="showAWVComplianceModal('missed')" title="Revenue lost from visits where AWV could have been billed but wasn't. Visits after AWV due date without AWV code.">
                                     <div class="ra-card-label">Missed Opportunity <span class="tooltip-icon">ⓘ</span></div>
-                                    <div class="ra-card-value bad" id="awv-missed-revenue">$847K</div>
-                                    <div class="ra-card-detail" id="awv-missed-detail">5,647 visits</div>
+                                    <div class="ra-card-value bad" id="awv-missed-revenue">$705K</div>
+                                    <div class="ra-card-detail" id="awv-missed-detail">4,698 visits</div>
                                     <div class="ra-card-action">Click for details →</div>
                                 </div>
                                 <div class="ra-card danger clickable" onclick="showHCCPatientList('all', 'not-scheduled')" title="Patients AWV non-compliant with no upcoming PCP appointments. Require immediate scheduling outreach.">
                                     <div class="ra-card-label">Not Scheduled <span class="tooltip-icon">ⓘ</span></div>
-                                    <div class="ra-card-value bad" id="not-scheduled-count">21,500</div>
+                                    <div class="ra-card-value bad" id="not-scheduled-count">17,887</div>
                                     <div class="ra-card-detail">No upcoming appt</div>
                                     <div class="ra-card-action">Click for list →</div>
                                 </div>
