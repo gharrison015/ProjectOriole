@@ -242,7 +242,7 @@
 }
 
 .result-card.highlight {
-    background: linear-gradient(135deg, var(--piedmont-primary) 0%, var(--piedmont-orange) 100%);
+    background: linear-gradient(135deg, #4a5568 0%, #5a6678 100%);
     color: white;
 }
 
@@ -280,7 +280,7 @@
 }
 
 .metric.success .value {
-    color: #a8e063;
+    color: #8ce99a;
 }
 
 .confidence-item {
@@ -353,23 +353,23 @@
 }
 
 .ci-item {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.12);
     padding: 1rem;
     border-radius: 8px;
     text-align: center;
 }
 
 .ci-item.pessimistic {
-    border-left: 3px solid #e74c3c;
+    border-left: 3px solid #ff6b6b;
 }
 
 .ci-item.expected {
-    border-left: 3px solid #a8e063;
-    background: rgba(255, 255, 255, 0.25);
+    border-left: 3px solid #69db7c;
+    background: rgba(255, 255, 255, 0.18);
 }
 
 .ci-item.optimistic {
-    border-left: 3px solid #3498db;
+    border-left: 3px solid #74c0fc;
 }
 
 .ci-label {
@@ -387,15 +387,15 @@
 }
 
 .ci-item.pessimistic .ci-value {
-    color: #ffcccc;
+    color: #ffa8a8;
 }
 
 .ci-item.expected .ci-value {
-    color: #a8e063;
+    color: #8ce99a;
 }
 
 .ci-item.optimistic .ci-value {
-    color: #87CEEB;
+    color: #a5d8ff;
 }
 
 .ci-sub {
