@@ -338,6 +338,45 @@
         font-size: 0.8rem;
     }
 
+    /* Monte Carlo confidence interval */
+    .monte-carlo-note {
+        font-size: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .confidence-interval-section {
+        margin-top: 1rem;
+        padding-top: 1rem;
+    }
+
+    .confidence-interval-section h4 {
+        font-size: 0.85rem;
+    }
+
+    .ci-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .ci-item {
+        padding: 0.75rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .ci-label {
+        font-size: 0.65rem;
+    }
+
+    .ci-value {
+        font-size: 1.1rem;
+    }
+
+    .ci-sub, .ci-note {
+        font-size: 0.65rem;
+    }
+
     .bar {
         height: 24px;
     }
