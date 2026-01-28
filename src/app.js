@@ -60,6 +60,22 @@ function formatDateShort(dateString) {
     return date.toLocaleDateString('en-US', options);
 }
 
+// Generate a DOB string from age
+function generateDOB(age) {
+    const birthYear = new Date().getFullYear() - age;
+    const month = Math.floor(Math.random() * 12) + 1;
+    const day = Math.floor(Math.random() * 28) + 1;
+    return `${month.toString().padStart(2, '0')}/${day.toString().padStart(2, '0')}/${birthYear}`;
+}
+
+// Generate a random last visit date within the past 6 months
+function generateLastVisit() {
+    const daysAgo = Math.floor(Math.random() * 180) + 1;
+    const lastVisitDate = new Date();
+    lastVisitDate.setDate(lastVisitDate.getDate() - daysAgo);
+    return lastVisitDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+}
+
 function initializeTabs() {
     const navItems = document.querySelectorAll('.nav-item');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -5906,39 +5922,41 @@ function showHCCPatientList(providerId, filterType) {
                     <thead>
                         <tr style="background: #f8f9fa;">
                             <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Patient Name</th>
-                            ${isAllProviders ? '<th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Provider</th>' : ''}
-                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">MRN</th>
-                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Age</th>
-                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Uncoded Dx</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">DOB</th>
+                            ${isAllProviders ? '<th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">PCP</th>' : ''}
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600; background: #fff3cd;">Potential RAF</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Last Visit</th>
                             <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">RAF Gap</th>
-                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600; background: #fff3cd;">Revenue at Risk</th>
-                            ${filterType === 'awv-incomplete' ? '<th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Scheduled PCP</th>' : ''}
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600;">Revenue at Risk</th>
+                            ${filterType === 'awv-incomplete' ? '<th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Next Appt</th>' : ''}
                         </tr>
                     </thead>
                     <tbody>
                         ${filteredPatients.slice(0, 50).map(p => {
                             const rafGap = (p.rafPotential - p.rafCurrent).toFixed(2);
+                            const potentialRaf = p.rafPotential.toFixed(2);
                             const isNotScheduled = p.nextAppt === 'Not scheduled';
+                            // Generate DOB and Last Visit if not present
+                            const dob = p.dob || generateDOB(p.age);
+                            const lastVisit = p.lastVisit || generateLastVisit();
                             return `
                             <tr style="cursor: pointer;" onclick="drillDownHCC('${p.providerId}')">
                                 <td style="padding: 0.75rem; border-bottom: 1px solid #eee;">
                                     <strong>${p.firstName} ${p.lastName}</strong>
                                 </td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; font-family: monospace; color: #6c757d; font-size: 0.8rem;">${dob}</td>
                                 ${isAllProviders ? `<td style="padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.8rem; color: #495057;">${p.providerName}</td>` : ''}
-                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; font-family: monospace; color: #6c757d;">${p.mrn}</td>
-                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee;">${p.age}</td>
-                                <td style="padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.8rem; color: #f39c12;">
-                                    ${p.suspectedHCCs.join('<br>')}
-                                </td>
-                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: #C84E28; font-weight: 600;">${rafGap}</td>
-                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; background: #fffbf0; font-weight: 600; color: #856404;">$${p.revenueOpp.toLocaleString()}</td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; background: #fffbf0; font-weight: 700; color: #856404;">${potentialRaf}</td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; font-family: monospace; color: #6c757d; font-size: 0.8rem;">${lastVisit}</td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: #C84E28; font-weight: 600;">+${rafGap}</td>
+                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; font-weight: 600; color: #856404;">$${p.revenueOpp.toLocaleString()}</td>
                                 ${filterType === 'awv-incomplete' ? `<td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: ${isNotScheduled ? '#e74c3c' : '#27ae60'}; font-weight: ${isNotScheduled ? '600' : '400'};">${isNotScheduled ? 'Not scheduled' : formatDateShort(p.nextAppt)}</td>` : ''}
                             </tr>
                             `;
                         }).join('')}
                         ${filteredPatients.length > 50 ? `
                             <tr style="background: #f8f9fa;">
-                                <td colspan="${isAllProviders ? '8' : '7'}" style="padding: 0.75rem; text-align: center; border-top: 2px solid #dee2e6; font-style: italic; color: #6c757d;">
+                                <td colspan="${isAllProviders ? '9' : '8'}" style="padding: 0.75rem; text-align: center; border-top: 2px solid #dee2e6; font-style: italic; color: #6c757d;">
                                     Showing first 50 of ${filteredPatients.length} patients. Export to CSV for complete list.
                                 </td>
                             </tr>
@@ -6015,6 +6033,567 @@ function exportHCCPatientList(providerId, filterType) {
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
     link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// ============================================
+// RAF SLIDER FILTER FUNCTIONALITY
+// ============================================
+
+// AWV Patient Data - extended dataset for the Risk Adjustment tab
+const awvPatientData = {
+    totalAttributed: 47823,
+    awvCompleted: 23911,
+    awvIncomplete: 23912,
+    notScheduled: 21500,
+    scheduledWithAWVDue: 2412,
+    missedOpportunityVisits: 5647,
+    awvRates: {
+        G0402: 160, // Initial Preventive Physical Exam
+        G0438: 175, // Initial AWV
+        G0439: 118  // Subsequent AWV
+    },
+    weightedAvgAWV: 150,
+
+    // Regional AWV performance data
+    regions: [
+        { name: 'Atlanta North', completed: 6234, total: 11892, rate: 52.4, missed: 1423, scheduled: 612 },
+        { name: 'Atlanta South', completed: 5892, total: 12456, rate: 47.3, missed: 1876, scheduled: 734 },
+        { name: 'Columbus', completed: 4123, total: 8234, rate: 50.1, missed: 987, scheduled: 423 },
+        { name: 'Augusta', completed: 3892, total: 7823, rate: 49.8, missed: 856, scheduled: 367 },
+        { name: 'Macon', completed: 3770, total: 7418, rate: 50.8, missed: 505, scheduled: 276 }
+    ],
+
+    // Top providers for AWV performance
+    providers: [
+        { name: 'Dr. Sarah Johnson', region: 'Atlanta North', completed: 847, total: 1847, rate: 45.9, missed: 134 },
+        { name: 'Dr. Michael Anderson', region: 'Atlanta South', completed: 892, total: 1923, rate: 46.4, missed: 156 },
+        { name: 'Dr. Jennifer Brown', region: 'Columbus', completed: 923, total: 1654, rate: 55.8, missed: 89 },
+        { name: 'Dr. Raj Patel', region: 'Augusta', completed: 712, total: 1567, rate: 45.4, missed: 143 },
+        { name: 'Dr. Susan Kim', region: 'Atlanta North', completed: 834, total: 1432, rate: 58.2, missed: 67 },
+        { name: 'Dr. Emily Wilson', region: 'Atlanta South', completed: 1023, total: 1756, rate: 58.3, missed: 78 },
+        { name: 'Dr. Carlos Rodriguez', region: 'Macon', completed: 789, total: 1298, rate: 60.8, missed: 45 },
+        { name: 'Dr. David Chen', region: 'Columbus', completed: 645, total: 1189, rate: 54.2, missed: 92 }
+    ],
+
+    // Sample patient list for drill-downs (expanded with DOB and Last Visit)
+    patients: generateAWVPatients(100)
+};
+
+// Generate sample patient data with all required fields
+function generateAWVPatients(count) {
+    const firstNames = ['James', 'Mary', 'John', 'Patricia', 'Robert', 'Jennifer', 'Michael', 'Linda', 'William', 'Elizabeth', 'David', 'Barbara', 'Richard', 'Susan', 'Joseph', 'Jessica', 'Thomas', 'Sarah', 'Charles', 'Karen'];
+    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin'];
+    const pcps = ['Dr. Sarah Johnson', 'Dr. Michael Anderson', 'Dr. Jennifer Brown', 'Dr. Raj Patel', 'Dr. Susan Kim', 'Dr. Emily Wilson', 'Dr. Carlos Rodriguez', 'Dr. David Chen'];
+    const regions = ['Atlanta North', 'Atlanta South', 'Columbus', 'Augusta', 'Macon'];
+
+    const patients = [];
+    for (let i = 0; i < count; i++) {
+        const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+        const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+        const age = Math.floor(Math.random() * 35) + 50; // 50-85
+        const birthYear = 2026 - age;
+        const birthMonth = Math.floor(Math.random() * 12) + 1;
+        const birthDay = Math.floor(Math.random() * 28) + 1;
+        const dob = `${birthMonth.toString().padStart(2, '0')}/${birthDay.toString().padStart(2, '0')}/${birthYear}`;
+
+        const rafCurrent = parseFloat((Math.random() * 2 + 0.8).toFixed(2));
+        const rafGap = parseFloat((Math.random() * 1.5).toFixed(2));
+        const rafPotential = parseFloat((rafCurrent + rafGap).toFixed(2));
+
+        // Last visit date - random date in last 6 months
+        const lastVisitDays = Math.floor(Math.random() * 180) + 1;
+        const lastVisitDate = new Date();
+        lastVisitDate.setDate(lastVisitDate.getDate() - lastVisitDays);
+        const lastVisit = lastVisitDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+
+        // Scheduled appointment - some have, some don't
+        const hasAppt = Math.random() > 0.45; // 55% not scheduled
+        let nextAppt = 'Not scheduled';
+        if (hasAppt) {
+            const apptDays = Math.floor(Math.random() * 90) + 1;
+            const apptDate = new Date();
+            apptDate.setDate(apptDate.getDate() + apptDays);
+            nextAppt = apptDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+        }
+
+        patients.push({
+            id: `P${100000 + i}`,
+            mrn: `MRN${800000 + i}`,
+            firstName,
+            lastName,
+            dob,
+            age,
+            pcp: pcps[Math.floor(Math.random() * pcps.length)],
+            region: regions[Math.floor(Math.random() * regions.length)],
+            rafCurrent,
+            rafGap,
+            rafPotential,
+            lastVisit,
+            nextAppt,
+            awvCompleted: false,
+            missedOpportunity: Math.random() > 0.7 // 30% had missed opportunity
+        });
+    }
+
+    // Sort by Potential RAF descending
+    return patients.sort((a, b) => b.rafPotential - a.rafPotential);
+}
+
+// RAF Slider update function
+function updateRAFSlider() {
+    const minSlider = document.getElementById('raf-slider-min');
+    const maxSlider = document.getElementById('raf-slider-max');
+
+    if (!minSlider || !maxSlider) return;
+
+    let minVal = parseFloat(minSlider.value);
+    let maxVal = parseFloat(maxSlider.value);
+
+    // Ensure min doesn't exceed max
+    if (minVal > maxVal) {
+        const temp = minVal;
+        minVal = maxVal;
+        maxVal = temp;
+        minSlider.value = minVal;
+        maxSlider.value = maxVal;
+    }
+
+    const rangeDisplay = document.getElementById('raf-range-display');
+    const resetBtn = document.getElementById('raf-reset-btn');
+    const container = document.querySelector('.raf-slider-container');
+
+    const isFiltered = minVal > 0.5 || maxVal < 5.0;
+
+    if (isFiltered) {
+        rangeDisplay.textContent = `${minVal.toFixed(1)} — ${maxVal.toFixed(1)}`;
+        resetBtn.style.display = 'inline-block';
+        container.classList.add('filtered');
+    } else {
+        rangeDisplay.textContent = '0.5 — 5.0 (All Patients)';
+        resetBtn.style.display = 'none';
+        container.classList.remove('filtered');
+    }
+
+    // Calculate filtered stats
+    updateRAFFilteredStats(minVal, maxVal);
+}
+
+function updateRAFFilteredStats(minVal, maxVal) {
+    // Simulate filtering based on RAF range
+    // In production, this would filter actual patient data
+    const totalPatients = awvPatientData.totalAttributed;
+    const fullRange = 5.0 - 0.5;
+    const selectedRange = maxVal - minVal;
+    const rangePct = selectedRange / fullRange;
+
+    // Adjusted calculation to simulate realistic distribution
+    // Higher RAF patients are fewer, so skew the distribution
+    let patientPct = rangePct;
+    if (minVal > 2.0) {
+        patientPct = rangePct * 0.4; // High RAF patients are rarer
+    } else if (minVal > 1.5) {
+        patientPct = rangePct * 0.7;
+    }
+
+    const filteredPatients = Math.round(totalPatients * patientPct);
+    const filteredUncoded = Math.round(2847 * patientPct * (minVal > 1.5 ? 1.5 : 1)); // Higher RAF = more uncoded
+    const filteredRevenue = (2.3 * patientPct * (minVal > 1.5 ? 1.5 : 1)).toFixed(1);
+
+    document.getElementById('raf-patients-count').textContent = filteredPatients.toLocaleString();
+    document.getElementById('raf-uncoded-count').textContent = filteredUncoded.toLocaleString();
+    document.getElementById('raf-revenue-risk').textContent = `$${filteredRevenue}M`;
+
+    // Update AWV counts based on filter
+    const awvIncomplete = Math.round(23912 * patientPct);
+    const notScheduled = Math.round(21500 * patientPct);
+
+    const awvIncompleteEl = document.getElementById('awv-incomplete-count');
+    const notScheduledEl = document.getElementById('not-scheduled-count');
+
+    if (awvIncompleteEl) awvIncompleteEl.textContent = awvIncomplete.toLocaleString();
+    if (notScheduledEl) notScheduledEl.textContent = notScheduled.toLocaleString();
+}
+
+function resetRAFSlider() {
+    const minSlider = document.getElementById('raf-slider-min');
+    const maxSlider = document.getElementById('raf-slider-max');
+
+    if (minSlider) minSlider.value = 0.5;
+    if (maxSlider) maxSlider.value = 5.0;
+
+    updateRAFSlider();
+}
+
+// ============================================
+// AWV COMPLIANCE MODAL
+// ============================================
+
+function showAWVComplianceModal(section = 'overview') {
+    const data = awvPatientData;
+    const completionRate = ((data.awvCompleted / data.totalAttributed) * 100).toFixed(1);
+    const forecastRevenue = data.scheduledWithAWVDue * data.weightedAvgAWV;
+    const missedRevenue = data.missedOpportunityVisits * data.weightedAvgAWV;
+
+    const modalBody = `
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div>
+                <h2 style="margin: 0;">AWV Compliance & Revenue Analysis</h2>
+                <p class="provider-summary" style="margin: 0.25rem 0 0 0;">Annual Wellness Visit Performance Dashboard</p>
+            </div>
+        </div>
+
+        <!-- Overview KPIs -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+            <div style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid #27ae60;">
+                <div style="font-size: 0.8rem; color: #155724; margin-bottom: 0.25rem;">AWV Compliance Rate</div>
+                <div style="font-size: 2rem; font-weight: 700; color: #155724;">${completionRate}%</div>
+                <div style="font-size: 0.75rem; color: #155724;">${data.awvCompleted.toLocaleString()} / ${data.totalAttributed.toLocaleString()}</div>
+            </div>
+            <div style="background: #fff3cd; padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid #f39c12;">
+                <div style="font-size: 0.8rem; color: #856404; margin-bottom: 0.25rem;">AWV Incomplete</div>
+                <div style="font-size: 2rem; font-weight: 700; color: #856404;">${data.awvIncomplete.toLocaleString()}</div>
+                <div style="font-size: 0.75rem; color: #856404;">Patients needing AWV</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid #3498db;">
+                <div style="font-size: 0.8rem; color: #0d47a1; margin-bottom: 0.25rem;">Forecast Opportunity</div>
+                <div style="font-size: 2rem; font-weight: 700; color: #0d47a1;">$${(forecastRevenue / 1000).toFixed(0)}K</div>
+                <div style="font-size: 0.75rem; color: #0d47a1;">${data.scheduledWithAWVDue.toLocaleString()} scheduled visits</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%); padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid #e74c3c;">
+                <div style="font-size: 0.8rem; color: #c62828; margin-bottom: 0.25rem;">Missed Opportunity</div>
+                <div style="font-size: 2rem; font-weight: 700; color: #c62828;">$${(missedRevenue / 1000).toFixed(0)}K</div>
+                <div style="font-size: 0.75rem; color: #c62828;">${data.missedOpportunityVisits.toLocaleString()} visits without AWV</div>
+            </div>
+        </div>
+
+        <!-- HCPCS Reference Rates -->
+        <div style="background: #f8f9fa; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1.5rem; display: flex; gap: 2rem; flex-wrap: wrap; font-size: 0.85rem;">
+            <span style="color: #6c757d;">AWV Reimbursement Rates:</span>
+            <span><strong>G0402</strong> (IPPE): $${data.awvRates.G0402}</span>
+            <span><strong>G0438</strong> (Initial AWV): $${data.awvRates.G0438}</span>
+            <span><strong>G0439</strong> (Subsequent AWV): $${data.awvRates.G0439}</span>
+            <span style="color: #667eea;"><strong>Weighted Avg:</strong> $${data.weightedAvgAWV}</span>
+        </div>
+
+        <!-- Regional Performance Section -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+            <div style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.25rem;">
+                <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50;">AWV Completion by Region</h3>
+                <div style="height: 200px;">
+                    <canvas id="awv-region-chart"></canvas>
+                </div>
+            </div>
+            <div style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.25rem;">
+                <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50;">Top Providers by AWV Rate</h3>
+                <div style="height: 200px;">
+                    <canvas id="awv-provider-chart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Missed Opportunity Detail -->
+        <div style="background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%); border: 1px solid #e74c3c; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="margin: 0; font-size: 1rem; color: #c62828;">Missed Opportunity Analysis</h3>
+                <span style="background: #e74c3c; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">$${(missedRevenue / 1000).toFixed(0)}K Lost Revenue</span>
+            </div>
+            <p style="font-size: 0.9rem; color: #6c757d; margin-bottom: 1rem;">
+                These ${data.missedOpportunityVisits.toLocaleString()} patients had a <strong>non-acute visit</strong> after becoming due for their Annual Wellness Visit,
+                but <strong>no AWV code was billed</strong>. This represents operational leakage where the patient was already in the exam room.
+            </p>
+            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.75rem; text-align: center;">
+                ${data.regions.map(r => `
+                    <div style="background: rgba(255,255,255,0.7); padding: 0.75rem; border-radius: 8px;">
+                        <div style="font-size: 0.75rem; color: #6c757d;">${r.name}</div>
+                        <div style="font-size: 1.25rem; font-weight: 700; color: #c62828;">${r.missed.toLocaleString()}</div>
+                        <div style="font-size: 0.7rem; color: #856404;">$${(r.missed * data.weightedAvgAWV / 1000).toFixed(0)}K</div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+
+        <!-- Regional Detail Table -->
+        <div style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.25rem; overflow-x: auto;">
+            <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50;">Regional Performance Detail</h3>
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                <thead>
+                    <tr style="background: #f8f9fa;">
+                        <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6;">Region</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Completed</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Total</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Rate</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Scheduled</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Forecast $</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Missed Opps</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Missed $</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${data.regions.map(r => `
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 0.75rem;"><strong>${r.name}</strong></td>
+                            <td style="padding: 0.75rem; text-align: center;">${r.completed.toLocaleString()}</td>
+                            <td style="padding: 0.75rem; text-align: center;">${r.total.toLocaleString()}</td>
+                            <td style="padding: 0.75rem; text-align: center; font-weight: 600; color: ${r.rate >= 50 ? '#27ae60' : '#e74c3c'};">${r.rate}%</td>
+                            <td style="padding: 0.75rem; text-align: center; color: #3498db;">${r.scheduled.toLocaleString()}</td>
+                            <td style="padding: 0.75rem; text-align: center; color: #3498db; font-weight: 600;">$${(r.scheduled * data.weightedAvgAWV / 1000).toFixed(0)}K</td>
+                            <td style="padding: 0.75rem; text-align: center; color: #e74c3c;">${r.missed.toLocaleString()}</td>
+                            <td style="padding: 0.75rem; text-align: center; color: #e74c3c; font-weight: 600;">$${(r.missed * data.weightedAvgAWV / 1000).toFixed(0)}K</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+                <tfoot>
+                    <tr style="background: #f8f9fa; font-weight: 600;">
+                        <td style="padding: 0.75rem;">Total</td>
+                        <td style="padding: 0.75rem; text-align: center;">${data.awvCompleted.toLocaleString()}</td>
+                        <td style="padding: 0.75rem; text-align: center;">${data.totalAttributed.toLocaleString()}</td>
+                        <td style="padding: 0.75rem; text-align: center; color: #27ae60;">${completionRate}%</td>
+                        <td style="padding: 0.75rem; text-align: center; color: #3498db;">${data.scheduledWithAWVDue.toLocaleString()}</td>
+                        <td style="padding: 0.75rem; text-align: center; color: #3498db;">$${(forecastRevenue / 1000).toFixed(0)}K</td>
+                        <td style="padding: 0.75rem; text-align: center; color: #e74c3c;">${data.missedOpportunityVisits.toLocaleString()}</td>
+                        <td style="padding: 0.75rem; text-align: center; color: #e74c3c;">$${(missedRevenue / 1000).toFixed(0)}K</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="alert-box warning" style="margin-top: 1.5rem;">
+            <h4>Strategic Recommendations</h4>
+            <ul>
+                <li><strong>Capture Scheduled Opportunities:</strong> ${data.scheduledWithAWVDue.toLocaleString()} patients with upcoming visits present $${(forecastRevenue / 1000).toFixed(0)}K in AWV revenue opportunity</li>
+                <li><strong>Address Missed Opportunities:</strong> Implement real-time alerts when AWV-due patients have non-acute visits scheduled</li>
+                <li><strong>Focus on Low-Performing Regions:</strong> Atlanta South (${data.regions[1].rate}%) and Augusta (${data.regions[3].rate}%) need targeted outreach</li>
+                <li><strong>Provider Education:</strong> Train front desk staff to identify AWV eligibility at check-in</li>
+            </ul>
+        </div>
+    `;
+
+    showModal(modalBody);
+
+    // Initialize charts after modal is shown
+    setTimeout(() => {
+        initAWVRegionChart(data);
+        initAWVProviderChart(data);
+    }, 100);
+}
+
+function initAWVRegionChart(data) {
+    const ctx = document.getElementById('awv-region-chart');
+    if (!ctx) return;
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: data.regions.map(r => r.name),
+            datasets: [{
+                label: 'AWV Completion Rate',
+                data: data.regions.map(r => r.rate),
+                backgroundColor: data.regions.map(r => r.rate >= 50 ? 'rgba(39, 174, 96, 0.7)' : 'rgba(231, 76, 60, 0.7)'),
+                borderColor: data.regions.map(r => r.rate >= 50 ? '#27ae60' : '#e74c3c'),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                datalabels: {
+                    color: '#2c3e50',
+                    font: { weight: 'bold', size: 11 },
+                    formatter: (value) => value + '%'
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    title: { display: true, text: 'Completion %' }
+                }
+            }
+        }
+    });
+}
+
+function initAWVProviderChart(data) {
+    const ctx = document.getElementById('awv-provider-chart');
+    if (!ctx) return;
+
+    const topProviders = data.providers.slice(0, 6).sort((a, b) => b.rate - a.rate);
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: topProviders.map(p => p.name.replace('Dr. ', '')),
+            datasets: [{
+                label: 'AWV Rate',
+                data: topProviders.map(p => p.rate),
+                backgroundColor: topProviders.map(p => p.rate >= 55 ? 'rgba(102, 126, 234, 0.7)' : 'rgba(243, 156, 18, 0.7)'),
+                borderColor: topProviders.map(p => p.rate >= 55 ? '#667eea' : '#f39c12'),
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                datalabels: {
+                    color: '#2c3e50',
+                    font: { weight: 'bold', size: 10 },
+                    anchor: 'end',
+                    align: 'right',
+                    formatter: (value) => value + '%'
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    max: 100,
+                    title: { display: true, text: 'Completion %' }
+                }
+            }
+        }
+    });
+}
+
+// ============================================
+// HIGH VALUE OUTREACH LIST
+// ============================================
+
+function showHighValueOutreach() {
+    const patients = awvPatientData.patients
+        .filter(p => !p.awvCompleted && p.nextAppt === 'Not scheduled')
+        .slice(0, 100);
+
+    const totalPotentialRAF = patients.reduce((sum, p) => sum + p.rafPotential, 0);
+    const avgPotentialRAF = (totalPotentialRAF / patients.length).toFixed(2);
+    const totalRevOpp = patients.reduce((sum, p) => sum + (p.rafGap * 820), 0); // ~$820 per RAF point
+
+    const modalBody = `
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div>
+                <h2 style="margin: 0;">High-Value Outreach List</h2>
+                <p class="provider-summary" style="margin: 0.25rem 0 0 0;">Top 100 Priority Patients for February Outreach</p>
+            </div>
+            <button onclick="exportHighValueList()" class="btn btn-primary" style="background: #27ae60; border: none; color: white; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span>📥</span> Export to CSV
+            </button>
+        </div>
+
+        <p style="color: #6c757d; font-size: 0.9rem; margin-bottom: 1rem;">
+            Patients ranked by Potential RAF who are AWV incomplete and have no scheduled appointments.
+            These represent the highest-value outreach opportunities for care coordinators.
+        </p>
+
+        <!-- Summary Stats -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+            <div style="background: linear-gradient(135deg, #667eea15 0%, #667eea25 100%); padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid #667eea;">
+                <div style="font-size: 0.8rem; color: #5a67d8;">Total Patients</div>
+                <div style="font-size: 1.75rem; font-weight: 700; color: #5a67d8;">${patients.length}</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #27ae6015 0%, #27ae6025 100%); padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid #27ae60;">
+                <div style="font-size: 0.8rem; color: #1e8449;">Avg Potential RAF</div>
+                <div style="font-size: 1.75rem; font-weight: 700; color: #1e8449;">${avgPotentialRAF}</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #f39c1215 0%, #f39c1225 100%); padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid #f39c12;">
+                <div style="font-size: 0.8rem; color: #9a7b0a;">Revenue Opportunity</div>
+                <div style="font-size: 1.75rem; font-weight: 700; color: #9a7b0a;">$${(totalRevOpp / 1000).toFixed(0)}K</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #e74c3c15 0%, #e74c3c25 100%); padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid #e74c3c;">
+                <div style="font-size: 0.8rem; color: #c0392b;">Status</div>
+                <div style="font-size: 1.75rem; font-weight: 700; color: #c0392b;">Not Sched</div>
+            </div>
+        </div>
+
+        <!-- Patient Table -->
+        <div style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1rem; overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                <thead>
+                    <tr style="background: #f8f9fa;">
+                        <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Rank</th>
+                        <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Patient Name</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">DOB</th>
+                        <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">PCP</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600; background: #fff3cd;">Potential RAF</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">RAF Gap</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Last Visit</th>
+                        <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Region</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${patients.slice(0, 50).map((p, i) => `
+                        <tr style="border-bottom: 1px solid #eee;">
+                            <td style="padding: 0.75rem; font-weight: 600; color: #667eea;">${i + 1}</td>
+                            <td style="padding: 0.75rem;"><strong>${p.firstName} ${p.lastName}</strong></td>
+                            <td style="padding: 0.75rem; text-align: center; font-family: monospace; color: #6c757d;">${p.dob}</td>
+                            <td style="padding: 0.75rem; font-size: 0.8rem;">${p.pcp}</td>
+                            <td style="padding: 0.75rem; text-align: center; background: #fffbf0; font-weight: 700; color: #856404;">${p.rafPotential.toFixed(2)}</td>
+                            <td style="padding: 0.75rem; text-align: center; color: #C84E28; font-weight: 600;">+${p.rafGap.toFixed(2)}</td>
+                            <td style="padding: 0.75rem; text-align: center; font-family: monospace; color: #6c757d;">${p.lastVisit}</td>
+                            <td style="padding: 0.75rem; font-size: 0.8rem; color: #495057;">${p.region}</td>
+                        </tr>
+                    `).join('')}
+                    ${patients.length > 50 ? `
+                        <tr style="background: #f8f9fa;">
+                            <td colspan="8" style="padding: 0.75rem; text-align: center; font-style: italic; color: #6c757d;">
+                                Showing first 50 of ${patients.length} patients. Export to CSV for complete list.
+                            </td>
+                        </tr>
+                    ` : ''}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="alert-box info" style="margin-top: 1.5rem; background: #e8f4fd; border-left-color: #3498db;">
+            <h4>Care Coordinator Action Items</h4>
+            <ul>
+                <li><strong>Priority Outreach:</strong> Contact top 20 patients within 48 hours</li>
+                <li><strong>Schedule AWV:</strong> Book Annual Wellness Visit for all contacted patients</li>
+                <li><strong>Pre-Visit Prep:</strong> Generate HCC documentation checklist for each patient</li>
+                <li><strong>Transportation:</strong> Offer transportation assistance for patients with access barriers</li>
+            </ul>
+        </div>
+    `;
+
+    showModal(modalBody);
+}
+
+function exportHighValueList() {
+    const patients = awvPatientData.patients
+        .filter(p => !p.awvCompleted && p.nextAppt === 'Not scheduled')
+        .slice(0, 100);
+
+    const headers = ['Rank', 'Patient Name', 'MRN', 'DOB', 'Age', 'PCP', 'Region', 'RAF Current', 'RAF Potential', 'RAF Gap', 'Last Visit'];
+    const rows = patients.map((p, i) => [
+        i + 1,
+        `${p.firstName} ${p.lastName}`,
+        p.mrn,
+        p.dob,
+        p.age,
+        p.pcp,
+        p.region,
+        p.rafCurrent.toFixed(2),
+        p.rafPotential.toFixed(2),
+        p.rafGap.toFixed(2),
+        p.lastVisit
+    ]);
+
+    let csvContent = headers.join(',') + '\n';
+    rows.forEach(row => {
+        csvContent += row.join(',') + '\n';
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'High_Value_Outreach_Top100.csv');
     link.style.visibility = 'hidden';
     document.body.appendChild(link);
     link.click();
@@ -7983,6 +8562,12 @@ window.showPatientListByMonth = showPatientListByMonth;
 window.showPatientListByRegion = showPatientListByRegion;
 window.showPatientListByProvider = showPatientListByProvider;
 
+// RAF Slider and AWV Compliance functions
+window.updateRAFSlider = updateRAFSlider;
+window.resetRAFSlider = resetRAFSlider;
+window.showAWVComplianceModal = showAWVComplianceModal;
+window.showHighValueOutreach = showHighValueOutreach;
+window.exportHighValueList = exportHighValueList;
 
 // Mobile menu toggle function
 function toggleMobileMenu() {

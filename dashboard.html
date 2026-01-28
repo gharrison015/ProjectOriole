@@ -1241,6 +1241,54 @@
                         </span>
                     </div>
 
+                    <!-- Potential RAF Slider Filter -->
+                    <div class="raf-slider-container" id="raf-slider-section">
+                        <div class="raf-slider-header">
+                            <div class="raf-slider-title">
+                                <span class="slider-icon">🎚️</span>
+                                <h4>Filter by Potential RAF Score</h4>
+                                <span class="tooltip-icon" title="Potential RAF = Current RAF + RAF Gap (Uncoded/Suspect). Use this slider to filter all cards and tables to focus on specific patient segments.">ⓘ</span>
+                            </div>
+                            <div class="raf-slider-values">
+                                <span class="raf-range-label">Range:</span>
+                                <span class="raf-range-display" id="raf-range-display">0.5 — 5.0 (All Patients)</span>
+                                <button class="btn-small" id="raf-reset-btn" onclick="resetRAFSlider()" style="margin-left: 1rem; display: none;">Reset Filter</button>
+                            </div>
+                        </div>
+                        <div class="raf-slider-track">
+                            <div class="raf-slider-inputs">
+                                <input type="range" id="raf-slider-min" min="0.5" max="5.0" step="0.1" value="0.5" class="raf-slider" oninput="updateRAFSlider()">
+                                <input type="range" id="raf-slider-max" min="0.5" max="5.0" step="0.1" value="5.0" class="raf-slider" oninput="updateRAFSlider()">
+                            </div>
+                            <div class="raf-slider-labels">
+                                <span>0.5</span>
+                                <span>1.0</span>
+                                <span>1.5</span>
+                                <span>2.0</span>
+                                <span>2.5</span>
+                                <span>3.0</span>
+                                <span>3.5</span>
+                                <span>4.0</span>
+                                <span>4.5</span>
+                                <span>5.0</span>
+                            </div>
+                        </div>
+                        <div class="raf-filter-stats" id="raf-filter-stats">
+                            <div class="raf-stat">
+                                <span class="raf-stat-label">Patients in Range:</span>
+                                <span class="raf-stat-value" id="raf-patients-count">47,823</span>
+                            </div>
+                            <div class="raf-stat">
+                                <span class="raf-stat-label">Uncoded Dx in Range:</span>
+                                <span class="raf-stat-value" id="raf-uncoded-count">2,847</span>
+                            </div>
+                            <div class="raf-stat">
+                                <span class="raf-stat-label">Revenue at Risk:</span>
+                                <span class="raf-stat-value" id="raf-revenue-risk">$2.3M</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- HCC Summary Cards - Row 1: Core Metrics -->
                     <div class="hcc-summary-grid">
                         <div class="hcc-summary-card">
@@ -1302,21 +1350,61 @@
                             <div class="hcc-trend good" id="hcc-forecast-revenue">$1.5M projected recapture</div>
                         </div>
                         <div class="hcc-summary-card clickable-card" onclick="showHCCPatientList('all', 'awv-incomplete')">
-                            <div class="hcc-card-header tooltip-hover" title="Patients with Uncoded Dx who have not completed an Annual Wellness Visit (AWV) in the current year. AWV provides optimal opportunity for comprehensive HCC documentation.">
+                            <div class="hcc-card-header tooltip-hover" title="Patients who have not completed an Annual Wellness Visit (AWV) in PY2026. AWV provides optimal opportunity for comprehensive HCC documentation and is a key driver of RAF score optimization.">
                                 <h4>AWV Incomplete</h4>
                                 <span class="tooltip-icon">ⓘ</span>
                             </div>
-                            <div class="hcc-value" style="color: #e74c3c;">1,423</div>
-                            <div class="hcc-detail">Patients with uncoded dx</div>
+                            <div class="hcc-value" style="color: #e74c3c;" id="awv-incomplete-count">23,912</div>
+                            <div class="hcc-detail">Patients needing AWV</div>
                             <div class="hcc-trend">Click to view list →</div>
                         </div>
                         <div class="hcc-summary-card clickable-card" onclick="showHCCPatientList('all', 'not-scheduled')">
-                            <div class="hcc-card-header tooltip-hover" title="Patients with Uncoded Dx who do not have a PCP appointment scheduled. These patients are at highest risk of RAF score loss and require immediate outreach.">
+                            <div class="hcc-card-header tooltip-hover" title="Patients who are AWV non-compliant AND have no upcoming PCP appointments in the EMR. These patients require immediate scheduling outreach.">
                                 <h4>Not Scheduled</h4>
                                 <span class="tooltip-icon">ⓘ</span>
                             </div>
-                            <div class="hcc-value" style="color: #e74c3c;">1,000</div>
-                            <div class="hcc-detail">Patients needing outreach</div>
+                            <div class="hcc-value" style="color: #e74c3c;" id="not-scheduled-count">21,500</div>
+                            <div class="hcc-detail">AWV incomplete + no appt</div>
+                            <div class="hcc-trend">Click to view list →</div>
+                        </div>
+                    </div>
+
+                    <!-- HCC Summary Cards - Row 3: AWV Compliance & Revenue -->
+                    <div class="hcc-summary-grid" style="margin-top: 0;">
+                        <div class="hcc-summary-card highlight clickable-card" onclick="showAWVComplianceModal()">
+                            <div class="hcc-card-header tooltip-hover" title="Annual Wellness Visit completion rate for attributed population. AWV is critical for comprehensive HCC documentation and risk adjustment optimization.">
+                                <h4>AWV Compliance</h4>
+                                <span class="tooltip-icon">ⓘ</span>
+                            </div>
+                            <div class="hcc-value" style="color: #27ae60;" id="awv-compliance-rate">50.0%</div>
+                            <div class="hcc-detail" id="awv-compliance-detail">23,911 / 47,823 completed</div>
+                            <div class="hcc-trend">Click for detailed view →</div>
+                        </div>
+                        <div class="hcc-summary-card warning clickable-card" onclick="showAWVComplianceModal('forecast')">
+                            <div class="hcc-card-header tooltip-hover" title="Projected AWV revenue from patients who are non-compliant but have scheduled visits. Calculated using weighted average AWV reimbursement rates (G0402, G0438, G0439).">
+                                <h4>Forecast Opportunity</h4>
+                                <span class="tooltip-icon">ⓘ</span>
+                            </div>
+                            <div class="hcc-value" style="color: #f39c12;" id="awv-forecast-revenue">$362K</div>
+                            <div class="hcc-detail" id="awv-forecast-detail">2,412 patients with scheduled visits</div>
+                            <div class="hcc-trend">Weighted avg: $150/AWV →</div>
+                        </div>
+                        <div class="hcc-summary-card clickable-card" style="background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%); border: 1px solid #e74c3c;" onclick="showAWVComplianceModal('missed')">
+                            <div class="hcc-card-header tooltip-hover" title="Revenue lost from patients who had a non-acute visit after becoming due for AWV but where no AWV code was billed. These represent missed billing opportunities.">
+                                <h4>Missed Opportunity</h4>
+                                <span class="tooltip-icon">ⓘ</span>
+                            </div>
+                            <div class="hcc-value" style="color: #e74c3c;" id="awv-missed-revenue">$847K</div>
+                            <div class="hcc-detail" id="awv-missed-detail">5,647 visits without AWV billing</div>
+                            <div class="hcc-trend">Click to view details →</div>
+                        </div>
+                        <div class="hcc-summary-card clickable-card" onclick="showHighValueOutreach()">
+                            <div class="hcc-card-header tooltip-hover" title="Top 100 patients ranked by Potential RAF who are AWV incomplete and not scheduled. Prioritized outreach list for care coordinators.">
+                                <h4>High-Value Outreach</h4>
+                                <span class="tooltip-icon">ⓘ</span>
+                            </div>
+                            <div class="hcc-value" style="color: #3498db;">100</div>
+                            <div class="hcc-detail">Priority patients for Feb</div>
                             <div class="hcc-trend">Click to view list →</div>
                         </div>
                     </div>
