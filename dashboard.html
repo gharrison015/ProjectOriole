@@ -1073,6 +1073,7 @@
                                     <th class="sortable" data-sort="string">Primary Service</th>
                                     <th>Top Rendering Providers</th>
                                     <th class="sortable" data-sort="string">Elective Status</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody id="oon-facilities-tbody">
@@ -1088,6 +1089,7 @@
                                         <div>Dr. Michael Torres, MD - Cardiac Anesthesia</div>
                                     </td>
                                     <td><span class="badge elective">Elective</span></td>
+                                    <td><button class="btn-small" onclick="event.stopPropagation(); showFacilityLeakageDetail('emory-stjosephs')">View Details</button></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Northside Hospital Atlanta</strong></td>
@@ -1101,6 +1103,7 @@
                                         <div>Dr. David Brown, MD - Joint Replacement</div>
                                     </td>
                                     <td><span class="badge elective">Elective</span></td>
+                                    <td><button class="btn-small" onclick="event.stopPropagation(); showFacilityLeakageDetail('northside-atlanta')">View Details</button></td>
                                 </tr>
                                 <tr>
                                     <td><strong>WellStar Kennestone Hospital</strong></td>
@@ -1114,6 +1117,7 @@
                                         <div>Dr. Emily Wong, MD - Critical Care</div>
                                     </td>
                                     <td><span class="badge non-elective">Non-Elective</span></td>
+                                    <td><button class="btn-small" onclick="event.stopPropagation(); showFacilityLeakageDetail('wellstar-kennestone')">View Details</button></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Peachtree Advanced Imaging</strong></td>
@@ -1126,6 +1130,7 @@
                                         <div>Dr. Jennifer Smith, MD - Neuroradiology</div>
                                     </td>
                                     <td><span class="badge elective">Elective</span></td>
+                                    <td><button class="btn-small" onclick="event.stopPropagation(); showFacilityLeakageDetail('peachtree-imaging')">View Details</button></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Grady Memorial Hospital</strong></td>
@@ -1139,6 +1144,7 @@
                                         <div>Dr. Steven Rodriguez, MD - Neurosurgery</div>
                                     </td>
                                     <td><span class="badge non-elective">Non-Elective</span></td>
+                                    <td><button class="btn-small" onclick="event.stopPropagation(); showFacilityLeakageDetail('grady-memorial')">View Details</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1151,7 +1157,7 @@
                                 <tr>
                                     <th class="sortable" data-sort="string">PCP Name</th>
                                     <th class="sortable" data-sort="string">Market</th>
-                                    <th class="sortable" data-sort="number">Attributed Lives</th>
+                                    <th class="sortable" data-sort="number">Patients</th>
                                     <th class="sortable" data-sort="currency">Total Spend</th>
                                     <th class="sortable" data-sort="currency">OON Spend</th>
                                     <th class="sortable" data-sort="percent">Leakage %</th>
@@ -1159,50 +1165,50 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr onclick="drillDownPCPLeakage('martinez')" class="clickable">
+                                <tr class="clickable">
                                     <td><strong>Dr. Robert Martinez</strong></td>
                                     <td>Augusta</td>
                                     <td>1,247</td>
                                     <td>$14,234,887</td>
                                     <td class="bad">$5,892,334</td>
                                     <td class="bad">41.4%</td>
-                                    <td><button class="btn-small">View Flow →</button></td>
+                                    <td><button class="btn-small" onclick="event.stopPropagation(); showProviderLeakageDetail('martinez')">View Details</button></td>
                                 </tr>
-                                <tr onclick="drillDownPCPLeakage('williams')" class="clickable">
+                                <tr class="clickable">
                                     <td><strong>Dr. Amanda Williams</strong></td>
                                     <td>Atlanta South</td>
                                     <td>1,523</td>
                                     <td>$17,892,441</td>
                                     <td class="bad">$7,234,556</td>
                                     <td class="bad">40.4%</td>
-                                    <td><button class="btn-small">View Flow →</button></td>
+                                    <td><button class="btn-small" onclick="event.stopPropagation(); showProviderLeakageDetail('williams')">View Details</button></td>
                                 </tr>
-                                <tr onclick="drillDownPCPLeakage('chen')" class="clickable">
+                                <tr class="clickable">
                                     <td><strong>Dr. Michael Chen</strong></td>
                                     <td>Atlanta South</td>
                                     <td>1,389</td>
                                     <td>$15,667,223</td>
                                     <td class="bad">$6,123,445</td>
                                     <td class="bad">39.1%</td>
-                                    <td><button class="btn-small">View Flow →</button></td>
+                                    <td><button class="btn-small" onclick="event.stopPropagation(); showProviderLeakageDetail('chen')">View Details</button></td>
                                 </tr>
-                                <tr onclick="drillDownPCPLeakage('thompson')" class="clickable">
+                                <tr class="clickable">
                                     <td><strong>Dr. David Thompson</strong></td>
                                     <td>Augusta</td>
                                     <td>982</td>
                                     <td>$11,234,665</td>
                                     <td class="bad">$4,234,887</td>
                                     <td class="bad">37.7%</td>
-                                    <td><button class="btn-small">View Flow →</button></td>
+                                    <td><button class="btn-small" onclick="event.stopPropagation(); showProviderLeakageDetail('thompson')">View Details</button></td>
                                 </tr>
-                                <tr onclick="drillDownPCPLeakage('patel')" class="clickable">
+                                <tr class="clickable">
                                     <td><strong>Dr. Sarah Patel</strong></td>
                                     <td>Atlanta South</td>
                                     <td>1,298</td>
                                     <td>$14,556,332</td>
                                     <td class="bad">$5,334,221</td>
                                     <td class="bad">36.6%</td>
-                                    <td><button class="btn-small">View Flow →</button></td>
+                                    <td><button class="btn-small" onclick="event.stopPropagation(); showProviderLeakageDetail('patel')">View Details</button></td>
                                 </tr>
                             </tbody>
                         </table>

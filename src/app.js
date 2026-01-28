@@ -3792,6 +3792,523 @@ function drillDownPCPLeakage(pcpId) {
     createSankeyDiagram(pcpId);
 }
 
+// Show detailed leakage breakdown for an attributed provider (PCP)
+function showProviderLeakageDetail(providerId) {
+    const providerData = {
+        'martinez': {
+            name: 'Dr. Robert Martinez',
+            market: 'Augusta',
+            patients: 1247,
+            totalSpend: 14234887,
+            oonSpend: 5892334,
+            leakagePercent: 41.4,
+            facilities: [
+                { name: 'Emory St. Joseph\'s Hospital', type: 'Acute Care', spend: 2134556, services: 'Cardiac Surgery', encounters: 89, electivePct: 78 },
+                { name: 'Northside Hospital', type: 'Acute Care', spend: 1456223, services: 'Orthopedic Surgery', encounters: 67, electivePct: 85 },
+                { name: 'Peachtree Advanced Imaging', type: 'Imaging Center', spend: 987334, services: 'MRI / CT Scans', encounters: 234, electivePct: 92 },
+                { name: 'WellStar Kennestone', type: 'Acute Care', spend: 723445, services: 'Emergency Services', encounters: 45, electivePct: 12 },
+                { name: 'Grady Memorial', type: 'Trauma Center', spend: 590776, services: 'Trauma / Emergency', encounters: 28, electivePct: 8 }
+            ],
+            serviceBreakdown: [
+                { service: 'Cardiac Surgery', spend: 2134556, encounters: 89, electiveEnc: 69, nonElectiveEnc: 20 },
+                { service: 'Orthopedic Surgery', spend: 1456223, encounters: 67, electiveEnc: 57, nonElectiveEnc: 10 },
+                { service: 'Imaging (MRI/CT)', spend: 987334, encounters: 234, electiveEnc: 215, nonElectiveEnc: 19 },
+                { service: 'Emergency Services', spend: 723445, encounters: 45, electiveEnc: 5, nonElectiveEnc: 40 },
+                { service: 'Trauma Care', spend: 590776, encounters: 28, electiveEnc: 2, nonElectiveEnc: 26 }
+            ]
+        },
+        'williams': {
+            name: 'Dr. Amanda Williams',
+            market: 'Atlanta South',
+            patients: 1523,
+            totalSpend: 17892441,
+            oonSpend: 7234556,
+            leakagePercent: 40.4,
+            facilities: [
+                { name: 'Northside Hospital Atlanta', type: 'Acute Care', spend: 2567889, services: 'Orthopedic Surgery', encounters: 112, electivePct: 88 },
+                { name: 'Emory University Hospital', type: 'Academic Medical', spend: 1923445, services: 'Complex Surgery', encounters: 56, electivePct: 45 },
+                { name: 'Peachtree Advanced Imaging', type: 'Imaging Center', spend: 1234556, services: 'MRI / CT Scans', encounters: 289, electivePct: 95 },
+                { name: 'Atlanta Spine Center', type: 'Specialty', spend: 876334, services: 'Spine Surgery', encounters: 34, electivePct: 82 },
+                { name: 'WellStar Kennestone', type: 'Acute Care', spend: 632332, services: 'Emergency Services', encounters: 67, electivePct: 15 }
+            ],
+            serviceBreakdown: [
+                { service: 'Orthopedic Surgery', spend: 2567889, encounters: 112, electiveEnc: 98, nonElectiveEnc: 14 },
+                { service: 'Complex Surgery', spend: 1923445, encounters: 56, electiveEnc: 25, nonElectiveEnc: 31 },
+                { service: 'Imaging (MRI/CT)', spend: 1234556, encounters: 289, electiveEnc: 275, nonElectiveEnc: 14 },
+                { service: 'Spine Surgery', spend: 876334, encounters: 34, electiveEnc: 28, nonElectiveEnc: 6 },
+                { service: 'Emergency Services', spend: 632332, encounters: 67, electiveEnc: 10, nonElectiveEnc: 57 }
+            ]
+        },
+        'chen': {
+            name: 'Dr. Michael Chen',
+            market: 'Atlanta South',
+            patients: 1389,
+            totalSpend: 15667223,
+            oonSpend: 6123445,
+            leakagePercent: 39.1,
+            facilities: [
+                { name: 'Piedmont Heart Institute', type: 'Specialty', spend: 2123445, services: 'Cardiac Care', encounters: 78, electivePct: 72 },
+                { name: 'Emory St. Joseph\'s Hospital', type: 'Acute Care', spend: 1567889, services: 'Cardiac Surgery', encounters: 45, electivePct: 65 },
+                { name: 'Peachtree Advanced Imaging', type: 'Imaging Center', spend: 1234556, services: 'MRI / CT Scans', encounters: 312, electivePct: 94 },
+                { name: 'Northside Hospital', type: 'Acute Care', spend: 678223, services: 'General Surgery', encounters: 34, electivePct: 68 },
+                { name: 'Grady Memorial', type: 'Trauma Center', spend: 519332, services: 'Emergency Services', encounters: 41, electivePct: 10 }
+            ],
+            serviceBreakdown: [
+                { service: 'Cardiac Care', spend: 2123445, encounters: 78, electiveEnc: 56, nonElectiveEnc: 22 },
+                { service: 'Cardiac Surgery', spend: 1567889, encounters: 45, electiveEnc: 29, nonElectiveEnc: 16 },
+                { service: 'Imaging (MRI/CT)', spend: 1234556, encounters: 312, electiveEnc: 293, nonElectiveEnc: 19 },
+                { service: 'General Surgery', spend: 678223, encounters: 34, electiveEnc: 23, nonElectiveEnc: 11 },
+                { service: 'Emergency Services', spend: 519332, encounters: 41, electiveEnc: 4, nonElectiveEnc: 37 }
+            ]
+        },
+        'thompson': {
+            name: 'Dr. David Thompson',
+            market: 'Augusta',
+            patients: 982,
+            totalSpend: 11234665,
+            oonSpend: 4234887,
+            leakagePercent: 37.7,
+            facilities: [
+                { name: 'Augusta University Medical', type: 'Academic Medical', spend: 1567889, services: 'Complex Care', encounters: 67, electivePct: 52 },
+                { name: 'Doctors Hospital Augusta', type: 'Acute Care', spend: 1234556, services: 'General Surgery', encounters: 89, electivePct: 76 },
+                { name: 'University Imaging Augusta', type: 'Imaging Center', spend: 756334, services: 'MRI / CT Scans', encounters: 187, electivePct: 91 },
+                { name: 'Augusta Spine Specialists', type: 'Specialty', spend: 434556, services: 'Spine Care', encounters: 23, electivePct: 85 },
+                { name: 'Augusta ER Center', type: 'Emergency', spend: 241552, services: 'Emergency Services', encounters: 34, electivePct: 8 }
+            ],
+            serviceBreakdown: [
+                { service: 'Complex Care', spend: 1567889, encounters: 67, electiveEnc: 35, nonElectiveEnc: 32 },
+                { service: 'General Surgery', spend: 1234556, encounters: 89, electiveEnc: 68, nonElectiveEnc: 21 },
+                { service: 'Imaging (MRI/CT)', spend: 756334, encounters: 187, electiveEnc: 170, nonElectiveEnc: 17 },
+                { service: 'Spine Care', spend: 434556, encounters: 23, electiveEnc: 20, nonElectiveEnc: 3 },
+                { service: 'Emergency Services', spend: 241552, encounters: 34, electiveEnc: 3, nonElectiveEnc: 31 }
+            ]
+        },
+        'patel': {
+            name: 'Dr. Sarah Patel',
+            market: 'Atlanta South',
+            patients: 1298,
+            totalSpend: 14556332,
+            oonSpend: 5334221,
+            leakagePercent: 36.6,
+            facilities: [
+                { name: 'Northside Hospital Atlanta', type: 'Acute Care', spend: 1876554, services: 'Orthopedic Surgery', encounters: 78, electivePct: 89 },
+                { name: 'Peachtree Advanced Imaging', type: 'Imaging Center', spend: 1345667, services: 'MRI / CT Scans', encounters: 298, electivePct: 96 },
+                { name: 'Emory Midtown', type: 'Acute Care', spend: 987334, services: 'General Surgery', encounters: 45, electivePct: 72 },
+                { name: 'Atlanta Orthopedic Institute', type: 'Specialty', spend: 678223, services: 'Joint Replacement', encounters: 34, electivePct: 94 },
+                { name: 'WellStar Kennestone', type: 'Acute Care', spend: 446443, services: 'Emergency Services', encounters: 52, electivePct: 14 }
+            ],
+            serviceBreakdown: [
+                { service: 'Orthopedic Surgery', spend: 1876554, encounters: 78, electiveEnc: 69, nonElectiveEnc: 9 },
+                { service: 'Imaging (MRI/CT)', spend: 1345667, encounters: 298, electiveEnc: 286, nonElectiveEnc: 12 },
+                { service: 'General Surgery', spend: 987334, encounters: 45, electiveEnc: 32, nonElectiveEnc: 13 },
+                { service: 'Joint Replacement', spend: 678223, encounters: 34, electiveEnc: 32, nonElectiveEnc: 2 },
+                { service: 'Emergency Services', spend: 446443, encounters: 52, electiveEnc: 7, nonElectiveEnc: 45 }
+            ]
+        }
+    };
+
+    const data = providerData[providerId];
+    if (!data) return;
+
+    // Calculate totals
+    const totalEncounters = data.serviceBreakdown.reduce((sum, s) => sum + s.encounters, 0);
+    const totalElective = data.serviceBreakdown.reduce((sum, s) => sum + s.electiveEnc, 0);
+    const totalNonElective = data.serviceBreakdown.reduce((sum, s) => sum + s.nonElectiveEnc, 0);
+    const electivePct = ((totalElective / totalEncounters) * 100).toFixed(1);
+    const nonElectivePct = ((totalNonElective / totalEncounters) * 100).toFixed(1);
+
+    let modalContent = `
+        <div class="leakage-detail-modal">
+            <div class="modal-header" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; padding: 1.5rem; border-radius: 12px 12px 0 0; margin: -1.5rem -1.5rem 1.5rem -1.5rem;">
+                <h2 style="margin: 0 0 0.5rem 0; font-size: 1.5rem;">${data.name} - Leakage Detail</h2>
+                <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">${data.market} Market | ${data.patients.toLocaleString()} Patients</p>
+            </div>
+
+            <!-- Summary Cards -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase;">Total Spend</div>
+                    <div style="font-size: 1.5rem; font-weight: 700; color: #2c3e50;">$${(data.totalSpend / 1000000).toFixed(1)}M</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: #ffeaea; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase;">OON Spend</div>
+                    <div style="font-size: 1.5rem; font-weight: 700; color: #e74c3c;">$${(data.oonSpend / 1000000).toFixed(1)}M</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: #ffeaea; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase;">Leakage Rate</div>
+                    <div style="font-size: 1.5rem; font-weight: 700; color: #e74c3c;">${data.leakagePercent}%</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase;">Total Encounters</div>
+                    <div style="font-size: 1.5rem; font-weight: 700; color: #2c3e50;">${totalEncounters.toLocaleString()}</div>
+                </div>
+            </div>
+
+            <!-- Elective vs Non-Elective Breakdown -->
+            <div style="background: white; border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
+                <h4 style="margin: 0 0 0.75rem 0; color: #2c3e50;">Elective vs Non-Elective Encounters</h4>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="flex: 1; height: 24px; background: #e9ecef; border-radius: 12px; overflow: hidden; position: relative;">
+                        <div style="width: ${electivePct}%; height: 100%; background: linear-gradient(90deg, #27ae60, #2ecc71); display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; color: white; font-weight: 600; font-size: 0.8rem;">${electivePct}%</div>
+                    </div>
+                    <div style="display: flex; gap: 1.5rem; font-size: 0.85rem;">
+                        <div><span style="display: inline-block; width: 12px; height: 12px; background: #27ae60; border-radius: 2px; margin-right: 4px;"></span>Elective: ${totalElective}</div>
+                        <div><span style="display: inline-block; width: 12px; height: 12px; background: #e74c3c; border-radius: 2px; margin-right: 4px;"></span>Non-Elective: ${totalNonElective}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Facility Breakdown Table -->
+            <div style="margin-bottom: 1.5rem;">
+                <h4 style="margin: 0 0 1rem 0; color: #2c3e50;">OON Spend by Facility</h4>
+                <table class="data-table" style="font-size: 0.85rem;">
+                    <thead>
+                        <tr>
+                            <th>Facility</th>
+                            <th>Type</th>
+                            <th>OON Spend</th>
+                            <th>Primary Services</th>
+                            <th>Encounters</th>
+                            <th>% Elective</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    `;
+
+    data.facilities.forEach(facility => {
+        const electiveClass = facility.electivePct >= 70 ? 'good' : facility.electivePct <= 30 ? 'bad' : '';
+        modalContent += `
+            <tr>
+                <td><strong>${facility.name}</strong></td>
+                <td>${facility.type}</td>
+                <td class="bad">$${facility.spend.toLocaleString()}</td>
+                <td>${facility.services}</td>
+                <td>${facility.encounters}</td>
+                <td class="${electiveClass}">${facility.electivePct}%</td>
+            </tr>
+        `;
+    });
+
+    modalContent += `
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Service Line Breakdown Table -->
+            <div style="margin-bottom: 1rem;">
+                <h4 style="margin: 0 0 1rem 0; color: #2c3e50;">Service Line Breakdown</h4>
+                <table class="data-table" style="font-size: 0.85rem;">
+                    <thead>
+                        <tr>
+                            <th>Service Line</th>
+                            <th>OON Spend</th>
+                            <th>Total Encounters</th>
+                            <th>Elective</th>
+                            <th>Non-Elective</th>
+                            <th>% Elective</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    `;
+
+    data.serviceBreakdown.forEach(service => {
+        const pct = ((service.electiveEnc / service.encounters) * 100).toFixed(0);
+        const electiveClass = pct >= 70 ? 'good' : pct <= 30 ? 'bad' : '';
+        modalContent += `
+            <tr>
+                <td><strong>${service.service}</strong></td>
+                <td class="bad">$${service.spend.toLocaleString()}</td>
+                <td>${service.encounters}</td>
+                <td>${service.electiveEnc}</td>
+                <td>${service.nonElectiveEnc}</td>
+                <td class="${electiveClass}">${pct}%</td>
+            </tr>
+        `;
+    });
+
+    modalContent += `
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Action Alert -->
+            <div class="alert-box warning">
+                <h4>🎯 Repatriation Opportunity</h4>
+                <p>Elective services account for <strong>${electivePct}%</strong> of encounters. High-value repatriation targets:</p>
+                <ul style="margin-top: 0.5rem;">
+                    ${data.facilities.filter(f => f.electivePct >= 70).slice(0, 3).map(f =>
+                        `<li><strong>${f.name}</strong> - ${f.services} ($${(f.spend/1000).toFixed(0)}K, ${f.electivePct}% elective)</li>`
+                    ).join('')}
+                </ul>
+            </div>
+        </div>
+    `;
+
+    showModal(modalContent);
+}
+
+// Show detailed leakage breakdown for a facility
+function showFacilityLeakageDetail(facilityId) {
+    const facilityData = {
+        'emory-stjosephs': {
+            name: 'Emory St. Joseph\'s Hospital',
+            type: 'Acute Care Hospital',
+            totalOonSpend: 14892334,
+            patientCount: 1456,
+            primaryService: 'Cardiac Surgery',
+            electivePct: 78,
+            encounters: 2134,
+            renderingProviders: [
+                { name: 'Dr. James Wilson, MD', specialty: 'Cardiothoracic Surgery', spend: 4234556, encounters: 312, electivePct: 82 },
+                { name: 'Dr. Sarah Kim, MD', specialty: 'Interventional Cardiology', spend: 3567889, encounters: 456, electivePct: 75 },
+                { name: 'Dr. Michael Torres, MD', specialty: 'Cardiac Anesthesiology', spend: 2234556, encounters: 389, electivePct: 85 },
+                { name: 'Dr. Elizabeth Chen, MD', specialty: 'Cardiac Surgery', spend: 1987334, encounters: 287, electivePct: 79 },
+                { name: 'Dr. Robert Anderson, MD', specialty: 'Vascular Surgery', spend: 1456778, encounters: 234, electivePct: 71 },
+                { name: 'Dr. Jennifer Martinez, MD', specialty: 'Cardiac Imaging', spend: 1411221, encounters: 456, electivePct: 92 }
+            ],
+            serviceBreakdown: [
+                { service: 'Cardiac Surgery', spend: 5678900, encounters: 423, electiveEnc: 345, nonElectiveEnc: 78 },
+                { service: 'Interventional Cardiology', spend: 3456789, encounters: 567, electiveEnc: 425, nonElectiveEnc: 142 },
+                { service: 'Cardiac Imaging', spend: 2345678, encounters: 634, electiveEnc: 583, nonElectiveEnc: 51 },
+                { service: 'Cardiac Rehab', spend: 1234567, encounters: 312, electiveEnc: 289, nonElectiveEnc: 23 },
+                { service: 'Emergency Cardiac Care', spend: 2176400, encounters: 198, electiveEnc: 23, nonElectiveEnc: 175 }
+            ]
+        },
+        'northside-atlanta': {
+            name: 'Northside Hospital Atlanta',
+            type: 'Acute Care Hospital',
+            totalOonSpend: 11234556,
+            patientCount: 1823,
+            primaryService: 'Orthopedic Surgery',
+            electivePct: 85,
+            encounters: 2567,
+            renderingProviders: [
+                { name: 'Dr. Robert Chen, MD', specialty: 'Orthopedic Surgery', spend: 3456789, encounters: 423, electivePct: 89 },
+                { name: 'Dr. Lisa Patel, MD', specialty: 'Sports Medicine', spend: 2345678, encounters: 567, electivePct: 92 },
+                { name: 'Dr. David Brown, MD', specialty: 'Joint Replacement', spend: 2123456, encounters: 389, electivePct: 95 },
+                { name: 'Dr. Amanda Wilson, MD', specialty: 'Spine Surgery', spend: 1567889, encounters: 287, electivePct: 78 },
+                { name: 'Dr. Michael Lee, MD', specialty: 'Hand Surgery', spend: 987334, encounters: 456, electivePct: 88 },
+                { name: 'Dr. Sarah Thompson, MD', specialty: 'Physical Therapy', spend: 753410, encounters: 445, electivePct: 94 }
+            ],
+            serviceBreakdown: [
+                { service: 'Joint Replacement', spend: 3789000, encounters: 312, electiveEnc: 296, nonElectiveEnc: 16 },
+                { service: 'Sports Medicine', spend: 2456789, encounters: 678, electiveEnc: 624, nonElectiveEnc: 54 },
+                { service: 'Spine Surgery', spend: 2123456, encounters: 234, electiveEnc: 183, nonElectiveEnc: 51 },
+                { service: 'General Orthopedics', spend: 1678900, encounters: 789, electiveEnc: 670, nonElectiveEnc: 119 },
+                { service: 'Physical Therapy', spend: 1186411, encounters: 554, electiveEnc: 521, nonElectiveEnc: 33 }
+            ]
+        },
+        'wellstar-kennestone': {
+            name: 'WellStar Kennestone Hospital',
+            type: 'Acute Care Hospital',
+            totalOonSpend: 9456778,
+            patientCount: 2134,
+            primaryService: 'Emergency Services',
+            electivePct: 22,
+            encounters: 3456,
+            renderingProviders: [
+                { name: 'Dr. Amanda Martinez, MD', specialty: 'Emergency Medicine', spend: 2567889, encounters: 856, electivePct: 15 },
+                { name: 'Dr. John Davis, MD', specialty: 'Trauma Surgery', spend: 2123456, encounters: 389, electivePct: 8 },
+                { name: 'Dr. Emily Wong, MD', specialty: 'Critical Care', spend: 1876543, encounters: 567, electivePct: 12 },
+                { name: 'Dr. Kevin Rodriguez, MD', specialty: 'General Surgery', spend: 1345678, encounters: 423, electivePct: 45 },
+                { name: 'Dr. Rachel Kim, MD', specialty: 'Internal Medicine', spend: 987654, encounters: 678, electivePct: 35 },
+                { name: 'Dr. Thomas Brown, MD', specialty: 'Neurology', spend: 555558, encounters: 543, electivePct: 28 }
+            ],
+            serviceBreakdown: [
+                { service: 'Emergency Services', spend: 3234567, encounters: 1234, electiveEnc: 98, nonElectiveEnc: 1136 },
+                { service: 'Trauma Surgery', spend: 2345678, encounters: 456, electiveEnc: 36, nonElectiveEnc: 420 },
+                { service: 'Critical Care', spend: 1987654, encounters: 678, electiveEnc: 81, nonElectiveEnc: 597 },
+                { service: 'General Surgery', spend: 1234567, encounters: 567, electiveEnc: 255, nonElectiveEnc: 312 },
+                { service: 'Medical Admission', spend: 654312, encounters: 521, electiveEnc: 287, nonElectiveEnc: 234 }
+            ]
+        },
+        'peachtree-imaging': {
+            name: 'Peachtree Advanced Imaging',
+            type: 'Imaging Center',
+            totalOonSpend: 8923441,
+            patientCount: 3421,
+            primaryService: 'MRI / CT Scans',
+            electivePct: 94,
+            encounters: 5678,
+            renderingProviders: [
+                { name: 'Dr. Kevin Lee, MD', specialty: 'Diagnostic Radiology', spend: 3234567, encounters: 1856, electivePct: 96 },
+                { name: 'Dr. Jennifer Smith, MD', specialty: 'Neuroradiology', spend: 2567889, encounters: 1234, electivePct: 93 },
+                { name: 'Dr. Mark Johnson, MD', specialty: 'Musculoskeletal Radiology', spend: 1876543, encounters: 1123, electivePct: 95 },
+                { name: 'Dr. Linda Chen, MD', specialty: 'Body Imaging', spend: 1244442, encounters: 1465, electivePct: 92 }
+            ],
+            serviceBreakdown: [
+                { service: 'MRI Scans', spend: 4123456, encounters: 2345, electiveEnc: 2228, nonElectiveEnc: 117 },
+                { service: 'CT Scans', spend: 2987654, encounters: 1987, electiveEnc: 1868, nonElectiveEnc: 119 },
+                { service: 'X-Ray', spend: 1234567, encounters: 987, electiveEnc: 918, nonElectiveEnc: 69 },
+                { service: 'Ultrasound', spend: 577764, encounters: 359, electiveEnc: 341, nonElectiveEnc: 18 }
+            ]
+        },
+        'grady-memorial': {
+            name: 'Grady Memorial Hospital',
+            type: 'Trauma Center',
+            totalOonSpend: 7234112,
+            patientCount: 892,
+            primaryService: 'Trauma / Emergency',
+            electivePct: 12,
+            encounters: 1678,
+            renderingProviders: [
+                { name: 'Dr. Marcus Johnson, MD', specialty: 'Trauma Surgery', spend: 2345678, encounters: 423, electivePct: 8 },
+                { name: 'Dr. Patricia Williams, MD', specialty: 'Emergency Medicine', spend: 1987654, encounters: 567, electivePct: 10 },
+                { name: 'Dr. Steven Rodriguez, MD', specialty: 'Neurosurgery', spend: 1567890, encounters: 234, electivePct: 15 },
+                { name: 'Dr. Angela Davis, MD', specialty: 'Critical Care', spend: 987654, encounters: 289, electivePct: 12 },
+                { name: 'Dr. Michael Thomas, MD', specialty: 'Orthopedic Trauma', spend: 345236, encounters: 165, electivePct: 18 }
+            ],
+            serviceBreakdown: [
+                { service: 'Trauma Surgery', spend: 2789000, encounters: 456, electiveEnc: 36, nonElectiveEnc: 420 },
+                { service: 'Emergency Services', spend: 2123456, encounters: 567, electiveEnc: 57, nonElectiveEnc: 510 },
+                { service: 'Neurosurgery', spend: 1234567, encounters: 234, electiveEnc: 35, nonElectiveEnc: 199 },
+                { service: 'Critical Care', spend: 654321, encounters: 289, electiveEnc: 35, nonElectiveEnc: 254 },
+                { service: 'Orthopedic Trauma', spend: 432768, encounters: 132, electiveEnc: 24, nonElectiveEnc: 108 }
+            ]
+        }
+    };
+
+    const data = facilityData[facilityId];
+    if (!data) return;
+
+    // Calculate totals
+    const totalEncounters = data.serviceBreakdown.reduce((sum, s) => sum + s.encounters, 0);
+    const totalElective = data.serviceBreakdown.reduce((sum, s) => sum + s.electiveEnc, 0);
+    const totalNonElective = data.serviceBreakdown.reduce((sum, s) => sum + s.nonElectiveEnc, 0);
+    const electivePct = ((totalElective / totalEncounters) * 100).toFixed(1);
+
+    let modalContent = `
+        <div class="leakage-detail-modal">
+            <div class="modal-header" style="background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%); color: white; padding: 1.5rem; border-radius: 12px 12px 0 0; margin: -1.5rem -1.5rem 1.5rem -1.5rem;">
+                <h2 style="margin: 0 0 0.5rem 0; font-size: 1.5rem;">${data.name}</h2>
+                <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">${data.type} | Primary Service: ${data.primaryService}</p>
+            </div>
+
+            <!-- Summary Cards -->
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+                <div style="text-align: center; padding: 1rem; background: #ffeaea; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase;">Total OON Spend</div>
+                    <div style="font-size: 1.5rem; font-weight: 700; color: #e74c3c;">$${(data.totalOonSpend / 1000000).toFixed(1)}M</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase;">Patient Count</div>
+                    <div style="font-size: 1.5rem; font-weight: 700; color: #2c3e50;">${data.patientCount.toLocaleString()}</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase;">Total Encounters</div>
+                    <div style="font-size: 1.5rem; font-weight: 700; color: #2c3e50;">${totalEncounters.toLocaleString()}</div>
+                </div>
+                <div style="text-align: center; padding: 1rem; background: ${data.electivePct >= 70 ? '#e8f5e9' : data.electivePct <= 30 ? '#ffeaea' : '#fff8e6'}; border-radius: 8px;">
+                    <div style="font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase;">% Elective</div>
+                    <div style="font-size: 1.5rem; font-weight: 700; color: ${data.electivePct >= 70 ? '#27ae60' : data.electivePct <= 30 ? '#e74c3c' : '#f39c12'};">${electivePct}%</div>
+                </div>
+            </div>
+
+            <!-- Elective vs Non-Elective Breakdown -->
+            <div style="background: white; border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem;">
+                <h4 style="margin: 0 0 0.75rem 0; color: #2c3e50;">Elective vs Non-Elective Encounters</h4>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <div style="flex: 1; height: 24px; background: #e9ecef; border-radius: 12px; overflow: hidden; position: relative;">
+                        <div style="width: ${electivePct}%; height: 100%; background: linear-gradient(90deg, #27ae60, #2ecc71); display: flex; align-items: center; justify-content: ${electivePct > 15 ? 'flex-end' : 'flex-start'}; padding-right: 8px; padding-left: 8px; color: white; font-weight: 600; font-size: 0.8rem;">${electivePct > 15 ? electivePct + '%' : ''}</div>
+                    </div>
+                    <div style="display: flex; gap: 1.5rem; font-size: 0.85rem;">
+                        <div><span style="display: inline-block; width: 12px; height: 12px; background: #27ae60; border-radius: 2px; margin-right: 4px;"></span>Elective: ${totalElective.toLocaleString()}</div>
+                        <div><span style="display: inline-block; width: 12px; height: 12px; background: #e74c3c; border-radius: 2px; margin-right: 4px;"></span>Non-Elective: ${totalNonElective.toLocaleString()}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rendering Providers Table -->
+            <div style="margin-bottom: 1.5rem;">
+                <h4 style="margin: 0 0 1rem 0; color: #2c3e50;">Rendering Providers at This Facility</h4>
+                <table class="data-table" style="font-size: 0.85rem;">
+                    <thead>
+                        <tr>
+                            <th>Provider Name</th>
+                            <th>Specialty</th>
+                            <th>OON Spend</th>
+                            <th>Encounters</th>
+                            <th>% Elective</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    `;
+
+    data.renderingProviders.forEach(provider => {
+        const electiveClass = provider.electivePct >= 70 ? 'good' : provider.electivePct <= 30 ? 'bad' : '';
+        modalContent += `
+            <tr>
+                <td><strong>${provider.name}</strong></td>
+                <td>${provider.specialty}</td>
+                <td class="bad">$${provider.spend.toLocaleString()}</td>
+                <td>${provider.encounters}</td>
+                <td class="${electiveClass}">${provider.electivePct}%</td>
+            </tr>
+        `;
+    });
+
+    modalContent += `
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Service Line Breakdown Table -->
+            <div style="margin-bottom: 1rem;">
+                <h4 style="margin: 0 0 1rem 0; color: #2c3e50;">Service Line Breakdown</h4>
+                <table class="data-table" style="font-size: 0.85rem;">
+                    <thead>
+                        <tr>
+                            <th>Service Line</th>
+                            <th>OON Spend</th>
+                            <th>Total Encounters</th>
+                            <th>Elective</th>
+                            <th>Non-Elective</th>
+                            <th>% Elective</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    `;
+
+    data.serviceBreakdown.forEach(service => {
+        const pct = ((service.electiveEnc / service.encounters) * 100).toFixed(0);
+        const electiveClass = pct >= 70 ? 'good' : pct <= 30 ? 'bad' : '';
+        modalContent += `
+            <tr>
+                <td><strong>${service.service}</strong></td>
+                <td class="bad">$${service.spend.toLocaleString()}</td>
+                <td>${service.encounters.toLocaleString()}</td>
+                <td>${service.electiveEnc.toLocaleString()}</td>
+                <td>${service.nonElectiveEnc.toLocaleString()}</td>
+                <td class="${electiveClass}">${pct}%</td>
+            </tr>
+        `;
+    });
+
+    modalContent += `
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Repatriation Alert -->
+            <div class="alert-box ${data.electivePct >= 50 ? 'warning' : 'info'}">
+                <h4>${data.electivePct >= 50 ? '🎯 High Repatriation Potential' : 'ℹ️ Limited Repatriation Potential'}</h4>
+                ${data.electivePct >= 50 ? `
+                    <p><strong>${electivePct}%</strong> of encounters are elective. Consider network contracting or steering to in-network alternatives:</p>
+                    <ul style="margin-top: 0.5rem;">
+                        ${data.renderingProviders.filter(p => p.electivePct >= 70).slice(0, 3).map(p =>
+                            `<li><strong>${p.name}</strong> (${p.specialty}) - $${(p.spend/1000).toFixed(0)}K, ${p.electivePct}% elective</li>`
+                        ).join('')}
+                    </ul>
+                ` : `
+                    <p>This facility primarily handles <strong>non-elective/emergency services</strong> (${(100 - parseFloat(electivePct)).toFixed(1)}% of encounters). Focus on post-acute transitions and follow-up care coordination rather than primary repatriation.</p>
+                `}
+            </div>
+        </div>
+    `;
+
+    showModal(modalContent);
+}
+
 // Global state for decomposition tree
 let expandedNodes = new Set();
 
@@ -7219,6 +7736,8 @@ window.exportEDPatientList = exportEDPatientList;
 window.setLeakageView = setLeakageView;
 window.toggleNetworkView = toggleNetworkView;
 window.drillDownPCPLeakage = drillDownPCPLeakage;
+window.showProviderLeakageDetail = showProviderLeakageDetail;
+window.showFacilityLeakageDetail = showFacilityLeakageDetail;
 window.drillDownHCC = drillDownHCC;
 window.toggleHCCProviderView = toggleHCCProviderView;
 window.drillDownEpisode = drillDownEpisode;
