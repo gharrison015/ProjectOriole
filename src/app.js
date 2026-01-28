@@ -3451,21 +3451,15 @@ function hideCountyTooltip() {
 }
 
 function showCountyDrillDown(county) {
-    const electiveTotal = county.facilities.reduce((sum, f) =>
-        sum + f.services.filter(s => s.isElective).reduce((s, srv) => s + srv.spend, 0), 0);
-    const nonElectiveTotal = county.facilities.reduce((sum, f) =>
-        sum + f.services.filter(s => !s.isElective).reduce((s, srv) => s + srv.spend, 0), 0);
-
     // Calculate OON Leakage from Total Cost × Leakage %
     const totalCost = county.totalLeakage; // totalLeakage represents total cost
     const oonLeakage = totalCost * county.leakageScore;
-    const totalFacilityCost = electiveTotal + nonElectiveTotal;
 
     let modalBody = `
         <h2 style="margin-bottom: 0.5rem;">${county.name} - Leakage Analysis</h2>
         <p style="color: #7f8c8d; margin-bottom: 1.5rem;">Out-of-Network referral patterns and cost breakdown</p>
 
-        <div class="market-kpi-row" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 1.5rem;">
+        <div class="market-kpi-row" style="grid-template-columns: repeat(3, 1fr); margin-bottom: 1.5rem;">
             <div class="kpi-box">
                 <div class="kpi-label">Total Cost</div>
                 <div class="kpi-value">$${(totalCost / 1000000).toFixed(2)}M</div>
@@ -3477,10 +3471,6 @@ function showCountyDrillDown(county) {
             <div class="kpi-box">
                 <div class="kpi-label">Leakage %</div>
                 <div class="kpi-value" style="color: ${county.leakageScore > 0.6 ? '#e74c3c' : county.leakageScore > 0.3 ? '#f39c12' : '#27ae60'};">${(county.leakageScore * 100).toFixed(0)}%</div>
-            </div>
-            <div class="kpi-box">
-                <div class="kpi-label">Total Facility Cost</div>
-                <div class="kpi-value">$${(totalFacilityCost / 1000000).toFixed(2)}M</div>
             </div>
         </div>
 
