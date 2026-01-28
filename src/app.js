@@ -932,7 +932,7 @@ function initQualityTrendChart() {
                 borderWidth: 3
             }, {
                 label: 'MSSP National Average',
-                data: [89.5, 90.2, 88.7, 85.3, 86.1, 87.4],
+                data: [92.0, 97.0, 91.0, 81.5, 82.3, 81.5],
                 borderColor: '#95a5a6',
                 backgroundColor: 'rgba(149, 165, 166, 0.05)',
                 tension: 0.3,
