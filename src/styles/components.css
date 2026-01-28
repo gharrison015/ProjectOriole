@@ -714,11 +714,13 @@
     position: relative;
     cursor: help;
     transition: background 0.2s ease, transform 0.2s ease;
+    z-index: 1;
 }
 
 .cost-category-item.tooltip-category:hover {
     background: #eef5fc;
     transform: translateX(4px);
+    z-index: 9999;
 }
 
 .cost-category-item .category-name .info-icon {
@@ -754,7 +756,7 @@
     min-width: 280px;
     max-width: 400px;
     line-height: 1.5;
-    z-index: 1000;
+    z-index: 99999;
     box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     white-space: normal;
 }
@@ -767,7 +769,7 @@
     top: 100%;
     border: 8px solid transparent;
     border-bottom-color: #2c3e50;
-    z-index: 1001;
+    z-index: 99999;
 }
 
 @media (max-width: 768px) {
