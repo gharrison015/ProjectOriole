@@ -1264,7 +1264,7 @@ function initEpisodeCostChart() {
                     borderWidth: 2
                 },
                 {
-                    label: 'National Benchmark',
+                    label: 'Benchmark',
                     data: Array(hospitals.length).fill(benchmark),
                     type: 'line',
                     borderColor: '#3498db',
@@ -1321,7 +1321,7 @@ function initEpisodeCostChart() {
                                     '🔍 Click to view provider details'
                                 ];
                             }
-                            return `National Benchmark: $${context.raw.toLocaleString()}`;
+                            return `Benchmark: $${context.raw.toLocaleString()}`;
                         }
                     }
                 }
@@ -1420,7 +1420,7 @@ function drillDownHospitalProviders(hospitalIndex) {
                 </div>
                 <div style="display: flex; gap: 2.5rem; flex-wrap: wrap;">
                     <div>
-                        <span style="font-size: 0.8rem; color: #495057;">National Benchmark:</span>
+                        <span style="font-size: 0.8rem; color: #495057;">Benchmark:</span>
                         <span style="font-weight: 700; color: #3498db; margin-left: 0.5rem; font-size: 1.1rem;">$${benchmark.avgCost.toLocaleString()}</span>
                     </div>
                     <div>
@@ -1448,7 +1448,7 @@ function drillDownHospitalProviders(hospitalIndex) {
                 </div>
                 <div style="font-size: 0.8rem; color: #6c757d; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #eee;">
                     <div style="margin-bottom: 0.25rem;">
-                        <span style="color: #495057;">vs National Benchmark:</span>
+                        <span style="color: #495057;">vs Benchmark:</span>
                         <span style="font-weight: 600; color: ${weightedAvgCost > benchmark.avgCost ? '#e74c3c' : '#27ae60'}; margin-left: 0.5rem;">
                             ${weightedAvgCost > benchmark.avgCost ? '+' : ''}$${Math.round(weightedAvgCost - benchmark.avgCost).toLocaleString()}
                         </span>
@@ -1482,10 +1482,10 @@ function drillDownHospitalProviders(hospitalIndex) {
                 </div>
             </div>
 
-            <!-- vs National Benchmark Card -->
+            <!-- vs Benchmark Card -->
             <div class="kpi-card" style="background: linear-gradient(135deg, #cce5ff 0%, #b8daff 100%); border: 1px solid #3498db;">
                 <div class="kpi-label" style="font-size: 0.75rem; color: #004085; text-transform: uppercase; letter-spacing: 0.5px;">
-                    vs National Benchmark
+                    vs Benchmark
                 </div>
                 <div class="kpi-value" style="font-size: 2rem; font-weight: 700; color: #004085; margin: 0.5rem 0;">
                     $${Math.round(nationalOpportunity).toLocaleString()}
@@ -1588,7 +1588,7 @@ function drillDownHospitalProviders(hospitalIndex) {
                         Avg Cost
                         <span class="info-icon">ⓘ</span>
                     </th>
-                    <th class="tooltip-trigger" data-tooltip="Percentage variance from national benchmark ($${benchmark.avgCost.toLocaleString()}). Formula: ((Avg Cost - Benchmark) ÷ Benchmark) × 100">
+                    <th class="tooltip-trigger" data-tooltip="Percentage variance from benchmark ($${benchmark.avgCost.toLocaleString()}). Formula: ((Avg Cost - Benchmark) ÷ Benchmark) × 100">
                         vs Benchmark
                         <span class="info-icon">ⓘ</span>
                     </th>
@@ -1596,15 +1596,15 @@ function drillDownHospitalProviders(hospitalIndex) {
                         Opportunity
                         <span class="info-icon">ⓘ</span>
                     </th>
-                    <th class="tooltip-trigger" data-tooltip="Composite quality score (0-100) based on complications, readmissions, patient satisfaction, and clinical outcomes. National benchmark: ${benchmark.qualityScore}">
+                    <th class="tooltip-trigger" data-tooltip="Composite quality score (0-100) based on complications, readmissions, patient satisfaction, and clinical outcomes. Benchmark: ${benchmark.qualityScore}">
                         Quality Score
                         <span class="info-icon">ⓘ</span>
                     </th>
-                    <th class="tooltip-trigger" data-tooltip="Rate of surgical complications within 90 days including infection, DVT, revision. National benchmark: ${benchmark.complications}%">
+                    <th class="tooltip-trigger" data-tooltip="Rate of surgical complications within 90 days including infection, DVT, revision. Benchmark: ${benchmark.complications}%">
                         Complications
                         <span class="info-icon">ⓘ</span>
                     </th>
-                    <th class="tooltip-trigger" data-tooltip="Percentage of patients readmitted within 30 days of discharge. National benchmark: ${benchmark.readmit30}%">
+                    <th class="tooltip-trigger" data-tooltip="Percentage of patients readmitted within 30 days of discharge. Benchmark: ${benchmark.readmit30}%">
                         30-Day Readmit
                         <span class="info-icon">ⓘ</span>
                     </th>
@@ -1652,7 +1652,7 @@ function drillDownHospitalProviders(hospitalIndex) {
                 <p style="margin-top: 0.5rem;"><em>Recommend sharing clinical protocols with higher-cost providers</em></p>
             </div>
             <div class="alert-box warning">
-                <h4>📊 National Benchmark Comparison</h4>
+                <h4>📊 Benchmark Comparison</h4>
                 <p>CMS Joint Replacement Bundle benchmarks (2024):</p>
                 <ul>
                     <li><strong>Target Cost:</strong> $${benchmark.avgCost.toLocaleString()} per episode</li>
@@ -1751,7 +1751,7 @@ function initProviderCostChart(providers, hospitalAvg, nationalBenchmark) {
                     fill: false
                 },
                 {
-                    label: 'National Benchmark',
+                    label: 'Benchmark',
                     data: Array(providers.length).fill(nationalBenchmark),
                     type: 'line',
                     borderColor: '#3498db',
@@ -6015,7 +6015,7 @@ function drillDownEpisode(episodeType) {
 
     let modalBody = `
         <h2>${episodeName} - Hospital Cost Variation Analysis</h2>
-        <p class="provider-summary">Hospital-level cost variation showing savings opportunity vs national benchmark</p>
+        <p class="provider-summary">Hospital-level cost variation showing savings opportunity vs benchmark</p>
 
         <!-- Reference Values Bar -->
         <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; border-left: 4px solid #3498db;">
@@ -6025,7 +6025,7 @@ function drillDownEpisode(episodeType) {
                 </div>
                 <div style="display: flex; gap: 2.5rem; flex-wrap: wrap;">
                     <div>
-                        <span style="font-size: 0.8rem; color: #495057;">National Benchmark:</span>
+                        <span style="font-size: 0.8rem; color: #495057;">Benchmark:</span>
                         <span style="font-weight: 700; color: #3498db; margin-left: 0.5rem; font-size: 1.1rem;">$${benchmarkCost.toLocaleString()}</span>
                     </div>
                     <div>
