@@ -7560,16 +7560,6 @@ function showAWVComplianceModal(section = 'overview') {
                 `).join('')}
             </div>
         </div>
-
-        <div class="alert-box warning" style="margin-top: 1.5rem;">
-            <h4>Strategic Recommendations</h4>
-            <ul>
-                <li><strong>Capture Scheduled Opportunities:</strong> ${data.scheduledWithAWVDue.toLocaleString()} patients with upcoming visits present $${(forecastRevenue / 1000).toFixed(0)}K in AWV revenue opportunity</li>
-                <li><strong>Address Missed Opportunities:</strong> Implement real-time alerts when AWV-due patients have non-acute visits scheduled</li>
-                <li><strong>Focus on Low-Performing Regions:</strong> Atlanta South (${data.regions[1].rate}%) and Augusta (${data.regions[3].rate}%) need targeted outreach</li>
-                <li><strong>Provider Education:</strong> Train front desk staff to identify AWV eligibility at check-in</li>
-            </ul>
-        </div>
     `;
 
     showModal(modalBody);
