@@ -5687,6 +5687,7 @@ function showHedisMeasureDetail(measureCode) {
             denominator: 8234,
             numerator: 6775,
             compliance: 82.3,
+            benchmark: 78.0,
             stars: 4,
             gaps: ['2,847 women due for screening in next 90 days', '1,459 women overdue for screening']
         },
@@ -5696,6 +5697,7 @@ function showHedisMeasureDetail(measureCode) {
             denominator: 12456,
             numerator: 9587,
             compliance: 76.9,
+            benchmark: 75.0,
             stars: 4,
             gaps: ['AWV scheduled for 2,341 patients - review medications during visit', '528 patients with polypharmacy at high risk']
         },
@@ -5705,6 +5707,7 @@ function showHedisMeasureDetail(measureCode) {
             denominator: 15823,
             numerator: 12152,
             compliance: 76.8,
+            benchmark: 72.0,
             stars: 4,
             gaps: ['3,671 patients due for FIT/colonoscopy', '1,234 patients with scheduled appointments - order screening']
         },
@@ -5714,6 +5717,7 @@ function showHedisMeasureDetail(measureCode) {
             denominator: 9847,
             numerator: 7129,
             compliance: 72.4,
+            benchmark: 70.0,
             stars: 4,
             gaps: ['2,718 patients with uncontrolled BP', '892 patients need medication adjustment', '456 patients lost to follow-up']
         },
@@ -5723,6 +5727,7 @@ function showHedisMeasureDetail(measureCode) {
             denominator: 6234,
             numerator: 5099,
             compliance: 81.8,
+            benchmark: 78.0,
             stars: 5,
             gaps: ['1,135 patients with HbA1c ≥8%', '234 patients without HbA1c in past 12 months']
         },
@@ -5732,6 +5737,7 @@ function showHedisMeasureDetail(measureCode) {
             denominator: 6234,
             numerator: 4295,
             compliance: 68.9,
+            benchmark: 65.0,
             stars: 3,
             gaps: ['1,939 patients overdue for eye exam', 'Partner with ophthalmology for in-office retinal imaging']
         },
@@ -5741,6 +5747,7 @@ function showHedisMeasureDetail(measureCode) {
             denominator: 2847,
             numerator: 1823,
             compliance: 64.0,
+            benchmark: 60.0,
             stars: 3,
             gaps: ['1,024 patients did not receive timely follow-up', 'Implement post-ED discharge outreach program']
         },
@@ -5750,6 +5757,7 @@ function showHedisMeasureDetail(measureCode) {
             denominator: 7892,
             numerator: 6945,
             compliance: 88.0,
+            benchmark: 85.0,
             stars: 5,
             gaps: ['947 patients with adherence gaps', '312 patients flagged for pharmacy outreach']
         },
@@ -5759,6 +5767,7 @@ function showHedisMeasureDetail(measureCode) {
             denominator: 5123,
             numerator: 4406,
             compliance: 86.0,
+            benchmark: 82.0,
             stars: 5,
             gaps: ['717 patients with adherence gaps', 'Consider 90-day fills and mail order']
         },
@@ -5768,6 +5777,7 @@ function showHedisMeasureDetail(measureCode) {
             denominator: 8456,
             numerator: 7272,
             compliance: 86.0,
+            benchmark: 83.0,
             stars: 5,
             gaps: ['1,184 patients with adherence gaps', 'Simplify regimens where possible']
         },
@@ -5777,6 +5787,7 @@ function showHedisMeasureDetail(measureCode) {
             denominator: 892,
             numerator: 445,
             compliance: 49.9,
+            benchmark: 52.0,
             stars: 2,
             gaps: ['447 women did not receive appropriate therapy', 'Review fracture liaison service protocols']
         },
@@ -5786,6 +5797,7 @@ function showHedisMeasureDetail(measureCode) {
             denominator: 4567,
             numerator: 4170,
             compliance: 91.3,
+            benchmark: 88.0,
             stars: 4,
             gaps: ['397 potentially preventable readmissions', 'Focus on CHF and COPD transitions']
         },
@@ -5795,6 +5807,7 @@ function showHedisMeasureDetail(measureCode) {
             denominator: 5234,
             numerator: 3884,
             compliance: 74.2,
+            benchmark: 72.0,
             stars: 3,
             gaps: ['1,350 patients without statin therapy', '423 patients with documented contraindication/intolerance']
         },
@@ -5804,6 +5817,7 @@ function showHedisMeasureDetail(measureCode) {
             denominator: 6234,
             numerator: 5236,
             compliance: 84.0,
+            benchmark: 80.0,
             stars: 4,
             gaps: ['998 diabetic patients without statin', 'Review for guideline-directed therapy']
         },
@@ -5813,6 +5827,7 @@ function showHedisMeasureDetail(measureCode) {
             denominator: 3456,
             numerator: 2419,
             compliance: 70.0,
+            benchmark: 68.0,
             stars: 3,
             gaps: ['1,037 transitions without complete documentation', 'Enhance discharge summary workflows']
         }
@@ -5821,45 +5836,85 @@ function showHedisMeasureDetail(measureCode) {
     const data = hedisData[measureCode];
     if (!data) return;
 
-    const starsHtml = '⭐'.repeat(data.stars) + '<span style="opacity:0.3">' + '⭐'.repeat(5 - data.stars) + '</span>';
+    // Calculate derived metrics to match ACO layout
     const gapCount = data.denominator - data.numerator;
     const gapPercent = ((gapCount / data.denominator) * 100).toFixed(1);
+    const scheduledPatients = Math.floor(gapCount * 0.4);
+    const forecastedCompliance = (data.compliance + (scheduledPatients / data.denominator * 100)).toFixed(1);
+    const trend = data.compliance > data.benchmark
+        ? `↑ ${(data.compliance - data.benchmark).toFixed(1)} pts above benchmark`
+        : `↓ ${(data.benchmark - data.compliance).toFixed(1)} pts below benchmark`;
 
-    // Generate provider rankings for HEDIS measure
+    // Generate data for charts
+    const monthlyData = generateMonthlyData(data.compliance);
+    const regionalData = generateRegionalData(data.compliance);
     const providers = generateHedisProviderRankings(data.denominator, data.compliance);
 
-    let modalContent = `
-        <div class="modal-header" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 1.5rem; border-radius: 12px 12px 0 0; margin: -1.5rem -1.5rem 1.5rem -1.5rem;">
-            <h2 style="margin: 0 0 0.5rem 0; font-size: 1.5rem;">${data.name}</h2>
-            <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">${data.description}</p>
-        </div>
+    let modalContent = '<div class="measure-dashboard">';
 
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
-            <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
-                <div style="font-size: 0.8rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.5px;">Denominator</div>
-                <div style="font-size: 1.8rem; font-weight: 700; color: #2c3e50;">${data.denominator.toLocaleString()}</div>
-            </div>
-            <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
-                <div style="font-size: 0.8rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.5px;">Numerator</div>
-                <div style="font-size: 1.8rem; font-weight: 700; color: #2c3e50;">${data.numerator.toLocaleString()}</div>
-            </div>
-            <div style="text-align: center; padding: 1rem; background: #e8f5e9; border-radius: 8px;">
-                <div style="font-size: 0.8rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.5px;">Compliance</div>
-                <div style="font-size: 1.8rem; font-weight: 700; color: #27ae60;">${data.compliance}%</div>
-            </div>
-            <div style="text-align: center; padding: 1rem; background: #fff8e1; border-radius: 8px;">
-                <div style="font-size: 0.8rem; color: #7f8c8d; text-transform: uppercase; letter-spacing: 0.5px;">Star Rating</div>
-                <div style="font-size: 1.2rem; margin-top: 0.25rem;">${starsHtml}</div>
+    // Header - matching ACO style
+    modalContent += `
+        <div class="measure-header">
+            <div class="measure-title">${data.name}</div>
+            <div class="measure-code">${measureCode}</div>
+        </div>
+    `;
+
+    // Summary Cards - matching ACO layout exactly
+    modalContent += '<div class="measure-summary-grid">';
+    modalContent += `
+        <div class="measure-summary-card">
+            <div class="summary-card-label">Current Performance</div>
+            <div class="summary-card-value">${data.compliance}%</div>
+            <div class="summary-card-detail">${trend}</div>
+        </div>
+        <div class="measure-summary-card">
+            <div class="summary-card-label">Total Patients</div>
+            <div class="summary-card-value">${data.denominator.toLocaleString()}</div>
+            <div class="summary-card-detail">${data.numerator.toLocaleString()} compliant</div>
+        </div>
+        <div class="measure-summary-card">
+            <div class="summary-card-label">Gap Opportunity</div>
+            <div class="summary-card-value">${gapCount.toLocaleString()}</div>
+            <div class="summary-card-detail">${gapPercent}% of denominator</div>
+        </div>
+        <div class="measure-summary-card">
+            <div class="summary-card-label">Forecasted Compliance</div>
+            <div class="summary-card-value">${forecastedCompliance}%</div>
+            <div class="summary-card-detail">${scheduledPatients} scheduled visits</div>
+        </div>
+    `;
+    modalContent += '</div>';
+
+    // Charts Section - matching ACO layout
+    modalContent += '<div class="measure-charts-grid">';
+
+    // Monthly Performance Chart
+    modalContent += `
+        <div class="measure-chart-card" onclick="showHedisPatientListByMonth('${measureCode}', '${data.name}')">
+            <div class="chart-card-title">📈 Monthly Performance Trend</div>
+            <canvas id="hedisMonthlyTrendChart-${measureCode}" style="max-height: 300px;"></canvas>
+            <div style="text-align: center; margin-top: 0.5rem; font-size: 0.85rem; color: var(--piedmont-gray);">
+                Click to view patients by month
             </div>
         </div>
+    `;
 
-        <div style="background: #fef9e7; border-left: 4px solid #f39c12; padding: 1rem 1.25rem; border-radius: 0 8px 8px 0; margin-bottom: 1.5rem;">
-            <h4 style="margin: 0 0 0.75rem 0; color: #2c3e50; font-size: 1rem;">Gap Closure Opportunities</h4>
-            <ul style="margin: 0; padding-left: 1.25rem; color: #5a6c7d; line-height: 1.8;">
-                ${data.gaps.map(gap => `<li>${gap}</li>`).join('')}
-            </ul>
+    // Regional Compliance Chart
+    modalContent += `
+        <div class="measure-chart-card" onclick="showHedisPatientListByRegion('${measureCode}', '${data.name}')">
+            <div class="chart-card-title">🗺️ % Compliance by Region</div>
+            <canvas id="hedisRegionalChart-${measureCode}" style="max-height: 300px;"></canvas>
+            <div style="text-align: center; margin-top: 0.5rem; font-size: 0.85rem; color: var(--piedmont-gray);">
+                Click to view patients by region
+            </div>
         </div>
+    `;
 
+    modalContent += '</div>';
+
+    // Provider Rankings - same structure as ACO
+    modalContent += `
         <div class="provider-ranking-table">
             <h3 style="margin-bottom: 1rem;">Provider Performance Rankings <span style="font-size: 0.85rem; font-weight: normal; color: var(--piedmont-gray);">(Click provider to see their patients)</span></h3>
             <table class="ranking-table">
@@ -5905,10 +5960,10 @@ function showHedisMeasureDetail(measureCode) {
         </div>
     `;
 
-    // Top opportunity PCP
+    // Top opportunity PCP - same as ACO
     const topOppPCP = providers[providers.length - 1];
     modalContent += `
-        <div class="alert-box warning" style="margin-top: 1.5rem;">
+        <div class="alert-box warning">
             <h4>🎯 Top Opportunity: ${topOppPCP.name}</h4>
             <p><strong>${topOppPCP.gapCount} patients</strong> with open gaps (${topOppPCP.complianceRate}% compliance rate)</p>
             <p>If ${topOppPCP.name} closes all gaps, performance would increase by <strong>${(topOppPCP.gapCount / data.denominator * 100).toFixed(1)}%</strong></p>
@@ -5918,9 +5973,120 @@ function showHedisMeasureDetail(measureCode) {
         </div>
     `;
 
-    document.getElementById('modal-body').innerHTML = modalContent;
-    document.getElementById('modal').style.display = 'block';
+    modalContent += '</div>';
+
+    showModal(modalContent);
+
+    // Render charts after modal is shown
+    setTimeout(() => {
+        renderHedisMonthlyTrendChart(measureCode, monthlyData);
+        renderHedisRegionalChart(measureCode, regionalData);
+    }, 100);
 }
+
+// Render monthly trend chart for HEDIS measures
+function renderHedisMonthlyTrendChart(measureCode, monthlyData) {
+    const ctx = document.getElementById('hedisMonthlyTrendChart-' + measureCode);
+    if (!ctx) return;
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: monthlyData.map(d => d.month),
+            datasets: [{
+                label: 'Performance %',
+                data: monthlyData.map(d => d.performance),
+                borderColor: '#3498db',
+                backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointRadius: 5,
+                pointHoverRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                datalabels: {
+                    color: '#3498db',
+                    font: { weight: 'bold', size: 10 },
+                    anchor: 'end',
+                    align: 'top',
+                    offset: 2,
+                    formatter: function(value) {
+                        return value.toFixed(1) + '%';
+                    }
+                },
+                tooltip: { enabled: true }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    ticks: { callback: function(value) { return value + '%'; } }
+                }
+            }
+        }
+    });
+}
+
+// Render regional chart for HEDIS measures
+function renderHedisRegionalChart(measureCode, regionalData) {
+    const ctx = document.getElementById('hedisRegionalChart-' + measureCode);
+    if (!ctx) return;
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: regionalData.map(d => d.region),
+            datasets: [{
+                label: 'Compliance %',
+                data: regionalData.map(d => d.performance),
+                backgroundColor: regionalData.map(d => d.performance >= 75 ? '#27ae60' : d.performance >= 65 ? '#f39c12' : '#e74c3c'),
+                borderRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: 'y',
+            plugins: {
+                legend: { display: false },
+                datalabels: {
+                    color: '#fff',
+                    font: { weight: 'bold', size: 11 },
+                    anchor: 'end',
+                    align: 'start',
+                    offset: 8,
+                    formatter: function(value) {
+                        return value.toFixed(1) + '%';
+                    }
+                },
+                tooltip: { enabled: true }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: { callback: function(value) { return value + '%'; } }
+                }
+            }
+        }
+    });
+}
+
+// Placeholder functions for HEDIS patient lists by month/region
+function showHedisPatientListByMonth(measureCode, measureName) {
+    showHedisPatientList(measureCode, measureName, 'All Providers');
+}
+
+function showHedisPatientListByRegion(measureCode, measureName) {
+    showHedisPatientList(measureCode, measureName, 'All Providers');
+}
+
+window.showHedisPatientListByMonth = showHedisPatientListByMonth;
+window.showHedisPatientListByRegion = showHedisPatientListByRegion;
 
 // Generate provider rankings for HEDIS measures
 function generateHedisProviderRankings(totalDenominator, avgCompliance) {
@@ -6141,7 +6307,7 @@ function exportFullPatientRoster() {
         ];
 
         // Build CSV header
-        let csvContent = 'Subscriber ID,MRN,Last Name,First Name,DOB,Gender,Address,City,State,ZIP,Phone,Email,PCP,Care Manager,Last Visit Date,Next Appt Date,';
+        let csvContent = 'Subscriber ID,MRN,Last Name,First Name,DOB,Gender,Address,City,State,ZIP,Phone,Email,PCP,Care Manager,RAF Score,Last Visit Date,Next Appt Date,';
         csvContent += hedisMeasures.map(m => `${m.code} Status`).join(',');
         csvContent += '\n';
 
@@ -6162,6 +6328,7 @@ function exportFullPatientRoster() {
                 patient.email,
                 `"${patient.pcp}"`,
                 `"${patient.careManager || ''}"`,
+                patient.rafScore,
                 patient.lastVisitDate || '',
                 patient.nextApptDate || ''
             ];
@@ -6202,8 +6369,8 @@ function exportFullPatientRoster() {
                     <ul style="margin: 0; padding-left: 1.25rem; color: #5a6c7d; line-height: 1.8;">
                         <li>File: HEDIS_Full_Patient_Roster_${today}.csv</li>
                         <li>Patient demographics (Name, DOB, Address, Phone, etc.)</li>
-                        <li>Subscriber ID and MRN for payer reconciliation</li>
-                        <li>15 HEDIS measure columns with Open/Closed/Excluded status</li>
+                        <li>Subscriber ID, MRN, and RAF Score for payer reconciliation</li>
+                        <li>15 HEDIS measure columns (Open/Closed/Excluded or blank if not eligible)</li>
                     </ul>
                 </div>
                 <p style="font-size: 0.85rem; color: #7f8c8d;">
@@ -6274,7 +6441,7 @@ function generateFullPatientRoster() {
         // Generate care gaps for each measure
         const careGaps = {};
         Object.entries(measureEligibility).forEach(([code, criteria]) => {
-            // Check eligibility
+            // Check eligibility (patient in denominator)
             let eligible = age >= criteria.minAge && age <= criteria.maxAge;
             if (criteria.genderReq && gender !== criteria.genderReq) eligible = false;
             if (criteria.chronicCondition === 'DM' && !hasDM) eligible = false;
@@ -6289,14 +6456,39 @@ function generateFullPatientRoster() {
             if (code === 'TRC' && !hadDischarge) eligible = false;
 
             if (!eligible) {
-                // Not eligible = Excluded
-                careGaps[code] = 'Excluded';
+                // Not eligible = blank (patient not in denominator for this measure)
+                careGaps[code] = '';
             } else {
-                // Eligible - determine if gap is open or closed
-                const closedRate = 0.70 + Math.random() * 0.15; // 70-85% closure rate
-                careGaps[code] = Math.random() < closedRate ? 'Closed' : 'Open';
+                // Eligible - check for exclusion criteria first
+                // Exclusion criteria: hospice, contraindication, advanced illness, frailty, etc.
+                // ~3-8% of eligible patients may have valid exclusion criteria depending on measure
+                const exclusionRate = code === 'BCS' || code === 'COL' ? 0.05 : // Cancer screenings - mastectomy, colectomy
+                                     code === 'CBP' || code === 'HBD' ? 0.03 : // Chronic disease - ESRD, hospice
+                                     code === 'OMW' ? 0.08 : // Osteoporosis - already on therapy
+                                     code === 'FMC' || code === 'TRC' ? 0.02 : // Transitions - died, left AMA
+                                     0.04; // Default exclusion rate
+
+                if (Math.random() < exclusionRate) {
+                    // Patient meets documented exclusion criteria
+                    careGaps[code] = 'Excluded';
+                } else {
+                    // In denominator - determine if gap is open or closed
+                    const closedRate = 0.70 + Math.random() * 0.15; // 70-85% closure rate
+                    careGaps[code] = Math.random() < closedRate ? 'Closed' : 'Open';
+                }
             }
         });
+
+        // Generate RAF score (risk adjustment factor)
+        // Base RAF around 1.0, higher for older patients and those with chronic conditions
+        let rafScore = 0.9 + Math.random() * 0.3; // Base 0.9-1.2
+        if (age >= 75) rafScore += 0.3 + Math.random() * 0.4;
+        else if (age >= 65) rafScore += 0.1 + Math.random() * 0.2;
+        if (hasDM) rafScore += 0.15 + Math.random() * 0.1;
+        if (hasHTN) rafScore += 0.05 + Math.random() * 0.05;
+        if (hasCVD) rafScore += 0.25 + Math.random() * 0.15;
+        if (hasMCC) rafScore += 0.2 + Math.random() * 0.15;
+        rafScore = Math.round(rafScore * 1000) / 1000; // Round to 3 decimal places
 
         const hasAppt = Math.random() > 0.5;
         const apptMonth = Math.floor(Math.random() * 6) + 1;
@@ -6320,6 +6512,7 @@ function generateFullPatientRoster() {
             email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}${Math.floor(Math.random() * 99)}@email.com`,
             pcp: pcps[Math.floor(Math.random() * pcps.length)],
             careManager: careManagers[Math.floor(Math.random() * careManagers.length)],
+            rafScore: rafScore,
             lastVisitDate: `${lastVisitMonth}/${lastVisitDay}/2025`,
             nextApptDate: hasAppt ? `${apptMonth}/${apptDay}/2026` : null,
             careGaps: careGaps
