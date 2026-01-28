@@ -1309,7 +1309,24 @@
                                 <span class="group-subtitle">Coding Performance</span>
                             </div>
                             <div class="ra-cards-grid">
-                                <!-- Row 1 -->
+                                <!-- Row 1: Total HCCs (denom), Total Uncoded Confirmed (num), Recapture Rate (compliance) -->
+                                <div class="ra-card" title="Total number of unique HCC codes documented across all attributed patients. This is the denominator for recapture rate calculation.">
+                                    <div class="ra-card-label">Total HCCs <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value" id="total-hccs">114,775</div>
+                                    <div class="ra-card-detail">Denominator (all HCCs)</div>
+                                </div>
+                                <div class="ra-card warning" title="Count of HCCs from prior year not yet recaptured in current year. This is the numerator showing non-recapture (85.3% of total).">
+                                    <div class="ra-card-label">Total Uncoded Confirmed <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value warning" id="total-uncoded-confirmed">97,903</div>
+                                    <div class="ra-card-detail">Numerator (not recaptured)</div>
+                                </div>
+                                <div class="ra-card" title="Recapture Rate: Percentage of prior year HCCs successfully re-documented in the current year. Formula: (Recaptured HCCs / Prior Year HCCs) × 100.">
+                                    <div class="ra-card-label">HCC Recapture Rate <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value" id="hcc-recapture-rate">14.7%</div>
+                                    <div class="ra-card-detail">YTD (Jan target: 8%)</div>
+                                    <div class="ra-card-trend good">+6.7 pts ahead of pace</div>
+                                </div>
+                                <!-- Row 2: Avg RAF Score, Avg RAF Gap, Avg HCCs/Patient -->
                                 <div class="ra-card" title="Risk Adjustment Factor: Average RAF score for attributed population. Reflects expected healthcare costs based on documented conditions.">
                                     <div class="ra-card-label">Avg RAF Score <span class="tooltip-icon">ⓘ</span></div>
                                     <div class="ra-card-value" id="avg-raf-score">0.892</div>
@@ -1320,46 +1337,27 @@
                                     <div class="ra-card-label">Avg RAF Gap <span class="tooltip-icon">ⓘ</span></div>
                                     <div class="ra-card-value warning" id="avg-raf-gap">0.156</div>
                                     <div class="ra-card-detail">Per patient opportunity</div>
-                                    <div class="ra-card-trend neutral">~$1,248/patient/year</div>
                                 </div>
                                 <div class="ra-card" title="Average number of Hierarchical Condition Categories documented per attributed patient.">
                                     <div class="ra-card-label">Avg HCCs/Patient <span class="tooltip-icon">ⓘ</span></div>
                                     <div class="ra-card-value" id="avg-hccs-patient">2.4</div>
-                                    <div class="ra-card-detail">Benchmark: 2.8</div>
-                                    <div class="ra-card-trend bad">-14% below target</div>
-                                </div>
-                                <!-- Row 2 -->
-                                <div class="ra-card" title="Total number of unique HCC codes documented across all attributed patients in the current measurement year.">
-                                    <div class="ra-card-label">Total HCCs <span class="tooltip-icon">ⓘ</span></div>
-                                    <div class="ra-card-value" id="total-hccs">114,775</div>
                                     <div class="ra-card-detail">Across 47,823 patients</div>
                                 </div>
-                                <div class="ra-card warning" title="Sum of RAF weight for all Confirmed Uncoded diagnoses - conditions documented in prior years not yet recaptured this year.">
-                                    <div class="ra-card-label">Sum RAF Uncoded Confirmed <span class="tooltip-icon">ⓘ</span></div>
-                                    <div class="ra-card-value warning" id="sum-raf-confirmed">2,847.3</div>
-                                    <div class="ra-card-detail">$2.3M revenue at risk</div>
-                                </div>
-                                <div class="ra-card warning" title="Sum of RAF weight for all Suspected Uncoded diagnoses - conditions identified through claims analysis that may exist but were never documented.">
-                                    <div class="ra-card-label">Sum RAF Uncoded Suspected <span class="tooltip-icon">ⓘ</span></div>
-                                    <div class="ra-card-value warning" id="sum-raf-suspected">574.2</div>
-                                    <div class="ra-card-detail">$470K opportunity</div>
-                                </div>
-                                <!-- Row 3 -->
-                                <div class="ra-card warning" title="Count of unique confirmed uncoded diagnoses from prior years requiring recapture in current year.">
-                                    <div class="ra-card-label">Total Uncoded Confirmed Dx <span class="tooltip-icon">ⓘ</span></div>
-                                    <div class="ra-card-value warning" id="total-uncoded-confirmed">2,847</div>
-                                    <div class="ra-card-detail">Prior year HCCs</div>
-                                </div>
-                                <div class="ra-card warning" title="Count of unique suspected diagnoses identified through analytics requiring clinical validation.">
+                                <!-- Row 3: Total Uncoded Suspected, Sum RAF Suspected, Sum RAF Confirmed -->
+                                <div class="ra-card warning" title="Count of unique suspected diagnoses identified through claims analytics requiring clinical validation.">
                                     <div class="ra-card-label">Total Uncoded Suspected Dx <span class="tooltip-icon">ⓘ</span></div>
-                                    <div class="ra-card-value warning" id="total-uncoded-suspected">574</div>
+                                    <div class="ra-card-value warning" id="total-uncoded-suspected">15,625</div>
                                     <div class="ra-card-detail">Require validation</div>
                                 </div>
-                                <div class="ra-card" title="Recapture Rate: Percentage of prior year HCCs successfully re-documented in the current year. Formula: (Recaptured HCCs / Prior Year HCCs) × 100.">
-                                    <div class="ra-card-label">HCC Recapture Rate <span class="tooltip-icon">ⓘ</span></div>
-                                    <div class="ra-card-value" id="hcc-recapture-rate">14.7%</div>
-                                    <div class="ra-card-detail">YTD (Jan target: 8%)</div>
-                                    <div class="ra-card-trend good">+6.7 pts ahead of pace</div>
+                                <div class="ra-card warning" title="Sum of RAF weight for all Suspected Uncoded diagnoses. Calculated as: Total Suspected Dx × Avg RAF weight per HCC.">
+                                    <div class="ra-card-label">Sum RAF Uncoded Suspected <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value warning" id="sum-raf-suspected">4,687.5</div>
+                                    <div class="ra-card-detail">$3.7M opportunity</div>
+                                </div>
+                                <div class="ra-card warning" title="Sum of RAF weight for all Confirmed Uncoded diagnoses. Calculated as: Total Uncoded Confirmed × Avg RAF weight per HCC.">
+                                    <div class="ra-card-label">Sum RAF Uncoded Confirmed <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value warning" id="sum-raf-confirmed">29,371</div>
+                                    <div class="ra-card-detail">$23.5M revenue at risk</div>
                                 </div>
                             </div>
                         </div>
