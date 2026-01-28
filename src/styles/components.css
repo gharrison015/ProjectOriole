@@ -1051,12 +1051,6 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     cursor: pointer;
     transition: transform 0.2s;
-    overflow: visible;
-}
-
-.leakage-chart-box .chart-wrapper {
-    overflow: visible;
-    height: 300px;
 }
 
 .leakage-chart-box:hover {

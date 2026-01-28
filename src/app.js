@@ -949,33 +949,26 @@ function initLeakagePieChart() {
         options: {
             responsive: true,
             maintainAspectRatio: true,
-            cutout: '50%',
+            cutout: '45%',
             layout: {
-                padding: {
-                    top: 30,
-                    bottom: 30,
-                    left: 60,
-                    right: 60
-                }
+                padding: 10
             },
             plugins: {
                 legend: {
                     display: false
                 },
                 datalabels: {
-                    color: '#2c3e50',
-                    font: { weight: 'bold', size: 10 },
-                    anchor: 'end',
-                    align: 'end',
-                    offset: 4,
+                    color: '#fff',
+                    font: { weight: 'bold', size: 12 },
+                    anchor: 'center',
+                    align: 'center',
                     formatter: function(value, context) {
                         const currentData = (leakagePieChart && leakagePieChart._customAmounts) || data;
                         const amounts = [currentData.inNetwork, currentData.oon];
                         const shortLabels = ['In-Network', 'OON'];
-                        return shortLabels[context.dataIndex] + '\n$' + amounts[context.dataIndex] + 'M (' + value + '%)';
+                        return [shortLabels[context.dataIndex], '$' + amounts[context.dataIndex] + 'M', value + '%'];
                     },
-                    textAlign: 'center',
-                    clamp: true
+                    textAlign: 'center'
                 },
                 tooltip: {
                     callbacks: {
