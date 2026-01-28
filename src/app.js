@@ -7635,7 +7635,7 @@ function exportFullPatientRoster() {
         ];
 
         // Build CSV header
-        let csvContent = 'Subscriber ID,MRN,Last Name,First Name,DOB,Gender,Address,City,State,ZIP,Phone,Email,PCP,Care Manager,RAF Score,Last Visit Date,Next Appt Date,';
+        let csvContent = 'Subscriber ID,MRN,Last Name,First Name,DOB,Gender,Address,City,State,ZIP,Phone,Email,PCP,Care Manager,Current RAF,RAF Gap,Potential RAF,AWV Status,AWV Date,Last Visit Date,Next Appt Date,';
         csvContent += hedisMeasures.map(m => `${m.code} Status`).join(',');
         csvContent += '\n';
 
@@ -7657,6 +7657,10 @@ function exportFullPatientRoster() {
                 `"${patient.pcp}"`,
                 `"${patient.careManager || ''}"`,
                 patient.rafScore,
+                patient.rafGap,
+                patient.potentialRaf,
+                patient.awvStatus,
+                patient.awvDate || '',
                 patient.lastVisitDate || '',
                 patient.nextApptDate || ''
             ];
@@ -7818,6 +7822,35 @@ function generateFullPatientRoster() {
         if (hasMCC) rafScore += 0.2 + Math.random() * 0.15;
         rafScore = Math.round(rafScore * 1000) / 1000; // Round to 3 decimal places
 
+        // Generate RAF Gap (Uncoded/Suspect HCC opportunity)
+        // Patients with chronic conditions are more likely to have uncoded HCCs
+        let rafGap = 0;
+        if (hasDM || hasHTN || hasCVD || hasMCC) {
+            // 40% of chronic patients have uncoded HCCs
+            if (Math.random() < 0.40) {
+                rafGap = 0.1 + Math.random() * 0.8; // RAF gap between 0.1 and 0.9
+            }
+        } else {
+            // 15% of non-chronic patients have uncoded HCCs
+            if (Math.random() < 0.15) {
+                rafGap = 0.05 + Math.random() * 0.3; // RAF gap between 0.05 and 0.35
+            }
+        }
+        rafGap = Math.round(rafGap * 1000) / 1000;
+
+        // Calculate Potential RAF (Current + Gap)
+        const potentialRaf = Math.round((rafScore + rafGap) * 1000) / 1000;
+
+        // AWV (Annual Wellness Visit) completion status
+        // ~50% have completed AWV (matching the 23,911/47,823 from Risk Adjustment tab)
+        const awvCompleted = Math.random() < 0.50;
+        const awvStatus = awvCompleted ? 'Completed' : 'Incomplete';
+
+        // AWV Date for those who completed
+        const awvMonth = Math.floor(Math.random() * 12) + 1;
+        const awvDay = Math.floor(Math.random() * 28) + 1;
+        const awvDate = awvCompleted ? `${awvMonth}/${awvDay}/2026` : null;
+
         const hasAppt = Math.random() > 0.5;
         const apptMonth = Math.floor(Math.random() * 6) + 1;
         const apptDay = Math.floor(Math.random() * 28) + 1;
@@ -7841,6 +7874,10 @@ function generateFullPatientRoster() {
             pcp: pcps[Math.floor(Math.random() * pcps.length)],
             careManager: careManagers[Math.floor(Math.random() * careManagers.length)],
             rafScore: rafScore,
+            rafGap: rafGap,
+            potentialRaf: potentialRaf,
+            awvStatus: awvStatus,
+            awvDate: awvDate,
             lastVisitDate: `${lastVisitMonth}/${lastVisitDay}/2025`,
             nextApptDate: hasAppt ? `${apptMonth}/${apptDay}/2026` : null,
             careGaps: careGaps
