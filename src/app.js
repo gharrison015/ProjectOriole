@@ -35,22 +35,6 @@ function setLastUpdatedDate() {
     if (lastUpdatedEl) {
         lastUpdatedEl.textContent = formattedDate;
     }
-
-    // Set data timeframe end dates for all tabs with this indicator
-    const dataEndDateIds = [
-        'quality-data-end-date',
-        'tcoc-data-end-date',
-        'leakage-data-end-date',
-        'episodes-data-end-date',
-        'hcc-data-end-date'
-    ];
-
-    dataEndDateIds.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            el.textContent = formattedDate;
-        }
-    });
 }
 
 // Helper function to format date as "Nov 22" or "Dec 5"
