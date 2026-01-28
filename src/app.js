@@ -930,67 +930,66 @@ function initLeakagePieChart() {
         leakagePieChart.destroy();
     }
 
-    const totalSpend = 486.7; // Total spend in millions
-    const spendAmounts = [371.4, 115.3]; // In-Network, Out-of-Network in millions
+    const data = getLeakageFilteredData();
 
     leakagePieChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: ['In-Network', 'Out-of-Network'],
             datasets: [{
-                data: [76.3, 23.7],
+                data: [data.inPct, data.oonPct],
                 backgroundColor: [
-                    'rgba(39, 174, 96, 0.8)',
-                    'rgba(231, 76, 60, 0.8)'
+                    'rgba(39, 174, 96, 0.9)',
+                    'rgba(231, 76, 60, 0.9)'
                 ],
-                borderColor: [
-                    '#27ae60',
-                    '#e74c3c'
-                ],
-                borderWidth: 2
+                borderWidth: 2,
+                borderColor: '#fff'
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: true,
             cutout: '50%',
+            layout: {
+                padding: {
+                    top: 40,
+                    bottom: 40,
+                    left: 40,
+                    right: 40
+                }
+            },
             plugins: {
                 legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 15,
-                        font: {
-                            size: 13
-                        },
-                        generateLabels: function(chart) {
-                            const data = chart.data;
-                            return data.labels.map((label, i) => ({
-                                text: `${label}: $${spendAmounts[i]}M (${data.datasets[0].data[i]}%)`,
-                                fillStyle: data.datasets[0].backgroundColor[i],
-                                strokeStyle: data.datasets[0].borderColor[i],
-                                lineWidth: 2,
-                                index: i
-                            }));
-                        }
-                    }
+                    display: false
                 },
                 datalabels: {
-                    color: '#fff',
-                    font: { weight: 'bold', size: 13 },
-                    textAlign: 'center',
+                    color: '#2c3e50',
+                    font: { weight: 'bold', size: 11 },
+                    anchor: 'end',
+                    align: 'end',
+                    offset: 6,
                     formatter: function(value, context) {
-                        const amount = spendAmounts[context.dataIndex];
-                        return ['$' + amount + 'M', value + '%'];
-                    }
+                        const amounts = [
+                            leakagePieChart._customAmounts ? leakagePieChart._customAmounts.inNetwork : data.inNetwork,
+                            leakagePieChart._customAmounts ? leakagePieChart._customAmounts.oon : data.oon
+                        ];
+                        const labels = ['In-Network', 'Out-of-Network'];
+                        return labels[context.dataIndex] + '\n$' + amounts[context.dataIndex] + 'M (' + value + '%)';
+                    },
+                    textAlign: 'center',
+                    clamp: false
                 },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            const amount = spendAmounts[context.dataIndex];
-                            return `${context.label}: $${amount}M (${context.parsed}%)`;
+                            const amounts = leakagePieChart._customAmounts || data;
+                            const amountArr = [amounts.inNetwork, amounts.oon];
+                            return `${context.label}: $${amountArr[context.dataIndex]}M (${context.parsed}%)`;
                         },
                         afterBody: function() {
-                            return `Total Spend: $${totalSpend}M`;
+                            const amounts = leakagePieChart._customAmounts || data;
+                            const total = (amounts.inNetwork + amounts.oon).toFixed(1);
+                            return `Total Spend: $${total}M`;
                         }
                     }
                 }
@@ -1003,6 +1002,9 @@ function initLeakagePieChart() {
             }
         }
     });
+
+    // Store amounts for label updates
+    leakagePieChart._customAmounts = { inNetwork: data.inNetwork, oon: data.oon };
 }
 
 function initCostPieChart() {
@@ -2587,6 +2589,35 @@ function removeTableHighlights() {
 let currentLeakageServiceType = 'all';
 let currentElectiveFilter = 'all';
 
+// Cross-filter data matrix: claim type x service type
+// Realistic healthcare data: Part A = facility (inpatient heavy), Part B = professional/outpatient
+const leakageFilterMatrix = {
+    all: {
+        all:          { inNetwork: 371.4, oon: 115.3, inPct: 76.3, oonPct: 23.7, benchmark: 97.3 },
+        inpatient:    { inNetwork: 198.2, oon: 52.1, inPct: 79.2, oonPct: 20.8, benchmark: 42.8 },
+        outpatient:   { inNetwork: 102.6, oon: 38.7, inPct: 72.6, oonPct: 27.4, benchmark: 32.1 },
+        professional: { inNetwork: 70.6, oon: 24.5, inPct: 74.2, oonPct: 25.8, benchmark: 22.4 }
+    },
+    parta: {
+        all:          { inNetwork: 245.8, oon: 67.2, inPct: 78.5, oonPct: 21.5, benchmark: 62.6 },
+        inpatient:    { inNetwork: 192.4, oon: 50.8, inPct: 79.1, oonPct: 20.9, benchmark: 41.6 },
+        outpatient:   { inNetwork: 48.2, oon: 14.8, inPct: 76.5, oonPct: 23.5, benchmark: 18.7 },
+        professional: { inNetwork: 5.2, oon: 1.6, inPct: 76.5, oonPct: 23.5, benchmark: 2.3 }
+    },
+    partb: {
+        all:          { inNetwork: 125.6, oon: 48.1, inPct: 72.3, oonPct: 27.7, benchmark: 34.7 },
+        inpatient:    { inNetwork: 5.8, oon: 1.3, inPct: 81.7, oonPct: 18.3, benchmark: 1.2 },
+        outpatient:   { inNetwork: 54.4, oon: 23.9, inPct: 69.5, oonPct: 30.5, benchmark: 13.4 },
+        professional: { inNetwork: 65.4, oon: 22.9, inPct: 74.1, oonPct: 25.9, benchmark: 20.1 }
+    }
+};
+
+function getLeakageFilteredData() {
+    const claimType = currentLeakageView || 'all';
+    const serviceType = currentLeakageServiceType || 'all';
+    return leakageFilterMatrix[claimType][serviceType];
+}
+
 function setLeakageView(view) {
     currentLeakageView = view;
 
@@ -2601,8 +2632,7 @@ function setLeakageView(view) {
         }
     });
 
-    // Update metrics based on view
-    updateLeakageDataByPart(view);
+    updateLeakageDisplay();
     updateFacilitiesTable();
 }
 
@@ -2621,6 +2651,7 @@ function setLeakageServiceType(serviceType) {
         }
     });
 
+    updateLeakageDisplay();
     updateFacilitiesTable();
 }
 
@@ -2641,36 +2672,35 @@ function setElectiveFilter(filter) {
     updateFacilitiesTable();
 }
 
-function updateLeakageDataByPart(view) {
-    // Data for Part A/B filtering with proper sizing for Piedmont
-    const metrics = {
-        all: { inNetwork: 371.4, oon: 115.3, inPct: 76.3, oonPct: 23.7, benchmark: 97.3, repatriation: 18.0 },
-        parta: { inNetwork: 245.8, oon: 67.2, inPct: 78.5, oonPct: 21.5, benchmark: 62.6, repatriation: 4.6 },
-        partb: { inNetwork: 125.6, oon: 48.1, inPct: 72.3, oonPct: 27.7, benchmark: 34.7, repatriation: 13.4 }
-    };
-
-    const data = metrics[view];
+function updateLeakageDisplay() {
+    const data = getLeakageFilteredData();
 
     document.getElementById('in-network-spend').textContent = '$' + data.inNetwork + 'M';
     document.getElementById('in-network-pct').textContent = data.inPct + '%';
     document.getElementById('oon-spend').textContent = '$' + data.oon + 'M';
     document.getElementById('oon-pct').textContent = data.oonPct + '%';
 
-    // Update benchmark and repatriation amounts
+    // Update benchmark
     const benchmarkEl = document.getElementById('leakage-benchmark');
+    if (benchmarkEl) benchmarkEl.textContent = '$' + data.benchmark + 'M';
+
+    // Update repatriation
     const repatriationEl = document.getElementById('repatriation-opportunity');
     const repatriationNoteEl = document.getElementById('repatriation-note');
-
-    if (benchmarkEl) benchmarkEl.textContent = '$' + data.benchmark + 'M';
-    if (repatriationEl) repatriationEl.textContent = '$' + data.repatriation + 'M';
+    if (repatriationEl) {
+        const repatriation = ((data.oonPct - 20) / 100 * (data.inNetwork + data.oon)).toFixed(1);
+        repatriationEl.textContent = '$' + (repatriation > 0 ? repatriation : '0.0') + 'M';
+    }
     if (repatriationNoteEl) {
-        const viewLabel = view === 'parta' ? 'Part A' : view === 'partb' ? 'Part B' : 'All Claims';
-        repatriationNoteEl.textContent = `${viewLabel} - if reduced to 20% benchmark`;
+        const viewLabel = currentLeakageView === 'parta' ? 'Part A' : currentLeakageView === 'partb' ? 'Part B' : 'All Claims';
+        const serviceLabel = currentLeakageServiceType !== 'all' ? ' / ' + currentLeakageServiceType.charAt(0).toUpperCase() + currentLeakageServiceType.slice(1) : '';
+        repatriationNoteEl.textContent = `${viewLabel}${serviceLabel} - if reduced to 20% benchmark`;
     }
 
     // Update pie chart
     if (leakagePieChart) {
         leakagePieChart.data.datasets[0].data = [data.inPct, data.oonPct];
+        leakagePieChart._customAmounts = { inNetwork: data.inNetwork, oon: data.oon };
         leakagePieChart.update();
     }
 }
@@ -3188,8 +3218,8 @@ function showCountyTooltip(event, d) {
     if (countyData && countyData.name) {
         tooltip.innerHTML = `
             <div style="font-weight: bold; margin-bottom: 6px; font-size: 14px;">${countyData.name} County</div>
-            <div style="margin-bottom: 4px;">Leakage: <strong style="color: #e74c3c;">$${(countyData.totalLeakage / 1000000).toFixed(1)}M</strong></div>
-            <div style="margin-bottom: 4px;">Score: <strong>${(countyData.leakageScore * 100).toFixed(0)}%</strong></div>
+            <div style="margin-bottom: 4px;">OON Spend: <strong style="color: #e74c3c;">$${(countyData.totalLeakage / 1000000).toFixed(1)}M</strong></div>
+            <div style="margin-bottom: 4px;">Leakage %: <strong>${(countyData.leakageScore * 100).toFixed(0)}%</strong></div>
             <div style="font-size: 10px; margin-top: 6px; opacity: 0.8; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 6px;">Click for facility details</div>
         `;
         tooltip.style.display = 'block';
@@ -3256,16 +3286,16 @@ function updateCountyDetailPanel(countyData) {
     const topProviders = allProviders.slice(0, 5);
 
     titleEl.textContent = `${countyData.name} County`;
-    subtitleEl.textContent = `Total OON Leakage: $${(countyData.totalLeakage / 1000000).toFixed(1)}M`;
+    subtitleEl.textContent = `Total Spend: $${(totalSpend / 1000000).toFixed(1)}M`;
 
     contentEl.innerHTML = `
         <div class="county-stats-grid">
             <div class="county-stat">
-                <div class="stat-label">Total Spend</div>
+                <div class="stat-label">Total OON Leakage</div>
                 <div class="stat-value bad">$${(countyData.totalLeakage / 1000000).toFixed(1)}M</div>
             </div>
             <div class="county-stat">
-                <div class="stat-label">Leakage Score</div>
+                <div class="stat-label">Leakage %</div>
                 <div class="stat-value">${(countyData.leakageScore * 100).toFixed(0)}%</div>
             </div>
             <div class="county-stat">
@@ -3291,7 +3321,8 @@ function updateCountyDetailPanel(countyData) {
 
         <div class="county-provider-list">
             <h5><svg style="width:14px;height:14px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>Top Rendering Providers</h5>
-            ${topProviders.map(p => `
+            <div id="county-providers-list">
+            ${topProviders.slice(0, 5).map(p => `
                 <div class="county-provider-item">
                     <div class="provider-name">${p.name}</div>
                     <div class="provider-details">
@@ -3301,6 +3332,12 @@ function updateCountyDetailPanel(countyData) {
                     <div class="provider-details" style="font-size: 0.75rem; opacity: 0.8;">${p.facility}</div>
                 </div>
             `).join('')}
+            </div>
+            ${allProviders.length > 5 ? `
+                <button class="filter-btn small" style="margin-top: 0.5rem; width: 100%;" onclick="toggleAllProviders(this)" data-providers='${JSON.stringify(allProviders.map(p => ({name: p.name, service: p.service, spend: p.spend, isElective: p.isElective, facility: p.facility}))).replace(/'/g, "&#39;")}'>
+                    Show All ${allProviders.length} Providers
+                </button>
+            ` : ''}
         </div>
 
         <div class="county-provider-list">
@@ -3320,6 +3357,43 @@ function updateCountyDetailPanel(countyData) {
     `;
 }
 
+function toggleAllProviders(btn) {
+    const listEl = document.getElementById('county-providers-list');
+    if (!listEl) return;
+
+    const providers = JSON.parse(btn.dataset.providers);
+    const isExpanded = btn.textContent.includes('Show Less');
+
+    if (isExpanded) {
+        // Show only top 5
+        listEl.innerHTML = providers.slice(0, 5).map(p => `
+            <div class="county-provider-item">
+                <div class="provider-name">${p.name}</div>
+                <div class="provider-details">
+                    ${p.service} • $${(p.spend / 1000000).toFixed(2)}M •
+                    <span style="color: ${p.isElective ? '#27ae60' : '#e74c3c'};">${p.isElective ? 'Elective' : 'Non-Elective'}</span>
+                </div>
+                <div class="provider-details" style="font-size: 0.75rem; opacity: 0.8;">${p.facility}</div>
+            </div>
+        `).join('');
+        btn.textContent = `Show All ${providers.length} Providers`;
+    } else {
+        // Show all
+        listEl.innerHTML = providers.map(p => `
+            <div class="county-provider-item">
+                <div class="provider-name">${p.name}</div>
+                <div class="provider-details">
+                    ${p.service} • $${(p.spend / 1000000).toFixed(2)}M •
+                    <span style="color: ${p.isElective ? '#27ae60' : '#e74c3c'};">${p.isElective ? 'Elective' : 'Non-Elective'}</span>
+                </div>
+                <div class="provider-details" style="font-size: 0.75rem; opacity: 0.8;">${p.facility}</div>
+            </div>
+        `).join('');
+        btn.textContent = 'Show Less';
+    }
+}
+window.toggleAllProviders = toggleAllProviders;
+
 function hideCountyTooltip() {
     const tooltip = document.getElementById('county-tooltip');
     if (tooltip) tooltip.style.display = 'none';
@@ -3337,11 +3411,11 @@ function showCountyDrillDown(county) {
 
         <div class="market-kpi-row" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 1.5rem;">
             <div class="kpi-box">
-                <div class="kpi-label">Total Leakage</div>
+                <div class="kpi-label">Total OON Leakage</div>
                 <div class="kpi-value bad">$${(county.totalLeakage / 1000000).toFixed(2)}M</div>
             </div>
             <div class="kpi-box">
-                <div class="kpi-label">Leakage Score</div>
+                <div class="kpi-label">Leakage %</div>
                 <div class="kpi-value" style="color: ${county.leakageScore > 0.6 ? '#e74c3c' : county.leakageScore > 0.3 ? '#f39c12' : '#27ae60'};">${(county.leakageScore * 100).toFixed(0)}%</div>
             </div>
             <div class="kpi-box">
@@ -5104,8 +5178,7 @@ function showProviderLeakageDetail(providerId) {
                 { service: 'Cardiac Surgery', spend: 2134556, encounters: 89, electiveEnc: 69, nonElectiveEnc: 20 },
                 { service: 'Orthopedic Surgery', spend: 1456223, encounters: 67, electiveEnc: 57, nonElectiveEnc: 10 },
                 { service: 'Imaging (MRI/CT)', spend: 987334, encounters: 234, electiveEnc: 215, nonElectiveEnc: 19 },
-                { service: 'Emergency Services', spend: 723445, encounters: 45, electiveEnc: 5, nonElectiveEnc: 40 },
-                { service: 'Trauma Care', spend: 590776, encounters: 28, electiveEnc: 2, nonElectiveEnc: 26 }
+                { service: 'Emergency Services', spend: 723445, encounters: 45, electiveEnc: 5, nonElectiveEnc: 40 }
             ]
         },
         'williams': {
@@ -5226,7 +5299,7 @@ function showProviderLeakageDetail(providerId) {
                     <div style="font-size: 1.5rem; font-weight: 700; color: #e74c3c;">$${(data.oonSpend / 1000000).toFixed(1)}M</div>
                 </div>
                 <div style="text-align: center; padding: 1rem; background: #ffeaea; border-radius: 8px;">
-                    <div style="font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase;">Leakage Rate</div>
+                    <div style="font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase;">Leakage %</div>
                     <div style="font-size: 1.5rem; font-weight: 700; color: #e74c3c;">${data.leakagePercent}%</div>
                 </div>
                 <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
@@ -5322,16 +5395,6 @@ function showProviderLeakageDetail(providerId) {
                 </table>
             </div>
 
-            <!-- Action Alert -->
-            <div class="alert-box warning">
-                <h4>🎯 Repatriation Opportunity</h4>
-                <p>Elective services account for <strong>${electivePct}%</strong> of encounters. High-value repatriation targets:</p>
-                <ul style="margin-top: 0.5rem;">
-                    ${data.facilities.filter(f => f.electivePct >= 70).slice(0, 3).map(f =>
-                        `<li><strong>${f.name}</strong> - ${f.services} ($${(f.spend/1000).toFixed(0)}K, ${f.electivePct}% elective)</li>`
-                    ).join('')}
-                </ul>
-            </div>
         </div>
     `;
 
