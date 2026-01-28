@@ -8,12 +8,14 @@ import './styles/mobile.css'
 // Import Chart.js and D3 from npm packages
 import Chart from 'chart.js/auto'
 import ChartDataLabels from 'chartjs-plugin-datalabels'
+import annotationPlugin from 'chartjs-plugin-annotation'
 import * as d3 from 'd3'
 import { sankey, sankeyLinkHorizontal } from 'd3-sankey'
 import * as topojson from 'topojson-client'
 
-// Register the datalabels plugin globally
+// Register Chart.js plugins globally
 Chart.register(ChartDataLabels)
+Chart.register(annotationPlugin)
 
 // Set global defaults for datalabels
 Chart.defaults.set('plugins.datalabels', {

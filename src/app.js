@@ -565,9 +565,13 @@ function initMonteCarloChart(scenario = 1) {
         descEl.innerHTML = scenarioConfig.description;
     }
 
-    // Generate histogram data from -$3M to +$15M
-    const minValue = -3;
-    const maxValue = 15;
+    // Calculate dynamic range based on P2.5 and P97.5 with 10% buffer
+    const p25 = scenarioConfig.mean - 1.96 * scenarioConfig.stdDev;
+    const p975 = scenarioConfig.mean + 1.96 * scenarioConfig.stdDev;
+    const range = p975 - p25;
+    const buffer = range * 0.1;
+    const minValue = Math.floor((p25 - buffer) * 2) / 2; // Round down to nearest 0.5
+    const maxValue = Math.ceil((p975 + buffer) * 2) / 2; // Round up to nearest 0.5
     const binWidth = 0.6;
     const bins = Math.ceil((maxValue - minValue) / binWidth);
     const data = [];
@@ -637,17 +641,51 @@ function initMonteCarloChart(scenario = 1) {
                 },
                 annotation: {
                     annotations: {
-                        line1: {
+                        meanLine: {
                             type: 'line',
                             xMin: (scenarioConfig.mean - minValue) / binWidth,
                             xMax: (scenarioConfig.mean - minValue) / binWidth,
                             borderColor: '#2c3e50',
                             borderWidth: 2,
-                            borderDash: [5, 5],
                             label: {
                                 display: true,
                                 content: 'Mean: $' + scenarioConfig.mean.toFixed(1) + 'M',
-                                position: 'start'
+                                position: 'start',
+                                backgroundColor: 'rgba(44, 62, 80, 0.8)',
+                                color: '#fff',
+                                font: { size: 10, weight: 'bold' }
+                            }
+                        },
+                        p25Line: {
+                            type: 'line',
+                            xMin: ((scenarioConfig.mean - 1.96 * scenarioConfig.stdDev) - minValue) / binWidth,
+                            xMax: ((scenarioConfig.mean - 1.96 * scenarioConfig.stdDev) - minValue) / binWidth,
+                            borderColor: '#e74c3c',
+                            borderWidth: 2,
+                            borderDash: [6, 4],
+                            label: {
+                                display: true,
+                                content: 'P2.5',
+                                position: 'start',
+                                backgroundColor: 'rgba(231, 76, 60, 0.8)',
+                                color: '#fff',
+                                font: { size: 10, weight: 'bold' }
+                            }
+                        },
+                        p975Line: {
+                            type: 'line',
+                            xMin: ((scenarioConfig.mean + 1.96 * scenarioConfig.stdDev) - minValue) / binWidth,
+                            xMax: ((scenarioConfig.mean + 1.96 * scenarioConfig.stdDev) - minValue) / binWidth,
+                            borderColor: '#27ae60',
+                            borderWidth: 2,
+                            borderDash: [6, 4],
+                            label: {
+                                display: true,
+                                content: 'P97.5',
+                                position: 'start',
+                                backgroundColor: 'rgba(39, 174, 96, 0.8)',
+                                color: '#fff',
+                                font: { size: 10, weight: 'bold' }
                             }
                         }
                     }
