@@ -7394,10 +7394,37 @@ function showAWVComplianceModal(section = 'overview') {
     const missedRevenue = data.missedOpportunityVisits * data.weightedAvgAWV;
 
     const modalBody = `
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; gap: 2rem;">
             <div>
                 <h2 style="margin: 0;">AWV Compliance & Revenue Analysis</h2>
                 <p class="provider-summary" style="margin: 0.25rem 0 0 0;">Annual Wellness Visit Performance Dashboard</p>
+            </div>
+
+            <!-- Compact RAF Slider -->
+            <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 0.75rem 1rem; min-width: 320px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <span style="font-size: 0.75rem; font-weight: 600; color: #495057;">Filter by RAF Score</span>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="font-size: 0.7rem; color: #6c757d;">Range:</span>
+                        <span id="awv-raf-range-display" style="font-size: 0.75rem; font-weight: 600; color: #495057;">0.5 — 5.0</span>
+                        <button onclick="resetAWVRAFSlider()" id="awv-raf-reset-btn" style="display: none; font-size: 0.65rem; padding: 0.2rem 0.5rem; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">Reset</button>
+                    </div>
+                </div>
+                <div style="position: relative; height: 20px;">
+                    <input type="range" id="awv-raf-slider-min" min="0.5" max="5.0" step="0.1" value="0.5"
+                           style="position: absolute; width: 100%; pointer-events: none; -webkit-appearance: none; background: transparent;"
+                           oninput="updateAWVRAFSlider()">
+                    <input type="range" id="awv-raf-slider-max" min="0.5" max="5.0" step="0.1" value="5.0"
+                           style="position: absolute; width: 100%; pointer-events: none; -webkit-appearance: none; background: transparent;"
+                           oninput="updateAWVRAFSlider()">
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 0.25rem; font-size: 0.65rem; color: #6c757d;">
+                    <span>0.5</span>
+                    <span>1.5</span>
+                    <span>2.5</span>
+                    <span>3.5</span>
+                    <span>5.0</span>
+                </div>
             </div>
         </div>
 
@@ -7405,23 +7432,23 @@ function showAWVComplianceModal(section = 'overview') {
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
             <div style="background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%); padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid #f39c12;">
                 <div style="font-size: 0.8rem; color: #856404; margin-bottom: 0.25rem;">AWV Compliance Rate</div>
-                <div style="font-size: 2rem; font-weight: 700; color: #856404;">${completionRate}%</div>
-                <div style="font-size: 0.75rem; color: #856404;">${data.awvCompleted.toLocaleString()} / ${data.totalAttributed.toLocaleString()}</div>
+                <div id="awv-modal-completion-rate" style="font-size: 2rem; font-weight: 700; color: #856404;">${completionRate}%</div>
+                <div id="awv-modal-completion-count" style="font-size: 0.75rem; color: #856404;">${data.awvCompleted.toLocaleString()} / ${data.totalAttributed.toLocaleString()}</div>
             </div>
             <div style="background: #fff3cd; padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid #f39c12;">
                 <div style="font-size: 0.8rem; color: #856404; margin-bottom: 0.25rem;">AWV Incomplete</div>
-                <div style="font-size: 2rem; font-weight: 700; color: #856404;">${data.awvIncomplete.toLocaleString()}</div>
+                <div id="awv-modal-incomplete" style="font-size: 2rem; font-weight: 700; color: #856404;">${data.awvIncomplete.toLocaleString()}</div>
                 <div style="font-size: 0.75rem; color: #856404;">Patients needing AWV</div>
             </div>
             <div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid #3498db;">
                 <div style="font-size: 0.8rem; color: #0d47a1; margin-bottom: 0.25rem;">Forecast Opportunity</div>
-                <div style="font-size: 2rem; font-weight: 700; color: #0d47a1;">$${(forecastRevenue / 1000).toFixed(0)}K</div>
-                <div style="font-size: 0.75rem; color: #0d47a1;">${data.scheduledWithAWVDue.toLocaleString()} scheduled visits</div>
+                <div id="awv-modal-forecast-revenue" style="font-size: 2rem; font-weight: 700; color: #0d47a1;">$${(forecastRevenue / 1000).toFixed(0)}K</div>
+                <div id="awv-modal-forecast-scheduled" style="font-size: 0.75rem; color: #0d47a1;">${data.scheduledWithAWVDue.toLocaleString()} scheduled visits</div>
             </div>
             <div style="background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%); padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid #e74c3c;">
                 <div style="font-size: 0.8rem; color: #c62828; margin-bottom: 0.25rem;">Missed Opportunity</div>
-                <div style="font-size: 2rem; font-weight: 700; color: #c62828;">$${(missedRevenue / 1000).toFixed(0)}K</div>
-                <div style="font-size: 0.75rem; color: #c62828;">${data.missedOpportunityVisits.toLocaleString()} visits without AWV</div>
+                <div id="awv-modal-missed-revenue" style="font-size: 2rem; font-weight: 700; color: #c62828;">$${(missedRevenue / 1000).toFixed(0)}K</div>
+                <div id="awv-modal-missed-visits" style="font-size: 0.75rem; color: #c62828;">${data.missedOpportunityVisits.toLocaleString()} visits without AWV</div>
             </div>
         </div>
 
@@ -7543,9 +7570,9 @@ function showAWVComplianceModal(section = 'overview') {
         <div style="background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%); border: 1px solid #e74c3c; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
                 <h3 style="margin: 0; font-size: 1rem; color: #c62828;">Missed Opportunity Analysis</h3>
-                <span style="background: #e74c3c; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">$${(missedRevenue / 1000).toFixed(0)}K Lost Revenue</span>
+                <span id="awv-modal-missed-banner" style="background: #e74c3c; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">$${(missedRevenue / 1000).toFixed(0)}K Lost Revenue</span>
             </div>
-            <p style="font-size: 0.9rem; color: #6c757d; margin-bottom: 1rem;">
+            <p id="awv-modal-missed-description" style="font-size: 0.9rem; color: #6c757d; margin-bottom: 1rem;">
                 These ${data.missedOpportunityVisits.toLocaleString()} patients had a <strong>non-acute visit</strong> after becoming due for their Annual Wellness Visit,
                 but <strong>no AWV code was billed</strong>. This represents operational leakage where the patient was already in the exam room.
             </p>
@@ -7568,7 +7595,117 @@ function showAWVComplianceModal(section = 'overview') {
     setTimeout(() => {
         initAWVRegionChart(data);
         initAWVProviderChart(data);
+
+        // Enable pointer events on the sliders after modal is shown
+        const minSlider = document.getElementById('awv-raf-slider-min');
+        const maxSlider = document.getElementById('awv-raf-slider-max');
+        if (minSlider && maxSlider) {
+            minSlider.style.pointerEvents = 'auto';
+            maxSlider.style.pointerEvents = 'auto';
+        }
     }, 100);
+}
+
+// ============================================
+// AWV MODAL RAF SLIDER FUNCTIONS
+// ============================================
+
+function updateAWVRAFSlider() {
+    const minSlider = document.getElementById('awv-raf-slider-min');
+    const maxSlider = document.getElementById('awv-raf-slider-max');
+
+    if (!minSlider || !maxSlider) return;
+
+    let minVal = parseFloat(minSlider.value);
+    let maxVal = parseFloat(maxSlider.value);
+
+    // Ensure min doesn't exceed max
+    if (minVal > maxVal) {
+        const temp = minVal;
+        minVal = maxVal;
+        maxVal = temp;
+        minSlider.value = minVal;
+        maxSlider.value = maxVal;
+    }
+
+    const rangeDisplay = document.getElementById('awv-raf-range-display');
+    const resetBtn = document.getElementById('awv-raf-reset-btn');
+
+    const isFiltered = minVal > 0.5 || maxVal < 5.0;
+
+    if (isFiltered) {
+        rangeDisplay.textContent = `${minVal.toFixed(1)} — ${maxVal.toFixed(1)}`;
+        resetBtn.style.display = 'inline-block';
+    } else {
+        rangeDisplay.textContent = '0.5 — 5.0';
+        resetBtn.style.display = 'none';
+    }
+
+    // Update all AWV modal data based on RAF range
+    updateAWVModalData(minVal, maxVal);
+}
+
+function resetAWVRAFSlider() {
+    const minSlider = document.getElementById('awv-raf-slider-min');
+    const maxSlider = document.getElementById('awv-raf-slider-max');
+
+    if (minSlider) minSlider.value = 0.5;
+    if (maxSlider) maxSlider.value = 5.0;
+
+    updateAWVRAFSlider();
+}
+
+function updateAWVModalData(minVal, maxVal) {
+    const data = awvPatientData;
+    const fullRange = 5.0 - 0.5;
+    const selectedRange = maxVal - minVal;
+    const rangePct = selectedRange / fullRange;
+
+    // Adjust for realistic RAF distribution (higher RAF = fewer patients)
+    let patientPct = rangePct;
+    if (minVal > 2.0) {
+        patientPct = rangePct * 0.4; // High RAF patients are rarer
+    } else if (minVal > 1.5) {
+        patientPct = rangePct * 0.7;
+    }
+
+    // Calculate filtered totals
+    const filteredTotal = Math.round(data.totalAttributed * patientPct);
+    const filteredCompleted = Math.round(data.awvCompleted * patientPct);
+    const filteredIncomplete = Math.round(data.awvIncomplete * patientPct);
+    const filteredScheduled = Math.round(data.scheduledWithAWVDue * patientPct);
+    const filteredMissed = Math.round(data.missedOpportunityVisits * patientPct * (minVal > 1.5 ? 1.2 : 1)); // Higher RAF = more missed
+
+    const filteredCompletionRate = ((filteredCompleted / filteredTotal) * 100).toFixed(1);
+    const filteredForecastRevenue = filteredScheduled * data.weightedAvgAWV;
+    const filteredMissedRevenue = filteredMissed * data.weightedAvgAWV;
+
+    // Update KPI cards
+    const completionRateEl = document.getElementById('awv-modal-completion-rate');
+    const completionCountEl = document.getElementById('awv-modal-completion-count');
+    const incompleteEl = document.getElementById('awv-modal-incomplete');
+    const forecastRevenueEl = document.getElementById('awv-modal-forecast-revenue');
+    const forecastScheduledEl = document.getElementById('awv-modal-forecast-scheduled');
+    const missedRevenueEl = document.getElementById('awv-modal-missed-revenue');
+    const missedVisitsEl = document.getElementById('awv-modal-missed-visits');
+
+    if (completionRateEl) completionRateEl.textContent = `${filteredCompletionRate}%`;
+    if (completionCountEl) completionCountEl.textContent = `${filteredCompleted.toLocaleString()} / ${filteredTotal.toLocaleString()}`;
+    if (incompleteEl) incompleteEl.textContent = filteredIncomplete.toLocaleString();
+    if (forecastRevenueEl) forecastRevenueEl.textContent = `$${(filteredForecastRevenue / 1000).toFixed(0)}K`;
+    if (forecastScheduledEl) forecastScheduledEl.textContent = `${filteredScheduled.toLocaleString()} scheduled visits`;
+    if (missedRevenueEl) missedRevenueEl.textContent = `$${(filteredMissedRevenue / 1000).toFixed(0)}K`;
+    if (missedVisitsEl) missedVisitsEl.textContent = `${filteredMissed.toLocaleString()} visits without AWV`;
+
+    // Update missed opportunity analysis section
+    const missedBannerEl = document.getElementById('awv-modal-missed-banner');
+    const missedDescEl = document.getElementById('awv-modal-missed-description');
+
+    if (missedBannerEl) missedBannerEl.textContent = `$${(filteredMissedRevenue / 1000).toFixed(0)}K Lost Revenue`;
+    if (missedDescEl) {
+        missedDescEl.innerHTML = `These ${filteredMissed.toLocaleString()} patients had a <strong>non-acute visit</strong> after becoming due for their Annual Wellness Visit,
+            but <strong>no AWV code was billed</strong>. This represents operational leakage where the patient was already in the exam room.`;
+    }
 }
 
 // ============================================
@@ -10259,6 +10396,8 @@ window.showPatientListByProvider = showPatientListByProvider;
 window.updateRAFSlider = updateRAFSlider;
 window.resetRAFSlider = resetRAFSlider;
 window.showAWVComplianceModal = showAWVComplianceModal;
+window.updateAWVRAFSlider = updateAWVRAFSlider;
+window.resetAWVRAFSlider = resetAWVRAFSlider;
 window.showHighValueOutreach = showHighValueOutreach;
 window.exportHighValueList = exportHighValueList;
 
