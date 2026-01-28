@@ -113,11 +113,12 @@
                             <div class="kpi-change positive" id="perf-pmpm-change">↓ 2.3% vs Benchmark ($858)</div>
                         </div>
                         <div class="kpi-card">
-                            <div class="kpi-label tooltip-hover" title="Projected Savings: Expected savings for the performance year. Formula: (Benchmark PMPM - Actual PMPM) × Member Months - Shared Savings Percentage. Source: CMS benchmark data and internal actuarial projections">
+                            <div class="kpi-label tooltip-hover" title="Projected Savings: Expected savings for the performance year. Formula: (Benchmark PMPM - Actual PMPM) × Member Months - Shared Savings Percentage. Source: CMS benchmark data and internal actuarial projections. IBNR (Incurred But Not Reported) adjustment applied for Oct-Dec claims lag.">
                                 Projected Savings <span class="tooltip-icon">ⓘ</span>
                             </div>
                             <div class="kpi-value" id="perf-savings-value">$11.2M</div>
                             <div class="kpi-change positive" id="perf-savings-change">↑ $700K vs Target ($10.5M)</div>
+                            <div class="kpi-ibnr-note">IBNR applied</div>
                         </div>
                         <div class="kpi-card">
                             <div class="kpi-label tooltip-hover" title="Quality Score: Composite score across all MSSP ACO quality measures. Based on eCQM/MIPS clinical submissions from Epic. Subject to fluctuation based on CMS final ruling.">
@@ -215,59 +216,38 @@
                         </div>
                     </div>
 
-                    <div class="forecast-results">
-                        <div class="forecast-card primary">
-                            <h4>Projected Year-End Spend</h4>
-                            <div class="forecast-value">$489.2M</div>
-                            <div class="forecast-breakdown">
-                                <div class="breakdown-row">
-                                    <span>Paid Claims (Q1)</span>
-                                    <span>$122.8M</span>
-                                </div>
-                                <div class="breakdown-row">
-                                    <span>IBNR Reserve</span>
-                                    <span>$9.6M</span>
-                                </div>
-                                <div class="breakdown-row">
-                                    <span>Projected (Q2-Q4)</span>
-                                    <span>$356.8M</span>
-                                </div>
+                    <!-- Consolidated Metric Bar -->
+                    <div class="metric-bar-container">
+                        <div class="metric-bar">
+                            <div class="metric-bar-item" title="CMS Benchmark after risk score adjustment. Formula: Base Benchmark ($513.2M) - Uncaptured Risk Impact ($14.4M). The risk adjustment reflects the January reset; as HCC recapture increases, the adjusted target rises.">
+                                <div class="metric-bar-label">Adjusted Target</div>
+                                <div class="metric-bar-value">$498.8M</div>
+                                <div class="metric-bar-detail">Base: $513.2M − Risk Adj: $14.4M</div>
                             </div>
-                            <div class="forecast-ci">95% CI: $478.4M - $500.1M</div>
+                            <div class="metric-bar-item" title="Projected total medical spend for PY2026. Includes Q1 paid claims ($122.8M), IBNR reserve ($9.6M), and projected Q2-Q4 spend ($356.8M). 95% CI: $478.4M - $500.1M.">
+                                <div class="metric-bar-label">Projected Spend</div>
+                                <div class="metric-bar-value">$489.2M</div>
+                                <div class="metric-bar-detail">95% CI: $478.4M - $500.1M</div>
+                            </div>
+                            <div class="metric-bar-item success" title="Gross Savings before CMS share and quality adjustment. Formula: Adjusted Target ($498.8M) - Projected Spend ($489.2M) = $9.6M.">
+                                <div class="metric-bar-label">Gross Savings</div>
+                                <div class="metric-bar-value">$9.6M</div>
+                                <div class="metric-bar-detail">Target − Spend</div>
+                            </div>
+                            <div class="metric-bar-item highlight" title="Piedmont's retained savings after CMS 50% share and quality adjustment (82.1% multiplier). Formula: Gross Savings × 50% × Quality Multiplier = $3.9M.">
+                                <div class="metric-bar-label">Retained Savings (Net)</div>
+                                <div class="metric-bar-value">$3.9M</div>
+                                <div class="metric-bar-detail">After CMS share & quality adj</div>
+                            </div>
                         </div>
-                        <div class="forecast-card">
-                            <h4>CMS Benchmark</h4>
-                            <div class="forecast-value">$498.8M</div>
-                            <div class="forecast-breakdown">
-                                <div class="breakdown-row">
-                                    <span>Base Benchmark</span>
-                                    <span>$513.2M</span>
-                                </div>
-                                <div class="breakdown-row">
-                                    <span>Risk Adjustment</span>
-                                    <span>-$14.4M</span>
-                                </div>
-                            </div>
-                            <div class="forecast-note">Based on CMS regional rates</div>
-                        </div>
-                        <div class="forecast-card success">
-                            <h4>Projected Shared Savings</h4>
-                            <div class="forecast-value">$9.6M</div>
-                            <div class="forecast-breakdown">
-                                <div class="breakdown-row">
-                                    <span>Gross Savings</span>
-                                    <span>$9.6M</span>
-                                </div>
-                                <div class="breakdown-row">
-                                    <span>Quality Multiplier</span>
-                                    <span>82.1%</span>
-                                </div>
-                                <div class="breakdown-row">
-                                    <span>Net to ACO (50%)</span>
-                                    <span>$3.9M</span>
-                                </div>
-                            </div>
-                            <div class="forecast-note">Based on preliminary Q1 quality score</div>
+                    </div>
+
+                    <!-- Financial Waterfall Chart -->
+                    <div class="chart-section waterfall-section">
+                        <h3>Shared Savings Bridge</h3>
+                        <p class="chart-subtitle">How we get from CMS Benchmark to Piedmont Retained Savings</p>
+                        <div class="chart-wrapper waterfall-wrapper">
+                            <canvas id="waterfallChart"></canvas>
                         </div>
                     </div>
 
@@ -304,22 +284,22 @@
                         <h4>Historical ACO Performance Benchmark</h4>
                         <p class="context-note">Based on analysis of 500+ MSSP ACOs over 5 performance years (2019-2024). CMS Benchmark PMPY: $10,428</p>
                         <div class="performance-bands">
-                            <div class="band-item">
+                            <div class="band-item" title="Top performing ACOs achieve 10-15% below benchmark spend through strong care coordination, preventive care focus, and network optimization.">
                                 <div class="band-label">Top Quartile</div>
                                 <div class="band-value positive">$8,850 - $9,550 PMPY</div>
                                 <div class="band-percent">25% of ACOs</div>
                             </div>
-                            <div class="band-item highlight">
+                            <div class="band-item highlight" title="Piedmont's current PMPY performance places the ACO in the top quartile nationally. Formula: Total Medical Spend ÷ Member Months × 12.">
                                 <div class="band-label">Piedmont Position</div>
                                 <div class="band-value">$9,428 PMPY</div>
                                 <div class="band-percent">72nd percentile</div>
                             </div>
-                            <div class="band-item">
+                            <div class="band-item" title="Median ACOs typically break even or achieve modest savings. Performance varies with regional cost differences and population health status.">
                                 <div class="band-label">Median Performance</div>
                                 <div class="band-value">$9,550 - $10,200 PMPY</div>
                                 <div class="band-percent">50% of ACOs</div>
                             </div>
-                            <div class="band-item">
+                            <div class="band-item" title="Bottom quartile ACOs typically incur losses or exit the program. Common factors: high ED utilization, poor care transitions, network leakage.">
                                 <div class="band-label">Bottom Quartile</div>
                                 <div class="band-value negative">$10,200 - $11,100 PMPY</div>
                                 <div class="band-percent">25% of ACOs</div>
@@ -346,19 +326,19 @@
                             </div>
 
                             <div class="ci-grid">
-                                <div class="ci-item pessimistic">
+                                <div class="ci-item pessimistic" title="P2.5 represents the 2.5th percentile - only 2.5% of simulated scenarios result in worse outcomes. This is your downside risk exposure.">
                                     <div class="ci-label">Lower Bound (P2.5)</div>
                                     <div class="ci-value" id="ci-low-savings">-$2.1M</div>
                                     <div class="ci-sub">Downside Risk (Bottom 2.5% of scenarios)</div>
                                     <div class="ci-note">Spend: <span id="ci-low-spend">$500.9M</span></div>
                                 </div>
-                                <div class="ci-item expected">
+                                <div class="ci-item expected" title="The statistical mean of all 10,000 Monte Carlo iterations. This is the most likely outcome based on historical patterns and current trends.">
                                     <div class="ci-label">Expected Outcome (Mean)</div>
                                     <div class="ci-value" id="ci-mean-savings">$9.6M</div>
                                     <div class="ci-sub">Statistical Mean of Monte Carlo Distribution</div>
                                     <div class="ci-note">Spend: <span id="ci-mean-spend">$489.2M</span></div>
                                 </div>
-                                <div class="ci-item optimistic">
+                                <div class="ci-item optimistic" title="P97.5 represents the 97.5th percentile - only 2.5% of simulated scenarios result in better outcomes. This is your upside potential.">
                                     <div class="ci-label">Upper Bound (P97.5)</div>
                                     <div class="ci-value" id="ci-high-savings">$20.4M</div>
                                     <div class="ci-sub">Upside Potential (Top 2.5% of scenarios)</div>

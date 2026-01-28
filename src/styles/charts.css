@@ -192,6 +192,46 @@
     color: #e74c3c;
 }
 
+/* Band item tooltips */
+.band-item[title] {
+    position: relative;
+    cursor: help;
+}
+
+.band-item[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2c3e50;
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 400;
+    white-space: normal;
+    width: 240px;
+    text-align: left;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    line-height: 1.5;
+    margin-bottom: 10px;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.band-item[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    border: 8px solid transparent;
+    border-top-color: #2c3e50;
+    z-index: 10000;
+}
+
 .band-percent {
     font-size: 0.75rem;
     color: #95a5a6;
@@ -479,6 +519,51 @@
 .ci-note {
     font-size: 0.7rem;
     opacity: 0.7;
+}
+
+/* CI item tooltips */
+.ci-item[title] {
+    position: relative;
+    cursor: help;
+    transition: transform 0.2s ease;
+}
+
+.ci-item[title]:hover {
+    transform: translateY(-2px);
+}
+
+.ci-item[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2c3e50;
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 400;
+    white-space: normal;
+    width: 260px;
+    text-align: left;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    line-height: 1.5;
+    margin-bottom: 10px;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.ci-item[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    border: 8px solid transparent;
+    border-top-color: #2c3e50;
+    z-index: 10000;
 }
 
 /* Geographic Map */

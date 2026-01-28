@@ -506,6 +506,15 @@
     font-style: italic;
 }
 
+.kpi-ibnr-note {
+    font-size: 0.7rem;
+    color: #f39c12;
+    font-weight: 500;
+    margin-top: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
 /* Table Section */
 .table-section {
     background: white;
@@ -1786,6 +1795,153 @@
     margin-top: 1rem;
     font-size: 0.8rem;
     color: #7f8c8d;
+}
+
+/* ============================================
+   METRIC BAR - Consolidated Summary Metrics
+   ============================================ */
+.metric-bar-container {
+    margin-bottom: 2rem;
+}
+
+.metric-bar {
+    display: flex;
+    gap: 1rem;
+    background: white;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.metric-bar-item {
+    flex: 1;
+    padding: 1rem 1.25rem;
+    border-radius: 8px;
+    background: #f8f9fa;
+    cursor: help;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.metric-bar-item:hover {
+    background: #eef5fc;
+    transform: translateY(-2px);
+}
+
+.metric-bar-item.success {
+    background: linear-gradient(135deg, #e8f8e8 0%, #f8f9fa 100%);
+    border-left: 3px solid #27ae60;
+}
+
+.metric-bar-item.highlight {
+    background: linear-gradient(135deg, #fff9e8 0%, #f8f9fa 100%);
+    border-left: 3px solid var(--piedmont-gold, #F7A828);
+}
+
+.metric-bar-label {
+    font-size: 0.75rem;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.35rem;
+}
+
+.metric-bar-value {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #2c3e50;
+    line-height: 1.2;
+}
+
+.metric-bar-item.success .metric-bar-value {
+    color: #27ae60;
+}
+
+.metric-bar-item.highlight .metric-bar-value {
+    color: var(--piedmont-primary, #C84E28);
+}
+
+.metric-bar-detail {
+    font-size: 0.7rem;
+    color: #95a5a6;
+    margin-top: 0.25rem;
+}
+
+/* Metric bar tooltips */
+.metric-bar-item[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2c3e50;
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 400;
+    white-space: normal;
+    width: 280px;
+    text-align: left;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    line-height: 1.5;
+    margin-bottom: 10px;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.metric-bar-item[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    border: 8px solid transparent;
+    border-top-color: #2c3e50;
+    z-index: 10000;
+}
+
+/* Waterfall Chart Section */
+.waterfall-section {
+    margin-bottom: 2rem;
+}
+
+.waterfall-section .chart-subtitle {
+    color: #7f8c8d;
+    font-size: 0.9rem;
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+}
+
+.waterfall-wrapper {
+    min-height: 350px;
+}
+
+/* Mobile responsive for metric bar */
+@media (max-width: 992px) {
+    .metric-bar {
+        flex-wrap: wrap;
+    }
+
+    .metric-bar-item {
+        flex: 1 1 calc(50% - 0.5rem);
+        min-width: 140px;
+    }
+}
+
+@media (max-width: 576px) {
+    .metric-bar {
+        flex-direction: column;
+    }
+
+    .metric-bar-item {
+        flex: 1 1 100%;
+    }
+
+    .metric-bar-value {
+        font-size: 1.4rem;
+    }
 }
 
 .ibnr-methodology {
