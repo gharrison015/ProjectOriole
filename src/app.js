@@ -3468,26 +3468,31 @@ function showCountyDrillDown(county) {
     const nonElectiveTotal = county.facilities.reduce((sum, f) =>
         sum + f.services.filter(s => !s.isElective).reduce((s, srv) => s + srv.spend, 0), 0);
 
+    // Calculate OON Leakage from Total Cost × Leakage %
+    const totalCost = county.totalLeakage; // totalLeakage represents total cost
+    const oonLeakage = totalCost * county.leakageScore;
+    const totalFacilityCost = electiveTotal + nonElectiveTotal;
+
     let modalBody = `
         <h2 style="margin-bottom: 0.5rem;">${county.name} - Leakage Analysis</h2>
-        <p style="color: #7f8c8d; margin-bottom: 1.5rem;">Out-of-Network referral patterns and spend breakdown</p>
+        <p style="color: #7f8c8d; margin-bottom: 1.5rem;">Out-of-Network referral patterns and cost breakdown</p>
 
         <div class="market-kpi-row" style="grid-template-columns: repeat(4, 1fr); margin-bottom: 1.5rem;">
             <div class="kpi-box">
+                <div class="kpi-label">Total Cost</div>
+                <div class="kpi-value">$${(totalCost / 1000000).toFixed(2)}M</div>
+            </div>
+            <div class="kpi-box">
                 <div class="kpi-label">Total OON Leakage</div>
-                <div class="kpi-value bad">$${(county.totalLeakage / 1000000).toFixed(2)}M</div>
+                <div class="kpi-value bad">$${(oonLeakage / 1000000).toFixed(2)}M</div>
             </div>
             <div class="kpi-box">
                 <div class="kpi-label">Leakage %</div>
                 <div class="kpi-value" style="color: ${county.leakageScore > 0.6 ? '#e74c3c' : county.leakageScore > 0.3 ? '#f39c12' : '#27ae60'};">${(county.leakageScore * 100).toFixed(0)}%</div>
             </div>
             <div class="kpi-box">
-                <div class="kpi-label">Elective Spend</div>
-                <div class="kpi-value">$${(electiveTotal / 1000000).toFixed(2)}M</div>
-            </div>
-            <div class="kpi-box">
-                <div class="kpi-label">Non-Elective Spend</div>
-                <div class="kpi-value">$${(nonElectiveTotal / 1000000).toFixed(2)}M</div>
+                <div class="kpi-label">Total Facility Cost</div>
+                <div class="kpi-value">$${(totalFacilityCost / 1000000).toFixed(2)}M</div>
             </div>
         </div>
 
@@ -3511,7 +3516,7 @@ function showCountyDrillDown(county) {
                             <th>CPT</th>
                             <th>Type</th>
                             <th>Provider</th>
-                            <th style="text-align: right;">Spend</th>
+                            <th style="text-align: right;">Cost</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -3653,7 +3658,7 @@ function drillDownMarket(marketId) {
                 <tr>
                     <th>Provider / Facility</th>
                     <th>Attributed Lives</th>
-                    <th>PMPM Spend</th>
+                    <th>PMPM Cost</th>
                     <th>Quality Score</th>
                     <th>Leakage %</th>
                     <th>Action</th>
