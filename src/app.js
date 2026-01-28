@@ -932,24 +932,49 @@ function initLeakagePieChart() {
 
     const data = getLeakageFilteredData();
 
+    // Create gradient fills for modern 3D look
+    const canvas = ctx;
+    const chartCtx = canvas.getContext('2d');
+
+    // In-Network gradient (green tones)
+    const greenGrad = chartCtx.createLinearGradient(0, 0, 0, canvas.height || 280);
+    greenGrad.addColorStop(0, '#2ecc71');
+    greenGrad.addColorStop(0.5, '#27ae60');
+    greenGrad.addColorStop(1, '#1e8449');
+
+    // OON gradient (red tones)
+    const redGrad = chartCtx.createLinearGradient(0, 0, 0, canvas.height || 280);
+    redGrad.addColorStop(0, '#e74c3c');
+    redGrad.addColorStop(0.5, '#c0392b');
+    redGrad.addColorStop(1, '#a93226');
+
     leakagePieChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: ['In-Network', 'Out-of-Network'],
             datasets: [{
                 data: [data.inPct, data.oonPct],
+                backgroundColor: [greenGrad, redGrad],
+                borderWidth: 0,
+                hoverBorderWidth: 3,
+                hoverBorderColor: '#fff',
+                hoverOffset: 8
+            },
+            // Shadow ring for 3D depth
+            {
+                data: [data.inPct, data.oonPct],
                 backgroundColor: [
-                    'rgba(39, 174, 96, 0.9)',
-                    'rgba(231, 76, 60, 0.9)'
+                    'rgba(30, 132, 73, 0.3)',
+                    'rgba(169, 50, 38, 0.3)'
                 ],
-                borderWidth: 2,
-                borderColor: '#fff'
+                borderWidth: 0,
+                weight: 0.3
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: true,
-            cutout: '45%',
+            cutout: '35%',
             layout: {
                 padding: 10
             },
@@ -958,10 +983,15 @@ function initLeakagePieChart() {
                     display: false
                 },
                 datalabels: {
+                    display: function(context) {
+                        return context.datasetIndex === 0;
+                    },
                     color: '#fff',
-                    font: { weight: 'bold', size: 12 },
+                    font: { weight: 'bold', size: 13 },
                     anchor: 'center',
                     align: 'center',
+                    textShadowColor: 'rgba(0,0,0,0.4)',
+                    textShadowBlur: 4,
                     formatter: function(value, context) {
                         const currentData = (leakagePieChart && leakagePieChart._customAmounts) || data;
                         const amounts = [currentData.inNetwork, currentData.oon];
@@ -971,6 +1001,9 @@ function initLeakagePieChart() {
                     textAlign: 'center'
                 },
                 tooltip: {
+                    filter: function(tooltipItem) {
+                        return tooltipItem.datasetIndex === 0;
+                    },
                     callbacks: {
                         label: function(context) {
                             const currentData = (leakagePieChart && leakagePieChart._customAmounts) || data;
@@ -986,7 +1019,7 @@ function initLeakagePieChart() {
                 }
             },
             onClick: (event, elements) => {
-                if (elements.length > 0) {
+                if (elements.length > 0 && elements[0].datasetIndex === 0) {
                     const index = elements[0].index;
                     toggleNetworkView(index);
                 }
@@ -2688,9 +2721,12 @@ function updateLeakageDisplay() {
         repatriationNoteEl.textContent = `${viewLabel}${serviceLabel} - if reduced to 20% benchmark`;
     }
 
-    // Update pie chart
+    // Update pie chart (both main dataset and shadow ring)
     if (leakagePieChart) {
         leakagePieChart.data.datasets[0].data = [data.inPct, data.oonPct];
+        if (leakagePieChart.data.datasets[1]) {
+            leakagePieChart.data.datasets[1].data = [data.inPct, data.oonPct];
+        }
         leakagePieChart._customAmounts = { inNetwork: data.inNetwork, oon: data.oon };
         leakagePieChart.update();
     }
