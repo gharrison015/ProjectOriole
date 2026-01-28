@@ -776,6 +776,9 @@ function initLeakagePieChart() {
         leakagePieChart.destroy();
     }
 
+    const totalSpend = 486.7; // Total spend in millions
+    const spendAmounts = [371.4, 115.3]; // In-Network, Out-of-Network in millions
+
     leakagePieChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -796,27 +799,44 @@ function initLeakagePieChart() {
         options: {
             responsive: true,
             maintainAspectRatio: true,
+            cutout: '50%',
             plugins: {
                 legend: {
                     position: 'bottom',
                     labels: {
-                        padding: 20,
+                        padding: 15,
                         font: {
-                            size: 14
+                            size: 13
+                        },
+                        generateLabels: function(chart) {
+                            const data = chart.data;
+                            return data.labels.map((label, i) => ({
+                                text: `${label}: $${spendAmounts[i]}M (${data.datasets[0].data[i]}%)`,
+                                fillStyle: data.datasets[0].backgroundColor[i],
+                                strokeStyle: data.datasets[0].borderColor[i],
+                                lineWidth: 2,
+                                index: i
+                            }));
                         }
                     }
                 },
                 datalabels: {
                     color: '#fff',
-                    font: { weight: 'bold', size: 14 },
-                    formatter: function(value) {
-                        return value + '%';
+                    font: { weight: 'bold', size: 13 },
+                    textAlign: 'center',
+                    formatter: function(value, context) {
+                        const amount = spendAmounts[context.dataIndex];
+                        return ['$' + amount + 'M', value + '%'];
                     }
                 },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            return context.label + ': ' + context.parsed + '%';
+                            const amount = spendAmounts[context.dataIndex];
+                            return `${context.label}: $${amount}M (${context.parsed}%)`;
+                        },
+                        afterBody: function() {
+                            return `Total Spend: $${totalSpend}M`;
                         }
                     }
                 }
@@ -1469,7 +1489,7 @@ function initEpisodeCostChart() {
                                     `Episodes: ${hospital.episodes}`,
                                     `vs Benchmark: ${variance > 0 ? '+' : ''}${variance}%`,
                                     '',
-                                    '🔍 Click to view provider details'
+                                    'Click to view provider details'
                                 ];
                             }
                             return `Benchmark: $${context.raw.toLocaleString()}`;
@@ -1660,7 +1680,7 @@ function drillDownHospitalProviders(hospitalIndex) {
         <!-- Calculation Breakdown Table -->
         <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; border: 1px solid #e0e0e0;">
             <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50; display: flex; align-items: center; gap: 0.5rem;">
-                <span style="font-size: 1.2rem;">📊</span> Savings Calculation Breakdown
+                <svg style="width:20px;height:20px;flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="14" y="6" width="3" height="12"/></svg> Savings Calculation Breakdown
             </h3>
             <div style="overflow-x: auto;">
                 <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
@@ -1803,7 +1823,7 @@ function drillDownHospitalProviders(hospitalIndex) {
                 <p style="margin-top: 0.5rem;"><em>Recommend sharing clinical protocols with higher-cost providers</em></p>
             </div>
             <div class="alert-box warning">
-                <h4>📊 Benchmark Comparison</h4>
+                <h4><svg style="width:16px;height:16px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="14" y="6" width="3" height="12"/></svg>Benchmark Comparison</h4>
                 <p>CMS Joint Replacement Bundle benchmarks (2024):</p>
                 <ul>
                     <li><strong>Target Cost:</strong> $${benchmark.avgCost.toLocaleString()} per episode</li>
@@ -3116,7 +3136,7 @@ function updateCountyDetailPanel(countyData) {
         </div>
 
         <div class="county-provider-list">
-            <h5>🏥 Top Rendering Providers</h5>
+            <h5><svg style="width:14px;height:14px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>Top Rendering Providers</h5>
             ${topProviders.map(p => `
                 <div class="county-provider-item">
                     <div class="provider-name">${p.name}</div>
@@ -3130,7 +3150,7 @@ function updateCountyDetailPanel(countyData) {
         </div>
 
         <div class="county-provider-list">
-            <h5>📋 Primary Services</h5>
+            <h5><svg style="width:14px;height:14px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg>Primary Services</h5>
             ${countyData.facilities.slice(0, 3).map(f => `
                 <div class="county-provider-item">
                     <div class="provider-name">${f.name}</div>
@@ -3222,15 +3242,6 @@ function showCountyDrillDown(county) {
             </div>
         `).join('')}
 
-        <div class="alert-box warning" style="margin-top: 1.5rem;">
-            <h4>Intervention Recommendations</h4>
-            <ul>
-                <li><strong>Network Development:</strong> Evaluate contracting opportunities with high-volume OON facilities in ${county.name}</li>
-                <li><strong>Provider Education:</strong> Implement referral guidance for elective services ($${(electiveTotal / 1000000).toFixed(1)}M opportunity)</li>
-                <li><strong>Care Navigation:</strong> Deploy care coordinators for high-cost service lines</li>
-                <li><strong>Savings Potential:</strong> Recapturing 50% of elective leakage = <strong style="color: #27ae60;">$${(electiveTotal * 0.5 / 1000000).toFixed(2)}M</strong> annually</li>
-            </ul>
-        </div>
     `;
 
     showModal(modalBody);
@@ -3758,7 +3769,7 @@ function drillDownEDMarket(marketId) {
         <!-- Savings Calculation Breakdown -->
         <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; border: 1px solid #e0e0e0;">
             <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50; display: flex; align-items: center; gap: 0.5rem;">
-                <span style="font-size: 1.2rem;">📊</span> Savings Calculation Breakdown by Attributed PCP
+                <svg style="width:20px;height:20px;flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="14" y="6" width="3" height="12"/></svg> Savings Calculation Breakdown by Attributed PCP
             </h3>
             <div style="overflow-x: auto;">
                 <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
@@ -3821,12 +3832,16 @@ function drillDownEDMarket(marketId) {
         <!-- Methodology Box -->
         <div style="background: #f8f9fa; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; border: 1px solid #e0e0e0;">
             <h4 style="margin: 0 0 0.75rem 0; font-size: 0.9rem; color: #2c3e50;">
-                <span style="margin-right: 0.5rem;">📋</span>Methodology & Definitions
+                <svg style="width:16px;height:16px;vertical-align:-3px;margin-right:0.5rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg>Methodology & Definitions
             </h4>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; font-size: 0.8rem; color: #5a6c7d;">
                 <div>
+                    <strong style="color: #2c3e50;">Attribution Definition:</strong>
+                    <p style="margin: 0.25rem 0 0 0;">Patients attributed to PCP based on plurality of E/M visits in 24-month lookback period. Attribution follows CMS MSSP methodology for determining the primary care provider relationship.</p>
+                </div>
+                <div>
                     <strong style="color: #2c3e50;">Avoidable ED Visit Definition:</strong>
-                    <p style="margin: 0.25rem 0 0 0;">ED visits classified as avoidable based on NYU ED Algorithm. Includes conditions treatable in primary care, urgent care, or via telehealth (e.g., URI, UTI, minor injuries, non-emergent back pain).</p>
+                    <p style="margin: 0.25rem 0 0 0;">ED visits classified as avoidable per NYU ED Algorithm. Includes conditions treatable in primary care, urgent care, or via telehealth (e.g., URI, UTI, minor injuries, non-emergent back pain).</p>
                 </div>
                 <div>
                     <strong style="color: #2c3e50;">Cost/Visit Calculation:</strong>
@@ -3834,7 +3849,7 @@ function drillDownEDMarket(marketId) {
                 </div>
                 <div>
                     <strong style="color: #2c3e50;">Savings Potential Formula:</strong>
-                    <p style="margin: 0.25rem 0 0 0;">Avoidable Visits × (ED Cost/Visit - Urgent Care Cost). Conservative estimate assumes $150 urgent care alternative cost. Does not include pharmacy or follow-up savings.</p>
+                    <p style="margin: 0.25rem 0 0 0;"><code style="background:#e9ecef;padding:2px 6px;border-radius:4px;font-size:0.85em;">Savings = Avoidable ED Visits × (Avg ED Cost/Visit − Avg Urgent Care/PCP Visit Cost)</code><br>Alternative care costs by avoidable category: Primary Care Treatable → PCP visit ($95); Urgent Care Appropriate → UC visit ($150); Non-Emergent → UC visit ($150). Does not include pharmacy or follow-up savings.</p>
                 </div>
             </div>
         </div>
@@ -3989,7 +4004,7 @@ function showEDPatientDetail(marketId, pcpId, pcpName, avoidableCount, costPerVi
         <!-- Calculation Methodology -->
         <div style="background: #f8f9fa; border-radius: 12px; padding: 1.25rem; margin-top: 1.5rem; border: 1px solid #e0e0e0;">
             <h4 style="margin: 0 0 0.75rem 0; font-size: 0.9rem; color: #2c3e50;">
-                <span style="margin-right: 0.5rem;">📋</span>Data Definitions & Calculations
+                <svg style="width:16px;height:16px;vertical-align:-3px;margin-right:0.5rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg>Data Definitions & Calculations
             </h4>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; font-size: 0.8rem; color: #5a6c7d;">
                 <div>
@@ -4516,9 +4531,13 @@ function drillDownAvoidableMarket(marketId) {
         <!-- Methodology Box -->
         <div style="background: #f8f9fa; border-radius: 12px; padding: 1.25rem; margin-top: 1.5rem; border: 1px solid #e0e0e0;">
             <h4 style="margin: 0 0 0.75rem 0; font-size: 0.9rem; color: #2c3e50;">
-                <span style="margin-right: 0.5rem;">📋</span>Methodology & Definitions
+                <svg style="width:16px;height:16px;vertical-align:-3px;margin-right:0.5rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg>Methodology & Definitions
             </h4>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; font-size: 0.8rem; color: #5a6c7d;">
+                <div>
+                    <strong style="color: #2c3e50;">Attribution Definition:</strong>
+                    <p style="margin: 0.25rem 0 0 0;">Patients attributed to PCP based on plurality of E/M visits in 24-month lookback period. Attribution follows CMS MSSP methodology for determining the primary care provider relationship.</p>
+                </div>
                 ${view === 'ed' || view === 'all' ? `
                 <div>
                     <strong style="color: #e74c3c;">Avoidable ED Visit (NYU Algorithm):</strong>
@@ -4528,12 +4547,18 @@ function drillDownAvoidableMarket(marketId) {
                 ${view === 'ip' || view === 'all' ? `
                 <div>
                     <strong style="color: #3498db;">Avoidable IP Admission (AHRQ PQIs):</strong>
-                    <p style="margin: 0.25rem 0 0 0;">Hospitalizations preventable with effective outpatient care per AHRQ Prevention Quality Indicators. Includes diabetes complications, COPD/asthma exacerbations, CHF decompensation, hypertension, bacterial pneumonia.</p>
+                    <p style="margin: 0.25rem 0 0 0;">Hospitalizations preventable with effective outpatient care per AHRQ Prevention Quality Indicators (PQI-01 through PQI-16). Includes diabetes short/long-term complications, COPD/asthma exacerbations, CHF decompensation, hypertension, bacterial pneumonia, and UTI admissions.</p>
                 </div>
                 ` : ''}
                 <div>
                     <strong style="color: #2c3e50;">Savings Calculation:</strong>
-                    <p style="margin: 0.25rem 0 0 0;">${view === 'ed' ? 'Avoidable Visits × (ED Cost - UC Cost). UC costs based on Medicare fee schedule.' : view === 'ip' ? 'Avoidable Admissions × (IP Cost - Observation Cost). Assumes appropriate patients can be observed vs. admitted.' : 'Combined ED and IP savings potential from diversion to appropriate care settings.'}</p>
+                    <p style="margin: 0.25rem 0 0 0;">
+                    ${view === 'ed' ? `<code style="background:#e9ecef;padding:2px 6px;border-radius:4px;font-size:0.85em;">ED Savings = Avoidable ED Visits × (Avg ED Cost/Visit − Avg UC/PCP Visit Cost)</code><br>Alternative care costs: Primary Care Treatable → PCP visit ($95); Urgent Care Appropriate → UC visit ($150); Non-Emergent → UC visit ($150).`
+                    : view === 'ip' ? `<code style="background:#e9ecef;padding:2px 6px;border-radius:4px;font-size:0.85em;">IP Savings = Avoidable Admissions × (Avg IP Cost/Admission − Avg Observation Stay Cost)</code><br>Observation stay cost based on 23-hour observation rate ($2,800 avg). Applicable to admissions where ambulatory-sensitive condition management could prevent hospitalization per AHRQ PQI methodology.`
+                    : `<strong>ED:</strong> <code style="background:#e9ecef;padding:2px 6px;border-radius:4px;font-size:0.85em;">Avoidable ED Visits × (Avg ED Cost/Visit − Avg UC/PCP Visit Cost)</code><br>
+                    <strong>IP:</strong> <code style="background:#e9ecef;padding:2px 6px;border-radius:4px;font-size:0.85em;">Avoidable Admissions × (Avg IP Cost/Admission − Avg Observation Stay Cost)</code><br>
+                    ED alternatives: PCP visit ($95) or UC visit ($150). IP alternative: observation stay ($2,800 avg). Combined total represents the sum of ED + IP diversion savings.`}
+                    </p>
                 </div>
             </div>
         </div>
@@ -4562,7 +4587,7 @@ function buildPCPTable(pcps, marketId, viewType, unitLabel) {
     let html = `
         <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; border: 1px solid #e0e0e0;">
             <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50; display: flex; align-items: center; gap: 0.5rem;">
-                <span style="font-size: 1.2rem;">${isED ? '🏥' : '🏨'}</span> ${unitLabel} Breakdown by Attributed PCP
+                <svg style="width:20px;height:20px;flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="${isED ? '#e74c3c' : '#3498db'}" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg> ${unitLabel} Breakdown by Attributed PCP
             </h3>
             <div style="overflow-x: auto;">
                 <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
@@ -4798,7 +4823,7 @@ function showAvoidablePatientDetail(marketId, pcpId, pcpName, avoidableCount, co
 
         <div style="background: #f8f9fa; border-radius: 12px; padding: 1.25rem; margin-top: 1.5rem; border: 1px solid #e0e0e0;">
             <h4 style="margin: 0 0 0.75rem 0; font-size: 0.9rem; color: #2c3e50;">
-                <span style="margin-right: 0.5rem;">📋</span>Data Definitions
+                <svg style="width:16px;height:16px;vertical-align:-3px;margin-right:0.5rem;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg>Data Definitions
             </h4>
             <div style="font-size: 0.8rem; color: #5a6c7d;">
                 ${isED ?
@@ -5406,7 +5431,7 @@ function showFacilityLeakageDetail(facilityId) {
 
             <!-- Repatriation Alert -->
             <div class="alert-box ${data.electivePct >= 50 ? 'warning' : 'info'}">
-                <h4>${data.electivePct >= 50 ? '🎯 High Repatriation Potential' : 'ℹ️ Limited Repatriation Potential'}</h4>
+                <h4>${data.electivePct >= 50 ? '<svg style="width:16px;height:16px;vertical-align:-3px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>High Repatriation Potential' : '<svg style="width:16px;height:16px;vertical-align:-3px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>Limited Repatriation Potential'}</h4>
                 ${data.electivePct >= 50 ? `
                     <p><strong>${electivePct}%</strong> of encounters are elective. Consider network contracting or steering to in-network alternatives:</p>
                     <ul style="margin-top: 0.5rem;">
@@ -8133,7 +8158,7 @@ function drillDownEpisode(episodeType) {
         <!-- Savings Calculation Breakdown -->
         <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; border: 1px solid #e0e0e0;">
             <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50; display: flex; align-items: center; gap: 0.5rem;">
-                <span style="font-size: 1.2rem;">📊</span> Savings Calculation Breakdown
+                <svg style="width:20px;height:20px;flex-shrink:0;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="14" y="6" width="3" height="12"/></svg> Savings Calculation Breakdown
             </h3>
             <div style="overflow-x: auto;">
                 <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
@@ -8598,7 +8623,7 @@ function showHedisMeasureDetail(measureCode) {
     // Monthly Performance Chart
     modalContent += `
         <div class="measure-chart-card" onclick="showHedisPatientListByMonth('${measureCode}', '${data.name}')">
-            <div class="chart-card-title">📈 Monthly Performance Trend</div>
+            <div class="chart-card-title"><svg style="width:14px;height:14px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 5 6-9"/></svg>Monthly Performance Trend</div>
             <canvas id="hedisMonthlyTrendChart-${measureCode}" style="max-height: 300px;"></canvas>
             <div style="text-align: center; margin-top: 0.5rem; font-size: 0.85rem; color: var(--piedmont-gray);">
                 Click to view patients by month
@@ -8972,7 +8997,7 @@ function exportFullPatientRoster() {
     loadingModal.innerHTML = `
         <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;">
             <div style="background: white; padding: 2rem; border-radius: 12px; text-align: center; max-width: 400px;">
-                <div style="font-size: 2rem; margin-bottom: 1rem;">📊</div>
+                <div style="margin-bottom: 1rem;"><svg style="width:32px;height:32px;" viewBox="0 0 24 24" fill="none" stroke="#7f8c8d" stroke-width="2"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="14" y="6" width="3" height="12"/></svg></div>
                 <h3 style="margin: 0 0 0.5rem 0; color: #2c3e50;">Generating Patient Roster</h3>
                 <p style="color: #7f8c8d; margin: 0 0 1rem 0;">Compiling 47,832 patient records with all HEDIS care gap statuses...</p>
                 <div style="width: 100%; height: 4px; background: #e9ecef; border-radius: 2px; overflow: hidden;">
@@ -9069,7 +9094,7 @@ function exportFullPatientRoster() {
         // Show success message
         showModal(`
             <div style="text-align: center; padding: 1rem;">
-                <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+                <div style="margin-bottom: 1rem;"><svg style="width:48px;height:48px;" viewBox="0 0 24 24" fill="none" stroke="#27ae60" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg></div>
                 <h2 style="margin: 0 0 1rem 0; color: #27ae60;">Export Complete</h2>
                 <p style="color: #5a6c7d; margin-bottom: 1.5rem;">
                     Successfully exported <strong>47,832 patient records</strong> with care gap statuses for all 15 HEDIS measures.
@@ -9329,7 +9354,7 @@ function showQualityPatientDetail(measureCode) {
     patientData.gaps.forEach(function(gap) {
         const isPrimaryGap = gap.measureCode === measureCode;
         modalBody += '<div class="gap-item ' + (isPrimaryGap ? 'primary-gap' : '') + '">';
-        modalBody += '<div class="gap-header"><span class="gap-measure">' + gap.measure + (isPrimaryGap ? ' ⭐' : '') + '</span>';
+        modalBody += '<div class="gap-header"><span class="gap-measure">' + gap.measure + (isPrimaryGap ? ' <span style="color:#f39c12;font-weight:bold;">★</span>' : '') + '</span>';
         modalBody += '<span class="gap-status ' + (gap.status === 'Open' ? 'open' : 'closing-soon') + '">' + gap.status + '</span></div>';
         modalBody += '<div class="gap-description">' + gap.description + '</div>';
         modalBody += '<div class="gap-details">';
@@ -9340,7 +9365,7 @@ function showQualityPatientDetail(measureCode) {
     });
 
     modalBody += '</div></div>';
-    modalBody += '<div class="appointment-section"><div class="appointment-title">📅 Next Scheduled Appointment</div>';
+    modalBody += '<div class="appointment-section"><div class="appointment-title"><svg style="width:14px;height:14px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Next Scheduled Appointment</div>';
     modalBody += '<div class="appointment-info">';
     modalBody += '<div class="appt-detail"><span class="appt-label">Date & Time</span><span class="appt-value">' + patientData.nextAppt.date + ' at ' + patientData.nextAppt.time + '</span></div>';
     modalBody += '<div class="appt-detail"><span class="appt-label">Provider</span><span class="appt-value">' + patientData.nextAppt.provider + '</span></div>';
@@ -9481,7 +9506,7 @@ function showMeasureDashboard(measureCode, measureName, performance, benchmark) 
     // Monthly Performance Chart
     modalBody += `
         <div class="measure-chart-card" onclick="showPatientListByMonth('${measureCode}', '${measureName}')">
-            <div class="chart-card-title">📈 Monthly Performance Trend</div>
+            <div class="chart-card-title"><svg style="width:14px;height:14px;vertical-align:-2px;margin-right:6px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 5 6-9"/></svg>Monthly Performance Trend</div>
             <canvas id="monthlyTrendChart-${measureCode}" style="max-height: 300px;"></canvas>
             <div style="text-align: center; margin-top: 0.5rem; font-size: 0.85rem; color: var(--piedmont-gray);">
                 Click to view patients by month
