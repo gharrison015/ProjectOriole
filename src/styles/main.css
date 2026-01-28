@@ -243,6 +243,12 @@ body {
     font-size: 0.65rem;
 }
 
+.stat-label.stat-date {
+    font-weight: 600;
+    text-transform: none;
+    margin-top: 0.25rem;
+}
+
 .stat-value {
     font-size: 1.5rem;
     font-weight: 700;
