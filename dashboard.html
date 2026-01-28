@@ -1289,123 +1289,123 @@
                         </div>
                     </div>
 
-                    <!-- HCC Summary Cards - Row 1: Core Metrics -->
-                    <div class="hcc-summary-grid">
-                        <div class="hcc-summary-card">
-                            <div class="hcc-card-header tooltip-hover" title="Risk Adjustment Factor: A CMS score reflecting the expected healthcare costs of a beneficiary based on their demographic and health status. Higher scores indicate higher expected costs and greater reimbursement.">
-                                <h4>Average RAF Score</h4>
-                                <span class="tooltip-icon">ⓘ</span>
+                    <!-- Risk Adjustment Grouped Cards -->
+                    <div class="ra-groups-container">
+                        <!-- Left Group: HCC/RAF Metrics -->
+                        <div class="ra-group ra-group-hcc">
+                            <div class="ra-group-header">
+                                <span class="group-icon">📊</span>
+                                <h3>HCC & Risk Adjustment</h3>
+                                <span class="group-subtitle">Coding Performance</span>
                             </div>
-                            <div class="hcc-value">1.247</div>
-                            <div class="hcc-detail">National Avg: 1.195</div>
-                            <div class="hcc-trend good">+4.4% above benchmark</div>
-                        </div>
-                        <div class="hcc-summary-card">
-                            <div class="hcc-card-header tooltip-hover" title="Additional CMS revenue generated through accurate risk adjustment coding compared to an unadjusted baseline. Calculated as (Actual RAF - 1.0) × Annual Per-Capita Rate × Member Months.">
-                                <h4>Revenue Impact</h4>
-                                <span class="tooltip-icon">ⓘ</span>
+                            <div class="ra-cards-grid">
+                                <!-- Row 1 -->
+                                <div class="ra-card" title="Risk Adjustment Factor: Average RAF score for attributed population. Reflects expected healthcare costs based on documented conditions.">
+                                    <div class="ra-card-label">Avg RAF Score <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value" id="avg-raf-score">0.892</div>
+                                    <div class="ra-card-detail">National Avg: 1.00</div>
+                                    <div class="ra-card-trend bad">-10.8% below benchmark</div>
+                                </div>
+                                <div class="ra-card" title="Average RAF Gap: Mean difference between current documented RAF and potential RAF if all suspected/uncoded conditions were captured.">
+                                    <div class="ra-card-label">Avg RAF Gap <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value warning" id="avg-raf-gap">0.156</div>
+                                    <div class="ra-card-detail">Per patient opportunity</div>
+                                    <div class="ra-card-trend neutral">~$1,248/patient/year</div>
+                                </div>
+                                <div class="ra-card" title="Average number of Hierarchical Condition Categories documented per attributed patient.">
+                                    <div class="ra-card-label">Avg HCCs/Patient <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value" id="avg-hccs-patient">2.4</div>
+                                    <div class="ra-card-detail">Benchmark: 2.8</div>
+                                    <div class="ra-card-trend bad">-14% below target</div>
+                                </div>
+                                <!-- Row 2 -->
+                                <div class="ra-card" title="Total number of unique HCC codes documented across all attributed patients in the current measurement year.">
+                                    <div class="ra-card-label">Total HCCs <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value" id="total-hccs">114,775</div>
+                                    <div class="ra-card-detail">Across 47,823 patients</div>
+                                </div>
+                                <div class="ra-card warning" title="Sum of RAF weight for all Confirmed Uncoded diagnoses - conditions documented in prior years not yet recaptured this year.">
+                                    <div class="ra-card-label">Sum RAF Uncoded Confirmed <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value warning" id="sum-raf-confirmed">2,847.3</div>
+                                    <div class="ra-card-detail">$2.3M revenue at risk</div>
+                                </div>
+                                <div class="ra-card warning" title="Sum of RAF weight for all Suspected Uncoded diagnoses - conditions identified through claims analysis that may exist but were never documented.">
+                                    <div class="ra-card-label">Sum RAF Uncoded Suspected <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value warning" id="sum-raf-suspected">574.2</div>
+                                    <div class="ra-card-detail">$470K opportunity</div>
+                                </div>
+                                <!-- Row 3 -->
+                                <div class="ra-card warning" title="Count of unique confirmed uncoded diagnoses from prior years requiring recapture in current year.">
+                                    <div class="ra-card-label">Total Uncoded Confirmed Dx <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value warning" id="total-uncoded-confirmed">2,847</div>
+                                    <div class="ra-card-detail">Prior year HCCs</div>
+                                </div>
+                                <div class="ra-card warning" title="Count of unique suspected diagnoses identified through analytics requiring clinical validation.">
+                                    <div class="ra-card-label">Total Uncoded Suspected Dx <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value warning" id="total-uncoded-suspected">574</div>
+                                    <div class="ra-card-detail">Require validation</div>
+                                </div>
+                                <div class="ra-card" title="Recapture Rate: Percentage of prior year HCCs successfully re-documented in the current year. Formula: (Recaptured HCCs / Prior Year HCCs) × 100.">
+                                    <div class="ra-card-label">HCC Recapture Rate <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value" id="hcc-recapture-rate">14.7%</div>
+                                    <div class="ra-card-detail">YTD (Jan target: 8%)</div>
+                                    <div class="ra-card-trend good">+6.7 pts ahead of pace</div>
+                                </div>
                             </div>
-                            <div class="hcc-value">$5.2M</div>
-                            <div class="hcc-detail">Additional CMS revenue</div>
-                            <div class="hcc-trend">vs. unadjusted baseline</div>
                         </div>
-                        <div class="hcc-summary-card warning">
-                            <div class="hcc-card-header tooltip-hover" title="Uncoded Dx (Uncoded Diagnoses): Per CMS Risk Adjustment guidelines, these are chronic conditions documented in prior payment years (PY2024/PY2025) that have NOT yet been recaptured in the current measurement year (PY2026). HCCs must be documented annually to affect RAF scores.">
-                                <h4>Uncoded Dx</h4>
-                                <span class="tooltip-icon">ⓘ</span>
-                            </div>
-                            <div class="hcc-value">2,847</div>
-                            <div class="hcc-detail">Prior year HCCs not yet recaptured</div>
-                            <div class="hcc-trend bad">$2.3M revenue at risk</div>
-                        </div>
-                        <div class="hcc-summary-card">
-                            <div class="hcc-card-header tooltip-hover" title="Recapture Rate: The percentage of HCCs documented in prior years that have been successfully re-documented in the current year. Formula: (Recaptured HCCs / Prior Year HCCs) × 100. Industry average is 72.1%.">
-                                <h4>Recapture Rate</h4>
-                                <span class="tooltip-icon">ⓘ</span>
-                            </div>
-                            <div class="hcc-value">76.3%</div>
-                            <div class="hcc-detail">Industry Avg: 72.1%</div>
-                            <div class="hcc-trend good">+4.2 pts above avg</div>
-                        </div>
-                    </div>
 
-                    <!-- HCC Summary Cards - Row 2: Suspect & Forecast -->
-                    <div class="hcc-summary-grid" style="margin-top: 0;">
-                        <div class="hcc-summary-card warning">
-                            <div class="hcc-card-header tooltip-hover" title="Suspect Uncoded Dx: Conditions identified through claims pattern analysis, pharmacy data, or lab results that suggest an HCC may exist but has never been documented. These represent NEW coding opportunities beyond recapture.">
-                                <h4>Suspect Uncoded Dx</h4>
-                                <span class="tooltip-icon">ⓘ</span>
+                        <!-- Right Group: AWV Metrics -->
+                        <div class="ra-group ra-group-awv">
+                            <div class="ra-group-header">
+                                <span class="group-icon">🩺</span>
+                                <h3>Annual Wellness Visits</h3>
+                                <span class="group-subtitle">AWV Performance</span>
                             </div>
-                            <div class="hcc-value">574</div>
-                            <div class="hcc-detail">Require clinical validation</div>
-                            <div class="hcc-trend bad">$470K opportunity</div>
-                        </div>
-                        <div class="hcc-summary-card highlight">
-                            <div class="hcc-card-header tooltip-hover" title="Forecasted Uncoded Capture: Projected HCC recapture based on patients with Uncoded Dx who have PCP appointments scheduled between now and Dec 31, 2026. Assumes 85% documentation rate for scheduled visits.">
-                                <h4>Forecasted Uncoded Capture</h4>
-                                <span class="tooltip-icon">ⓘ</span>
+                            <div class="ra-cards-grid">
+                                <!-- Row 1 -->
+                                <div class="ra-card" title="Total attributed patients eligible for Annual Wellness Visit in the measurement year.">
+                                    <div class="ra-card-label">Denominator <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value" id="awv-denominator">47,823</div>
+                                    <div class="ra-card-detail">Eligible patients</div>
+                                </div>
+                                <div class="ra-card success" title="Patients who have completed an Annual Wellness Visit in the current measurement year.">
+                                    <div class="ra-card-label">Numerator <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value good" id="awv-numerator">23,911</div>
+                                    <div class="ra-card-detail">Completed AWV</div>
+                                </div>
+                                <div class="ra-card highlight clickable" onclick="showAWVComplianceModal()" title="AWV completion rate for attributed population. AWV is critical for comprehensive HCC documentation.">
+                                    <div class="ra-card-label">Compliance <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value good" id="awv-compliance-rate">50.0%</div>
+                                    <div class="ra-card-detail">23,911 / 47,823</div>
+                                    <div class="ra-card-action">Click for details →</div>
+                                </div>
+                                <!-- Row 2 -->
+                                <div class="ra-card warning clickable" onclick="showAWVComplianceModal('forecast')" title="Projected AWV revenue from non-compliant patients with scheduled visits. Uses weighted average reimbursement (G0402, G0438, G0439).">
+                                    <div class="ra-card-label">Forecast Opportunity <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value warning" id="awv-forecast-revenue">$362K</div>
+                                    <div class="ra-card-detail" id="awv-forecast-detail">2,412 scheduled</div>
+                                    <div class="ra-card-action">Click for details →</div>
+                                </div>
+                                <div class="ra-card danger clickable" onclick="showAWVComplianceModal('missed')" title="Revenue lost from visits where AWV could have been billed but wasn't. Visits after AWV due date without AWV code.">
+                                    <div class="ra-card-label">Missed Opportunity <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value bad" id="awv-missed-revenue">$847K</div>
+                                    <div class="ra-card-detail" id="awv-missed-detail">5,647 visits</div>
+                                    <div class="ra-card-action">Click for details →</div>
+                                </div>
+                                <div class="ra-card danger clickable" onclick="showHCCPatientList('all', 'not-scheduled')" title="Patients AWV non-compliant with no upcoming PCP appointments. Require immediate scheduling outreach.">
+                                    <div class="ra-card-label">Not Scheduled <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value bad" id="not-scheduled-count">21,500</div>
+                                    <div class="ra-card-detail">No upcoming appt</div>
+                                    <div class="ra-card-action">Click for list →</div>
+                                </div>
+                                <!-- Row 3 -->
+                                <div class="ra-card highlight clickable" onclick="showHighValueOutreach()" title="Top 100 patients ranked by Potential RAF who are AWV incomplete and not scheduled. Priority outreach list.">
+                                    <div class="ra-card-label">High-Value Outreach <span class="tooltip-icon">ⓘ</span></div>
+                                    <div class="ra-card-value info">100</div>
+                                    <div class="ra-card-detail">Priority patients</div>
+                                    <div class="ra-card-action">Click for list →</div>
+                                </div>
                             </div>
-                            <div class="hcc-value" id="hcc-forecast-capture">1,847</div>
-                            <div class="hcc-detail" id="hcc-forecast-detail">64.9% of uncoded with scheduled visits</div>
-                            <div class="hcc-trend good" id="hcc-forecast-revenue">$1.5M projected recapture</div>
-                        </div>
-                        <div class="hcc-summary-card clickable-card" onclick="showHCCPatientList('all', 'awv-incomplete')">
-                            <div class="hcc-card-header tooltip-hover" title="Patients who have not completed an Annual Wellness Visit (AWV) in PY2026. AWV provides optimal opportunity for comprehensive HCC documentation and is a key driver of RAF score optimization.">
-                                <h4>AWV Incomplete</h4>
-                                <span class="tooltip-icon">ⓘ</span>
-                            </div>
-                            <div class="hcc-value" style="color: #e74c3c;" id="awv-incomplete-count">23,912</div>
-                            <div class="hcc-detail">Patients needing AWV</div>
-                            <div class="hcc-trend">Click to view list →</div>
-                        </div>
-                        <div class="hcc-summary-card clickable-card" onclick="showHCCPatientList('all', 'not-scheduled')">
-                            <div class="hcc-card-header tooltip-hover" title="Patients who are AWV non-compliant AND have no upcoming PCP appointments in the EMR. These patients require immediate scheduling outreach.">
-                                <h4>Not Scheduled</h4>
-                                <span class="tooltip-icon">ⓘ</span>
-                            </div>
-                            <div class="hcc-value" style="color: #e74c3c;" id="not-scheduled-count">21,500</div>
-                            <div class="hcc-detail">AWV incomplete + no appt</div>
-                            <div class="hcc-trend">Click to view list →</div>
-                        </div>
-                    </div>
-
-                    <!-- HCC Summary Cards - Row 3: AWV Compliance & Revenue -->
-                    <div class="hcc-summary-grid" style="margin-top: 0;">
-                        <div class="hcc-summary-card highlight clickable-card" onclick="showAWVComplianceModal()">
-                            <div class="hcc-card-header tooltip-hover" title="Annual Wellness Visit completion rate for attributed population. AWV is critical for comprehensive HCC documentation and risk adjustment optimization.">
-                                <h4>AWV Compliance</h4>
-                                <span class="tooltip-icon">ⓘ</span>
-                            </div>
-                            <div class="hcc-value" style="color: #27ae60;" id="awv-compliance-rate">50.0%</div>
-                            <div class="hcc-detail" id="awv-compliance-detail">23,911 / 47,823 completed</div>
-                            <div class="hcc-trend">Click for detailed view →</div>
-                        </div>
-                        <div class="hcc-summary-card warning clickable-card" onclick="showAWVComplianceModal('forecast')">
-                            <div class="hcc-card-header tooltip-hover" title="Projected AWV revenue from patients who are non-compliant but have scheduled visits. Calculated using weighted average AWV reimbursement rates (G0402, G0438, G0439).">
-                                <h4>Forecast Opportunity</h4>
-                                <span class="tooltip-icon">ⓘ</span>
-                            </div>
-                            <div class="hcc-value" style="color: #f39c12;" id="awv-forecast-revenue">$362K</div>
-                            <div class="hcc-detail" id="awv-forecast-detail">2,412 patients with scheduled visits</div>
-                            <div class="hcc-trend">Weighted avg: $150/AWV →</div>
-                        </div>
-                        <div class="hcc-summary-card clickable-card" style="background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%); border: 1px solid #e74c3c;" onclick="showAWVComplianceModal('missed')">
-                            <div class="hcc-card-header tooltip-hover" title="Revenue lost from patients who had a non-acute visit after becoming due for AWV but where no AWV code was billed. These represent missed billing opportunities.">
-                                <h4>Missed Opportunity</h4>
-                                <span class="tooltip-icon">ⓘ</span>
-                            </div>
-                            <div class="hcc-value" style="color: #e74c3c;" id="awv-missed-revenue">$847K</div>
-                            <div class="hcc-detail" id="awv-missed-detail">5,647 visits without AWV billing</div>
-                            <div class="hcc-trend">Click to view details →</div>
-                        </div>
-                        <div class="hcc-summary-card clickable-card" onclick="showHighValueOutreach()">
-                            <div class="hcc-card-header tooltip-hover" title="Top 100 patients ranked by Potential RAF who are AWV incomplete and not scheduled. Prioritized outreach list for care coordinators.">
-                                <h4>High-Value Outreach</h4>
-                                <span class="tooltip-icon">ⓘ</span>
-                            </div>
-                            <div class="hcc-value" style="color: #3498db;">100</div>
-                            <div class="hcc-detail">Priority patients for Feb</div>
-                            <div class="hcc-trend">Click to view list →</div>
                         </div>
                     </div>
 

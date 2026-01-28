@@ -2248,3 +2248,196 @@
         font-size: 0.8rem;
     }
 }
+
+/* Risk Adjustment Grouped Cards Layout */
+.ra-groups-container {
+    display: flex;
+    gap: 0;
+    margin-bottom: 1.5rem;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.ra-group {
+    flex: 1;
+    padding: 1.25rem;
+}
+
+.ra-group-hcc {
+    background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+    border-right: 2px dashed #bdc3c8;
+}
+
+.ra-group-awv {
+    background: linear-gradient(135deg, #fff 0%, #f0f9ff 100%);
+}
+
+.ra-group-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.ra-group-header .group-icon {
+    font-size: 1.5rem;
+}
+
+.ra-group-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.ra-group-header .group-subtitle {
+    font-size: 0.75rem;
+    color: #7f8c8d;
+    margin-left: auto;
+}
+
+/* Cards grid within each group */
+.ra-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+}
+
+.ra-card {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 0.875rem;
+    transition: all 0.2s ease;
+}
+
+.ra-card:hover {
+    border-color: #667eea;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+}
+
+.ra-card.clickable {
+    cursor: pointer;
+}
+
+.ra-card.clickable:hover {
+    transform: translateY(-2px);
+}
+
+.ra-card.warning {
+    background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
+    border-color: #f39c12;
+}
+
+.ra-card.danger {
+    background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
+    border-color: #e74c3c;
+}
+
+.ra-card.success {
+    background: linear-gradient(135deg, #f0fff4 0%, #fff 100%);
+    border-color: #27ae60;
+}
+
+.ra-card.highlight {
+    background: linear-gradient(135deg, #f0f9ff 0%, #fff 100%);
+    border-color: #3498db;
+}
+
+.ra-card-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    margin-bottom: 0.4rem;
+}
+
+.ra-card-label .tooltip-icon {
+    font-size: 0.7rem;
+    cursor: help;
+}
+
+.ra-card-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2c3e50;
+    line-height: 1.2;
+}
+
+.ra-card-value.good { color: #27ae60; }
+.ra-card-value.bad { color: #e74c3c; }
+.ra-card-value.warning { color: #f39c12; }
+.ra-card-value.info { color: #3498db; }
+
+.ra-card-detail {
+    font-size: 0.7rem;
+    color: #95a5a6;
+    margin-top: 0.25rem;
+}
+
+.ra-card-trend {
+    font-size: 0.7rem;
+    margin-top: 0.35rem;
+    font-weight: 500;
+}
+
+.ra-card-trend.good { color: #27ae60; }
+.ra-card-trend.bad { color: #e74c3c; }
+.ra-card-trend.neutral { color: #7f8c8d; }
+
+.ra-card-action {
+    font-size: 0.65rem;
+    color: #667eea;
+    margin-top: 0.35rem;
+    font-weight: 500;
+}
+
+/* Mobile responsive for RA groups */
+@media (max-width: 1200px) {
+    .ra-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 992px) {
+    .ra-groups-container {
+        flex-direction: column;
+    }
+
+    .ra-group-hcc {
+        border-right: none;
+        border-bottom: 2px dashed #bdc3c8;
+    }
+
+    .ra-cards-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .ra-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .ra-card-value {
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .ra-cards-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .ra-group {
+        padding: 1rem;
+    }
+}
