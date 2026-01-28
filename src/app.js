@@ -6279,10 +6279,99 @@ function showAWVComplianceModal(section = 'overview') {
             <span style="color: #667eea;"><strong>Weighted Avg:</strong> $${data.weightedAvgAWV}</span>
         </div>
 
-        <!-- Regional Performance Section -->
+        <!-- Regional Performance Tables - Three Metric Views -->
+        <div style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="margin: 0; font-size: 1rem; color: #2c3e50;">Regional Performance by Metric</h3>
+                <span style="font-size: 0.75rem; color: #7f8c8d;">Click any region row to drill down to provider detail</span>
+            </div>
+
+            <!-- Three-column metric tables -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                <!-- AWV Completion by Region -->
+                <div style="border: 1px solid #27ae60; border-radius: 8px; overflow: hidden;">
+                    <div style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); padding: 0.75rem; text-align: center; border-bottom: 1px solid #27ae60;">
+                        <div style="font-weight: 700; color: #155724;">AWV Completion</div>
+                        <div style="font-size: 0.75rem; color: #155724;">by Region</div>
+                    </div>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
+                        <thead>
+                            <tr style="background: #f8f9fa;">
+                                <th style="padding: 0.5rem; text-align: left; font-weight: 600;">Region</th>
+                                <th style="padding: 0.5rem; text-align: center; font-weight: 600;">Rate</th>
+                                <th style="padding: 0.5rem; text-align: center; font-weight: 600;">Count</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.regions.map(r => `
+                                <tr onclick="showAWVRegionDrilldown('${r.name}', 'completion')" style="cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;" onmouseover="this.style.background='#e8f5e9'" onmouseout="this.style.background='white'">
+                                    <td style="padding: 0.5rem;"><strong>${r.name}</strong></td>
+                                    <td style="padding: 0.5rem; text-align: center; font-weight: 600; color: ${r.rate >= 50 ? '#27ae60' : '#e74c3c'};">${r.rate}%</td>
+                                    <td style="padding: 0.5rem; text-align: center; color: #6c757d;">${r.completed.toLocaleString()}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Forecast Opportunity by Region -->
+                <div style="border: 1px solid #3498db; border-radius: 8px; overflow: hidden;">
+                    <div style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 0.75rem; text-align: center; border-bottom: 1px solid #3498db;">
+                        <div style="font-weight: 700; color: #0d47a1;">Forecast Opportunity</div>
+                        <div style="font-size: 0.75rem; color: #0d47a1;">by Region</div>
+                    </div>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
+                        <thead>
+                            <tr style="background: #f8f9fa;">
+                                <th style="padding: 0.5rem; text-align: left; font-weight: 600;">Region</th>
+                                <th style="padding: 0.5rem; text-align: center; font-weight: 600;">Revenue</th>
+                                <th style="padding: 0.5rem; text-align: center; font-weight: 600;">Scheduled</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.regions.map(r => `
+                                <tr onclick="showAWVRegionDrilldown('${r.name}', 'forecast')" style="cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;" onmouseover="this.style.background='#e3f2fd'" onmouseout="this.style.background='white'">
+                                    <td style="padding: 0.5rem;"><strong>${r.name}</strong></td>
+                                    <td style="padding: 0.5rem; text-align: center; font-weight: 600; color: #3498db;">$${(r.scheduled * data.weightedAvgAWV / 1000).toFixed(0)}K</td>
+                                    <td style="padding: 0.5rem; text-align: center; color: #6c757d;">${r.scheduled.toLocaleString()}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Missed Opportunity by Region -->
+                <div style="border: 1px solid #e74c3c; border-radius: 8px; overflow: hidden;">
+                    <div style="background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%); padding: 0.75rem; text-align: center; border-bottom: 1px solid #e74c3c;">
+                        <div style="font-weight: 700; color: #c62828;">Missed Opportunity</div>
+                        <div style="font-size: 0.75rem; color: #c62828;">by Region</div>
+                    </div>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
+                        <thead>
+                            <tr style="background: #f8f9fa;">
+                                <th style="padding: 0.5rem; text-align: left; font-weight: 600;">Region</th>
+                                <th style="padding: 0.5rem; text-align: center; font-weight: 600;">Lost $</th>
+                                <th style="padding: 0.5rem; text-align: center; font-weight: 600;">Visits</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${data.regions.map(r => `
+                                <tr onclick="showAWVRegionDrilldown('${r.name}', 'missed')" style="cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;" onmouseover="this.style.background='#ffebee'" onmouseout="this.style.background='white'">
+                                    <td style="padding: 0.5rem;"><strong>${r.name}</strong></td>
+                                    <td style="padding: 0.5rem; text-align: center; font-weight: 600; color: #e74c3c;">$${(r.missed * data.weightedAvgAWV / 1000).toFixed(0)}K</td>
+                                    <td style="padding: 0.5rem; text-align: center; color: #6c757d;">${r.missed.toLocaleString()}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Regional Charts Section -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
             <div style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.25rem;">
-                <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50;">AWV Completion by Region</h3>
+                <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50;">AWV Completion Rate by Region</h3>
                 <div style="height: 200px;">
                     <canvas id="awv-region-chart"></canvas>
                 </div>
@@ -6307,58 +6396,14 @@ function showAWVComplianceModal(section = 'overview') {
             </p>
             <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.75rem; text-align: center;">
                 ${data.regions.map(r => `
-                    <div style="background: rgba(255,255,255,0.7); padding: 0.75rem; border-radius: 8px;">
+                    <div onclick="showAWVRegionDrilldown('${r.name}', 'missed')" style="background: rgba(255,255,255,0.7); padding: 0.75rem; border-radius: 8px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
                         <div style="font-size: 0.75rem; color: #6c757d;">${r.name}</div>
                         <div style="font-size: 1.25rem; font-weight: 700; color: #c62828;">${r.missed.toLocaleString()}</div>
                         <div style="font-size: 0.7rem; color: #856404;">$${(r.missed * data.weightedAvgAWV / 1000).toFixed(0)}K</div>
+                        <div style="font-size: 0.65rem; color: #667eea; margin-top: 0.25rem;">Click to drill down →</div>
                     </div>
                 `).join('')}
             </div>
-        </div>
-
-        <!-- Regional Detail Table -->
-        <div style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.25rem; overflow-x: auto;">
-            <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50;">Regional Performance Detail</h3>
-            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
-                <thead>
-                    <tr style="background: #f8f9fa;">
-                        <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6;">Region</th>
-                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Completed</th>
-                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Total</th>
-                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Rate</th>
-                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Scheduled</th>
-                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Forecast $</th>
-                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Missed Opps</th>
-                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Missed $</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${data.regions.map(r => `
-                        <tr style="border-bottom: 1px solid #eee;">
-                            <td style="padding: 0.75rem;"><strong>${r.name}</strong></td>
-                            <td style="padding: 0.75rem; text-align: center;">${r.completed.toLocaleString()}</td>
-                            <td style="padding: 0.75rem; text-align: center;">${r.total.toLocaleString()}</td>
-                            <td style="padding: 0.75rem; text-align: center; font-weight: 600; color: ${r.rate >= 50 ? '#27ae60' : '#e74c3c'};">${r.rate}%</td>
-                            <td style="padding: 0.75rem; text-align: center; color: #3498db;">${r.scheduled.toLocaleString()}</td>
-                            <td style="padding: 0.75rem; text-align: center; color: #3498db; font-weight: 600;">$${(r.scheduled * data.weightedAvgAWV / 1000).toFixed(0)}K</td>
-                            <td style="padding: 0.75rem; text-align: center; color: #e74c3c;">${r.missed.toLocaleString()}</td>
-                            <td style="padding: 0.75rem; text-align: center; color: #e74c3c; font-weight: 600;">$${(r.missed * data.weightedAvgAWV / 1000).toFixed(0)}K</td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-                <tfoot>
-                    <tr style="background: #f8f9fa; font-weight: 600;">
-                        <td style="padding: 0.75rem;">Total</td>
-                        <td style="padding: 0.75rem; text-align: center;">${data.awvCompleted.toLocaleString()}</td>
-                        <td style="padding: 0.75rem; text-align: center;">${data.totalAttributed.toLocaleString()}</td>
-                        <td style="padding: 0.75rem; text-align: center; color: #27ae60;">${completionRate}%</td>
-                        <td style="padding: 0.75rem; text-align: center; color: #3498db;">${data.scheduledWithAWVDue.toLocaleString()}</td>
-                        <td style="padding: 0.75rem; text-align: center; color: #3498db;">$${(forecastRevenue / 1000).toFixed(0)}K</td>
-                        <td style="padding: 0.75rem; text-align: center; color: #e74c3c;">${data.missedOpportunityVisits.toLocaleString()}</td>
-                        <td style="padding: 0.75rem; text-align: center; color: #e74c3c;">$${(missedRevenue / 1000).toFixed(0)}K</td>
-                    </tr>
-                </tfoot>
-            </table>
         </div>
 
         <div class="alert-box warning" style="margin-top: 1.5rem;">
@@ -6380,6 +6425,472 @@ function showAWVComplianceModal(section = 'overview') {
         initAWVProviderChart(data);
     }, 100);
 }
+
+// ============================================
+// AWV REGION DRILL-DOWN
+// ============================================
+
+function showAWVRegionDrilldown(regionName, metricType = 'completion') {
+    const data = awvPatientData;
+    const region = data.regions.find(r => r.name === regionName);
+    if (!region) return;
+
+    // Get providers for this region
+    const regionProviders = data.providers.filter(p => p.region === regionName);
+
+    // Generate additional provider data for this region (simulate more providers)
+    const expandedProviders = generateRegionProviders(regionName, region);
+
+    const metricTitles = {
+        completion: 'AWV Completion',
+        forecast: 'Forecast Opportunity',
+        missed: 'Missed Opportunity'
+    };
+
+    const metricColors = {
+        completion: { bg: '#d4edda', border: '#27ae60', text: '#155724' },
+        forecast: { bg: '#e3f2fd', border: '#3498db', text: '#0d47a1' },
+        missed: { bg: '#ffebee', border: '#e74c3c', text: '#c62828' }
+    };
+
+    const colors = metricColors[metricType];
+
+    // Calculate region totals based on metric type
+    let metricValue, metricDetail;
+    if (metricType === 'completion') {
+        metricValue = `${region.rate}%`;
+        metricDetail = `${region.completed.toLocaleString()} / ${region.total.toLocaleString()} completed`;
+    } else if (metricType === 'forecast') {
+        metricValue = `$${(region.scheduled * data.weightedAvgAWV / 1000).toFixed(0)}K`;
+        metricDetail = `${region.scheduled.toLocaleString()} patients with scheduled visits`;
+    } else {
+        metricValue = `$${(region.missed * data.weightedAvgAWV / 1000).toFixed(0)}K`;
+        metricDetail = `${region.missed.toLocaleString()} visits without AWV billing`;
+    }
+
+    const modalBody = `
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div>
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                    <button onclick="showAWVComplianceModal()" style="background: none; border: none; cursor: pointer; font-size: 1.1rem; color: #667eea; padding: 0;">← Back</button>
+                    <span style="color: #7f8c8d;">|</span>
+                    <span style="color: #7f8c8d; font-size: 0.85rem;">AWV Compliance</span>
+                </div>
+                <h2 style="margin: 0;">${regionName} - ${metricTitles[metricType]}</h2>
+                <p class="provider-summary" style="margin: 0.25rem 0 0 0;">Provider/PCP Performance Detail</p>
+            </div>
+            <button onclick="exportAWVRegionPatients('${regionName}', '${metricType}')" class="btn-small" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; border: none; padding: 0.6rem 1rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                <span>📥</span> Export Patient List
+            </button>
+        </div>
+
+        <!-- Region Summary KPIs -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+            <div style="background: linear-gradient(135deg, ${colors.bg} 0%, white 100%); padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid ${colors.border};">
+                <div style="font-size: 0.8rem; color: ${colors.text}; margin-bottom: 0.25rem;">${metricTitles[metricType]}</div>
+                <div style="font-size: 2rem; font-weight: 700; color: ${colors.text};">${metricValue}</div>
+                <div style="font-size: 0.75rem; color: ${colors.text};">${metricDetail}</div>
+            </div>
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid #dee2e6;">
+                <div style="font-size: 0.8rem; color: #6c757d; margin-bottom: 0.25rem;">Total Attributed</div>
+                <div style="font-size: 2rem; font-weight: 700; color: #2c3e50;">${region.total.toLocaleString()}</div>
+                <div style="font-size: 0.75rem; color: #6c757d;">patients in region</div>
+            </div>
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid #dee2e6;">
+                <div style="font-size: 0.8rem; color: #6c757d; margin-bottom: 0.25rem;">Providers</div>
+                <div style="font-size: 2rem; font-weight: 700; color: #2c3e50;">${expandedProviders.length}</div>
+                <div style="font-size: 0.75rem; color: #6c757d;">PCPs in region</div>
+            </div>
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid #dee2e6;">
+                <div style="font-size: 0.8rem; color: #6c757d; margin-bottom: 0.25rem;">Avg per Provider</div>
+                <div style="font-size: 2rem; font-weight: 700; color: #2c3e50;">${Math.round(region.total / expandedProviders.length)}</div>
+                <div style="font-size: 0.75rem; color: #6c757d;">patients/PCP</div>
+            </div>
+        </div>
+
+        <!-- Provider Performance Table -->
+        <div style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="margin: 0; font-size: 1rem; color: #2c3e50;">Provider Performance - ${metricTitles[metricType]}</h3>
+                <span style="font-size: 0.75rem; color: #7f8c8d;">Click provider row for patient list</span>
+            </div>
+            <div style="max-height: 350px; overflow-y: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                    <thead style="position: sticky; top: 0; background: white;">
+                        <tr style="background: #f8f9fa;">
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6;">Provider</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Panel Size</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">AWV Completed</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Completion Rate</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Scheduled</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Forecast $</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Missed Opps</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6;">Missed $</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${expandedProviders.map(p => `
+                            <tr onclick="showAWVProviderPatients('${p.name}', '${regionName}', '${metricType}')" style="cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='white'">
+                                <td style="padding: 0.75rem;"><strong>${p.name}</strong></td>
+                                <td style="padding: 0.75rem; text-align: center;">${p.total.toLocaleString()}</td>
+                                <td style="padding: 0.75rem; text-align: center; color: #27ae60;">${p.completed.toLocaleString()}</td>
+                                <td style="padding: 0.75rem; text-align: center; font-weight: 600; color: ${p.rate >= 50 ? '#27ae60' : '#e74c3c'};">${p.rate}%</td>
+                                <td style="padding: 0.75rem; text-align: center; color: #3498db;">${p.scheduled}</td>
+                                <td style="padding: 0.75rem; text-align: center; color: #3498db; font-weight: 500;">$${(p.scheduled * data.weightedAvgAWV / 1000).toFixed(1)}K</td>
+                                <td style="padding: 0.75rem; text-align: center; color: #e74c3c;">${p.missed}</td>
+                                <td style="padding: 0.75rem; text-align: center; color: #e74c3c; font-weight: 500;">$${(p.missed * data.weightedAvgAWV / 1000).toFixed(1)}K</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Provider Chart -->
+        <div style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.25rem;">
+            <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50;">${metricTitles[metricType]} by Provider</h3>
+            <div style="height: 250px;">
+                <canvas id="region-provider-chart"></canvas>
+            </div>
+        </div>
+    `;
+
+    showModal(modalBody);
+
+    // Initialize provider chart
+    setTimeout(() => {
+        initRegionProviderChart(expandedProviders, metricType, data.weightedAvgAWV);
+    }, 100);
+}
+
+// Generate providers for a region
+function generateRegionProviders(regionName, region) {
+    const providerFirstNames = ['Sarah', 'Michael', 'Jennifer', 'David', 'Emily', 'James', 'Lisa', 'Robert', 'Amanda', 'William', 'Maria', 'Christopher', 'Susan', 'Andrew', 'Karen'];
+    const providerLastNames = ['Johnson', 'Anderson', 'Brown', 'Patel', 'Kim', 'Wilson', 'Chen', 'Rodriguez', 'Martinez', 'Thompson', 'Garcia', 'Lee', 'Taylor', 'Harris', 'Clark'];
+
+    // Number of providers based on region size
+    const providerCount = Math.ceil(region.total / 800); // ~800 patients per provider
+    const providers = [];
+
+    let remainingTotal = region.total;
+    let remainingCompleted = region.completed;
+    let remainingScheduled = region.scheduled;
+    let remainingMissed = region.missed;
+
+    for (let i = 0; i < providerCount; i++) {
+        const isLast = i === providerCount - 1;
+        const firstName = providerFirstNames[i % providerFirstNames.length];
+        const lastName = providerLastNames[(i + regionName.length) % providerLastNames.length];
+
+        // Distribute patients among providers
+        const panelSize = isLast ? remainingTotal : Math.floor(remainingTotal / (providerCount - i) * (0.8 + Math.random() * 0.4));
+        const completed = isLast ? remainingCompleted : Math.floor(remainingCompleted / (providerCount - i) * (0.7 + Math.random() * 0.6));
+        const scheduled = isLast ? remainingScheduled : Math.floor(remainingScheduled / (providerCount - i) * (0.6 + Math.random() * 0.8));
+        const missed = isLast ? remainingMissed : Math.floor(remainingMissed / (providerCount - i) * (0.5 + Math.random() * 1.0));
+
+        remainingTotal -= panelSize;
+        remainingCompleted -= completed;
+        remainingScheduled -= scheduled;
+        remainingMissed -= missed;
+
+        providers.push({
+            name: `Dr. ${firstName} ${lastName}`,
+            region: regionName,
+            total: Math.max(panelSize, 100),
+            completed: Math.max(completed, 0),
+            rate: panelSize > 0 ? parseFloat(((completed / panelSize) * 100).toFixed(1)) : 0,
+            scheduled: Math.max(scheduled, 0),
+            missed: Math.max(missed, 0)
+        });
+    }
+
+    // Sort by rate descending
+    return providers.sort((a, b) => b.rate - a.rate);
+}
+
+// Initialize region provider chart
+function initRegionProviderChart(providers, metricType, weightedAvg) {
+    const ctx = document.getElementById('region-provider-chart');
+    if (!ctx) return;
+
+    let chartData, chartLabel, chartColors;
+
+    if (metricType === 'completion') {
+        chartData = providers.map(p => p.rate);
+        chartLabel = 'AWV Completion Rate (%)';
+        chartColors = providers.map(p => p.rate >= 50 ? 'rgba(39, 174, 96, 0.7)' : 'rgba(231, 76, 60, 0.7)');
+    } else if (metricType === 'forecast') {
+        chartData = providers.map(p => (p.scheduled * weightedAvg / 1000));
+        chartLabel = 'Forecast Opportunity ($K)';
+        chartColors = 'rgba(52, 152, 219, 0.7)';
+    } else {
+        chartData = providers.map(p => (p.missed * weightedAvg / 1000));
+        chartLabel = 'Missed Opportunity ($K)';
+        chartColors = 'rgba(231, 76, 60, 0.7)';
+    }
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: providers.map(p => p.name.replace('Dr. ', '')),
+            datasets: [{
+                label: chartLabel,
+                data: chartData,
+                backgroundColor: chartColors,
+                borderWidth: 1
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                datalabels: {
+                    color: '#2c3e50',
+                    font: { weight: 'bold', size: 10 },
+                    anchor: 'end',
+                    align: 'right',
+                    formatter: (value) => metricType === 'completion' ? value + '%' : '$' + value.toFixed(1) + 'K'
+                }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: { display: true, text: chartLabel }
+                }
+            }
+        }
+    });
+}
+
+// Show patient list for a specific provider
+function showAWVProviderPatients(providerName, regionName, metricType) {
+    const data = awvPatientData;
+
+    // Generate patient data for this provider
+    const patients = generateProviderPatients(providerName, regionName, metricType, 50);
+
+    const metricTitles = {
+        completion: 'AWV Incomplete Patients',
+        forecast: 'Scheduled - AWV Due',
+        missed: 'Missed AWV Opportunities'
+    };
+
+    const modalBody = `
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+            <div>
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+                    <button onclick="showAWVRegionDrilldown('${regionName}', '${metricType}')" style="background: none; border: none; cursor: pointer; font-size: 1.1rem; color: #667eea; padding: 0;">← Back to ${regionName}</button>
+                </div>
+                <h2 style="margin: 0;">${providerName} - ${metricTitles[metricType]}</h2>
+                <p class="provider-summary" style="margin: 0.25rem 0 0 0;">Patient-Level Detail</p>
+            </div>
+            <button onclick="exportProviderPatients('${providerName}', '${regionName}', '${metricType}')" class="btn-small" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; border: none; padding: 0.6rem 1rem; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                <span>📥</span> Export to CSV
+            </button>
+        </div>
+
+        <!-- Patient Table -->
+        <div style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.25rem; overflow-x: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="margin: 0; font-size: 1rem; color: #2c3e50;">${patients.length} Patients</h3>
+                <span style="font-size: 0.75rem; color: #7f8c8d;">Sorted by Potential RAF (highest first)</span>
+            </div>
+            <div style="max-height: 450px; overflow-y: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;">
+                    <thead style="position: sticky; top: 0; background: white;">
+                        <tr style="background: #f8f9fa;">
+                            <th style="padding: 0.6rem; text-align: left; border-bottom: 2px solid #dee2e6;">MRN</th>
+                            <th style="padding: 0.6rem; text-align: left; border-bottom: 2px solid #dee2e6;">Patient Name</th>
+                            <th style="padding: 0.6rem; text-align: center; border-bottom: 2px solid #dee2e6;">DOB</th>
+                            <th style="padding: 0.6rem; text-align: center; border-bottom: 2px solid #dee2e6;">Age</th>
+                            <th style="padding: 0.6rem; text-align: center; border-bottom: 2px solid #dee2e6;">RAF</th>
+                            <th style="padding: 0.6rem; text-align: center; border-bottom: 2px solid #dee2e6;">RAF Gap</th>
+                            <th style="padding: 0.6rem; text-align: center; border-bottom: 2px solid #dee2e6;">Potential RAF</th>
+                            <th style="padding: 0.6rem; text-align: center; border-bottom: 2px solid #dee2e6;">Last Visit</th>
+                            <th style="padding: 0.6rem; text-align: center; border-bottom: 2px solid #dee2e6;">Next Appt</th>
+                            <th style="padding: 0.6rem; text-align: center; border-bottom: 2px solid #dee2e6;">AWV Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${patients.map(p => `
+                            <tr style="border-bottom: 1px solid #eee;">
+                                <td style="padding: 0.6rem; font-family: monospace; font-size: 0.75rem;">${p.mrn}</td>
+                                <td style="padding: 0.6rem;"><strong>${p.lastName}, ${p.firstName}</strong></td>
+                                <td style="padding: 0.6rem; text-align: center;">${p.dob}</td>
+                                <td style="padding: 0.6rem; text-align: center;">${p.age}</td>
+                                <td style="padding: 0.6rem; text-align: center;">${p.rafCurrent.toFixed(2)}</td>
+                                <td style="padding: 0.6rem; text-align: center; color: ${p.rafGap > 0 ? '#f39c12' : '#7f8c8d'};">${p.rafGap > 0 ? '+' + p.rafGap.toFixed(2) : '—'}</td>
+                                <td style="padding: 0.6rem; text-align: center; font-weight: 600; color: #667eea;">${p.rafPotential.toFixed(2)}</td>
+                                <td style="padding: 0.6rem; text-align: center;">${p.lastVisit}</td>
+                                <td style="padding: 0.6rem; text-align: center; color: ${p.nextAppt === 'Not scheduled' ? '#e74c3c' : '#27ae60'};">${p.nextAppt}</td>
+                                <td style="padding: 0.6rem; text-align: center;">
+                                    <span style="padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 500; background: ${p.awvCompleted ? '#d4edda' : '#fff3cd'}; color: ${p.awvCompleted ? '#155724' : '#856404'};">
+                                        ${p.awvCompleted ? 'Completed' : metricType === 'missed' ? 'Missed' : 'Incomplete'}
+                                    </span>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+
+    showModal(modalBody);
+}
+
+// Generate patient data for a provider
+function generateProviderPatients(providerName, regionName, metricType, count) {
+    const firstNames = ['James', 'Mary', 'John', 'Patricia', 'Robert', 'Jennifer', 'Michael', 'Linda', 'William', 'Elizabeth', 'David', 'Barbara', 'Richard', 'Susan', 'Joseph', 'Jessica', 'Thomas', 'Sarah', 'Charles', 'Karen'];
+    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin'];
+
+    const patients = [];
+    for (let i = 0; i < count; i++) {
+        const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+        const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+        const age = Math.floor(Math.random() * 35) + 50;
+        const birthYear = 2026 - age;
+        const birthMonth = Math.floor(Math.random() * 12) + 1;
+        const birthDay = Math.floor(Math.random() * 28) + 1;
+        const dob = `${birthMonth.toString().padStart(2, '0')}/${birthDay.toString().padStart(2, '0')}/${birthYear}`;
+
+        const rafCurrent = parseFloat((Math.random() * 2 + 0.8).toFixed(2));
+        const rafGap = parseFloat((Math.random() * 1.5).toFixed(2));
+        const rafPotential = parseFloat((rafCurrent + rafGap).toFixed(2));
+
+        const lastVisitDays = Math.floor(Math.random() * 180) + 1;
+        const lastVisitDate = new Date();
+        lastVisitDate.setDate(lastVisitDate.getDate() - lastVisitDays);
+        const lastVisit = lastVisitDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+
+        let nextAppt = 'Not scheduled';
+        let awvCompleted = false;
+
+        if (metricType === 'forecast') {
+            // All have scheduled appointments
+            const apptDays = Math.floor(Math.random() * 90) + 1;
+            const apptDate = new Date();
+            apptDate.setDate(apptDate.getDate() + apptDays);
+            nextAppt = apptDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+        } else if (metricType === 'missed') {
+            // Had a visit but no AWV billed
+            awvCompleted = false;
+        } else {
+            // AWV incomplete - mix of scheduled and not
+            if (Math.random() > 0.55) {
+                const apptDays = Math.floor(Math.random() * 90) + 1;
+                const apptDate = new Date();
+                apptDate.setDate(apptDate.getDate() + apptDays);
+                nextAppt = apptDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+            }
+        }
+
+        patients.push({
+            mrn: `MRN${800000 + i + Math.floor(Math.random() * 10000)}`,
+            firstName,
+            lastName,
+            dob,
+            age,
+            pcp: providerName,
+            region: regionName,
+            rafCurrent,
+            rafGap,
+            rafPotential,
+            lastVisit,
+            nextAppt,
+            awvCompleted
+        });
+    }
+
+    return patients.sort((a, b) => b.rafPotential - a.rafPotential);
+}
+
+// Export functions for patient lists
+function exportAWVRegionPatients(regionName, metricType) {
+    const data = awvPatientData;
+    const region = data.regions.find(r => r.name === regionName);
+    if (!region) return;
+
+    // Generate all patients for the region
+    const count = metricType === 'completion' ? region.total - region.completed :
+                  metricType === 'forecast' ? region.scheduled : region.missed;
+
+    const patients = generateRegionPatientExport(regionName, metricType, Math.min(count, 500));
+
+    downloadPatientCSV(patients, `AWV_${metricType}_${regionName.replace(/\s+/g, '_')}`);
+}
+
+function exportProviderPatients(providerName, regionName, metricType) {
+    const patients = generateProviderPatients(providerName, regionName, metricType, 100);
+    downloadPatientCSV(patients, `AWV_${metricType}_${providerName.replace(/\s+/g, '_').replace('Dr._', '')}`);
+}
+
+function generateRegionPatientExport(regionName, metricType, count) {
+    const providers = generateRegionProviders(regionName, awvPatientData.regions.find(r => r.name === regionName));
+    const allPatients = [];
+
+    providers.forEach(provider => {
+        const providerCount = Math.ceil(count / providers.length);
+        const patients = generateProviderPatients(provider.name, regionName, metricType, providerCount);
+        allPatients.push(...patients);
+    });
+
+    return allPatients.slice(0, count).sort((a, b) => b.rafPotential - a.rafPotential);
+}
+
+function downloadPatientCSV(patients, filename) {
+    // Create CSV with HEDIS-aligned columns
+    const headers = [
+        'MRN', 'Last Name', 'First Name', 'DOB', 'Age', 'Gender', 'PCP', 'Region',
+        'RAF Score', 'RAF Gap', 'Potential RAF', 'Last Visit', 'Next Appt',
+        'AWV Status', 'Phone', 'Address', 'City', 'State', 'ZIP'
+    ];
+
+    const rows = patients.map(p => [
+        p.mrn,
+        p.lastName,
+        p.firstName,
+        p.dob,
+        p.age,
+        Math.random() > 0.48 ? 'F' : 'M',
+        p.pcp,
+        p.region,
+        p.rafCurrent.toFixed(3),
+        p.rafGap.toFixed(3),
+        p.rafPotential.toFixed(3),
+        p.lastVisit,
+        p.nextAppt,
+        p.awvCompleted ? 'Completed' : 'Incomplete',
+        `(${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
+        `${Math.floor(Math.random() * 9999) + 1} ${['Oak St', 'Maple Ave', 'Main St', 'Park Rd', 'Cedar Ln'][Math.floor(Math.random() * 5)]}`,
+        ['Atlanta', 'Marietta', 'Alpharetta', 'Roswell', 'Decatur'][Math.floor(Math.random() * 5)],
+        'GA',
+        '30' + String(Math.floor(Math.random() * 900) + 100)
+    ]);
+
+    const csvContent = [
+        headers.join(','),
+        ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `${filename}_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Make functions globally available
+window.showAWVRegionDrilldown = showAWVRegionDrilldown;
+window.showAWVProviderPatients = showAWVProviderPatients;
+window.exportAWVRegionPatients = exportAWVRegionPatients;
+window.exportProviderPatients = exportProviderPatients;
 
 function initAWVRegionChart(data) {
     const ctx = document.getElementById('awv-region-chart');
