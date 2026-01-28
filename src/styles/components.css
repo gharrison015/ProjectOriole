@@ -747,6 +747,42 @@
     background: #fff3cd;
 }
 
+.hcc-summary-card.highlight {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border: 1px solid #27ae60;
+}
+
+.hcc-summary-card.clickable-card {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.hcc-summary-card.clickable-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+    border: 1px solid #3498db;
+}
+
+.hcc-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-bottom: 0.25rem;
+}
+
+.hcc-card-header h4 {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #2c3e50;
+}
+
+.hcc-card-header .tooltip-icon {
+    font-size: 0.85rem;
+    color: #95a5a6;
+    cursor: help;
+}
+
 .hcc-value {
     font-size: 2.5rem;
     font-weight: 700;

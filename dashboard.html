@@ -1178,7 +1178,7 @@
                     <div class="tab-header-row">
                         <div class="tab-header">
                             <h2>Risk Adjustment</h2>
-                            <p>RAF score optimization and coding opportunity identification</p>
+                            <p>RAF score optimization and HCC recapture opportunity identification</p>
                         </div>
                         <button class="insights-btn success" onclick="showInsightsModal('hcc')">
                             <span class="insights-btn-icon">💡</span>
@@ -1196,31 +1196,149 @@
                         </span>
                     </div>
 
+                    <!-- HCC Summary Cards - Row 1: Core Metrics -->
                     <div class="hcc-summary-grid">
                         <div class="hcc-summary-card">
-                            <h4>Average RAF Score</h4>
+                            <div class="hcc-card-header tooltip-hover" title="Risk Adjustment Factor: A CMS score reflecting the expected healthcare costs of a beneficiary based on their demographic and health status. Higher scores indicate higher expected costs and greater reimbursement.">
+                                <h4>Average RAF Score</h4>
+                                <span class="tooltip-icon">ⓘ</span>
+                            </div>
                             <div class="hcc-value">1.247</div>
                             <div class="hcc-detail">National Avg: 1.195</div>
                             <div class="hcc-trend good">+4.4% above benchmark</div>
                         </div>
                         <div class="hcc-summary-card">
-                            <h4>Revenue Impact</h4>
+                            <div class="hcc-card-header tooltip-hover" title="Additional CMS revenue generated through accurate risk adjustment coding compared to an unadjusted baseline. Calculated as (Actual RAF - 1.0) × Annual Per-Capita Rate × Member Months.">
+                                <h4>Revenue Impact</h4>
+                                <span class="tooltip-icon">ⓘ</span>
+                            </div>
                             <div class="hcc-value">$5.2M</div>
                             <div class="hcc-detail">Additional CMS revenue</div>
                             <div class="hcc-trend">vs. unadjusted baseline</div>
                         </div>
                         <div class="hcc-summary-card warning">
-                            <h4>Suspected HCCs</h4>
-                            <div class="hcc-value">3,421</div>
-                            <div class="hcc-detail">Require documentation</div>
-                            <div class="hcc-trend bad">$2.8M opportunity</div>
+                            <div class="hcc-card-header tooltip-hover" title="Uncoded Dx (Uncoded Diagnoses): Per CMS Risk Adjustment guidelines, these are chronic conditions documented in prior payment years (PY2024/PY2025) that have NOT yet been recaptured in the current measurement year (PY2026). HCCs must be documented annually to affect RAF scores.">
+                                <h4>Uncoded Dx</h4>
+                                <span class="tooltip-icon">ⓘ</span>
+                            </div>
+                            <div class="hcc-value">2,847</div>
+                            <div class="hcc-detail">Prior year HCCs not yet recaptured</div>
+                            <div class="hcc-trend bad">$2.3M revenue at risk</div>
                         </div>
                         <div class="hcc-summary-card">
-                            <h4>Capture Rate</h4>
+                            <div class="hcc-card-header tooltip-hover" title="Recapture Rate: The percentage of HCCs documented in prior years that have been successfully re-documented in the current year. Formula: (Recaptured HCCs / Prior Year HCCs) × 100. Industry average is 72.1%.">
+                                <h4>Recapture Rate</h4>
+                                <span class="tooltip-icon">ⓘ</span>
+                            </div>
                             <div class="hcc-value">76.3%</div>
                             <div class="hcc-detail">Industry Avg: 72.1%</div>
                             <div class="hcc-trend good">+4.2 pts above avg</div>
                         </div>
+                    </div>
+
+                    <!-- HCC Summary Cards - Row 2: Suspect & Forecast -->
+                    <div class="hcc-summary-grid" style="margin-top: 0;">
+                        <div class="hcc-summary-card warning">
+                            <div class="hcc-card-header tooltip-hover" title="Suspect Uncoded Dx: Conditions identified through claims pattern analysis, pharmacy data, or lab results that suggest an HCC may exist but has never been documented. These represent NEW coding opportunities beyond recapture.">
+                                <h4>Suspect Uncoded Dx</h4>
+                                <span class="tooltip-icon">ⓘ</span>
+                            </div>
+                            <div class="hcc-value">574</div>
+                            <div class="hcc-detail">Require clinical validation</div>
+                            <div class="hcc-trend bad">$470K opportunity</div>
+                        </div>
+                        <div class="hcc-summary-card highlight">
+                            <div class="hcc-card-header tooltip-hover" title="Forecasted Uncoded Capture: Projected HCC recapture based on patients with Uncoded Dx who have PCP appointments scheduled between now and Dec 31, 2026. Assumes 85% documentation rate for scheduled visits.">
+                                <h4>Forecasted Uncoded Capture</h4>
+                                <span class="tooltip-icon">ⓘ</span>
+                            </div>
+                            <div class="hcc-value" id="hcc-forecast-capture">1,847</div>
+                            <div class="hcc-detail" id="hcc-forecast-detail">64.9% of uncoded with scheduled visits</div>
+                            <div class="hcc-trend good" id="hcc-forecast-revenue">$1.5M projected recapture</div>
+                        </div>
+                        <div class="hcc-summary-card clickable-card" onclick="showHCCPatientList('all', 'awv-incomplete')">
+                            <div class="hcc-card-header tooltip-hover" title="Patients with Uncoded Dx who have not completed an Annual Wellness Visit (AWV) in the current year. AWV provides optimal opportunity for comprehensive HCC documentation.">
+                                <h4>AWV Incomplete</h4>
+                                <span class="tooltip-icon">ⓘ</span>
+                            </div>
+                            <div class="hcc-value" style="color: #e74c3c;">1,423</div>
+                            <div class="hcc-detail">Patients with uncoded dx</div>
+                            <div class="hcc-trend">Click to view list →</div>
+                        </div>
+                        <div class="hcc-summary-card clickable-card" onclick="showHCCPatientList('all', 'not-scheduled')">
+                            <div class="hcc-card-header tooltip-hover" title="Patients with Uncoded Dx who do not have a PCP appointment scheduled. These patients are at highest risk of RAF score loss and require immediate outreach.">
+                                <h4>Not Scheduled</h4>
+                                <span class="tooltip-icon">ⓘ</span>
+                            </div>
+                            <div class="hcc-value" style="color: #e74c3c;">1,000</div>
+                            <div class="hcc-detail">Patients needing outreach</div>
+                            <div class="hcc-trend">Click to view list →</div>
+                        </div>
+                    </div>
+
+                    <!-- Recapture by Region Section -->
+                    <div class="table-section" style="margin-top: 1.5rem;">
+                        <h3>Recapture Performance by Market Region</h3>
+                        <table class="data-table" id="hcc-region-table">
+                            <thead>
+                                <tr>
+                                    <th class="sortable" data-sort="string">Market Region</th>
+                                    <th class="sortable tooltip-header" data-sort="number" data-tooltip="Total HCCs documented in prior year (PY2025) that need recapture in current year">Prior Year HCCs</th>
+                                    <th class="sortable tooltip-header" data-sort="number" data-tooltip="HCCs from prior year successfully documented in current year to date">Recaptured YTD</th>
+                                    <th class="sortable tooltip-header" data-sort="percent" data-tooltip="(Recaptured YTD / Prior Year HCCs) × 100">Recapture Rate</th>
+                                    <th class="sortable tooltip-header" data-sort="number" data-tooltip="Prior year HCCs not yet documented in current year">Uncoded Dx</th>
+                                    <th class="sortable tooltip-header" data-sort="number" data-tooltip="Patients with uncoded dx who have scheduled PCP visits">Scheduled</th>
+                                    <th class="sortable tooltip-header" data-sort="currency" data-tooltip="Potential revenue if all uncoded dx are recaptured">Revenue at Risk</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Atlanta North</strong></td>
+                                    <td>3,245</td>
+                                    <td>2,567</td>
+                                    <td class="good">79.1%</td>
+                                    <td class="warning">678</td>
+                                    <td>423</td>
+                                    <td class="warning">$556K</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Atlanta South</strong></td>
+                                    <td>3,892</td>
+                                    <td>2,845</td>
+                                    <td>73.1%</td>
+                                    <td class="warning">1,047</td>
+                                    <td>612</td>
+                                    <td class="bad">$858K</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Columbus</strong></td>
+                                    <td>2,134</td>
+                                    <td>1,689</td>
+                                    <td class="good">79.2%</td>
+                                    <td class="warning">445</td>
+                                    <td>298</td>
+                                    <td class="warning">$365K</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Augusta</strong></td>
+                                    <td>1,876</td>
+                                    <td>1,345</td>
+                                    <td class="bad">71.7%</td>
+                                    <td class="warning">531</td>
+                                    <td>287</td>
+                                    <td class="warning">$435K</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Macon</strong></td>
+                                    <td>987</td>
+                                    <td>841</td>
+                                    <td class="good">85.2%</td>
+                                    <td>146</td>
+                                    <td>112</td>
+                                    <td>$120K</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
 
                     <div class="table-section" id="hcc-provider-section">
@@ -1235,171 +1353,187 @@
                                 </button>
                             </div>
                         </div>
-                        <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 1rem;">Click column headers to sort. Higher Avg RAF indicates more complex patient populations requiring additional support.</p>
+                        <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 1rem;">Ranked by Uncoded Dx count. Click column headers to re-sort. Click "View Gaps" for patient-level detail.</p>
                         <table class="data-table" id="hcc-provider-table">
                             <thead>
                                 <tr>
                                     <th class="sortable" data-sort="number" style="width: 50px;">Rank</th>
                                     <th class="sortable" data-sort="string">Provider Name</th>
-                                    <th class="sortable" data-sort="string">Specialty</th>
                                     <th class="sortable" data-sort="string">Market</th>
-                                    <th class="sortable" data-sort="number">Panel Size</th>
+                                    <th class="sortable" data-sort="number">Panel</th>
+                                    <th class="sortable tooltip-header" data-sort="number" data-tooltip="Prior year HCCs not yet documented in current year for this provider's panel">Uncoded Dx</th>
+                                    <th class="sortable tooltip-header" data-sort="percent" data-tooltip="Percentage of prior year HCCs recaptured YTD">Recapture Rate</th>
+                                    <th class="sortable tooltip-header" data-sort="number" data-tooltip="Conditions suggested by claims/labs but never documented">Suspect Uncoded</th>
                                     <th class="sortable" data-sort="number">Avg RAF</th>
-                                    <th class="sortable" data-sort="number">Suspect HCCs</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody id="hcc-provider-tbody">
-                                <!-- Top 3 providers (always visible) -->
-                                <tr onclick="drillDownHCC('johnson')" class="clickable" data-provider-type="top">
-                                    <td>1</td>
-                                    <td><strong>Dr. Sarah Johnson</strong></td>
-                                    <td>Internal Medicine</td>
-                                    <td>Atlanta North</td>
-                                    <td>1,847</td>
-                                    <td>1.189</td>
-                                    <td class="warning">427</td>
-                                    <td><button class="btn-small">View Gaps →</button></td>
-                                </tr>
+                                <!-- Top 3 providers by Uncoded Dx (always visible) -->
                                 <tr onclick="drillDownHCC('anderson')" class="clickable" data-provider-type="top">
-                                    <td>2</td>
+                                    <td>1</td>
                                     <td><strong>Dr. Michael Anderson</strong></td>
-                                    <td>Family Medicine</td>
                                     <td>Atlanta South</td>
                                     <td>1,923</td>
+                                    <td class="bad">312</td>
+                                    <td class="bad">68.2%</td>
+                                    <td class="warning">86</td>
                                     <td>1.256</td>
-                                    <td class="warning">398</td>
                                     <td><button class="btn-small">View Gaps →</button></td>
                                 </tr>
-                                <tr onclick="drillDownHCC('brown')" class="clickable" data-provider-type="top">
+                                <tr onclick="drillDownHCC('johnson')" class="clickable" data-provider-type="top">
+                                    <td>2</td>
+                                    <td><strong>Dr. Sarah Johnson</strong></td>
+                                    <td>Atlanta North</td>
+                                    <td>1,847</td>
+                                    <td class="warning">287</td>
+                                    <td>74.5%</td>
+                                    <td class="warning">78</td>
+                                    <td>1.189</td>
+                                    <td><button class="btn-small">View Gaps →</button></td>
+                                </tr>
+                                <tr onclick="drillDownHCC('patel')" class="clickable" data-provider-type="top">
                                     <td>3</td>
-                                    <td><strong>Dr. Jennifer Brown</strong></td>
-                                    <td>Internal Medicine</td>
-                                    <td>Columbus</td>
-                                    <td>1,654</td>
-                                    <td>1.178</td>
-                                    <td class="warning">312</td>
+                                    <td><strong>Dr. Raj Patel</strong></td>
+                                    <td>Augusta</td>
+                                    <td>1,567</td>
+                                    <td class="warning">245</td>
+                                    <td class="bad">69.8%</td>
+                                    <td class="warning">67</td>
+                                    <td class="bad">1.412</td>
                                     <td><button class="btn-small">View Gaps →</button></td>
                                 </tr>
                                 <!-- Additional providers (hidden by default) -->
-                                <tr onclick="drillDownHCC('patel')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
+                                <tr onclick="drillDownHCC('brown')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
                                     <td>4</td>
-                                    <td><strong>Dr. Raj Patel</strong></td>
-                                    <td>Internal Medicine</td>
-                                    <td>Augusta</td>
-                                    <td>1,567</td>
-                                    <td class="bad">1.412</td>
-                                    <td class="warning">289</td>
+                                    <td><strong>Dr. Jennifer Brown</strong></td>
+                                    <td>Columbus</td>
+                                    <td>1,654</td>
+                                    <td class="warning">198</td>
+                                    <td>76.1%</td>
+                                    <td>52</td>
+                                    <td>1.178</td>
                                     <td><button class="btn-small">View Gaps →</button></td>
                                 </tr>
                                 <tr onclick="drillDownHCC('kim')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
                                     <td>5</td>
                                     <td><strong>Dr. Susan Kim</strong></td>
-                                    <td>Family Medicine</td>
                                     <td>Atlanta North</td>
                                     <td>1,432</td>
+                                    <td class="warning">176</td>
+                                    <td class="good">79.3%</td>
+                                    <td>45</td>
                                     <td>1.145</td>
-                                    <td class="warning">256</td>
                                     <td><button class="btn-small">View Gaps →</button></td>
                                 </tr>
                                 <tr onclick="drillDownHCC('rodriguez')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
                                     <td>6</td>
                                     <td><strong>Dr. Carlos Rodriguez</strong></td>
-                                    <td>Internal Medicine</td>
                                     <td>Macon</td>
                                     <td>1,298</td>
+                                    <td>156</td>
+                                    <td class="good">82.4%</td>
+                                    <td>41</td>
                                     <td class="bad">1.387</td>
-                                    <td class="warning">234</td>
                                     <td><button class="btn-small">View Gaps →</button></td>
                                 </tr>
                                 <tr onclick="drillDownHCC('wilson')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
                                     <td>7</td>
                                     <td><strong>Dr. Emily Wilson</strong></td>
-                                    <td>Family Medicine</td>
                                     <td>Atlanta South</td>
                                     <td>1,756</td>
+                                    <td>143</td>
+                                    <td class="good">80.1%</td>
+                                    <td>38</td>
                                     <td>1.098</td>
-                                    <td>198</td>
                                     <td><button class="btn-small">View Gaps →</button></td>
                                 </tr>
                                 <tr onclick="drillDownHCC('chen')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
                                     <td>8</td>
                                     <td><strong>Dr. David Chen</strong></td>
-                                    <td>Internal Medicine</td>
                                     <td>Columbus</td>
                                     <td>1,189</td>
+                                    <td>134</td>
+                                    <td>75.8%</td>
+                                    <td>35</td>
                                     <td class="bad">1.356</td>
-                                    <td>187</td>
                                     <td><button class="btn-small">View Gaps →</button></td>
                                 </tr>
                                 <tr onclick="drillDownHCC('martinez')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
                                     <td>9</td>
                                     <td><strong>Dr. Maria Martinez</strong></td>
-                                    <td>Family Medicine</td>
                                     <td>Augusta</td>
                                     <td>1,345</td>
+                                    <td>121</td>
+                                    <td>73.2%</td>
+                                    <td>32</td>
                                     <td>1.234</td>
-                                    <td>176</td>
                                     <td><button class="btn-small">View Gaps →</button></td>
                                 </tr>
                                 <tr onclick="drillDownHCC('thompson')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
                                     <td>10</td>
                                     <td><strong>Dr. James Thompson</strong></td>
-                                    <td>Internal Medicine</td>
                                     <td>Atlanta North</td>
                                     <td>1,456</td>
+                                    <td>98</td>
+                                    <td class="good">81.5%</td>
+                                    <td>26</td>
                                     <td>1.067</td>
-                                    <td>165</td>
                                     <td><button class="btn-small">View Gaps →</button></td>
                                 </tr>
                                 <tr onclick="drillDownHCC('nguyen')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
                                     <td>11</td>
                                     <td><strong>Dr. Lisa Nguyen</strong></td>
-                                    <td>Family Medicine</td>
                                     <td>Macon</td>
                                     <td>987</td>
+                                    <td>87</td>
+                                    <td class="good">84.6%</td>
+                                    <td>23</td>
                                     <td class="bad">1.423</td>
-                                    <td>154</td>
                                     <td><button class="btn-small">View Gaps →</button></td>
                                 </tr>
                                 <tr onclick="drillDownHCC('jackson')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
                                     <td>12</td>
                                     <td><strong>Dr. Robert Jackson</strong></td>
-                                    <td>Internal Medicine</td>
                                     <td>Atlanta South</td>
                                     <td>1,234</td>
+                                    <td>76</td>
+                                    <td class="good">78.9%</td>
+                                    <td>20</td>
                                     <td>1.156</td>
-                                    <td>143</td>
                                     <td><button class="btn-small">View Gaps →</button></td>
                                 </tr>
                                 <tr onclick="drillDownHCC('lee')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
                                     <td>13</td>
                                     <td><strong>Dr. Michelle Lee</strong></td>
-                                    <td>Family Medicine</td>
                                     <td>Columbus</td>
                                     <td>1,098</td>
+                                    <td>65</td>
+                                    <td class="good">82.1%</td>
+                                    <td>17</td>
                                     <td>1.089</td>
-                                    <td>132</td>
                                     <td><button class="btn-small">View Gaps →</button></td>
                                 </tr>
                                 <tr onclick="drillDownHCC('garcia')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
                                     <td>14</td>
                                     <td><strong>Dr. Anthony Garcia</strong></td>
-                                    <td>Internal Medicine</td>
                                     <td>Augusta</td>
                                     <td>876</td>
+                                    <td>54</td>
+                                    <td class="bad">70.2%</td>
+                                    <td>14</td>
                                     <td class="bad">1.478</td>
-                                    <td>121</td>
                                     <td><button class="btn-small">View Gaps →</button></td>
                                 </tr>
                                 <tr onclick="drillDownHCC('white')" class="clickable hcc-expanded-row" data-provider-type="expanded" style="display: none;">
                                     <td>15</td>
                                     <td><strong>Dr. Patricia White</strong></td>
-                                    <td>Family Medicine</td>
                                     <td>Atlanta North</td>
                                     <td>1,567</td>
+                                    <td>45</td>
+                                    <td class="good">85.3%</td>
+                                    <td>12</td>
                                     <td>1.012</td>
-                                    <td>98</td>
                                     <td><button class="btn-small">View Gaps →</button></td>
                                 </tr>
                             </tbody>
@@ -1407,15 +1541,16 @@
                     </div>
 
                     <div class="table-section">
-                        <h3>Top Suspected HCC Categories</h3>
+                        <h3>Top Uncoded Dx Categories (Prior Year HCCs Requiring Recapture)</h3>
+                        <p style="font-size: 0.85rem; color: #7f8c8d; margin-bottom: 1rem; margin-top: -0.5rem;">These HCCs were documented in PY2024/PY2025 but have not yet been recaptured in PY2026. Per CMS guidelines, HCCs must be documented annually.</p>
                         <table class="data-table">
                             <thead>
                                 <tr>
                                     <th class="sortable" data-sort="string">HCC Category</th>
                                     <th class="sortable" data-sort="string">HCC Code</th>
-                                    <th class="sortable" data-sort="number">Suspect Count</th>
+                                    <th class="sortable tooltip-header" data-sort="number" data-tooltip="Number of patients with this HCC in prior year not yet recaptured">Uncoded Count</th>
                                     <th class="sortable" data-sort="number">RAF Weight</th>
-                                    <th class="sortable" data-sort="currency">Revenue Impact</th>
+                                    <th class="sortable tooltip-header" data-sort="currency" data-tooltip="Potential revenue if all uncoded dx in this category are recaptured">Revenue at Risk</th>
                                     <th class="sortable" data-sort="string">Common ICD-10</th>
                                 </tr>
                             </thead>

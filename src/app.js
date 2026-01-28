@@ -52,6 +52,14 @@ function setLastUpdatedDate() {
     });
 }
 
+// Helper function to format date as "Nov 22" or "Dec 5"
+function formatDateShort(dateString) {
+    if (!dateString || dateString === 'Not scheduled') return 'Not scheduled';
+    const date = new Date(dateString);
+    const options = { month: 'short', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+}
+
 function initializeTabs() {
     const navItems = document.querySelectorAll('.nav-item');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -4516,7 +4524,7 @@ function drillDownHCC(providerId) {
         <!-- Savings Calculation Breakdown -->
         <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; border: 1px solid #e0e0e0;">
             <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50; display: flex; align-items: center; gap: 0.5rem;">
-                <span style="font-size: 1.2rem;">📊</span> Revenue Calculation Breakdown
+                <span style="font-size: 1.2rem;">��</span> Revenue Calculation Breakdown
             </h3>
             <div style="overflow-x: auto;">
                 <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
@@ -4524,17 +4532,19 @@ function drillDownHCC(providerId) {
                         <tr style="background: #f8f9fa;">
                             <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Patient</th>
                             <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">AWV</th>
-                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Suspected HCCs</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Scheduled<br>PCP Visit</th>
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Uncoded Dx</th>
                             <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">RAF<br>Current</th>
                             <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">RAF<br>Potential</th>
                             <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">RAF Gap</th>
-                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600;">Calculation</th>
                             <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600; background: #d4edda;">Revenue<br>Opportunity</th>
                         </tr>
                     </thead>
                     <tbody>
                         ${patients.map(p => {
                             const rafGap = (p.rafPotential - p.rafCurrent).toFixed(2);
+                            const isNotScheduled = p.nextAppt === 'Not scheduled';
+                            const formattedDate = isNotScheduled ? 'Not scheduled' : formatDateShort(p.nextAppt);
                             return `
                             <tr>
                                 <td style="padding: 0.75rem; border-bottom: 1px solid #eee;">
@@ -4544,15 +4554,15 @@ function drillDownHCC(providerId) {
                                 <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee;">
                                     <span style="color: ${p.awvCompleted ? '#27ae60' : '#e74c3c'}; font-weight: 600;">${p.awvCompleted ? '✓' : '✗'}</span>
                                 </td>
+                                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: ${isNotScheduled ? '#e74c3c' : '#27ae60'}; font-weight: ${isNotScheduled ? '600' : '400'};">
+                                    ${formattedDate}
+                                </td>
                                 <td style="padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.8rem; color: #f39c12;">
                                     ${p.suspectedHCCs.join('<br>')}
                                 </td>
                                 <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee;">${p.rafCurrent.toFixed(2)}</td>
                                 <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: #27ae60; font-weight: 600;">${p.rafPotential.toFixed(2)}</td>
                                 <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: #C84E28; font-weight: 600;">${rafGap}</td>
-                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; font-size: 0.8rem; color: #6c757d;">
-                                    ${rafGap} × $${pmpmPerRAF.toLocaleString()}
-                                </td>
                                 <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; background: #f0fff0; font-weight: 600; color: #155724;">
                                     $${p.revenueOpp.toLocaleString()}
                                 </td>
@@ -4562,11 +4572,11 @@ function drillDownHCC(providerId) {
                         <tr style="background: #f8f9fa; font-weight: 700;">
                             <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;">TOTAL</td>
                             <td style="padding: 0.75rem; text-align: center; border-top: 2px solid #dee2e6;">${awvCompleteCount}/${patients.length}</td>
+                            <td style="padding: 0.75rem; text-align: center; border-top: 2px solid #dee2e6;">${patients.filter(p => p.nextAppt !== 'Not scheduled').length} scheduled</td>
                             <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;"></td>
                             <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;"></td>
                             <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;"></td>
                             <td style="padding: 0.75rem; text-align: center; border-top: 2px solid #dee2e6; color: #C84E28;">${totalRAFGap.toFixed(2)}</td>
-                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;"></td>
                             <td style="padding: 0.75rem; text-align: right; border-top: 2px solid #dee2e6; background: #d4edda; color: #155724; font-size: 1.1rem;">$${totalRevOpp.toLocaleString()}</td>
                         </tr>
                     </tbody>
@@ -4780,10 +4790,26 @@ const hccProviderData = {
 };
 
 function showHCCPatientList(providerId, filterType) {
-    const provider = hccProviderData[providerId];
-    if (!provider) {
-        showModal(`<h2>Provider Not Found</h2><p>No data available for provider ID: ${providerId}</p>`);
-        return;
+    let allPatients = [];
+    let headerTitle = '';
+    let isAllProviders = (providerId === 'all');
+
+    if (isAllProviders) {
+        // Aggregate all patients from all providers
+        Object.entries(hccProviderData).forEach(([provId, provider]) => {
+            provider.patients.forEach(p => {
+                allPatients.push({...p, providerName: provider.name, providerId: provId});
+            });
+        });
+        headerTitle = 'All Providers';
+    } else {
+        const provider = hccProviderData[providerId];
+        if (!provider) {
+            showModal(`<h2>Provider Not Found</h2><p>No data available for provider ID: ${providerId}</p>`);
+            return;
+        }
+        allPatients = provider.patients.map(p => ({...p, providerName: provider.name, providerId: providerId}));
+        headerTitle = provider.name;
     }
 
     let filteredPatients = [];
@@ -4791,13 +4817,13 @@ function showHCCPatientList(providerId, filterType) {
     let listDescription = '';
 
     if (filterType === 'awv-incomplete') {
-        filteredPatients = provider.patients.filter(p => !p.awvCompleted);
+        filteredPatients = allPatients.filter(p => !p.awvCompleted);
         listTitle = 'Patients Without AWV Completion';
-        listDescription = 'These patients have not completed their Annual Wellness Visit and are priority for outreach.';
+        listDescription = 'These patients have not completed their Annual Wellness Visit and are priority for outreach. AWV provides optimal opportunity for comprehensive HCC documentation.';
     } else if (filterType === 'not-scheduled') {
-        filteredPatients = provider.patients.filter(p => p.nextAppt === 'Not scheduled');
+        filteredPatients = allPatients.filter(p => p.nextAppt === 'Not scheduled');
         listTitle = 'Patients Not Scheduled';
-        listDescription = 'These patients do not have an upcoming appointment and require immediate scheduling outreach.';
+        listDescription = 'These patients do not have an upcoming PCP appointment and require immediate scheduling outreach. These represent highest risk for RAF score loss.';
     }
 
     // Sort by revenue opportunity descending
@@ -4808,7 +4834,7 @@ function showHCCPatientList(providerId, filterType) {
     const modalBody = `
         <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
             <div>
-                <h2 style="margin: 0;">${provider.name}</h2>
+                <h2 style="margin: 0;">${headerTitle}</h2>
                 <p class="provider-summary" style="margin: 0.25rem 0 0 0;">${listTitle}</p>
             </div>
             <button onclick="exportHCCPatientList('${providerId}', '${filterType}')" class="btn btn-primary" style="background: #27ae60; border: none; color: white; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem;">
@@ -4824,7 +4850,7 @@ function showHCCPatientList(providerId, filterType) {
                     <span style="font-weight: 700; color: #155724; margin-left: 0.5rem; font-size: 1.3rem;">${filteredPatients.length}</span>
                 </div>
                 <div>
-                    <span style="font-size: 0.85rem; color: #155724;">Total Revenue Opportunity:</span>
+                    <span style="font-size: 0.85rem; color: #155724;">Total Revenue at Risk:</span>
                     <span style="font-weight: 700; color: #155724; margin-left: 0.5rem; font-size: 1.3rem;">$${totalRevOpp.toLocaleString()}</span>
                 </div>
             </div>
@@ -4834,7 +4860,7 @@ function showHCCPatientList(providerId, filterType) {
             <div style="background: #d4edda; border-radius: 12px; padding: 2rem; text-align: center;">
                 <span style="font-size: 2rem;">✓</span>
                 <h3 style="color: #155724; margin: 1rem 0 0.5rem 0;">All Caught Up!</h3>
-                <p style="color: #155724; margin: 0;">No patients in this category for this provider.</p>
+                <p style="color: #155724; margin: 0;">No patients in this category.</p>
             </div>
         ` : `
             <div style="background: white; border-radius: 12px; padding: 1rem; border: 1px solid #e0e0e0; overflow-x: auto;">
@@ -4842,33 +4868,43 @@ function showHCCPatientList(providerId, filterType) {
                     <thead>
                         <tr style="background: #f8f9fa;">
                             <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Patient Name</th>
+                            ${isAllProviders ? '<th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Provider</th>' : ''}
                             <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">MRN</th>
                             <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Age</th>
-                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Suspected HCCs</th>
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Uncoded Dx</th>
                             <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">RAF Gap</th>
-                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600; background: #d4edda;">Revenue Opp</th>
-                            ${filterType === 'awv-incomplete' ? '<th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Next Appt</th>' : ''}
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600; background: #fff3cd;">Revenue at Risk</th>
+                            ${filterType === 'awv-incomplete' ? '<th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Scheduled PCP</th>' : ''}
                         </tr>
                     </thead>
                     <tbody>
-                        ${filteredPatients.map(p => {
+                        ${filteredPatients.slice(0, 50).map(p => {
                             const rafGap = (p.rafPotential - p.rafCurrent).toFixed(2);
+                            const isNotScheduled = p.nextAppt === 'Not scheduled';
                             return `
-                            <tr>
+                            <tr style="cursor: pointer;" onclick="drillDownHCC('${p.providerId}')">
                                 <td style="padding: 0.75rem; border-bottom: 1px solid #eee;">
                                     <strong>${p.firstName} ${p.lastName}</strong>
                                 </td>
+                                ${isAllProviders ? `<td style="padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.8rem; color: #495057;">${p.providerName}</td>` : ''}
                                 <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; font-family: monospace; color: #6c757d;">${p.mrn}</td>
                                 <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee;">${p.age}</td>
                                 <td style="padding: 0.75rem; border-bottom: 1px solid #eee; font-size: 0.8rem; color: #f39c12;">
                                     ${p.suspectedHCCs.join('<br>')}
                                 </td>
                                 <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: #C84E28; font-weight: 600;">${rafGap}</td>
-                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; background: #f0fff0; font-weight: 600; color: #155724;">$${p.revenueOpp.toLocaleString()}</td>
-                                ${filterType === 'awv-incomplete' ? `<td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: ${p.nextAppt === 'Not scheduled' ? '#e74c3c' : '#27ae60'};">${p.nextAppt}</td>` : ''}
+                                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; background: #fffbf0; font-weight: 600; color: #856404;">$${p.revenueOpp.toLocaleString()}</td>
+                                ${filterType === 'awv-incomplete' ? `<td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: ${isNotScheduled ? '#e74c3c' : '#27ae60'}; font-weight: ${isNotScheduled ? '600' : '400'};">${isNotScheduled ? 'Not scheduled' : formatDateShort(p.nextAppt)}</td>` : ''}
                             </tr>
                             `;
                         }).join('')}
+                        ${filteredPatients.length > 50 ? `
+                            <tr style="background: #f8f9fa;">
+                                <td colspan="${isAllProviders ? '8' : '7'}" style="padding: 0.75rem; text-align: center; border-top: 2px solid #dee2e6; font-style: italic; color: #6c757d;">
+                                    Showing first 50 of ${filteredPatients.length} patients. Export to CSV for complete list.
+                                </td>
+                            </tr>
+                        ` : ''}
                     </tbody>
                 </table>
             </div>
@@ -4879,21 +4915,23 @@ function showHCCPatientList(providerId, filterType) {
             <ul>
                 ${filterType === 'awv-incomplete' ? `
                     <li><strong>Schedule AWV:</strong> Contact these ${filteredPatients.length} patients to schedule Annual Wellness Visit</li>
-                    <li><strong>Prepare Gap List:</strong> Generate patient-specific suspected HCC documentation for each AWV</li>
+                    <li><strong>Pre-Visit Planning:</strong> Generate patient-specific uncoded dx documentation for each scheduled visit</li>
                     <li><strong>Care Team Alert:</strong> Notify care coordinators to prioritize outreach</li>
                 ` : `
-                    <li><strong>Urgent Outreach:</strong> Contact these ${filteredPatients.length} patients immediately to schedule appointments</li>
+                    <li><strong>Urgent Outreach:</strong> Contact these ${filteredPatients.length} patients immediately to schedule PCP appointments</li>
                     <li><strong>Alternative Contact:</strong> Try multiple contact methods (phone, patient portal, mail)</li>
                     <li><strong>Transportation:</strong> Assess if transportation barriers are preventing scheduling</li>
                 `}
             </ul>
         </div>
 
+        ${!isAllProviders ? `
         <div style="margin-top: 1rem; text-align: center;">
             <button onclick="drillDownHCC('${providerId}')" class="btn btn-secondary" style="background: #6c757d; border: none; color: white; padding: 0.5rem 1.5rem; border-radius: 6px; cursor: pointer;">
                 ← Back to Provider Details
             </button>
         </div>
+        ` : ''}
     `;
 
     showModal(modalBody);
