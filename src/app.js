@@ -2875,6 +2875,7 @@ window.setLeakageServiceType = setLeakageServiceType;
 window.setElectiveFilter = setElectiveFilter;
 
 // Georgia County Leakage Data (FIPS codes for matching with TopoJSON)
+// Note: totalLeakage = total cost (not OON cost). OON Leakage = totalLeakage × leakageScore
 const georgiaCountyLeakageData = {
     // FIPS codes for Georgia counties (13XXX format)
     '13121': { name: 'Fulton', leakageScore: 0.92, totalLeakage: 12800000, hasMarker: true,
@@ -3270,9 +3271,13 @@ function showCountyTooltip(event, d) {
     const countyData = georgiaCountyLeakageData[fips] || d;
 
     if (countyData && countyData.name) {
+        // Calculate OON Cost from Total Cost × Leakage %
+        const totalCost = countyData.totalLeakage; // totalLeakage represents total cost
+        const oonCost = totalCost * countyData.leakageScore;
+
         tooltip.innerHTML = `
             <div style="font-weight: bold; margin-bottom: 6px; font-size: 14px;">${countyData.name} County</div>
-            <div style="margin-bottom: 4px;">OON Cost: <strong style="color: #e74c3c;">$${(countyData.totalLeakage / 1000000).toFixed(1)}M</strong></div>
+            <div style="margin-bottom: 4px;">OON Cost: <strong style="color: #e74c3c;">$${(oonCost / 1000000).toFixed(1)}M</strong></div>
             <div style="margin-bottom: 4px;">Leakage %: <strong>${(countyData.leakageScore * 100).toFixed(0)}%</strong></div>
             <div style="font-size: 10px; margin-top: 6px; opacity: 0.8; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 6px;">Click for facility details</div>
         `;
@@ -3339,14 +3344,18 @@ function updateCountyDetailPanel(countyData) {
     allProviders.sort((a, b) => b.spend - a.spend);
     const topProviders = allProviders.slice(0, 5);
 
+    // Calculate OON Leakage from Total Cost × Leakage %
+    const totalCost = countyData.totalLeakage; // totalLeakage represents total cost
+    const oonLeakage = totalCost * countyData.leakageScore;
+
     titleEl.textContent = `${countyData.name} County`;
-    subtitleEl.textContent = `Total Cost: $${(totalSpend / 1000000).toFixed(1)}M`;
+    subtitleEl.textContent = `Total Cost: $${(totalCost / 1000000).toFixed(1)}M`;
 
     contentEl.innerHTML = `
         <div class="county-stats-grid">
             <div class="county-stat">
                 <div class="stat-label">Total OON Leakage</div>
-                <div class="stat-value bad">$${(countyData.totalLeakage / 1000000).toFixed(1)}M</div>
+                <div class="stat-value bad">$${(oonLeakage / 1000000).toFixed(1)}M</div>
             </div>
             <div class="county-stat">
                 <div class="stat-label">Leakage %</div>
