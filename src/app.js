@@ -6913,11 +6913,11 @@ function exportHCCPatientList(providerId, filterType) {
 // AWV Patient Data - extended dataset for the Risk Adjustment tab
 const awvPatientData = {
     totalAttributed: 47823,
-    awvCompleted: 23911,
-    awvIncomplete: 23912,
-    notScheduled: 21500,
-    scheduledWithAWVDue: 2412,
-    missedOpportunityVisits: 5647,
+    awvCompleted: 27929,
+    awvIncomplete: 19894,
+    notScheduled: 17887,
+    scheduledWithAWVDue: 2007,
+    missedOpportunityVisits: 4698,
     awvRates: {
         G0402: 160, // Initial Preventive Physical Exam
         G0438: 175, // Initial AWV
@@ -6925,13 +6925,13 @@ const awvPatientData = {
     },
     weightedAvgAWV: 150,
 
-    // Regional AWV performance data
+    // Regional AWV performance data (aligned with 58.4% overall rate)
     regions: [
-        { name: 'Atlanta North', completed: 6234, total: 11892, rate: 52.4, missed: 1423, scheduled: 612 },
-        { name: 'Atlanta South', completed: 5892, total: 12456, rate: 47.3, missed: 1876, scheduled: 734 },
-        { name: 'Columbus', completed: 4123, total: 8234, rate: 50.1, missed: 987, scheduled: 423 },
-        { name: 'Augusta', completed: 3892, total: 7823, rate: 49.8, missed: 856, scheduled: 367 },
-        { name: 'Macon', completed: 3770, total: 7418, rate: 50.8, missed: 505, scheduled: 276 }
+        { name: 'Atlanta North', completed: 7016, total: 11892, rate: 59.0, missed: 1185, scheduled: 509 },
+        { name: 'Atlanta South', completed: 7100, total: 12456, rate: 57.0, missed: 1560, scheduled: 611 },
+        { name: 'Columbus', completed: 4940, total: 8234, rate: 60.0, missed: 821, scheduled: 352 },
+        { name: 'Augusta', completed: 4537, total: 7823, rate: 58.0, missed: 712, scheduled: 305 },
+        { name: 'Macon', completed: 4377, total: 7418, rate: 59.0, missed: 420, scheduled: 230 }
     ],
 
     // Top providers for AWV performance
@@ -7115,10 +7115,10 @@ function showAWVComplianceModal(section = 'overview') {
 
         <!-- Overview KPIs -->
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
-            <div style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid #27ae60;">
-                <div style="font-size: 0.8rem; color: #155724; margin-bottom: 0.25rem;">AWV Compliance Rate</div>
-                <div style="font-size: 2rem; font-weight: 700; color: #155724;">${completionRate}%</div>
-                <div style="font-size: 0.75rem; color: #155724;">${data.awvCompleted.toLocaleString()} / ${data.totalAttributed.toLocaleString()}</div>
+            <div style="background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%); padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid #f39c12;">
+                <div style="font-size: 0.8rem; color: #856404; margin-bottom: 0.25rem;">AWV Compliance Rate</div>
+                <div style="font-size: 2rem; font-weight: 700; color: #856404;">${completionRate}%</div>
+                <div style="font-size: 0.75rem; color: #856404;">${data.awvCompleted.toLocaleString()} / ${data.totalAttributed.toLocaleString()}</div>
             </div>
             <div style="background: #fff3cd; padding: 1rem; border-radius: 10px; text-align: center; border: 1px solid #f39c12;">
                 <div style="font-size: 0.8rem; color: #856404; margin-bottom: 0.25rem;">AWV Incomplete</div>
