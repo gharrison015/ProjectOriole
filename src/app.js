@@ -5533,8 +5533,13 @@ function showHedisMeasureDetail(measureCode) {
     if (!data) return;
 
     const starsHtml = '⭐'.repeat(data.stars) + '<span style="opacity:0.3">' + '⭐'.repeat(5 - data.stars) + '</span>';
+    const gapCount = data.denominator - data.numerator;
+    const gapPercent = ((gapCount / data.denominator) * 100).toFixed(1);
 
-    const modalContent = `
+    // Generate provider rankings for HEDIS measure
+    const providers = generateHedisProviderRankings(data.denominator, data.compliance);
+
+    let modalContent = `
         <div class="modal-header" style="background: linear-gradient(135deg, #3498db 0%, #2980b9 100%); color: white; padding: 1.5rem; border-radius: 12px 12px 0 0; margin: -1.5rem -1.5rem 1.5rem -1.5rem;">
             <h2 style="margin: 0 0 0.5rem 0; font-size: 1.5rem;">${data.name}</h2>
             <p style="margin: 0; opacity: 0.9; font-size: 0.9rem;">${data.description}</p>
@@ -5559,17 +5564,244 @@ function showHedisMeasureDetail(measureCode) {
             </div>
         </div>
 
-        <div style="background: #fef9e7; border-left: 4px solid #f39c12; padding: 1rem 1.25rem; border-radius: 0 8px 8px 0;">
+        <div style="background: #fef9e7; border-left: 4px solid #f39c12; padding: 1rem 1.25rem; border-radius: 0 8px 8px 0; margin-bottom: 1.5rem;">
             <h4 style="margin: 0 0 0.75rem 0; color: #2c3e50; font-size: 1rem;">Gap Closure Opportunities</h4>
             <ul style="margin: 0; padding-left: 1.25rem; color: #5a6c7d; line-height: 1.8;">
                 ${data.gaps.map(gap => `<li>${gap}</li>`).join('')}
             </ul>
+        </div>
+
+        <div class="provider-ranking-table">
+            <h3 style="margin-bottom: 1rem;">Provider Performance Rankings <span style="font-size: 0.85rem; font-weight: normal; color: var(--piedmont-gray);">(Click provider to see their patients)</span></h3>
+            <table class="ranking-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Provider Name</th>
+                        <th>Patients</th>
+                        <th>Compliant</th>
+                        <th>Compliance Rate</th>
+                        <th>Gap Count</th>
+                        <th>Opportunity Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+    providers.forEach((provider, index) => {
+        const rankClass = index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : 'rank-other';
+        const oppClass = provider.gapCount > 20 ? 'high' : provider.gapCount > 10 ? 'medium' : 'low';
+        const oppLabel = provider.gapCount > 20 ? 'High' : provider.gapCount > 10 ? 'Medium' : 'Low';
+
+        modalContent += `
+            <tr onclick="showHedisPatientList('${measureCode}', '${data.name}', '${provider.name}')" style="cursor: pointer;">
+                <td><span class="rank-badge ${rankClass}">${index + 1}</span></td>
+                <td><strong>${provider.name}</strong></td>
+                <td>${provider.totalPatients}</td>
+                <td>${provider.compliantPatients}</td>
+                <td>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${provider.complianceRate}%">${provider.complianceRate}%</div>
+                    </div>
+                </td>
+                <td><strong>${provider.gapCount}</strong></td>
+                <td><span class="opportunity-badge ${oppClass}">${oppLabel}</span></td>
+            </tr>
+        `;
+    });
+
+    modalContent += `
+                </tbody>
+            </table>
+        </div>
+    `;
+
+    // Top opportunity PCP
+    const topOppPCP = providers[providers.length - 1];
+    modalContent += `
+        <div class="alert-box warning" style="margin-top: 1.5rem;">
+            <h4>🎯 Top Opportunity: ${topOppPCP.name}</h4>
+            <p><strong>${topOppPCP.gapCount} patients</strong> with open gaps (${topOppPCP.complianceRate}% compliance rate)</p>
+            <p>If ${topOppPCP.name} closes all gaps, performance would increase by <strong>${(topOppPCP.gapCount / data.denominator * 100).toFixed(1)}%</strong></p>
+            <button class="btn-small" onclick="showHedisPatientList('${measureCode}', '${data.name}', '${topOppPCP.name}')" style="margin-top: 1rem;">
+                View ${topOppPCP.name}'s Patient List →
+            </button>
         </div>
     `;
 
     document.getElementById('modal-body').innerHTML = modalContent;
     document.getElementById('modal').style.display = 'block';
 }
+
+// Generate provider rankings for HEDIS measures
+function generateHedisProviderRankings(totalDenominator, avgCompliance) {
+    const providers = [
+        'Dr. Chen',
+        'Dr. Santos',
+        'Dr. Williams',
+        'Dr. Anderson',
+        'Dr. Brown',
+        'Dr. Davis',
+        'Dr. Miller',
+        'Dr. Wilson'
+    ];
+
+    return providers.map(name => {
+        const providerPatients = Math.floor(Math.random() * 150) + 80;
+        const complianceVariance = Math.random() * 30 - 15;
+        const complianceRate = Math.max(50, Math.min(100, avgCompliance + complianceVariance));
+        const compliantPatients = Math.floor(providerPatients * (complianceRate / 100));
+        const gapCount = providerPatients - compliantPatients;
+
+        return {
+            name: name,
+            totalPatients: providerPatients,
+            compliantPatients: compliantPatients,
+            complianceRate: complianceRate.toFixed(1),
+            gapCount: gapCount
+        };
+    }).sort((a, b) => parseFloat(b.complianceRate) - parseFloat(a.complianceRate));
+}
+
+// Show HEDIS patient list with export capability
+function showHedisPatientList(measureCode, measureName, providerName) {
+    const patients = generateHedisPatientListData(measureCode, measureName, providerName);
+
+    let modalBody = '<div class="patient-list-container">';
+
+    // Header with export button
+    modalBody += `
+        <div class="list-controls">
+            <div>
+                <div class="list-title">${measureName} - Patient List</div>
+                <div style="font-size: 0.9rem; color: var(--piedmont-gray); margin-top: 0.5rem;">
+                    Provider: ${providerName} | Total: ${patients.length} patients | Non-Compliant: ${patients.filter(p => !p.compliant).length}
+                </div>
+            </div>
+            <button class="export-btn" onclick="exportHedisPatientList('${measureCode}', '${measureName}', '${providerName}')">
+                📥 Export to Excel
+            </button>
+        </div>
+    `;
+
+    // Patient List Table
+    modalBody += `
+        <div style="max-height: 60vh; overflow-y: auto;">
+            <table class="patient-list-table">
+                <thead>
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>MRN</th>
+                        <th>DOB</th>
+                        <th>PCP</th>
+                        <th>Compliant</th>
+                        <th>Gap Status</th>
+                        <th>Last Service Date</th>
+                        <th>Due Date</th>
+                        <th>Case Manager</th>
+                        <th>Next Appt</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+    patients.forEach(patient => {
+        const rowClass = !patient.compliant ? 'non-compliant' : '';
+        modalBody += `
+            <tr class="${rowClass}">
+                <td class="patient-name-cell">${patient.name}</td>
+                <td>${patient.mrn}</td>
+                <td>${patient.dob}</td>
+                <td>${patient.pcp}</td>
+                <td><span class="compliant-badge ${patient.compliant ? 'yes' : 'no'}">${patient.compliant ? 'Yes' : 'No'}</span></td>
+                <td>
+                    <span class="gap-indicator ${patient.gapStatus}">${patient.gapStatus === 'open' ? '✗ Open' : '✓ Closed'}</span>
+                </td>
+                <td>${patient.lastServiceDate || '<span style="color: #ccc;">—</span>'}</td>
+                <td>${patient.dueDate || '<span style="color: #ccc;">—</span>'}</td>
+                <td>${patient.caseManager || '<span style="color: #ccc;">—</span>'}</td>
+                <td>
+                    ${patient.nextAppt ? '<div>' + patient.nextAppt.date + '</div><div style="font-size: 0.75rem; color: var(--piedmont-gray);">' + patient.nextAppt.time + '</div>' : '<span style="color: #ccc;">—</span>'}
+                </td>
+            </tr>
+        `;
+    });
+
+    modalBody += `
+                </tbody>
+            </table>
+        </div>
+    </div>`;
+
+    showModal(modalBody);
+}
+
+// Generate HEDIS patient list data
+function generateHedisPatientListData(measureCode, measureName, providerName) {
+    const patientCount = Math.floor(Math.random() * 40) + 60;
+    const patients = [];
+
+    const firstNames = ['John', 'Mary', 'Robert', 'Patricia', 'Michael', 'Jennifer', 'William', 'Linda', 'David', 'Barbara', 'Richard', 'Susan', 'Joseph', 'Jessica', 'Thomas', 'Sarah', 'Charles', 'Karen', 'Christopher', 'Nancy'];
+    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin'];
+    const caseManagers = ['Jennifer Rodriguez, RN', 'Michael Chen, RN', 'Sarah Thompson, RN', null, null];
+
+    for (let i = 0; i < patientCount; i++) {
+        const isCompliant = Math.random() > 0.3;
+        const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+        const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+        const birthYear = 1940 + Math.floor(Math.random() * 50);
+        const birthMonth = Math.floor(Math.random() * 12) + 1;
+        const birthDay = Math.floor(Math.random() * 28) + 1;
+
+        const hasAppt = Math.random() > 0.4;
+        const apptMonth = Math.floor(Math.random() * 6) + 1;
+        const apptDay = Math.floor(Math.random() * 28) + 1;
+        const apptHour = Math.floor(Math.random() * 8) + 8;
+
+        patients.push({
+            name: `${lastName}, ${firstName}`,
+            mrn: 'MRN' + String(Math.floor(Math.random() * 900000) + 100000),
+            dob: `${birthMonth}/${birthDay}/${birthYear}`,
+            pcp: providerName,
+            compliant: isCompliant,
+            gapStatus: isCompliant ? 'closed' : 'open',
+            lastServiceDate: isCompliant ? `${Math.floor(Math.random() * 12) + 1}/15/2026` : null,
+            dueDate: !isCompliant ? `${Math.floor(Math.random() * 6) + 1}/1/2026` : null,
+            caseManager: caseManagers[Math.floor(Math.random() * caseManagers.length)],
+            nextAppt: hasAppt ? {
+                date: `${apptMonth}/${apptDay}/2026`,
+                time: `${apptHour}:00 AM`
+            } : null
+        });
+    }
+
+    return patients.sort((a, b) => a.compliant - b.compliant);
+}
+
+// Export HEDIS patient list to CSV
+function exportHedisPatientList(measureCode, measureName, providerName) {
+    const patients = generateHedisPatientListData(measureCode, measureName, providerName);
+
+    let csvContent = 'Patient Name,MRN,DOB,PCP,Compliant,Gap Status,Last Service Date,Due Date,Case Manager,Next Appt\n';
+
+    patients.forEach(patient => {
+        const nextApptStr = patient.nextAppt ? `${patient.nextAppt.date} ${patient.nextAppt.time}` : '';
+        csvContent += `"${patient.name}","${patient.mrn}","${patient.dob}","${patient.pcp}","${patient.compliant ? 'Yes' : 'No'}","${patient.gapStatus}","${patient.lastServiceDate || ''}","${patient.dueDate || ''}","${patient.caseManager || ''}","${nextApptStr}"\n`;
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `HEDIS_${measureCode}_${providerName.replace(/\s+/g, '_')}_patients.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+window.showHedisPatientList = showHedisPatientList;
+window.exportHedisPatientList = exportHedisPatientList;
 
 // Make showHedisMeasureDetail globally available
 window.showHedisMeasureDetail = showHedisMeasureDetail;
