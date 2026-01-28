@@ -969,10 +969,8 @@ function initLeakagePieChart() {
                     align: 'end',
                     offset: 6,
                     formatter: function(value, context) {
-                        const amounts = [
-                            leakagePieChart._customAmounts ? leakagePieChart._customAmounts.inNetwork : data.inNetwork,
-                            leakagePieChart._customAmounts ? leakagePieChart._customAmounts.oon : data.oon
-                        ];
+                        const currentData = (leakagePieChart && leakagePieChart._customAmounts) || data;
+                        const amounts = [currentData.inNetwork, currentData.oon];
                         const labels = ['In-Network', 'Out-of-Network'];
                         return labels[context.dataIndex] + '\n$' + amounts[context.dataIndex] + 'M (' + value + '%)';
                     },
@@ -982,13 +980,13 @@ function initLeakagePieChart() {
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            const amounts = leakagePieChart._customAmounts || data;
-                            const amountArr = [amounts.inNetwork, amounts.oon];
+                            const currentData = (leakagePieChart && leakagePieChart._customAmounts) || data;
+                            const amountArr = [currentData.inNetwork, currentData.oon];
                             return `${context.label}: $${amountArr[context.dataIndex]}M (${context.parsed}%)`;
                         },
                         afterBody: function() {
-                            const amounts = leakagePieChart._customAmounts || data;
-                            const total = (amounts.inNetwork + amounts.oon).toFixed(1);
+                            const currentData = (leakagePieChart && leakagePieChart._customAmounts) || data;
+                            const total = (currentData.inNetwork + currentData.oon).toFixed(1);
                             return `Total Spend: $${total}M`;
                         }
                     }
