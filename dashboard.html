@@ -71,13 +71,13 @@
         <div class="main-content">
             <nav class="sidebar">
                 <ul class="nav-menu">
-                    <li class="nav-item active" data-tab="performance">📊 Performance Overview</li>
-                    <li class="nav-item" data-tab="projections">🔮 Projections</li>
-                    <li class="nav-item" data-tab="tcoc">💰 Total Cost of Care</li>
-                    <li class="nav-item" data-tab="leakage">🔀 Leakage</li>
-                    <li class="nav-item" data-tab="episodes">🏥 Episodes</li>
-                    <li class="nav-item" data-tab="quality">✅ Quality</li>
-                    <li class="nav-item" data-tab="hcc">📋 Risk Adjustment</li>
+                    <li class="nav-item active" data-tab="performance"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M18 9l-5 5-4-4-3 3"/></svg> Performance Overview</li>
+                    <li class="nav-item" data-tab="projections"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Projections</li>
+                    <li class="nav-item" data-tab="tcoc"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg> Total Cost of Care</li>
+                    <li class="nav-item" data-tab="leakage"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M16 12H8M12 8v8"/><path d="M8 8l8 8M16 8l-8 8" opacity="0.5"/></svg> Leakage</li>
+                    <li class="nav-item" data-tab="episodes"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg> Episodes</li>
+                    <li class="nav-item" data-tab="quality"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg> Quality</li>
+                    <li class="nav-item" data-tab="hcc"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg> Risk Adjustment</li>
                 </ul>
             </nav>
 
@@ -90,7 +90,7 @@
                             <p>Executive dashboard showing MSSP ACO performance vs benchmarks</p>
                         </div>
                         <button class="insights-btn" onclick="showInsightsModal('performance')">
-                            <span class="insights-btn-icon">💡</span>
+                            <svg class="insights-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.75V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.25A7 7 0 0 0 12 2z"/></svg>
                             Executive Insights
                         </button>
                     </div>
@@ -135,7 +135,7 @@
                         </div>
                     </div>
                     <div class="kpi-note" id="performance-kpi-note">
-                        <span class="note-icon">⚠️</span>
+                        <svg class="note-icon warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
                         <span class="note-text">Quality Score based on eCQM/MIPS clinical submissions from Epic. Subject to fluctuation based on CMS final ruling.</span>
                     </div>
 
@@ -145,7 +145,7 @@
                             <canvas id="trendChart"></canvas>
                         </div>
                         <div class="chart-note" id="pmpm-chart-note">
-                            <span class="note-icon">ℹ️</span>
+                            <svg class="note-icon info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
                             <span class="note-text">Nov-Dec values include IBNR (Incurred But Not Reported) adjustment for claims lag</span>
                         </div>
                     </div>
@@ -180,34 +180,34 @@
                             <p>PY2026 forecasting and scenario modeling for program participation decisions</p>
                         </div>
                         <button class="insights-btn success" onclick="showInsightsModal('projections')">
-                            <span class="insights-btn-icon">💡</span>
+                            <svg class="insights-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.75V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.25A7 7 0 0 0 12 2z"/></svg>
                             PY2026 Recommendation
                         </button>
                     </div>
 
                     <!-- Section 1: Forecasting (Static View) -->
                     <div class="section-divider">
-                        <h3 class="section-title">📈 PY2026 Year-End Forecast</h3>
+                        <h3 class="section-title"><svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 16l4-8 4 5 6-9"/></svg> PY2026 Year-End Forecast</h3>
                         <p class="section-subtitle">Actuarial projection through December 2026 including IBNR estimates</p>
                     </div>
 
                     <div class="forecast-data-status">
                         <div class="data-status-item">
-                            <span class="status-icon complete">✓</span>
+                            <svg class="status-icon complete" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
                             <div class="status-text">
                                 <strong>Claims Data</strong>
                                 <span>Q1 2026</span>
                             </div>
                         </div>
                         <div class="data-status-item">
-                            <span class="status-icon complete">✓</span>
+                            <svg class="status-icon complete" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6L9 17l-5-5"/></svg>
                             <div class="status-text">
                                 <strong>Expenditure Files</strong>
                                 <span>Q1 2026 Received</span>
                             </div>
                         </div>
                         <div class="data-status-item">
-                            <span class="status-icon pending">◐</span>
+                            <svg class="status-icon pending" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
                             <div class="status-text">
                                 <strong>IBNR Estimates</strong>
                                 <span>Applied to Q1 claims experience</span>
@@ -295,7 +295,7 @@
 
                     <!-- Section 2: Performance Scenarios -->
                     <div class="section-divider" style="margin-top: 3rem;">
-                        <h3 class="section-title">🔮 PY2026 Performance Year Scenarios</h3>
+                        <h3 class="section-title"><svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> PY2026 Performance Year Scenarios</h3>
                         <p class="section-subtitle">Actuarial simulations based on historical ACO performance to model PY2026 outcomes</p>
                     </div>
 
@@ -385,13 +385,13 @@
                             <p>MSSP ACO PY2025 performance on CMS quality measures with drill-down capability</p>
                         </div>
                         <button class="insights-btn info" onclick="showInsightsModal('quality')">
-                            <span class="insights-btn-icon">💡</span>
+                            <svg class="insights-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.75V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.25A7 7 0 0 0 12 2z"/></svg>
                             Improvement Opportunities
                         </button>
                     </div>
 
                     <div class="data-timeframe">
-                        <span class="data-timeframe-icon">📅</span>
+                        <svg class="data-timeframe-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                         <span class="data-timeframe-label">Data Period:</span>
                         <span class="data-timeframe-dates">Jan 1, 2026 — <span id="quality-data-end-date">Loading...</span></span>
                         <span class="data-timeframe-note">
@@ -405,7 +405,7 @@
                         <div class="quality-summary-card">
                             <h4>Overall Quality Score</h4>
                             <div class="quality-score-large">87.4%</div>
-                            <div class="quality-rating">⭐⭐⭐⭐ (4-Star Equivalent)</div>
+                            <div class="quality-rating"><span class="star-rating-4"></span> (4-Star Equivalent)</div>
                             <div class="quality-detail">Based on 33 quality measures</div>
                         </div>
                         <div class="quality-summary-card">
@@ -427,7 +427,7 @@
                         <!-- Historical (Left) -->
                         <div class="pop-health-column">
                             <div class="compact-slider-header">
-                                <span class="slider-label">📅 Historical (Service Date)</span>
+                                <span class="slider-label"><svg class="slider-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Historical (Service Date)</span>
                                 <span class="date-range-display compact" id="quality-historical-display">Jan 1 - Yesterday</span>
                             </div>
                             <div class="compact-slider">
@@ -456,7 +456,7 @@
                         <!-- Forecast (Right) -->
                         <div class="pop-health-column forecast">
                             <div class="compact-slider-header">
-                                <span class="slider-label">🔮 Forecast (Scheduled)</span>
+                                <span class="slider-label"><svg class="slider-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> Forecast (Scheduled)</span>
                                 <span class="date-range-display compact" id="quality-forecast-display">Today - Dec 31, 2026</span>
                             </div>
                             <div class="compact-slider">
@@ -490,7 +490,7 @@
                                 <span class="toggle-icon">🏛️</span> ACO Quality Measures
                             </button>
                             <button class="toggle-btn" id="hedis-toggle" onclick="toggleMeasuresView('hedis')">
-                                <span class="toggle-icon">📊</span> HEDIS-Like Measures
+                                <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="14" y="6" width="3" height="12"/></svg> HEDIS-Like Measures
                             </button>
                         </div>
                     </div>
@@ -669,105 +669,105 @@
                                                 <td>8,234</td>
                                                 <td>6,775</td>
                                                 <td class="good"><strong>82.3%</strong></td>
-                                                <td><span class="star-rating">⭐⭐⭐⭐</span></td>
+                                                <td><span class="star-rating star-4"></span></td>
                                             </tr>
                                             <tr class="clickable" onclick="showHedisMeasureDetail('COA')">
                                                 <td><strong>Care for Older Adults - Medication Review</strong></td>
                                                 <td>12,456</td>
                                                 <td>9,587</td>
                                                 <td class="good"><strong>76.9%</strong></td>
-                                                <td><span class="star-rating">⭐⭐⭐⭐</span></td>
+                                                <td><span class="star-rating star-4"></span></td>
                                             </tr>
                                             <tr class="clickable" onclick="showHedisMeasureDetail('COL')">
                                                 <td><strong>Colorectal Cancer Screening</strong></td>
                                                 <td>15,823</td>
                                                 <td>12,152</td>
                                                 <td class="good"><strong>76.8%</strong></td>
-                                                <td><span class="star-rating">⭐⭐⭐⭐</span></td>
+                                                <td><span class="star-rating star-4"></span></td>
                                             </tr>
                                             <tr class="clickable" onclick="showHedisMeasureDetail('CBP')">
                                                 <td><strong>Controlling High Blood Pressure</strong></td>
                                                 <td>9,847</td>
                                                 <td>7,129</td>
                                                 <td class="good"><strong>72.4%</strong></td>
-                                                <td><span class="star-rating">⭐⭐⭐⭐</span></td>
+                                                <td><span class="star-rating star-4"></span></td>
                                             </tr>
                                             <tr class="clickable" onclick="showHedisMeasureDetail('HBD')">
                                                 <td><strong>Diabetes Care - Blood Sugar Controlled</strong></td>
                                                 <td>6,234</td>
                                                 <td>5,099</td>
                                                 <td class="good"><strong>81.8%</strong></td>
-                                                <td><span class="star-rating">⭐⭐⭐⭐⭐</span></td>
+                                                <td><span class="star-rating star-5"></span></td>
                                             </tr>
                                             <tr class="clickable" onclick="showHedisMeasureDetail('EED')">
                                                 <td><strong>Eye Exam for Patients with Diabetes</strong></td>
                                                 <td>6,234</td>
                                                 <td>4,295</td>
                                                 <td class="warning"><strong>68.9%</strong></td>
-                                                <td><span class="star-rating">⭐⭐⭐</span></td>
+                                                <td><span class="star-rating star-3"></span></td>
                                             </tr>
                                             <tr class="clickable" onclick="showHedisMeasureDetail('FMC')">
                                                 <td><strong>Follow-up After ED Visit (Multiple Chronic Conditions)</strong></td>
                                                 <td>2,847</td>
                                                 <td>1,823</td>
                                                 <td class="warning"><strong>64.0%</strong></td>
-                                                <td><span class="star-rating">⭐⭐⭐</span></td>
+                                                <td><span class="star-rating star-3"></span></td>
                                             </tr>
                                             <tr class="clickable" onclick="showHedisMeasureDetail('SPC')">
                                                 <td><strong>Medication Adherence - Cholesterol (Statin)</strong></td>
                                                 <td>7,892</td>
                                                 <td>6,945</td>
                                                 <td class="good"><strong>88.0%</strong></td>
-                                                <td><span class="star-rating">⭐⭐⭐⭐⭐</span></td>
+                                                <td><span class="star-rating star-5"></span></td>
                                             </tr>
                                             <tr class="clickable" onclick="showHedisMeasureDetail('SPD')">
                                                 <td><strong>Medication Adherence - Diabetes Medications</strong></td>
                                                 <td>5,123</td>
                                                 <td>4,406</td>
                                                 <td class="good"><strong>86.0%</strong></td>
-                                                <td><span class="star-rating">⭐⭐⭐⭐⭐</span></td>
+                                                <td><span class="star-rating star-5"></span></td>
                                             </tr>
                                             <tr class="clickable" onclick="showHedisMeasureDetail('SPH')">
                                                 <td><strong>Medication Adherence - Hypertension (RASA)</strong></td>
                                                 <td>8,456</td>
                                                 <td>7,272</td>
                                                 <td class="good"><strong>86.0%</strong></td>
-                                                <td><span class="star-rating">⭐⭐⭐⭐⭐</span></td>
+                                                <td><span class="star-rating star-5"></span></td>
                                             </tr>
                                             <tr class="clickable" onclick="showHedisMeasureDetail('OMW')">
                                                 <td><strong>Osteoporosis Management in Women Who Had a Fracture</strong></td>
                                                 <td>892</td>
                                                 <td>445</td>
                                                 <td class="bad"><strong>49.9%</strong></td>
-                                                <td><span class="star-rating">⭐⭐</span></td>
+                                                <td><span class="star-rating star-2"></span></td>
                                             </tr>
                                             <tr class="clickable" onclick="showHedisMeasureDetail('PCR')">
                                                 <td><strong>Plan All-Cause Readmissions</strong></td>
                                                 <td>4,567</td>
                                                 <td>4,170</td>
                                                 <td class="good"><strong>91.3%</strong></td>
-                                                <td><span class="star-rating">⭐⭐⭐⭐</span></td>
+                                                <td><span class="star-rating star-4"></span></td>
                                             </tr>
                                             <tr class="clickable" onclick="showHedisMeasureDetail('STC')">
                                                 <td><strong>Statin Therapy - Cardiovascular Disease</strong></td>
                                                 <td>5,234</td>
                                                 <td>3,884</td>
                                                 <td class="warning"><strong>74.2%</strong></td>
-                                                <td><span class="star-rating">⭐⭐⭐</span></td>
+                                                <td><span class="star-rating star-3"></span></td>
                                             </tr>
                                             <tr class="clickable" onclick="showHedisMeasureDetail('SUPD')">
                                                 <td><strong>Statin Use in Persons with Diabetes</strong></td>
                                                 <td>6,234</td>
                                                 <td>5,236</td>
                                                 <td class="good"><strong>84.0%</strong></td>
-                                                <td><span class="star-rating">⭐⭐⭐⭐</span></td>
+                                                <td><span class="star-rating star-4"></span></td>
                                             </tr>
                                             <tr class="clickable" onclick="showHedisMeasureDetail('TRC')">
                                                 <td><strong>Transitions of Care</strong></td>
                                                 <td>3,456</td>
                                                 <td>2,419</td>
                                                 <td class="warning"><strong>70.0%</strong></td>
-                                                <td><span class="star-rating">⭐⭐⭐</span></td>
+                                                <td><span class="star-rating star-3"></span></td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -779,14 +779,14 @@
                     <div class="chart-section">
                         <div class="chart-header-row">
                             <h3>Piedmont MSSP ACO Quality Performance</h3>
-                            <span class="data-source-badge">📊 CMS Public Data</span>
+                            <span class="data-source-badge"><svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><rect x="7" y="10" width="3" height="8"/><rect x="14" y="6" width="3" height="12"/></svg> CMS Public Data</span>
                         </div>
                         <p class="chart-subtitle">Piedmont Clinic ACO LLC (A3250) — CMS Shared Savings Program Results</p>
                         <div class="chart-wrapper">
                             <canvas id="qualityTrendChart"></canvas>
                         </div>
                         <div class="chart-note">
-                            <span class="note-icon">ℹ️</span>
+                            <svg class="note-icon info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
                             <span class="note-text">Source: CMS MSSP Performance Year Financial and Quality Results. Quality scores calculated from ACO-specific measures including CAHPS patient experience, preventive care, and chronic disease management.</span>
                         </div>
                     </div>
@@ -801,13 +801,13 @@
                             <p>Cost driver breakdown with actionable intervention opportunities</p>
                         </div>
                         <button class="insights-btn warning" onclick="showInsightsModal('tcoc')">
-                            <span class="insights-btn-icon">💡</span>
+                            <svg class="insights-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.75V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.25A7 7 0 0 0 12 2z"/></svg>
                             Cost Reduction Opportunities
                         </button>
                     </div>
 
                     <div class="data-timeframe">
-                        <span class="data-timeframe-icon">📅</span>
+                        <svg class="data-timeframe-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                         <span class="data-timeframe-label">Data Period:</span>
                         <span class="data-timeframe-dates">Jan 1, 2026 — <span id="tcoc-data-end-date">Loading...</span></span>
                         <span class="data-timeframe-note">
@@ -975,13 +975,13 @@
                             <p>Comprehensive view of network retention and out-of-network spend with geographic analysis</p>
                         </div>
                         <button class="insights-btn info" onclick="showInsightsModal('leakage')">
-                            <span class="insights-btn-icon">💡</span>
+                            <svg class="insights-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.75V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.25A7 7 0 0 0 12 2z"/></svg>
                             Leakage Reduction Strategy
                         </button>
                     </div>
 
                     <div class="data-timeframe">
-                        <span class="data-timeframe-icon">📅</span>
+                        <svg class="data-timeframe-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                         <span class="data-timeframe-label">Data Period:</span>
                         <span class="data-timeframe-dates">Jan 1, 2026 — <span id="leakage-data-end-date">Loading...</span></span>
                         <span class="data-timeframe-note">
@@ -1246,13 +1246,13 @@
                             <p>RAF score optimization and HCC recapture opportunity identification</p>
                         </div>
                         <button class="insights-btn success" onclick="showInsightsModal('hcc')">
-                            <span class="insights-btn-icon">💡</span>
+                            <svg class="insights-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.75V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.25A7 7 0 0 0 12 2z"/></svg>
                             Risk Adjustment Action Plan
                         </button>
                     </div>
 
                     <div class="data-timeframe">
-                        <span class="data-timeframe-icon">📅</span>
+                        <svg class="data-timeframe-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                         <span class="data-timeframe-label">Data Period:</span>
                         <span class="data-timeframe-dates">Jan 1, 2026 — <span id="hcc-data-end-date">Loading...</span></span>
                         <span class="data-timeframe-note">
@@ -1314,7 +1314,7 @@
                         <!-- Left Group: HCC/RAF Metrics -->
                         <div class="ra-group ra-group-hcc">
                             <div class="ra-group-header">
-                                <span class="group-icon">📊</span>
+                                <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg>
                                 <h3>HCC & Risk Adjustment</h3>
                                 <span class="group-subtitle">Coding Performance</span>
                             </div>
@@ -1375,7 +1375,7 @@
                         <!-- Right Group: AWV Metrics -->
                         <div class="ra-group ra-group-awv">
                             <div class="ra-group-header">
-                                <span class="group-icon">🩺</span>
+                                <svg class="group-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg>
                                 <h3>Annual Wellness Visits</h3>
                                 <span class="group-subtitle">AWV Performance</span>
                             </div>
@@ -1770,13 +1770,13 @@
                             <p>Episode-based analytics identifying cost variation and standardization opportunities</p>
                         </div>
                         <button class="insights-btn warning" onclick="showInsightsModal('episodes')">
-                            <span class="insights-btn-icon">💡</span>
+                            <svg class="insights-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.75V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.25A7 7 0 0 0 12 2z"/></svg>
                             Clinical Variation Opportunities
                         </button>
                     </div>
 
                     <div class="data-timeframe">
-                        <span class="data-timeframe-icon">📅</span>
+                        <svg class="data-timeframe-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
                         <span class="data-timeframe-label">Data Period:</span>
                         <span class="data-timeframe-dates">Jan 1, 2026 — <span id="episodes-data-end-date">Loading...</span></span>
                         <span class="data-timeframe-note">

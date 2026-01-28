@@ -19,8 +19,147 @@
     font-size: 0.85rem;
 }
 
+/* SVG Icon Base Styles */
+.data-timeframe-icon,
+.insights-btn-icon,
+.section-icon,
+.slider-icon,
+.toggle-icon,
+.badge-icon,
+.group-icon,
+.status-icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
 .data-timeframe-icon {
-    font-size: 1.2rem;
+    width: 18px;
+    height: 18px;
+    color: var(--piedmont-primary);
+}
+
+.insights-btn-icon {
+    width: 18px;
+    height: 18px;
+    margin-right: 0.5rem;
+}
+
+.section-icon {
+    width: 22px;
+    height: 22px;
+    margin-right: 0.5rem;
+    color: var(--piedmont-primary);
+}
+
+.slider-icon {
+    width: 14px;
+    height: 14px;
+    margin-right: 0.35rem;
+    vertical-align: -2px;
+}
+
+.toggle-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 0.35rem;
+    vertical-align: -3px;
+}
+
+.badge-icon {
+    width: 14px;
+    height: 14px;
+    margin-right: 0.35rem;
+    vertical-align: -2px;
+}
+
+.group-icon {
+    width: 24px;
+    height: 24px;
+    color: var(--piedmont-primary);
+}
+
+.status-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.status-icon.complete {
+    color: #27ae60;
+}
+
+.status-icon.pending {
+    color: #f39c12;
+}
+
+.status-icon.warning {
+    color: #e74c3c;
+}
+
+/* Note Icons */
+.note-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+.note-icon.warning {
+    color: #f39c12;
+}
+
+.note-icon.info {
+    color: #3498db;
+}
+
+/* Star Ratings - Professional SVG-based stars */
+.star-rating {
+    display: inline-flex;
+    gap: 2px;
+}
+
+.star-rating::before {
+    content: '';
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+/* Generate star ratings using CSS */
+.star-rating-4::before,
+.star-rating.star-4::before {
+    content: '★★★★☆';
+    color: #f39c12;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+}
+
+.star-rating.star-5::before {
+    content: '★★★★★';
+    color: #27ae60;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+}
+
+.star-rating.star-3::before {
+    content: '★★★☆☆';
+    color: #f39c12;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+}
+
+.star-rating.star-2::before {
+    content: '★★☆☆☆';
+    color: #e74c3c;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
+}
+
+.star-rating.star-1::before {
+    content: '★☆☆☆☆';
+    color: #e74c3c;
+    letter-spacing: 1px;
+    font-size: 0.9rem;
 }
 
 .data-timeframe-label {

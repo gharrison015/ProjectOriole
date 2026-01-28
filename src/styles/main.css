@@ -295,6 +295,20 @@ body {
     font-weight: 600;
 }
 
+/* Navigation Icons */
+.nav-icon {
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    margin-right: 0.5rem;
+    flex-shrink: 0;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+}
+
 /* Dashboard Main Area */
 .dashboard-main {
     flex: 1;
