@@ -95,8 +95,12 @@ function initializeTabs() {
 
                 // Re-render charts when tab becomes visible to fix sizing issues
                 setTimeout(() => {
-                    if (tabName === 'leakage' && leakagePieChart) {
-                        leakagePieChart.resize();
+                    if (tabName === 'leakage') {
+                        if (leakagePieChart) {
+                            leakagePieChart.resize();
+                        }
+                        // Update facilities table to ensure filters are applied correctly
+                        updateFacilitiesTable();
                     }
                     if (tabName === 'tcoc' && costPieChart) {
                         costPieChart.resize();
@@ -2812,7 +2816,10 @@ function updateFacilitiesTable() {
     // Take top 5
     facilities = facilities.slice(0, 5);
 
-    tbody.innerHTML = facilities.map(f => `
+    tbody.innerHTML = facilities.map(f => {
+        // Generate facility ID from name (lowercase, replace spaces/apostrophes with hyphens)
+        const facilityId = f.name.toLowerCase().replace(/[']/g, '').replace(/\s+/g, '-');
+        return `
         <tr>
             <td><strong>${f.name}</strong></td>
             <td>${f.type}</td>
@@ -2823,8 +2830,10 @@ function updateFacilitiesTable() {
                 ${f.providers.map(p => `<div>${p}</div>`).join('')}
             </td>
             <td><span class="badge ${f.elective ? 'elective' : 'non-elective'}">${f.elective ? 'Elective' : 'Non-Elective'}</span></td>
+            <td><button class="btn-small" onclick="event.stopPropagation(); showFacilityLeakageDetail('${facilityId}')">View Details</button></td>
         </tr>
-    `).join('');
+        `;
+    }).join('');
 }
 
 // Navigate to a specific tab

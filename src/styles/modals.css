@@ -586,11 +586,13 @@
     color: #5a6c7d;
     text-transform: uppercase;
     border-bottom: 2px solid #e9ecef;
+    vertical-align: top;
 }
 
 .ranking-table td {
     padding: 1rem;
     border-bottom: 1px solid #e9ecef;
+    vertical-align: top;
 }
 
 .ranking-table tbody tr {
@@ -741,6 +743,7 @@
     text-transform: uppercase;
     border-bottom: 2px solid #e9ecef;
     white-space: nowrap;
+    vertical-align: top;
 }
 
 .patient-list-table td {
