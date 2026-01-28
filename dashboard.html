@@ -874,20 +874,30 @@
                     </div>
 
                     <div class="table-section">
-                        <h3>Avoidable ED Visits by Market - High Impact Opportunity</h3>
-                        <table class="data-table">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+                            <h3 style="margin: 0;">Avoidable Utilization by Market - High Impact Opportunity</h3>
+                            <div class="avoidable-toggle-container" style="display: flex; gap: 0.25rem; background: #f0f2f5; padding: 0.25rem; border-radius: 8px;">
+                                <button class="avoidable-toggle-btn active" data-view="ed" onclick="setAvoidableView('ed')">ED Visits</button>
+                                <button class="avoidable-toggle-btn" data-view="ip" onclick="setAvoidableView('ip')">IP Admissions</button>
+                                <button class="avoidable-toggle-btn" data-view="all" onclick="setAvoidableView('all')">Combined</button>
+                            </div>
+                        </div>
+                        <div id="avoidable-view-description" style="font-size: 0.8rem; color: #6c757d; margin-bottom: 1rem; padding: 0.75rem; background: #f8f9fa; border-radius: 6px; border-left: 3px solid #007bff;">
+                            <strong>ED Avoidables (NYU ED Algorithm):</strong> Emergency visits treatable in primary care, urgent care, or telehealth - includes URI, UTI, minor injuries, non-emergent conditions.
+                        </div>
+                        <table class="data-table" id="avoidable-market-table">
                             <thead>
                                 <tr>
                                     <th class="sortable tooltip-header" data-sort="string" data-tooltip="Geographic service area based on attributed patient residence. Markets defined by Piedmont regional boundaries.">Market Region <span class="th-info">ⓘ</span></th>
-                                    <th class="sortable tooltip-header" data-sort="number" data-tooltip="Count of all ED visits by attributed patients in the measurement period. Source: Claims data with ED revenue codes (0450-0459, 0981).">Total ED Visits <span class="th-info">ⓘ</span></th>
-                                    <th class="sortable tooltip-header" data-sort="number" data-tooltip="ED visits classified as avoidable per NYU ED Algorithm. Includes conditions treatable in primary care, urgent care, or via telehealth (URI, UTI, minor injuries, non-emergent back pain).">Avoidable Visits <span class="th-info">ⓘ</span></th>
-                                    <th class="sortable tooltip-header" data-sort="percent" data-tooltip="Percentage of total ED visits classified as avoidable. Formula: (Avoidable Visits ÷ Total ED Visits) × 100. Benchmark: &lt;25% is considered good performance.">Avoidable % <span class="th-info">ⓘ</span></th>
-                                    <th class="sortable tooltip-header" data-sort="currency" data-tooltip="Total allowed amount for avoidable ED visits. Formula: Avoidable Visits × Avg Cost/Visit. Includes facility fees + professional fees. Represents actual paid claims.">Cost Impact <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="number" id="avoidable-total-header" data-tooltip="Count of all ED visits by attributed patients in the measurement period. Source: Claims data with ED revenue codes (0450-0459, 0981).">Total ED Visits <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="number" id="avoidable-count-header" data-tooltip="ED visits classified as avoidable per NYU ED Algorithm. Includes conditions treatable in primary care, urgent care, or via telehealth.">Avoidable Visits <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="percent" id="avoidable-pct-header" data-tooltip="Percentage of total utilization classified as avoidable. Benchmark: ED <25%, IP <15% is considered good performance.">Avoidable % <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="currency" id="avoidable-cost-header" data-tooltip="Total allowed amount for avoidable utilization. Represents actual paid claims including facility and professional fees.">Cost Impact <span class="th-info">ⓘ</span></th>
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr onclick="drillDownEDMarket('atlanta-south')" class="clickable">
+                            <tbody id="avoidable-market-tbody">
+                                <tr onclick="drillDownAvoidableMarket('atlanta-south')" class="clickable">
                                     <td><strong>Atlanta South</strong></td>
                                     <td>4,231</td>
                                     <td class="bad">1,523</td>
@@ -895,7 +905,7 @@
                                     <td class="bad">$1,868,271</td>
                                     <td><button class="btn-small">View Details →</button></td>
                                 </tr>
-                                <tr onclick="drillDownEDMarket('augusta')" class="clickable">
+                                <tr onclick="drillDownAvoidableMarket('augusta')" class="clickable">
                                     <td><strong>Augusta</strong></td>
                                     <td>2,187</td>
                                     <td class="bad">789</td>
@@ -903,7 +913,7 @@
                                     <td class="bad">$967,803</td>
                                     <td><button class="btn-small">View Details →</button></td>
                                 </tr>
-                                <tr onclick="drillDownEDMarket('atlanta-north')" class="clickable">
+                                <tr onclick="drillDownAvoidableMarket('atlanta-north')" class="clickable">
                                     <td><strong>Atlanta North</strong></td>
                                     <td>3,456</td>
                                     <td class="warning">967</td>
@@ -911,7 +921,7 @@
                                     <td class="warning">$1,186,309</td>
                                     <td><button class="btn-small">View Details →</button></td>
                                 </tr>
-                                <tr onclick="drillDownEDMarket('columbus')" class="clickable">
+                                <tr onclick="drillDownAvoidableMarket('columbus')" class="clickable">
                                     <td><strong>Columbus</strong></td>
                                     <td>2,534</td>
                                     <td class="good">658</td>
@@ -919,7 +929,7 @@
                                     <td>$807,066</td>
                                     <td><button class="btn-small">View Details →</button></td>
                                 </tr>
-                                <tr onclick="drillDownEDMarket('macon')" class="clickable">
+                                <tr onclick="drillDownAvoidableMarket('macon')" class="clickable">
                                     <td><strong>Macon</strong></td>
                                     <td>1,245</td>
                                     <td class="warning">349</td>

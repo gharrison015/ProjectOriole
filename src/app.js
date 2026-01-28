@@ -4032,6 +4032,825 @@ function exportEDPatientList(pcpId, pcpName, marketName) {
     }
 }
 
+// ==============================================
+// AVOIDABLE UTILIZATION - ED & IP DATA AND FUNCTIONS
+// ==============================================
+
+// Current avoidable view state: 'ed', 'ip', or 'all'
+let currentAvoidableView = 'ed';
+
+// Comprehensive avoidable utilization data by market
+const avoidableMarketData = {
+    'atlanta-south': {
+        ed: {
+            totalVisits: 4231,
+            avoidableCount: 1523,
+            avoidablePct: 36.0,
+            costImpact: 1868271,
+            avgCostPerVisit: 1226,
+            savingsPotential: 1400000,
+            pcps: [
+                { pcp: 'Dr. Sarah Mitchell', pcpId: 'mitchell-s', lives: 1847, total: 1523, avoidable: 548, avoidablePct: 36.0, costPerVisit: 1226, savingsPotential: 671848 },
+                { pcp: 'Dr. James Wilson', pcpId: 'wilson-j', lives: 1623, total: 1342, avoidable: 483, avoidablePct: 36.0, costPerVisit: 1226, savingsPotential: 592158 },
+                { pcp: 'Dr. Maria Garcia', pcpId: 'garcia-m', lives: 1245, total: 892, avoidable: 321, avoidablePct: 36.0, costPerVisit: 1226, savingsPotential: 393546 },
+                { pcp: 'Dr. Robert Chen', pcpId: 'chen-r', lives: 987, total: 474, avoidable: 171, avoidablePct: 36.1, costPerVisit: 1226, savingsPotential: 209646 }
+            ]
+        },
+        ip: {
+            totalAdmissions: 892,
+            avoidableCount: 187,
+            avoidablePct: 21.0,
+            costImpact: 2805000,
+            avgCostPerAdmission: 15000,
+            savingsPotential: 1870000,
+            pcps: [
+                { pcp: 'Dr. Sarah Mitchell', pcpId: 'mitchell-s', lives: 1847, total: 321, avoidable: 67, avoidablePct: 20.9, costPerAdmission: 15000, savingsPotential: 670000 },
+                { pcp: 'Dr. James Wilson', pcpId: 'wilson-j', lives: 1623, total: 283, avoidable: 60, avoidablePct: 21.2, costPerAdmission: 15000, savingsPotential: 600000 },
+                { pcp: 'Dr. Maria Garcia', pcpId: 'garcia-m', lives: 1245, total: 188, avoidable: 39, avoidablePct: 20.7, costPerAdmission: 15000, savingsPotential: 390000 },
+                { pcp: 'Dr. Robert Chen', pcpId: 'chen-r', lives: 987, total: 100, avoidable: 21, avoidablePct: 21.0, costPerAdmission: 15000, savingsPotential: 210000 }
+            ]
+        }
+    },
+    'augusta': {
+        ed: {
+            totalVisits: 2187,
+            avoidableCount: 789,
+            avoidablePct: 36.1,
+            costImpact: 967803,
+            avgCostPerVisit: 1227,
+            savingsPotential: 725000,
+            pcps: [
+                { pcp: 'Dr. Patricia Brown', pcpId: 'brown-p', lives: 1234, total: 876, avoidable: 316, avoidablePct: 36.1, costPerVisit: 1227, savingsPotential: 387732 },
+                { pcp: 'Dr. Michael Davis', pcpId: 'davis-m', lives: 1123, total: 698, avoidable: 252, avoidablePct: 36.1, costPerVisit: 1227, savingsPotential: 309204 },
+                { pcp: 'Dr. Jennifer Lee', pcpId: 'lee-j', lives: 876, total: 413, avoidable: 149, avoidablePct: 36.1, costPerVisit: 1227, savingsPotential: 182823 },
+                { pcp: 'Dr. William Taylor', pcpId: 'taylor-w', lives: 654, total: 200, avoidable: 72, avoidablePct: 36.0, costPerVisit: 1227, savingsPotential: 88344 }
+            ]
+        },
+        ip: {
+            totalAdmissions: 462,
+            avoidableCount: 111,
+            avoidablePct: 24.0,
+            costImpact: 1665000,
+            avgCostPerAdmission: 15000,
+            savingsPotential: 1110000,
+            pcps: [
+                { pcp: 'Dr. Patricia Brown', pcpId: 'brown-p', lives: 1234, total: 185, avoidable: 44, avoidablePct: 23.8, costPerAdmission: 15000, savingsPotential: 440000 },
+                { pcp: 'Dr. Michael Davis', pcpId: 'davis-m', lives: 1123, total: 148, avoidable: 36, avoidablePct: 24.3, costPerAdmission: 15000, savingsPotential: 360000 },
+                { pcp: 'Dr. Jennifer Lee', pcpId: 'lee-j', lives: 876, total: 87, avoidable: 21, avoidablePct: 24.1, costPerAdmission: 15000, savingsPotential: 210000 },
+                { pcp: 'Dr. William Taylor', pcpId: 'taylor-w', lives: 654, total: 42, avoidable: 10, avoidablePct: 23.8, costPerAdmission: 15000, savingsPotential: 100000 }
+            ]
+        }
+    },
+    'atlanta-north': {
+        ed: {
+            totalVisits: 3456,
+            avoidableCount: 967,
+            avoidablePct: 28.0,
+            costImpact: 1186309,
+            avgCostPerVisit: 1227,
+            savingsPotential: 890000,
+            pcps: [
+                { pcp: 'Dr. Elizabeth Martinez', pcpId: 'martinez-e', lives: 1567, total: 1245, avoidable: 349, avoidablePct: 28.0, costPerVisit: 1227, savingsPotential: 428223 },
+                { pcp: 'Dr. David Anderson', pcpId: 'anderson-d', lives: 1345, total: 987, avoidable: 276, avoidablePct: 28.0, costPerVisit: 1227, savingsPotential: 338652 },
+                { pcp: 'Dr. Susan Thompson', pcpId: 'thompson-s', lives: 1123, total: 789, avoidable: 221, avoidablePct: 28.0, costPerVisit: 1227, savingsPotential: 271167 },
+                { pcp: 'Dr. Richard White', pcpId: 'white-r', lives: 876, total: 435, avoidable: 121, avoidablePct: 27.8, costPerVisit: 1227, savingsPotential: 148467 }
+            ]
+        },
+        ip: {
+            totalAdmissions: 729,
+            avoidableCount: 117,
+            avoidablePct: 16.0,
+            costImpact: 1755000,
+            avgCostPerAdmission: 15000,
+            savingsPotential: 1170000,
+            pcps: [
+                { pcp: 'Dr. Elizabeth Martinez', pcpId: 'martinez-e', lives: 1567, total: 263, avoidable: 42, avoidablePct: 16.0, costPerAdmission: 15000, savingsPotential: 420000 },
+                { pcp: 'Dr. David Anderson', pcpId: 'anderson-d', lives: 1345, total: 208, avoidable: 33, avoidablePct: 15.9, costPerAdmission: 15000, savingsPotential: 330000 },
+                { pcp: 'Dr. Susan Thompson', pcpId: 'thompson-s', lives: 1123, total: 166, avoidable: 27, avoidablePct: 16.3, costPerAdmission: 15000, savingsPotential: 270000 },
+                { pcp: 'Dr. Richard White', pcpId: 'white-r', lives: 876, total: 92, avoidable: 15, avoidablePct: 16.3, costPerAdmission: 15000, savingsPotential: 150000 }
+            ]
+        }
+    },
+    'columbus': {
+        ed: {
+            totalVisits: 2534,
+            avoidableCount: 658,
+            avoidablePct: 26.0,
+            costImpact: 807066,
+            avgCostPerVisit: 1227,
+            savingsPotential: 605000,
+            pcps: [
+                { pcp: 'Dr. Karen Johnson', pcpId: 'johnson-k', lives: 1234, total: 987, avoidable: 257, avoidablePct: 26.0, costPerVisit: 1227, savingsPotential: 315339 },
+                { pcp: 'Dr. Thomas Moore', pcpId: 'moore-t', lives: 1098, total: 765, avoidable: 199, avoidablePct: 26.0, costPerVisit: 1227, savingsPotential: 244173 },
+                { pcp: 'Dr. Nancy Clark', pcpId: 'clark-n', lives: 876, total: 523, avoidable: 136, avoidablePct: 26.0, costPerVisit: 1227, savingsPotential: 166872 },
+                { pcp: 'Dr. Joseph Lewis', pcpId: 'lewis-j', lives: 654, total: 259, avoidable: 66, avoidablePct: 25.5, costPerVisit: 1227, savingsPotential: 80982 }
+            ]
+        },
+        ip: {
+            totalAdmissions: 535,
+            avoidableCount: 75,
+            avoidablePct: 14.0,
+            costImpact: 1125000,
+            avgCostPerAdmission: 15000,
+            savingsPotential: 750000,
+            pcps: [
+                { pcp: 'Dr. Karen Johnson', pcpId: 'johnson-k', lives: 1234, total: 208, avoidable: 29, avoidablePct: 13.9, costPerAdmission: 15000, savingsPotential: 290000 },
+                { pcp: 'Dr. Thomas Moore', pcpId: 'moore-t', lives: 1098, total: 162, avoidable: 23, avoidablePct: 14.2, costPerAdmission: 15000, savingsPotential: 230000 },
+                { pcp: 'Dr. Nancy Clark', pcpId: 'clark-n', lives: 876, total: 110, avoidable: 15, avoidablePct: 13.6, costPerAdmission: 15000, savingsPotential: 150000 },
+                { pcp: 'Dr. Joseph Lewis', pcpId: 'lewis-j', lives: 654, total: 55, avoidable: 8, avoidablePct: 14.5, costPerAdmission: 15000, savingsPotential: 80000 }
+            ]
+        }
+    },
+    'macon': {
+        ed: {
+            totalVisits: 1245,
+            avoidableCount: 349,
+            avoidablePct: 28.0,
+            costImpact: 428223,
+            avgCostPerVisit: 1227,
+            savingsPotential: 321000,
+            pcps: [
+                { pcp: 'Dr. Linda Hall', pcpId: 'hall-l', lives: 654, total: 534, avoidable: 150, avoidablePct: 28.1, costPerVisit: 1227, savingsPotential: 184050 },
+                { pcp: 'Dr. Charles Young', pcpId: 'young-c', lives: 543, total: 412, avoidable: 115, avoidablePct: 27.9, costPerVisit: 1227, savingsPotential: 141105 },
+                { pcp: 'Dr. Barbara King', pcpId: 'king-b', lives: 432, total: 299, avoidable: 84, avoidablePct: 28.1, costPerVisit: 1227, savingsPotential: 103068 }
+            ]
+        },
+        ip: {
+            totalAdmissions: 263,
+            avoidableCount: 47,
+            avoidablePct: 17.9,
+            costImpact: 705000,
+            avgCostPerAdmission: 15000,
+            savingsPotential: 470000,
+            pcps: [
+                { pcp: 'Dr. Linda Hall', pcpId: 'hall-l', lives: 654, total: 113, avoidable: 20, avoidablePct: 17.7, costPerAdmission: 15000, savingsPotential: 200000 },
+                { pcp: 'Dr. Charles Young', pcpId: 'young-c', lives: 543, total: 87, avoidable: 16, avoidablePct: 18.4, costPerAdmission: 15000, savingsPotential: 160000 },
+                { pcp: 'Dr. Barbara King', pcpId: 'king-b', lives: 432, total: 63, avoidable: 11, avoidablePct: 17.5, costPerAdmission: 15000, savingsPotential: 110000 }
+            ]
+        }
+    }
+};
+
+// Set avoidable utilization view and update table
+function setAvoidableView(view) {
+    currentAvoidableView = view;
+
+    // Update toggle button states
+    document.querySelectorAll('.avoidable-toggle-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.view === view);
+    });
+
+    // Update description
+    const descriptions = {
+        ed: '<strong>ED Avoidables (NYU ED Algorithm):</strong> Emergency visits treatable in primary care, urgent care, or telehealth - includes URI, UTI, minor injuries, non-emergent conditions.',
+        ip: '<strong>IP Avoidables (AHRQ PQIs):</strong> Hospitalizations preventable through effective outpatient care - includes diabetes complications, COPD/asthma exacerbations, CHF decompensation, hypertension, bacterial pneumonia.',
+        all: '<strong>Combined ED + IP Avoidables:</strong> Total avoidable utilization across both emergency and inpatient settings. Shows aggregate opportunity for care management interventions.'
+    };
+
+    const descEl = document.getElementById('avoidable-view-description');
+    if (descEl) {
+        const borderColors = { ed: '#e74c3c', ip: '#3498db', all: '#9b59b6' };
+        descEl.innerHTML = descriptions[view];
+        descEl.style.borderLeftColor = borderColors[view];
+    }
+
+    // Update table headers
+    const totalHeader = document.getElementById('avoidable-total-header');
+    const countHeader = document.getElementById('avoidable-count-header');
+
+    if (view === 'ed') {
+        if (totalHeader) totalHeader.innerHTML = 'Total ED Visits <span class="th-info">ⓘ</span>';
+        if (countHeader) countHeader.innerHTML = 'Avoidable Visits <span class="th-info">ⓘ</span>';
+    } else if (view === 'ip') {
+        if (totalHeader) totalHeader.innerHTML = 'Total IP Admits <span class="th-info">ⓘ</span>';
+        if (countHeader) countHeader.innerHTML = 'Avoidable Admits <span class="th-info">ⓘ</span>';
+    } else {
+        if (totalHeader) totalHeader.innerHTML = 'Total Utilization <span class="th-info">ⓘ</span>';
+        if (countHeader) countHeader.innerHTML = 'Avoidable Count <span class="th-info">ⓘ</span>';
+    }
+
+    // Update table rows
+    updateAvoidableTable(view);
+}
+
+// Update the avoidable market table
+function updateAvoidableTable(view) {
+    const tbody = document.getElementById('avoidable-market-tbody');
+    if (!tbody) return;
+
+    const markets = ['atlanta-south', 'augusta', 'atlanta-north', 'columbus', 'macon'];
+    const marketNames = {
+        'atlanta-south': 'Atlanta South',
+        'augusta': 'Augusta',
+        'atlanta-north': 'Atlanta North',
+        'columbus': 'Columbus',
+        'macon': 'Macon'
+    };
+
+    let html = '';
+
+    markets.forEach(marketId => {
+        const data = avoidableMarketData[marketId];
+        let total, avoidable, pct, cost;
+
+        if (view === 'ed') {
+            total = data.ed.totalVisits;
+            avoidable = data.ed.avoidableCount;
+            pct = data.ed.avoidablePct;
+            cost = data.ed.costImpact;
+        } else if (view === 'ip') {
+            total = data.ip.totalAdmissions;
+            avoidable = data.ip.avoidableCount;
+            pct = data.ip.avoidablePct;
+            cost = data.ip.costImpact;
+        } else {
+            // Combined view
+            total = data.ed.totalVisits + data.ip.totalAdmissions;
+            avoidable = data.ed.avoidableCount + data.ip.avoidableCount;
+            pct = ((avoidable / total) * 100).toFixed(1);
+            cost = data.ed.costImpact + data.ip.costImpact;
+        }
+
+        // Determine class based on thresholds
+        let pctClass, costClass;
+        if (view === 'ed') {
+            pctClass = pct > 33 ? 'bad' : pct > 27 ? 'warning' : 'good';
+            costClass = cost > 1500000 ? 'bad' : cost > 1000000 ? 'warning' : '';
+        } else if (view === 'ip') {
+            pctClass = pct > 22 ? 'bad' : pct > 17 ? 'warning' : 'good';
+            costClass = cost > 2000000 ? 'bad' : cost > 1500000 ? 'warning' : '';
+        } else {
+            pctClass = pct > 28 ? 'bad' : pct > 24 ? 'warning' : 'good';
+            costClass = cost > 4000000 ? 'bad' : cost > 3000000 ? 'warning' : '';
+        }
+
+        html += `
+            <tr onclick="drillDownAvoidableMarket('${marketId}')" class="clickable">
+                <td><strong>${marketNames[marketId]}</strong></td>
+                <td>${total.toLocaleString()}</td>
+                <td class="${pctClass}">${avoidable.toLocaleString()}</td>
+                <td class="${pctClass}">${pct}%</td>
+                <td class="${costClass}">$${cost.toLocaleString()}</td>
+                <td><button class="btn-small">View Details →</button></td>
+            </tr>
+        `;
+    });
+
+    tbody.innerHTML = html;
+}
+
+// Drill down into avoidable market detail with toggle
+function drillDownAvoidableMarket(marketId) {
+    const marketNames = {
+        'atlanta-north': 'Atlanta North',
+        'atlanta-south': 'Atlanta South',
+        'augusta': 'Augusta',
+        'columbus': 'Columbus',
+        'macon': 'Macon'
+    };
+
+    const marketName = marketNames[marketId] || marketId;
+    const data = avoidableMarketData[marketId];
+    const view = currentAvoidableView;
+
+    // Calculate totals based on view
+    let viewData, unitLabel, alternativeCost, alternativeLabel, diversionRate;
+
+    if (view === 'ed') {
+        viewData = data.ed;
+        unitLabel = 'ED Visits';
+        alternativeCost = 150;
+        alternativeLabel = 'Urgent Care';
+        diversionRate = 0.65;
+    } else if (view === 'ip') {
+        viewData = data.ip;
+        unitLabel = 'IP Admissions';
+        alternativeCost = 3500;
+        alternativeLabel = 'Observation';
+        diversionRate = 0.45;
+    } else {
+        // Combined - we'll show both sections
+        viewData = {
+            total: data.ed.totalVisits + data.ip.totalAdmissions,
+            avoidable: data.ed.avoidableCount + data.ip.avoidableCount,
+            costImpact: data.ed.costImpact + data.ip.costImpact,
+            savingsPotential: data.ed.savingsPotential + data.ip.savingsPotential
+        };
+        viewData.pct = ((viewData.avoidable / viewData.total) * 100).toFixed(1);
+        unitLabel = 'Total Utilization';
+        alternativeCost = null;
+        alternativeLabel = null;
+        diversionRate = 0.55;
+    }
+
+    const totalItems = view === 'all' ? viewData.total : (view === 'ed' ? viewData.totalVisits : viewData.totalAdmissions);
+    const avoidableItems = view === 'all' ? viewData.avoidable : viewData.avoidableCount;
+    const avoidablePct = view === 'all' ? viewData.pct : viewData.avoidablePct;
+    const costImpact = view === 'all' ? viewData.costImpact : viewData.costImpact;
+    const savingsPotential = view === 'all' ? viewData.savingsPotential : viewData.savingsPotential;
+    const realisticSavings = Math.round(savingsPotential * diversionRate);
+
+    // Get view-specific color
+    const viewColors = { ed: '#e74c3c', ip: '#3498db', all: '#9b59b6' };
+    const viewColor = viewColors[view];
+
+    let modalBody = `
+        <h2>${marketName} - Avoidable ${view === 'ed' ? 'ED' : view === 'ip' ? 'IP' : 'ED + IP'} Cost Opportunity</h2>
+        <p class="provider-summary">Attributed PCP-level analysis showing savings from preventing avoidable utilization</p>
+
+        <!-- View Toggle in Modal -->
+        <div style="display: flex; justify-content: center; margin-bottom: 1.5rem;">
+            <div class="avoidable-toggle-container" style="display: flex; gap: 0.25rem; background: #f0f2f5; padding: 0.25rem; border-radius: 8px;">
+                <button class="avoidable-toggle-btn ${view === 'ed' ? 'active' : ''}" data-view="ed" onclick="switchModalAvoidableView('${marketId}', 'ed')">ED Visits</button>
+                <button class="avoidable-toggle-btn ${view === 'ip' ? 'active' : ''}" data-view="ip" onclick="switchModalAvoidableView('${marketId}', 'ip')">IP Admissions</button>
+                <button class="avoidable-toggle-btn ${view === 'all' ? 'active' : ''}" data-view="all" onclick="switchModalAvoidableView('${marketId}', 'all')">Combined</button>
+            </div>
+        </div>
+
+        <!-- Reference Values Bar -->
+        <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.5rem; border-left: 4px solid ${viewColor};">
+            <div style="display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;">
+                <div>
+                    <div style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.25rem;">Reference Values & Definitions</div>
+                </div>
+                <div style="display: flex; gap: 2.5rem; flex-wrap: wrap;">
+                    ${view === 'ed' ? `
+                        <div>
+                            <span style="font-size: 0.8rem; color: #495057;">Avg ED Cost/Visit:</span>
+                            <span style="font-weight: 700; color: #e74c3c; margin-left: 0.5rem; font-size: 1.1rem;">$${viewData.avgCostPerVisit?.toLocaleString() || '1,227'}</span>
+                            <div style="font-size: 0.65rem; color: #888; margin-top: 0.15rem;">Facility + professional fees</div>
+                        </div>
+                        <div>
+                            <span style="font-size: 0.8rem; color: #495057;">Urgent Care Cost:</span>
+                            <span style="font-weight: 700; color: #27ae60; margin-left: 0.5rem; font-size: 1.1rem;">~$150</span>
+                            <div style="font-size: 0.65rem; color: #888; margin-top: 0.15rem;">Alternative setting benchmark</div>
+                        </div>
+                    ` : view === 'ip' ? `
+                        <div>
+                            <span style="font-size: 0.8rem; color: #495057;">Avg IP Cost/Admit:</span>
+                            <span style="font-weight: 700; color: #3498db; margin-left: 0.5rem; font-size: 1.1rem;">$${viewData.avgCostPerAdmission?.toLocaleString() || '15,000'}</span>
+                            <div style="font-size: 0.65rem; color: #888; margin-top: 0.15rem;">Average admission cost</div>
+                        </div>
+                        <div>
+                            <span style="font-size: 0.8rem; color: #495057;">Observation Cost:</span>
+                            <span style="font-weight: 700; color: #27ae60; margin-left: 0.5rem; font-size: 1.1rem;">~$3,500</span>
+                            <div style="font-size: 0.65rem; color: #888; margin-top: 0.15rem;">Alternative setting benchmark</div>
+                        </div>
+                    ` : `
+                        <div>
+                            <span style="font-size: 0.8rem; color: #495057;">ED Avoidable Cost:</span>
+                            <span style="font-weight: 700; color: #e74c3c; margin-left: 0.5rem; font-size: 1.1rem;">$${data.ed.costImpact.toLocaleString()}</span>
+                        </div>
+                        <div>
+                            <span style="font-size: 0.8rem; color: #495057;">IP Avoidable Cost:</span>
+                            <span style="font-weight: 700; color: #3498db; margin-left: 0.5rem; font-size: 1.1rem;">$${data.ip.costImpact.toLocaleString()}</span>
+                        </div>
+                    `}
+                    <div>
+                        <span style="font-size: 0.8rem; color: #495057;">Diversion Rate:</span>
+                        <span style="font-weight: 700; color: #9b59b6; margin-left: 0.5rem; font-size: 1.1rem;">${Math.round(diversionRate * 100)}%</span>
+                        <div style="font-size: 0.65rem; color: #888; margin-top: 0.15rem;">Industry achievable target</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid" style="grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-bottom: 1.5rem;">
+            <div class="kpi-card" style="background: white; border: 1px solid #e0e0e0;">
+                <div class="kpi-label" style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase;">
+                    Total Avoidable ${view === 'ip' ? 'Admissions' : view === 'ed' ? 'Visits' : 'Events'}
+                </div>
+                <div class="kpi-value" style="font-size: 2rem; font-weight: 700; color: ${viewColor}; margin: 0.5rem 0;">
+                    ${avoidableItems.toLocaleString()}
+                </div>
+                <div style="font-size: 0.8rem; color: #6c757d; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #eee;">
+                    <span>${avoidablePct}% of ${totalItems.toLocaleString()} total</span>
+                </div>
+            </div>
+            <div class="kpi-card" style="background: white; border: 1px solid #e0e0e0;">
+                <div class="kpi-label" style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase;">
+                    Total Cost Impact
+                </div>
+                <div class="kpi-value" style="font-size: 2rem; font-weight: 700; color: #f39c12; margin: 0.5rem 0;">
+                    $${costImpact.toLocaleString()}
+                </div>
+                <div style="font-size: 0.8rem; color: #6c757d; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #eee;">
+                    <span>Avoidable spend</span>
+                </div>
+            </div>
+            <div class="kpi-card" style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border: 1px solid #28a745;">
+                <div class="kpi-label" style="font-size: 0.75rem; color: #155724; text-transform: uppercase;">
+                    Realistic Savings (${Math.round(diversionRate * 100)}%)
+                </div>
+                <div class="kpi-value" style="font-size: 2rem; font-weight: 700; color: #155724; margin: 0.5rem 0;">
+                    $${realisticSavings.toLocaleString()}
+                </div>
+                <div style="font-size: 0.8rem; color: #155724; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(40,167,69,0.3);">
+                    <span>Achievable with interventions</span>
+                </div>
+            </div>
+        </div>
+    `;
+
+    // Add PCP breakdown table based on view
+    if (view === 'all') {
+        // Show both ED and IP tables
+        modalBody += buildPCPTable(data.ed.pcps, marketId, 'ed', 'ED Visits');
+        modalBody += buildPCPTable(data.ip.pcps, marketId, 'ip', 'IP Admissions');
+    } else {
+        const pcps = view === 'ed' ? data.ed.pcps : data.ip.pcps;
+        modalBody += buildPCPTable(pcps, marketId, view, unitLabel);
+    }
+
+    // Add methodology
+    modalBody += `
+        <!-- Methodology Box -->
+        <div style="background: #f8f9fa; border-radius: 12px; padding: 1.25rem; margin-top: 1.5rem; border: 1px solid #e0e0e0;">
+            <h4 style="margin: 0 0 0.75rem 0; font-size: 0.9rem; color: #2c3e50;">
+                <span style="margin-right: 0.5rem;">📋</span>Methodology & Definitions
+            </h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; font-size: 0.8rem; color: #5a6c7d;">
+                ${view === 'ed' || view === 'all' ? `
+                <div>
+                    <strong style="color: #e74c3c;">Avoidable ED Visit (NYU Algorithm):</strong>
+                    <p style="margin: 0.25rem 0 0 0;">ED visits classified as avoidable per NYU ED Algorithm. Includes conditions treatable in primary care, urgent care, or via telehealth (URI, UTI, minor injuries, non-emergent back pain).</p>
+                </div>
+                ` : ''}
+                ${view === 'ip' || view === 'all' ? `
+                <div>
+                    <strong style="color: #3498db;">Avoidable IP Admission (AHRQ PQIs):</strong>
+                    <p style="margin: 0.25rem 0 0 0;">Hospitalizations preventable with effective outpatient care per AHRQ Prevention Quality Indicators. Includes diabetes complications, COPD/asthma exacerbations, CHF decompensation, hypertension, bacterial pneumonia.</p>
+                </div>
+                ` : ''}
+                <div>
+                    <strong style="color: #2c3e50;">Savings Calculation:</strong>
+                    <p style="margin: 0.25rem 0 0 0;">${view === 'ed' ? 'Avoidable Visits × (ED Cost - UC Cost). UC costs based on Medicare fee schedule.' : view === 'ip' ? 'Avoidable Admissions × (IP Cost - Observation Cost). Assumes appropriate patients can be observed vs. admitted.' : 'Combined ED and IP savings potential from diversion to appropriate care settings.'}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-box success" style="margin-top: 1rem;">
+            <h4>Intervention Strategy for ${marketName}</h4>
+            <ul>
+                ${view === 'ed' || view === 'all' ? '<li><strong>ED Diversion:</strong> Expand urgent care access, after-hours nurse line, telehealth for non-emergent conditions</li>' : ''}
+                ${view === 'ip' || view === 'all' ? '<li><strong>IP Prevention:</strong> Chronic disease management programs, transitional care, medication adherence support</li>' : ''}
+                <li><strong>Care Coordination:</strong> High-risk patient identification and proactive outreach</li>
+            </ul>
+        </div>
+    `;
+
+    showModal(modalBody);
+}
+
+// Build PCP breakdown table for modal
+function buildPCPTable(pcps, marketId, viewType, unitLabel) {
+    const isED = viewType === 'ed';
+    const costLabel = isED ? 'Cost/Visit' : 'Cost/Admit';
+    const totalLabel = isED ? 'Total ED' : 'Total IP';
+    const avoidableLabel = isED ? 'Avoidable' : 'Avoidable';
+    const viewColor = isED ? '#e74c3c' : '#3498db';
+
+    let html = `
+        <div style="background: white; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; border: 1px solid #e0e0e0;">
+            <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50; display: flex; align-items: center; gap: 0.5rem;">
+                <span style="font-size: 1.2rem;">${isED ? '🏥' : '🏨'}</span> ${unitLabel} Breakdown by Attributed PCP
+            </h3>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                    <thead>
+                        <tr style="background: #f8f9fa;">
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Attributed PCP</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">${totalLabel}</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">${avoidableLabel}</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">% Avoidable</th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600;">${costLabel}</th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600; background: #d4edda;">Savings Potential</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    `;
+
+    let totalAll = 0, avoidableAll = 0, savingsAll = 0;
+
+    pcps.forEach(p => {
+        const costPer = isED ? p.costPerVisit : p.costPerAdmission;
+        totalAll += p.total;
+        avoidableAll += p.avoidable;
+        savingsAll += p.savingsPotential;
+
+        html += `
+            <tr>
+                <td style="padding: 0.75rem; border-bottom: 1px solid #eee;"><strong>${p.pcp}</strong><br><span style="font-size: 0.75rem; color: #6c757d;">${p.lives.toLocaleString()} attributed lives</span></td>
+                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee;">${p.total.toLocaleString()}</td>
+                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: ${viewColor}; font-weight: 600;">${p.avoidable}</td>
+                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; color: ${p.avoidablePct > (isED ? 33 : 20) ? viewColor : '#f39c12'};">${p.avoidablePct}%</td>
+                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee;">$${costPer.toLocaleString()}</td>
+                <td style="padding: 0.75rem; text-align: right; border-bottom: 1px solid #eee; background: #f0fff0; font-weight: 600; color: #155724;">
+                    $${p.savingsPotential.toLocaleString()}
+                </td>
+                <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee;">
+                    <button class="btn-small" onclick="showAvoidablePatientDetail('${marketId}', '${p.pcpId}', '${p.pcp}', ${p.avoidable}, ${costPer}, '${viewType}')" style="white-space: nowrap;">
+                        Patient Detail
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+
+    const avgPct = ((avoidableAll / totalAll) * 100).toFixed(1);
+
+    html += `
+                        <tr style="background: #f8f9fa; font-weight: 700;">
+                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;">TOTAL</td>
+                            <td style="padding: 0.75rem; text-align: center; border-top: 2px solid #dee2e6;">${totalAll.toLocaleString()}</td>
+                            <td style="padding: 0.75rem; text-align: center; border-top: 2px solid #dee2e6; color: ${viewColor};">${avoidableAll.toLocaleString()}</td>
+                            <td style="padding: 0.75rem; text-align: center; border-top: 2px solid #dee2e6;">${avgPct}%</td>
+                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;"></td>
+                            <td style="padding: 0.75rem; text-align: right; border-top: 2px solid #dee2e6; background: #d4edda; color: #155724; font-size: 1.1rem;">$${savingsAll.toLocaleString()}</td>
+                            <td style="padding: 0.75rem; border-top: 2px solid #dee2e6;"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    `;
+
+    return html;
+}
+
+// Switch view within the modal
+function switchModalAvoidableView(marketId, view) {
+    currentAvoidableView = view;
+
+    // Update main page toggle too
+    document.querySelectorAll('.avoidable-toggle-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.view === view);
+    });
+
+    // Update main table
+    updateAvoidableTable(view);
+
+    // Re-render modal with new view
+    drillDownAvoidableMarket(marketId);
+}
+
+// Show patient detail for avoidable utilization (ED or IP)
+function showAvoidablePatientDetail(marketId, pcpId, pcpName, avoidableCount, costPer, viewType) {
+    const marketNames = {
+        'atlanta-north': 'Atlanta North',
+        'atlanta-south': 'Atlanta South',
+        'augusta': 'Augusta',
+        'columbus': 'Columbus',
+        'macon': 'Macon'
+    };
+
+    const marketName = marketNames[marketId] || marketId;
+    const isED = viewType === 'ed';
+    const viewColor = isED ? '#e74c3c' : '#3498db';
+
+    // Conditions based on type
+    const edConditions = [
+        { code: 'J06.9', desc: 'Acute upper respiratory infection', category: 'Primary Care Treatable', altCost: 125 },
+        { code: 'N39.0', desc: 'Urinary tract infection', category: 'Primary Care Treatable', altCost: 145 },
+        { code: 'M54.5', desc: 'Low back pain', category: 'Non-Emergent', altCost: 135 },
+        { code: 'J20.9', desc: 'Acute bronchitis', category: 'Primary Care Treatable', altCost: 130 },
+        { code: 'H10.9', desc: 'Conjunctivitis', category: 'Primary Care Treatable', altCost: 95 },
+        { code: 'L03.90', desc: 'Cellulitis', category: 'Urgent Care Appropriate', altCost: 155 },
+        { code: 'S93.40', desc: 'Ankle sprain', category: 'Non-Emergent', altCost: 165 },
+        { code: 'R51', desc: 'Headache', category: 'Non-Emergent', altCost: 120 },
+        { code: 'J02.9', desc: 'Acute pharyngitis', category: 'Primary Care Treatable', altCost: 110 },
+        { code: 'K30', desc: 'Dyspepsia', category: 'Non-Emergent', altCost: 140 }
+    ];
+
+    const ipConditions = [
+        { code: 'E11.65', desc: 'Diabetes with hyperglycemia', category: 'Diabetes-Related', altCost: 3200 },
+        { code: 'J44.1', desc: 'COPD with acute exacerbation', category: 'Respiratory', altCost: 3800 },
+        { code: 'I50.9', desc: 'Heart failure, unspecified', category: 'Cardiac', altCost: 4200 },
+        { code: 'J18.9', desc: 'Bacterial pneumonia', category: 'Respiratory', altCost: 3500 },
+        { code: 'I10', desc: 'Essential hypertension', category: 'Cardiac', altCost: 2800 },
+        { code: 'J45.901', desc: 'Asthma exacerbation', category: 'Respiratory', altCost: 3000 },
+        { code: 'E86.0', desc: 'Dehydration', category: 'Metabolic', altCost: 2500 },
+        { code: 'N17.9', desc: 'Acute kidney injury', category: 'Renal', altCost: 4000 },
+        { code: 'K92.0', desc: 'GI hemorrhage', category: 'GI', altCost: 3600 }
+    ];
+
+    const conditions = isED ? edConditions : ipConditions;
+    const altLabel = isED ? 'UC Cost' : 'Obs Cost';
+    const eventLabel = isED ? 'Visit' : 'Admission';
+
+    // Generate patients
+    const patients = [];
+    const firstNames = ['James', 'Mary', 'Robert', 'Patricia', 'John', 'Jennifer', 'Michael', 'Linda', 'William', 'Barbara', 'David', 'Elizabeth', 'Richard', 'Susan', 'Joseph', 'Jessica'];
+    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Wilson', 'Anderson'];
+
+    const numPatients = Math.min(avoidableCount, 25);
+
+    for (let i = 0; i < numPatients; i++) {
+        const condition = conditions[Math.floor(Math.random() * conditions.length)];
+        const eventCost = costPer + Math.floor(Math.random() * (isED ? 400 : 4000)) - (isED ? 200 : 2000);
+        const savingsPotential = eventCost - condition.altCost;
+
+        patients.push({
+            id: `P${100000 + Math.floor(Math.random() * 900000)}`,
+            firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
+            lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
+            dob: `${Math.floor(Math.random() * 12) + 1}/${Math.floor(Math.random() * 28) + 1}/${1940 + Math.floor(Math.random() * 50)}`,
+            eventDate: `${Math.floor(Math.random() * 12) + 1}/${Math.floor(Math.random() * 28) + 1}/2024`,
+            condition: condition,
+            eventCost: eventCost,
+            savingsPotential: savingsPotential,
+            facility: isED ?
+                ['Piedmont Atlanta ED', 'Piedmont Fayette ED', 'Piedmont Henry ED', 'Piedmont Newnan ED'][Math.floor(Math.random() * 4)] :
+                ['Piedmont Atlanta Hospital', 'Piedmont Fayette Hospital', 'Piedmont Henry Hospital', 'Piedmont Newnan Hospital'][Math.floor(Math.random() * 4)],
+            eventCount: Math.floor(Math.random() * (isED ? 4 : 3)) + 1,
+            los: isED ? null : Math.floor(Math.random() * 4) + 2
+        });
+    }
+
+    patients.sort((a, b) => b.savingsPotential - a.savingsPotential);
+    const totalPatientSavings = patients.reduce((sum, p) => sum + p.savingsPotential, 0);
+
+    let modalBody = `
+        <h2>Patient Detail - Avoidable ${isED ? 'ED Visits' : 'IP Admissions'}</h2>
+        <p class="provider-summary">${pcpName} | ${marketName} Market</p>
+
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; text-align: center;">
+                <div style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase;">Patients Shown</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: #2c3e50;">${numPatients}</div>
+                <div style="font-size: 0.7rem; color: #888;">of ${avoidableCount} total</div>
+            </div>
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; text-align: center;">
+                <div style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase;">Avg ${eventLabel} Cost</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: ${viewColor};">$${costPer.toLocaleString()}</div>
+            </div>
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; text-align: center;">
+                <div style="font-size: 0.75rem; color: #6c757d; text-transform: uppercase;">Avg ${altLabel}</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: #27ae60;">$${isED ? '150' : '3,500'}</div>
+            </div>
+            <div style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); padding: 1rem; border-radius: 8px; text-align: center;">
+                <div style="font-size: 0.75rem; color: #155724; text-transform: uppercase;">Total Savings</div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: #155724;">$${totalPatientSavings.toLocaleString()}</div>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <h3 style="margin: 0; font-size: 1rem; color: #2c3e50;">
+                <span style="margin-right: 0.5rem;">👥</span>Patient List (Exportable)
+            </h3>
+            <button class="btn-small" onclick="exportAvoidablePatientList('${pcpId}', '${pcpName}', '${marketName}', '${viewType}')" style="background: #27ae60;">
+                📥 Export to CSV
+            </button>
+        </div>
+
+        <div style="background: white; border-radius: 12px; border: 1px solid #e0e0e0; overflow: hidden;">
+            <div style="overflow-x: auto; max-height: 400px; overflow-y: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.8rem;" id="avoidable-patient-table" data-view-type="${viewType}">
+                    <thead style="position: sticky; top: 0; background: #f8f9fa; z-index: 1;">
+                        <tr>
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Patient ID</th>
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Patient Name</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">DOB</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">${eventLabel} Date</th>
+                            <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600;">Avoidable Condition</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">Category</th>
+                            ${!isED ? '<th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">LOS</th>' : ''}
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600;">${eventLabel} Cost</th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600;">${altLabel}</th>
+                            <th style="padding: 0.75rem; text-align: right; border-bottom: 2px solid #dee2e6; font-weight: 600; background: #d4edda;">Savings</th>
+                            <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600;">${isED ? 'ED Visits' : 'IP Admits'} (12mo)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${patients.map(p => `
+                            <tr>
+                                <td style="padding: 0.6rem 0.75rem; border-bottom: 1px solid #eee; font-family: monospace; font-size: 0.75rem;">${p.id}</td>
+                                <td style="padding: 0.6rem 0.75rem; border-bottom: 1px solid #eee;"><strong>${p.lastName}, ${p.firstName}</strong></td>
+                                <td style="padding: 0.6rem 0.75rem; border-bottom: 1px solid #eee; text-align: center;">${p.dob}</td>
+                                <td style="padding: 0.6rem 0.75rem; border-bottom: 1px solid #eee; text-align: center;">${p.eventDate}</td>
+                                <td style="padding: 0.6rem 0.75rem; border-bottom: 1px solid #eee;">
+                                    <span style="font-weight: 600;">${p.condition.code}</span> - ${p.condition.desc}
+                                </td>
+                                <td style="padding: 0.6rem 0.75rem; border-bottom: 1px solid #eee; text-align: center;">
+                                    <span style="background: ${getCategoryColor(p.condition.category)}; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.7rem;">${p.condition.category}</span>
+                                </td>
+                                ${!isED ? `<td style="padding: 0.6rem 0.75rem; border-bottom: 1px solid #eee; text-align: center;">${p.los} days</td>` : ''}
+                                <td style="padding: 0.6rem 0.75rem; border-bottom: 1px solid #eee; text-align: right; color: ${viewColor}; font-weight: 600;">$${p.eventCost.toLocaleString()}</td>
+                                <td style="padding: 0.6rem 0.75rem; border-bottom: 1px solid #eee; text-align: right; color: #27ae60;">$${p.condition.altCost.toLocaleString()}</td>
+                                <td style="padding: 0.6rem 0.75rem; border-bottom: 1px solid #eee; text-align: right; background: #f0fff0; font-weight: 600; color: #155724;">$${p.savingsPotential.toLocaleString()}</td>
+                                <td style="padding: 0.6rem 0.75rem; border-bottom: 1px solid #eee; text-align: center; ${p.eventCount >= 3 ? 'color: #e74c3c; font-weight: 700;' : ''}">${p.eventCount}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div style="background: #f8f9fa; border-radius: 12px; padding: 1.25rem; margin-top: 1.5rem; border: 1px solid #e0e0e0;">
+            <h4 style="margin: 0 0 0.75rem 0; font-size: 0.9rem; color: #2c3e50;">
+                <span style="margin-right: 0.5rem;">📋</span>Data Definitions
+            </h4>
+            <div style="font-size: 0.8rem; color: #5a6c7d;">
+                ${isED ?
+                    '<strong>NYU ED Algorithm:</strong> Classifies ED visits by urgency and treatability. Categories: Primary Care Treatable (routine), Urgent Care Appropriate (minor acute), Non-Emergent (could wait).' :
+                    '<strong>AHRQ PQIs:</strong> Prevention Quality Indicators identify hospitalizations potentially preventable with effective outpatient care. Categories include chronic disease complications (diabetes, CHF, COPD) and acute conditions (pneumonia, dehydration).'
+                }
+            </div>
+        </div>
+
+        <div style="margin-top: 1rem; text-align: center;">
+            <button class="btn-small" onclick="drillDownAvoidableMarket('${marketId}')" style="background: #6c757d;">
+                ← Back to ${marketName} Summary
+            </button>
+        </div>
+    `;
+
+    showModal(modalBody);
+}
+
+// Get category color for patient detail
+function getCategoryColor(category) {
+    const colors = {
+        'Primary Care Treatable': '#d4edda',
+        'Urgent Care Appropriate': '#fff3cd',
+        'Non-Emergent': '#e2e3e5',
+        'Diabetes-Related': '#cce5ff',
+        'Respiratory': '#d1ecf1',
+        'Cardiac': '#f8d7da',
+        'Metabolic': '#e2e3e5',
+        'Renal': '#fff3cd',
+        'GI': '#d6d8db'
+    };
+    return colors[category] || '#e2e3e5';
+}
+
+// Export avoidable patient list to CSV
+function exportAvoidablePatientList(pcpId, pcpName, marketName, viewType) {
+    const table = document.getElementById('avoidable-patient-table');
+    if (!table) {
+        alert('No patient data to export');
+        return;
+    }
+
+    const isED = viewType === 'ed';
+    const eventLabel = isED ? 'Visit' : 'Admission';
+    const altLabel = isED ? 'UC Cost' : 'Obs Cost';
+
+    let headers = ['Patient ID', 'Patient Name', 'DOB', `${eventLabel} Date`, 'ICD-10 Code', 'Avoidable Condition', 'Category'];
+    if (!isED) headers.push('LOS');
+    headers.push(`${eventLabel} Cost`, altLabel, 'Savings Potential', `${isED ? 'ED Visits' : 'IP Admits'} (12mo)`);
+
+    let csv = headers.join(',') + '\n';
+
+    const rows = table.querySelectorAll('tbody tr');
+    rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        const values = [];
+        cells.forEach((cell, idx) => {
+            let val = cell.textContent.trim();
+            if (val.includes(',') || val.includes('"')) {
+                val = `"${val.replace(/"/g, '""')}"`;
+            } else {
+                val = `"${val}"`;
+            }
+            values.push(val);
+        });
+        csv += values.join(',') + '\n';
+    });
+
+    csv += '\n\n"--- METHODOLOGY ---"\n';
+    csv += `"Avoidable ${isED ? 'ED Visit' : 'IP Admission'} Definition: ${isED ? 'NYU ED Algorithm - conditions treatable in lower-cost settings' : 'AHRQ PQIs - hospitalizations preventable with effective outpatient care'}"\n`;
+    csv += `"${eventLabel} Cost: Total allowed amount including all fees"\n`;
+    csv += `"Savings: ${eventLabel} Cost - ${isED ? 'Urgent Care' : 'Observation'} Cost"\n`;
+    csv += `"Report Generated: ${new Date().toLocaleString()}"\n`;
+    csv += `"Attributed PCP: ${pcpName}"\n`;
+    csv += `"Market: ${marketName}"\n`;
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const filename = `avoidable_${viewType}_patients_${pcpId}_${new Date().toISOString().split('T')[0]}.csv`;
+
+    link.href = URL.createObjectURL(blob);
+    link.download = filename;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Make functions globally available
+window.setAvoidableView = setAvoidableView;
+window.drillDownAvoidableMarket = drillDownAvoidableMarket;
+window.switchModalAvoidableView = switchModalAvoidableView;
+window.showAvoidablePatientDetail = showAvoidablePatientDetail;
+window.exportAvoidablePatientList = exportAvoidablePatientList;
+
+// ==============================================
+// END AVOIDABLE UTILIZATION SECTION
+// ==============================================
+
 function drillDownPCPLeakage(pcpId) {
     // Show Sankey diagram for this PCP
     createSankeyDiagram(pcpId);
