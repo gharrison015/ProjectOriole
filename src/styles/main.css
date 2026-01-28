@@ -47,10 +47,30 @@ body {
     border-image: linear-gradient(90deg, #C84E28 0%, #E87722 25%, #F7A828 50%, #FFC857 75%, #FFD700 100%) 1;
 }
 
+/* Compact header variant */
+.top-header.compact {
+    padding: 0.5rem 1.5rem;
+    gap: 1rem;
+}
+
 .header-left {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+}
+
+.top-header.compact .header-left {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Center section for timeline */
+.header-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .piedmont-logo {
@@ -79,6 +99,40 @@ body {
     background: #f8f9fa;
     border-radius: 8px;
     font-size: 0.85rem;
+}
+
+/* Compact timeline for centered header layout */
+.mssp-timeline.compact {
+    margin-top: 0;
+    padding: 0.5rem 1rem;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+}
+
+.mssp-timeline.compact .timeline-step {
+    gap: 0.35rem;
+}
+
+.mssp-timeline.compact .timeline-dot {
+    width: 8px;
+    height: 8px;
+}
+
+.mssp-timeline.compact .timeline-dot.active {
+    width: 10px;
+    height: 10px;
+}
+
+.mssp-timeline.compact .timeline-line {
+    width: 25px;
+}
+
+.mssp-timeline.compact .timeline-label {
+    font-size: 0.75rem;
+}
+
+.mssp-timeline.compact .timeline-date {
+    font-size: 0.65rem;
 }
 
 .timeline-step {
@@ -163,10 +217,19 @@ body {
     gap: 2rem;
 }
 
+/* Compact header stats */
+.top-header.compact .header-stats {
+    gap: 1.25rem;
+}
+
 .stat-box {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+}
+
+.top-header.compact .stat-box {
+    gap: 0;
 }
 
 .stat-label {
@@ -176,10 +239,19 @@ body {
     letter-spacing: 0.5px;
 }
 
+.top-header.compact .stat-label {
+    font-size: 0.65rem;
+}
+
 .stat-value {
     font-size: 1.5rem;
     font-weight: 700;
     margin-top: 0.25rem;
+}
+
+.top-header.compact .stat-value {
+    font-size: 1.2rem;
+    margin-top: 0;
 }
 
 /* Main Content Layout */

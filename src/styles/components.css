@@ -1399,15 +1399,14 @@
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     text-align: center;
+    border: 1px solid #e0e4e8;
 }
 
-.hcc-summary-card.warning {
-    background: #fff3cd;
-}
-
+/* Standardized card colors - consistent with RA cards */
+.hcc-summary-card.warning,
 .hcc-summary-card.highlight {
-    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-    border: 1px solid #27ae60;
+    background: #fff;
+    border-color: #e0e4e8;
 }
 
 .hcc-summary-card.clickable-card {
@@ -1417,8 +1416,8 @@
 
 .hcc-summary-card.clickable-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-    border: 1px solid #3498db;
+    box-shadow: 0 4px 12px rgba(200, 78, 40, 0.15);
+    border-color: var(--piedmont-primary);
 }
 
 .hcc-card-header {
@@ -2066,9 +2065,80 @@
     margin-bottom: 0;
 }
 
-/* Tooltip Styles for Data Definitions */
-.tooltip-header {
+/* ============================================
+   GLOBAL TOOLTIP STYLES - Consistent across all tabs
+   ============================================ */
+
+/* Base tooltip styling for all elements using [title] or [data-tooltip] */
+.tooltip-global,
+.tooltip-header,
+.tooltip-trigger,
+.quality-pop-card[title],
+.hcc-summary-card[title],
+.ra-card[title],
+.kpi-card[title],
+.tcoc-card[title],
+.cost-category-item.tooltip-category[title] {
     position: relative;
+    cursor: help;
+}
+
+/* Unified tooltip appearance */
+.tooltip-global[title]:hover::after,
+.tooltip-header[data-tooltip]:hover::after,
+.tooltip-trigger[data-tooltip]:hover::after,
+.quality-pop-card[title]:hover::after,
+.hcc-summary-card[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2c3e50;
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: normal;
+    white-space: normal;
+    width: 280px;
+    max-width: 320px;
+    text-align: left;
+    z-index: 99999;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+    line-height: 1.5;
+    margin-bottom: 10px;
+}
+
+.tooltip-header[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+}
+
+.tooltip-trigger[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    width: 300px;
+}
+
+/* Unified tooltip arrow */
+.tooltip-global[title]:hover::before,
+.tooltip-header[data-tooltip]:hover::before,
+.tooltip-trigger[data-tooltip]:hover::before,
+.quality-pop-card[title]:hover::before,
+.hcc-summary-card[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    border: 8px solid transparent;
+    border-top-color: #2c3e50;
+    z-index: 100000;
+}
+
+/* Tooltip header specific styles */
+.tooltip-header {
     cursor: help;
 }
 
@@ -2081,40 +2151,6 @@
 
 .tooltip-header:hover {
     background: #eef5fc;
-}
-
-.tooltip-header[data-tooltip]:hover::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #2c3e50;
-    color: white;
-    padding: 0.75rem 1rem;
-    border-radius: 6px;
-    font-size: 0.75rem;
-    font-weight: normal;
-    text-transform: none;
-    letter-spacing: normal;
-    white-space: normal;
-    width: 280px;
-    text-align: left;
-    z-index: 1000;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-    line-height: 1.5;
-    margin-bottom: 8px;
-}
-
-.tooltip-header[data-tooltip]:hover::before {
-    content: '';
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%) translateY(8px);
-    border: 8px solid transparent;
-    border-top-color: #2c3e50;
-    z-index: 1001;
 }
 
 /* Info icon for inline tooltips */
@@ -2359,15 +2395,15 @@
 
 .ra-card {
     background: #fff;
-    border: 1px solid #e9ecef;
-    border-radius: 8px;
-    padding: 0.875rem;
+    border: 1px solid #e0e4e8;
+    border-radius: 10px;
+    padding: 1rem;
     transition: all 0.2s ease;
 }
 
 .ra-card:hover {
-    border-color: #667eea;
-    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.15);
+    border-color: var(--piedmont-primary);
+    box-shadow: 0 3px 10px rgba(200, 78, 40, 0.12);
 }
 
 .ra-card.clickable {
@@ -2378,45 +2414,43 @@
     transform: translateY(-2px);
 }
 
-.ra-card.warning {
-    background: linear-gradient(135deg, #fff9e6 0%, #fff 100%);
-    border-color: #f39c12;
-}
-
-.ra-card.danger {
-    background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
-    border-color: #e74c3c;
-}
-
-.ra-card.success {
-    background: linear-gradient(135deg, #f0fff4 0%, #fff 100%);
-    border-color: #27ae60;
-}
-
+/* Standardized card colors - all cards use the same styling */
+.ra-card.warning,
+.ra-card.danger,
+.ra-card.success,
 .ra-card.highlight {
-    background: linear-gradient(135deg, #f0f9ff 0%, #fff 100%);
-    border-color: #3498db;
+    background: #fff;
+    border-color: #e0e4e8;
+}
+
+.ra-card.warning:hover,
+.ra-card.danger:hover,
+.ra-card.success:hover,
+.ra-card.highlight:hover {
+    border-color: var(--piedmont-primary);
+    box-shadow: 0 3px 10px rgba(200, 78, 40, 0.12);
 }
 
 .ra-card-label {
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     font-weight: 600;
-    color: #7f8c8d;
+    color: #5a6c7d;
     text-transform: uppercase;
     letter-spacing: 0.3px;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.5rem;
 }
 
 .ra-card-label .tooltip-icon {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
     cursor: help;
+    color: #95a5a6;
 }
 
 .ra-card-value {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 700;
     color: #2c3e50;
     line-height: 1.2;
@@ -2428,14 +2462,14 @@
 .ra-card-value.info { color: #3498db; }
 
 .ra-card-detail {
-    font-size: 0.7rem;
-    color: #95a5a6;
-    margin-top: 0.25rem;
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    margin-top: 0.35rem;
 }
 
 .ra-card-trend {
-    font-size: 0.7rem;
-    margin-top: 0.35rem;
+    font-size: 0.8rem;
+    margin-top: 0.4rem;
     font-weight: 500;
 }
 
@@ -2444,10 +2478,49 @@
 .ra-card-trend.neutral { color: #7f8c8d; }
 
 .ra-card-action {
-    font-size: 0.65rem;
-    color: #667eea;
-    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    color: var(--piedmont-primary);
+    margin-top: 0.4rem;
     font-weight: 500;
+}
+
+/* RA Card Tooltips - consistent with other tabs */
+.ra-card[title] {
+    position: relative;
+}
+
+.ra-card[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #2c3e50;
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 400;
+    white-space: normal;
+    width: 260px;
+    text-align: left;
+    z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    line-height: 1.5;
+    margin-bottom: 10px;
+    text-transform: none;
+    letter-spacing: normal;
+}
+
+.ra-card[title]:hover::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px);
+    border: 8px solid transparent;
+    border-top-color: #2c3e50;
+    z-index: 10000;
 }
 
 /* Mobile responsive for RA groups */
