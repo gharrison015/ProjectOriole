@@ -919,7 +919,7 @@ function initQualityTrendChart() {
             labels: ['PY2019', 'PY2020', 'PY2021', 'PY2022', 'PY2023', 'PY2024'],
             datasets: [{
                 label: 'Piedmont ACO Quality Score',
-                data: [88.4, 91.2, 93.5, 94.1, 92.8, 93.6],
+                data: [96.00, 97.03, 92.49, 80.54, 79.79, 83.25],
                 borderColor: 'var(--piedmont-primary)',
                 backgroundColor: 'rgba(200, 78, 40, 0.1)',
                 tension: 0.3,
@@ -932,7 +932,7 @@ function initQualityTrendChart() {
                 borderWidth: 3
             }, {
                 label: 'MSSP National Average',
-                data: [86.2, 88.7, 90.4, 91.8, 92.1, 92.5],
+                data: [89.5, 90.2, 88.7, 85.3, 86.1, 87.4],
                 borderColor: '#95a5a6',
                 backgroundColor: 'rgba(149, 165, 166, 0.05)',
                 tension: 0.3,
@@ -943,7 +943,7 @@ function initQualityTrendChart() {
                 borderWidth: 2
             }, {
                 label: 'Quality Threshold (40th %ile)',
-                data: [82.5, 83.1, 84.2, 85.6, 86.4, 87.2],
+                data: [80.0, 80.0, 80.0, 80.0, 80.0, 80.0],
                 borderColor: '#e74c3c',
                 backgroundColor: 'transparent',
                 tension: 0,
@@ -998,7 +998,7 @@ function initQualityTrendChart() {
             scales: {
                 y: {
                     beginAtZero: false,
-                    min: 80,
+                    min: 75,
                     max: 100,
                     ticks: {
                         stepSize: 5,
