@@ -703,6 +703,88 @@
     color: #7f8c8d;
 }
 
+/* Cost Category Tooltips */
+.cost-category-item.tooltip-category {
+    position: relative;
+    cursor: help;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.cost-category-item.tooltip-category:hover {
+    background: #eef5fc;
+    transform: translateX(4px);
+}
+
+.cost-category-item .category-name .info-icon {
+    color: #3498db;
+    font-size: 0.85rem;
+    margin-left: 0.25rem;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.cost-category-item:hover .category-name .info-icon {
+    opacity: 1;
+}
+
+.cost-category-item.tooltip-category[title] {
+    position: relative;
+}
+
+.cost-category-item.tooltip-category[title]:hover::after {
+    content: attr(title);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 12px;
+    background: #2c3e50;
+    color: white;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 400;
+    width: 320px;
+    line-height: 1.5;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    white-space: normal;
+}
+
+.cost-category-item.tooltip-category[title]:hover::before {
+    content: '';
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-left: 4px;
+    border: 8px solid transparent;
+    border-right-color: #2c3e50;
+    z-index: 1001;
+}
+
+@media (max-width: 1200px) {
+    .cost-category-item.tooltip-category[title]:hover::after {
+        left: auto;
+        right: 0;
+        top: 100%;
+        transform: none;
+        margin-left: 0;
+        margin-top: 8px;
+        width: 280px;
+    }
+
+    .cost-category-item.tooltip-category[title]:hover::before {
+        left: auto;
+        right: 20px;
+        top: 100%;
+        transform: none;
+        margin-left: 0;
+        border: 8px solid transparent;
+        border-bottom-color: #2c3e50;
+    }
+}
+
 /* Leakage Styles */
 .leakage-filter-bar {
     background: white;
