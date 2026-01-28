@@ -93,6 +93,15 @@
                         </button>
                     </div>
 
+                    <!-- Global Year Selector -->
+                    <div class="year-selector-container" id="performance-year-selector">
+                        <span class="year-selector-label">Select Performance Year</span>
+                        <div class="year-toggle-container">
+                            <button class="year-toggle-btn active" data-year="PY2025" onclick="switchPerformanceYear('PY2025')">PY2025</button>
+                            <button class="year-toggle-btn" data-year="PY2026" onclick="switchPerformanceYear('PY2026')">PY2026</button>
+                        </div>
+                    </div>
+
                     <div class="kpi-grid" id="performance-kpi-grid">
                         <div class="kpi-card">
                             <div class="kpi-label tooltip-hover" title="Per Member Per Month (PMPM) Spend: Total medical spending divided by member months. Formula: Total Claims / (Members × 12 months). Source: Internal claims data">
@@ -129,13 +138,7 @@
                     </div>
 
                     <div class="chart-section">
-                        <div class="chart-header-row">
-                            <h3>PMPM Trend vs Benchmark</h3>
-                            <div class="year-toggle-container">
-                                <button class="year-toggle-btn active" data-year="PY2025">PY2025</button>
-                                <button class="year-toggle-btn" data-year="PY2026">PY2026</button>
-                            </div>
-                        </div>
+                        <h3>PMPM Trend vs Benchmark</h3>
                         <div class="chart-wrapper">
                             <canvas id="trendChart"></canvas>
                         </div>
@@ -147,7 +150,7 @@
 
                     <div class="table-section">
                         <h3>Market Performance Summary - Click to Drill Down</h3>
-                        <table class="data-table">
+                        <table class="data-table" id="market-performance-table">
                             <thead>
                                 <tr>
                                     <th class="sortable" data-sort="string">Market Region</th>
@@ -159,52 +162,8 @@
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr onclick="drillDownMarket('atlanta-north')" class="clickable">
-                                    <td><strong>Atlanta North</strong></td>
-                                    <td>12,456</td>
-                                    <td>$823.45</td>
-                                    <td class="good">-$43.05 (-5.0%)</td>
-                                    <td>89.2%</td>
-                                    <td class="good">18.3%</td>
-                                    <td><button class="btn-small">View Details →</button></td>
-                                </tr>
-                                <tr onclick="drillDownMarket('atlanta-south')" class="clickable">
-                                    <td><strong>Atlanta South</strong></td>
-                                    <td>15,234</td>
-                                    <td>$871.22</td>
-                                    <td class="warning">+$4.72 (+0.5%)</td>
-                                    <td>86.1%</td>
-                                    <td class="bad">27.4%</td>
-                                    <td><button class="btn-small">View Details →</button></td>
-                                </tr>
-                                <tr onclick="drillDownMarket('columbus')" class="clickable">
-                                    <td><strong>Columbus</strong></td>
-                                    <td>8,923</td>
-                                    <td>$834.67</td>
-                                    <td class="good">-$31.83 (-3.7%)</td>
-                                    <td>88.5%</td>
-                                    <td>21.2%</td>
-                                    <td><button class="btn-small">View Details →</button></td>
-                                </tr>
-                                <tr onclick="drillDownMarket('augusta')" class="clickable">
-                                    <td><strong>Augusta</strong></td>
-                                    <td>6,734</td>
-                                    <td>$892.18</td>
-                                    <td class="bad">+$25.68 (+3.0%)</td>
-                                    <td>84.3%</td>
-                                    <td class="bad">31.8%</td>
-                                    <td><button class="btn-small">View Details →</button></td>
-                                </tr>
-                                <tr onclick="drillDownMarket('macon')" class="clickable">
-                                    <td><strong>Macon</strong></td>
-                                    <td>4,476</td>
-                                    <td>$851.34</td>
-                                    <td class="warning">-$15.16 (-1.7%)</td>
-                                    <td>85.9%</td>
-                                    <td>19.6%</td>
-                                    <td><button class="btn-small">View Details →</button></td>
-                                </tr>
+                            <tbody id="market-performance-tbody">
+                                <!-- Dynamically populated based on selected year -->
                             </tbody>
                         </table>
                     </div>
@@ -367,7 +326,12 @@
                     </div>
 
                     <div class="controls-panel">
-                        <h3>Scenario Variables - Adjust to Model Different Outcomes</h3>
+                        <div class="controls-header">
+                            <h3>Scenario Variables - Adjust to Model Different Outcomes</h3>
+                            <button class="reset-btn" id="reset-scenarios-btn" onclick="resetScenarioVariables()">
+                                <span class="reset-icon">↺</span> Reset All
+                            </button>
+                        </div>
                         <div class="control-grid">
                             <div class="control-item">
                                 <label>Lives Growth: <span id="lives-val">+2.0%</span></label>

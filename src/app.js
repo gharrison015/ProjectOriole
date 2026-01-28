@@ -14,7 +14,7 @@ let showingOONOnly = false;
 document.addEventListener('DOMContentLoaded', function() {
     initializeTabs();
     initializeCharts();
-    initPMPMYearToggle();
+    initPerformanceOverviewDefaults();
     initMonteCarloScenarioToggle();
     initializeProjectionControls();
     initializeLeakageInteractions();
@@ -164,8 +164,8 @@ function initPerformanceTrendChart(selectedYear = 'PY2025') {
         ];
         tooltipBorderColor = '#667eea';
     } else {
-        // PY2026 data - January and February have actual data (two green dots with connecting line)
-        const py2026ActualData = [855, 852, null, null, null, null, null, null, null, null, null, null];
+        // PY2026 data - Only January has actual data (one green dot)
+        const py2026ActualData = [855, null, null, null, null, null, null, null, null, null, null, null];
         const py2026Benchmark = [864, 864, 864, 864, 864, 864, 864, 864, 864, 864, 864, 864];
 
         datasets = [
@@ -238,8 +238,8 @@ function initPerformanceTrendChart(selectedYear = 'PY2025') {
                             if (datasetIndex === 0 && (dataIndex === 0 || dataIndex === 5 || dataIndex === 9)) return true;
                             if (datasetIndex === 1 && dataIndex === 11) return true;
                         } else {
-                            // PY2026 - show labels for January and February
-                            if (datasetIndex === 0 && (dataIndex === 0 || dataIndex === 1)) return true;
+                            // PY2026 - show label for January only
+                            if (datasetIndex === 0 && dataIndex === 0) return true;
                         }
                         return false;
                     },
@@ -349,23 +349,10 @@ function initPerformanceTrendChart(selectedYear = 'PY2025') {
     });
 }
 
-// Initialize year toggle for PMPM chart
-function initPMPMYearToggle() {
-    const toggleBtns = document.querySelectorAll('.year-toggle-btn');
-    toggleBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            // Update active state
-            toggleBtns.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-
-            // Reinitialize chart with selected year
-            const selectedYear = this.dataset.year;
-            initPerformanceTrendChart(selectedYear);
-
-            // Update KPI values based on selected year
-            updatePerformanceKPIs(selectedYear);
-        });
-    });
+// Initialize Performance Overview with default year (PY2025)
+function initPerformanceOverviewDefaults() {
+    // Initialize market performance table with PY2025 data
+    updateMarketPerformanceTable('PY2025');
 }
 
 // Update Performance Overview KPIs based on selected year
@@ -404,34 +391,92 @@ function updatePerformanceKPIs(selectedYear) {
         }
         if (kpiNote) kpiNote.classList.remove('hidden');
     } else {
-        // PY2026 values (2 months of data - Jan & Feb)
-        // Average PMPM from Jan ($855) and Feb ($852) = $853.50
-        if (pmpmValue) pmpmValue.textContent = '$853.50';
+        // PY2026 values (1 month of data - January only)
+        if (pmpmValue) pmpmValue.textContent = '$855.00';
         if (pmpmChange) {
-            pmpmChange.textContent = '↓ 1.2% vs Benchmark ($864)';
+            pmpmChange.textContent = '↓ 1.0% vs Benchmark ($864)';
             pmpmChange.className = 'kpi-change positive';
         }
-        // Projected savings based on 2 months trending (pulled from projections concept)
-        if (savingsValue) savingsValue.textContent = '$9.8M';
+        // Projected savings based on 1 month trending
+        if (savingsValue) savingsValue.textContent = '$9.2M';
         if (savingsChange) {
-            savingsChange.textContent = 'Projected (2 mo. data)';
+            savingsChange.textContent = 'Projected (1 mo. data)';
             savingsChange.className = 'kpi-change neutral';
         }
-        // Quality score slightly lower early in year (less claims data for quality measures)
-        if (qualityValue) qualityValue.textContent = '82.1%';
+        // Quality score preliminary (less claims data for quality measures)
+        if (qualityValue) qualityValue.textContent = '81.5%';
         if (qualityChange) {
             qualityChange.textContent = 'Preliminary (eCQM submissions)';
             qualityChange.className = 'kpi-change neutral';
         }
-        // Network leakage slightly lower with limited data
-        if (leakageValue) leakageValue.textContent = '21.4%';
+        // Network leakage with limited data
+        if (leakageValue) leakageValue.textContent = '20.8%';
         if (leakageChange) {
-            leakageChange.textContent = '$680K Opportunity (2 mo.)';
+            leakageChange.textContent = '$340K Opportunity (1 mo.)';
             leakageChange.className = 'kpi-change negative';
         }
         if (kpiNote) kpiNote.classList.add('hidden');
     }
 }
+
+// Market Performance Data by Year
+const marketPerformanceData = {
+    PY2025: [
+        { region: 'Atlanta North', id: 'atlanta-north', lives: '12,456', pmpm: '$823.45', vsBenchmark: '-$43.05 (-5.0%)', vsBenchmarkClass: 'good', quality: '89.2%', leakage: '18.3%', leakageClass: 'good' },
+        { region: 'Atlanta South', id: 'atlanta-south', lives: '15,234', pmpm: '$871.22', vsBenchmark: '+$4.72 (+0.5%)', vsBenchmarkClass: 'warning', quality: '86.1%', leakage: '27.4%', leakageClass: 'bad' },
+        { region: 'Columbus', id: 'columbus', lives: '8,923', pmpm: '$834.67', vsBenchmark: '-$31.83 (-3.7%)', vsBenchmarkClass: 'good', quality: '88.5%', leakage: '21.2%', leakageClass: '' },
+        { region: 'Augusta', id: 'augusta', lives: '6,734', pmpm: '$892.18', vsBenchmark: '+$25.68 (+3.0%)', vsBenchmarkClass: 'bad', quality: '84.3%', leakage: '31.8%', leakageClass: 'bad' },
+        { region: 'Macon', id: 'macon', lives: '4,476', pmpm: '$851.34', vsBenchmark: '-$15.16 (-1.7%)', vsBenchmarkClass: 'warning', quality: '85.9%', leakage: '19.6%', leakageClass: '' }
+    ],
+    PY2026: [
+        { region: 'Atlanta North', id: 'atlanta-north', lives: '12,612', pmpm: '$831.20', vsBenchmark: '-$32.80 (-3.8%)', vsBenchmarkClass: 'good', quality: '84.1%', leakage: '17.2%', leakageClass: 'good' },
+        { region: 'Atlanta South', id: 'atlanta-south', lives: '15,389', pmpm: '$878.45', vsBenchmark: '+$14.45 (+1.7%)', vsBenchmarkClass: 'warning', quality: '80.3%', leakage: '25.1%', leakageClass: 'bad' },
+        { region: 'Columbus', id: 'columbus', lives: '9,045', pmpm: '$842.10', vsBenchmark: '-$21.90 (-2.5%)', vsBenchmarkClass: 'good', quality: '82.7%', leakage: '19.8%', leakageClass: '' },
+        { region: 'Augusta', id: 'augusta', lives: '6,801', pmpm: '$898.32', vsBenchmark: '+$34.32 (+4.0%)', vsBenchmarkClass: 'bad', quality: '78.5%', leakage: '29.4%', leakageClass: 'bad' },
+        { region: 'Macon', id: 'macon', lives: '4,521', pmpm: '$858.90', vsBenchmark: '-$5.10 (-0.6%)', vsBenchmarkClass: 'warning', quality: '80.8%', leakage: '18.2%', leakageClass: '' }
+    ]
+};
+
+// Update Market Performance Table based on selected year
+function updateMarketPerformanceTable(selectedYear) {
+    const tbody = document.getElementById('market-performance-tbody');
+    if (!tbody) return;
+
+    const data = marketPerformanceData[selectedYear] || marketPerformanceData.PY2025;
+
+    tbody.innerHTML = data.map(row => `
+        <tr onclick="drillDownMarket('${row.id}')" class="clickable">
+            <td><strong>${row.region}</strong></td>
+            <td>${row.lives}</td>
+            <td>${row.pmpm}</td>
+            <td class="${row.vsBenchmarkClass}">${row.vsBenchmark}</td>
+            <td>${row.quality}</td>
+            <td class="${row.leakageClass}">${row.leakage}</td>
+            <td><button class="btn-small">View Details →</button></td>
+        </tr>
+    `).join('');
+}
+
+// Global year switching function for Performance Overview tab
+function switchPerformanceYear(year) {
+    // Update toggle button active states
+    const toggleBtns = document.querySelectorAll('#performance-year-selector .year-toggle-btn');
+    toggleBtns.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.year === year);
+    });
+
+    // Update chart
+    initPerformanceTrendChart(year);
+
+    // Update KPIs
+    updatePerformanceKPIs(year);
+
+    // Update market performance table
+    updateMarketPerformanceTable(year);
+}
+
+// Make switchPerformanceYear available globally for onclick handler
+window.switchPerformanceYear = switchPerformanceYear;
 
 // Monte Carlo scenario descriptions
 const monteCarloScenarios = {
@@ -1725,6 +1770,32 @@ function initializeProjectionControls() {
         }
     });
 }
+
+// Reset all scenario sliders to default values
+function resetScenarioVariables() {
+    const defaults = [
+        { slider: 'lives-slider', value: 'lives-val', defaultVal: 2, format: v => '+' + v + '%' },
+        { slider: 'risk-slider', value: 'risk-val', defaultVal: 0, format: v => v + '.0%' },
+        { slider: 'util-slider', value: 'util-val', defaultVal: -1, format: v => v + '%' },
+        { slider: 'leak-slider', value: 'leak-val', defaultVal: 2, format: v => v + '%' }
+    ];
+
+    defaults.forEach(({slider, value, defaultVal, format}) => {
+        const sliderEl = document.getElementById(slider);
+        const valueEl = document.getElementById(value);
+
+        if (sliderEl && valueEl) {
+            sliderEl.value = defaultVal;
+            valueEl.textContent = format(defaultVal);
+        }
+    });
+
+    // Update projections with reset values
+    updateProjectionValues();
+}
+
+// Make resetScenarioVariables available globally for onclick handler
+window.resetScenarioVariables = resetScenarioVariables;
 
 function updateProjectionValues() {
     const livesGrowth = parseFloat(document.getElementById('lives-slider').value) / 100;
