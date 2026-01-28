@@ -779,115 +779,85 @@ function initWaterfallChart() {
         waterfallChart.destroy();
     }
 
-    // Waterfall data: [bottom, top] for floating bars, or just value for totals
-    const waterfallData = {
-        labels: [
-            'Base Benchmark',
-            'Uncaptured Risk\nImpact',
-            'Adjusted Target',
-            'Projected Spend',
-            'Gross Savings',
-            'CMS/Quality Adj',
-            'Piedmont Retained'
-        ],
-        values: [513.2, -14.4, 498.8, -489.2, 9.6, -5.7, 3.9],
-        types: ['total', 'decrease', 'subtotal', 'decrease', 'increase', 'decrease', 'total']
-    };
+    // Simplified waterfall with cleaner labels
+    const labels = ['Base Benchmark', 'Risk Adj.', 'Adjusted Target', 'Medical Spend', 'Gross Savings', 'CMS Share', 'Net Earned'];
+    const displayValues = [513.2, -14.4, 498.8, -489.2, 9.6, -5.7, 3.9];
+    const types = ['start', 'decrease', 'subtotal', 'decrease', 'increase', 'decrease', 'end'];
 
-    // Calculate cumulative positions for floating bars
-    const datasets = [];
-    let cumulative = 0;
+    // Calculate bar positions for waterfall effect
     const barData = [];
-    const baseData = []; // For floating bars, this is the invisible base
-    const colors = [];
-    const borderColors = [];
+    const baseData = [];
+    let running = 0;
 
-    waterfallData.values.forEach((value, index) => {
-        const type = waterfallData.types[index];
-
-        if (type === 'total' || type === 'subtotal') {
-            // Total bars start from 0
-            barData.push(value);
+    types.forEach((type, i) => {
+        const val = displayValues[i];
+        if (type === 'start') {
             baseData.push(0);
-            cumulative = value;
-            if (index === waterfallData.values.length - 1) {
-                // Final total - gold/highlight color
-                colors.push('rgba(247, 168, 40, 0.85)');
-                borderColors.push('#F7A828');
-            } else if (type === 'subtotal') {
-                // Subtotal - blue
-                colors.push('rgba(52, 152, 219, 0.85)');
-                borderColors.push('#3498db');
-            } else {
-                // Starting total - slate
-                colors.push('rgba(127, 140, 141, 0.85)');
-                borderColors.push('#7f8c8d');
-            }
+            barData.push(val);
+            running = val;
+        } else if (type === 'subtotal' || type === 'end') {
+            baseData.push(0);
+            barData.push(val);
+            running = val;
         } else if (type === 'decrease') {
-            // Floating bar going down
-            const newCumulative = cumulative + value;
-            barData.push(Math.abs(value));
-            baseData.push(newCumulative);
-            cumulative = newCumulative;
-            colors.push('rgba(231, 76, 60, 0.85)');
-            borderColors.push('#e74c3c');
+            const newRunning = running + val;
+            baseData.push(newRunning);
+            barData.push(Math.abs(val));
+            running = newRunning;
         } else if (type === 'increase') {
-            // Floating bar going up
-            barData.push(value);
-            baseData.push(cumulative);
-            cumulative = cumulative + value;
-            colors.push('rgba(39, 174, 96, 0.85)');
-            borderColors.push('#27ae60');
+            baseData.push(running);
+            barData.push(val);
+            running = running + val;
         }
+    });
+
+    // Color scheme
+    const barColors = types.map((type, i) => {
+        if (type === 'start') return '#6c757d';
+        if (type === 'subtotal') return '#3498db';
+        if (type === 'end') return '#27ae60';
+        if (type === 'decrease') return '#e74c3c';
+        if (type === 'increase') return '#27ae60';
+        return '#6c757d';
     });
 
     waterfallChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: waterfallData.labels,
+            labels: labels,
             datasets: [
                 {
                     label: 'Base',
                     data: baseData,
                     backgroundColor: 'transparent',
-                    borderColor: 'transparent',
                     borderWidth: 0,
-                    barPercentage: 0.6,
-                    categoryPercentage: 0.8
+                    barPercentage: 0.7,
+                    categoryPercentage: 0.85
                 },
                 {
-                    label: 'Value',
+                    label: 'Values',
                     data: barData,
-                    backgroundColor: colors,
-                    borderColor: borderColors,
-                    borderWidth: 2,
-                    barPercentage: 0.6,
-                    categoryPercentage: 0.8
+                    backgroundColor: barColors,
+                    borderColor: barColors.map(c => c),
+                    borderWidth: 0,
+                    barPercentage: 0.7,
+                    categoryPercentage: 0.85
                 }
             ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            layout: {
+                padding: { top: 30 }
+            },
             scales: {
                 x: {
                     stacked: true,
-                    grid: {
-                        display: false
-                    },
+                    grid: { display: false },
                     ticks: {
-                        font: {
-                            size: 11
-                        },
-                        maxRotation: 0,
-                        callback: function(value, index) {
-                            const label = this.getLabelForValue(index);
-                            // Split multi-line labels
-                            if (label.includes('\n')) {
-                                return label.split('\n');
-                            }
-                            return label;
-                        }
+                        font: { size: 11, weight: '500' },
+                        color: '#2c3e50'
                     }
                 },
                 y: {
@@ -895,82 +865,55 @@ function initWaterfallChart() {
                     beginAtZero: true,
                     max: 550,
                     ticks: {
-                        callback: function(value) {
-                            return '$' + value + 'M';
-                        },
-                        stepSize: 100
+                        callback: (v) => '$' + v + 'M',
+                        stepSize: 100,
+                        font: { size: 11 },
+                        color: '#7f8c8d'
                     },
-                    grid: {
-                        color: 'rgba(0,0,0,0.05)'
-                    }
+                    grid: { color: 'rgba(0,0,0,0.06)' }
                 }
             },
             plugins: {
-                legend: {
-                    display: false
-                },
+                legend: { display: false },
                 datalabels: {
-                    display: function(context) {
-                        return context.datasetIndex === 1; // Only show on value bars
+                    display: (ctx) => ctx.datasetIndex === 1,
+                    color: (ctx) => {
+                        // Use dark text for light colored bars, white for others
+                        const type = types[ctx.dataIndex];
+                        return (type === 'end' || type === 'increase') ? '#fff' : '#fff';
                     },
-                    color: '#fff',
-                    font: {
-                        weight: 'bold',
-                        size: 12
-                    },
+                    font: { weight: 'bold', size: 11 },
                     anchor: 'center',
                     align: 'center',
-                    formatter: function(value, context) {
-                        const index = context.dataIndex;
-                        const type = waterfallData.types[index];
-                        const originalValue = waterfallData.values[index];
-
-                        if (type === 'decrease') {
-                            return '-$' + Math.abs(originalValue) + 'M';
-                        } else if (type === 'increase') {
-                            return '+$' + originalValue + 'M';
-                        }
-                        return '$' + originalValue + 'M';
+                    formatter: (val, ctx) => {
+                        const origVal = displayValues[ctx.dataIndex];
+                        if (origVal < 0) return '-$' + Math.abs(origVal) + 'M';
+                        if (types[ctx.dataIndex] === 'increase') return '+$' + origVal + 'M';
+                        return '$' + origVal + 'M';
                     }
                 },
                 tooltip: {
+                    backgroundColor: '#2c3e50',
+                    titleFont: { size: 13, weight: 'bold' },
+                    bodyFont: { size: 12 },
+                    padding: 12,
                     callbacks: {
-                        title: function(context) {
-                            return context[0].label.replace('\n', ' ');
-                        },
-                        label: function(context) {
-                            if (context.datasetIndex === 0) return null; // Skip base bar
-                            const index = context.dataIndex;
-                            const type = waterfallData.types[index];
-                            const value = waterfallData.values[index];
-
-                            let description = '';
-                            switch(index) {
-                                case 0:
-                                    description = 'CMS Historical Baseline';
-                                    break;
-                                case 1:
-                                    description = 'January reset impact - shrinks as HCC recapture increases';
-                                    break;
-                                case 2:
-                                    description = 'Target after risk adjustment';
-                                    break;
-                                case 3:
-                                    description = 'Projected total medical spend';
-                                    break;
-                                case 4:
-                                    description = 'Target minus projected spend';
-                                    break;
-                                case 5:
-                                    description = 'CMS 50% share + 82.1% quality multiplier';
-                                    break;
-                                case 6:
-                                    description = 'Piedmont\'s final retained savings';
-                                    break;
-                            }
-
-                            const formattedValue = value < 0 ? '-$' + Math.abs(value) + 'M' : '$' + value + 'M';
-                            return [formattedValue, description];
+                        title: (ctx) => ctx[0].label,
+                        label: (ctx) => {
+                            if (ctx.datasetIndex === 0) return null;
+                            const i = ctx.dataIndex;
+                            const v = displayValues[i];
+                            const descriptions = [
+                                'CMS Historical Baseline',
+                                'Risk score adjustment (shrinks as HCC recapture increases)',
+                                'Benchmark after risk adjustment',
+                                'Projected total medical spend for PY2026',
+                                'Adjusted Target minus Projected Spend',
+                                'CMS 50% share × 82.1% quality multiplier',
+                                'Piedmont\'s projected shared savings earned'
+                            ];
+                            const formatted = v < 0 ? '-$' + Math.abs(v) + 'M' : '$' + v + 'M';
+                            return [formatted, descriptions[i]];
                         }
                     }
                 }
