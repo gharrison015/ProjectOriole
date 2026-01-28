@@ -124,8 +124,8 @@
                             <div class="kpi-value" id="perf-quality-value">87.4%</div>
                             <div class="kpi-change positive" id="perf-quality-change">↑ 5.2 pts vs National (82.1%)</div>
                         </div>
-                        <div class="kpi-card">
-                            <div class="kpi-label tooltip-hover" title="Network Leakage: Percentage of total spend going to out-of-network providers. Formula: (OON Spend / Total Spend) × 100. Reducing leakage improves margins and care coordination. Source: Claims data with network attribution">
+                        <div class="kpi-card clickable-card" onclick="navigateToTab('leakage')">
+                            <div class="kpi-label tooltip-hover" title="Network Leakage: Percentage of total spend going to out-of-network providers. Formula: (OON Spend / Total Spend) × 100. Reducing leakage improves margins and care coordination. Source: Claims data with network attribution. Click to view Leakage tab.">
                                 Network Leakage <span class="tooltip-icon">ⓘ</span>
                             </div>
                             <div class="kpi-value" id="perf-leakage-value">23.7%</div>
@@ -1004,10 +1004,19 @@
                     </div>
 
                     <div class="leakage-filter-bar">
-                        <label>View:</label>
-                        <button class="filter-btn active" onclick="setLeakageView('all')">All Claims</button>
-                        <button class="filter-btn" onclick="setLeakageView('parta')">Part A Only</button>
-                        <button class="filter-btn" onclick="setLeakageView('partb')">Part B Only</button>
+                        <div class="filter-group">
+                            <label>Claim Type:</label>
+                            <button class="filter-btn active" data-filter="claim" onclick="setLeakageView('all')">All Claims</button>
+                            <button class="filter-btn" data-filter="claim" onclick="setLeakageView('parta')">Part A Only</button>
+                            <button class="filter-btn" data-filter="claim" onclick="setLeakageView('partb')">Part B Only</button>
+                        </div>
+                        <div class="filter-group">
+                            <label>Service Type:</label>
+                            <button class="filter-btn active" data-filter="service" onclick="setLeakageServiceType('all')">All Services</button>
+                            <button class="filter-btn" data-filter="service" onclick="setLeakageServiceType('inpatient')">Inpatient</button>
+                            <button class="filter-btn" data-filter="service" onclick="setLeakageServiceType('outpatient')">Outpatient</button>
+                            <button class="filter-btn" data-filter="service" onclick="setLeakageServiceType('professional')">Professional</button>
+                        </div>
                     </div>
 
                     <div class="leakage-summary-section">
@@ -1031,72 +1040,105 @@
                                     <div class="metric-pct" id="oon-pct">23.7%</div>
                                 </div>
                                 <div class="metric-item">
-                                    <div class="metric-label">Target Leakage (20%)</div>
-                                    <div class="metric-value">$97.3M</div>
+                                    <div class="metric-label">Leakage Benchmark (20%)</div>
+                                    <div class="metric-value" id="leakage-benchmark">$97.3M</div>
                                     <div class="metric-note">Industry benchmark</div>
                                 </div>
                                 <div class="metric-item highlight">
-                                    <div class="metric-label">Recovery Opportunity</div>
-                                    <div class="metric-value warning">$18.0M</div>
-                                    <div class="metric-note">If reduced to 20% target</div>
+                                    <div class="metric-label">Repatriation Opportunity</div>
+                                    <div class="metric-value warning" id="repatriation-opportunity">$18.0M</div>
+                                    <div class="metric-note" id="repatriation-note">If reduced to 20% benchmark</div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="table-section">
-                        <h3>Top 5 Out-of-Network Providers (Where Leakage Goes)</h3>
-                        <table class="data-table">
+                        <div class="facilities-header-row">
+                            <h3>Top 5 Out-of-Network Facilities (Where Leakage Goes)</h3>
+                            <div class="elective-toggle-container">
+                                <label>Filter:</label>
+                                <button class="filter-btn small active" data-filter="elective" onclick="setElectiveFilter('all')">All</button>
+                                <button class="filter-btn small" data-filter="elective" onclick="setElectiveFilter('elective')">Elective</button>
+                                <button class="filter-btn small" data-filter="elective" onclick="setElectiveFilter('non-elective')">Non-Elective</button>
+                            </div>
+                        </div>
+                        <table class="data-table" id="oon-facilities-table">
                             <thead>
                                 <tr>
-                                    <th class="sortable" data-sort="string">OON Provider/Facility</th>
-                                    <th class="sortable" data-sort="string">Specialty/Type</th>
+                                    <th class="sortable" data-sort="string">OON Facility</th>
+                                    <th class="sortable" data-sort="string">Facility Type</th>
                                     <th class="sortable" data-sort="currency">Total OON Spend</th>
                                     <th class="sortable" data-sort="number">Patient Count</th>
-                                    <th class="sortable" data-sort="currency">Avg Cost/Patient</th>
                                     <th class="sortable" data-sort="string">Primary Service</th>
+                                    <th>Top Rendering Providers</th>
+                                    <th class="sortable" data-sort="string">Elective Status</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="oon-facilities-tbody">
                                 <tr>
-                                    <td><strong>Atlanta Cardiology Associates</strong></td>
-                                    <td>Cardiology Group</td>
-                                    <td class="bad">$12,347,892</td>
-                                    <td>1,234</td>
-                                    <td>$10,009</td>
-                                    <td>Interventional Cardiology</td>
+                                    <td><strong>Emory St. Joseph's Hospital</strong></td>
+                                    <td>Acute Care Hospital</td>
+                                    <td class="bad">$14,892,334</td>
+                                    <td>1,456</td>
+                                    <td>Cardiac Surgery</td>
+                                    <td class="rendering-providers">
+                                        <div>Dr. James Wilson, MD - Cardiothoracic</div>
+                                        <div>Dr. Sarah Kim, MD - Interventional Cardiology</div>
+                                        <div>Dr. Michael Torres, MD - Cardiac Anesthesia</div>
+                                    </td>
+                                    <td><span class="badge elective">Elective</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Northside Hospital Atlanta</strong></td>
+                                    <td>Acute Care Hospital</td>
+                                    <td class="bad">$11,234,556</td>
+                                    <td>1,823</td>
+                                    <td>Orthopedic Surgery</td>
+                                    <td class="rendering-providers">
+                                        <div>Dr. Robert Chen, MD - Orthopedic Surgery</div>
+                                        <div>Dr. Lisa Patel, MD - Sports Medicine</div>
+                                        <div>Dr. David Brown, MD - Joint Replacement</div>
+                                    </td>
+                                    <td><span class="badge elective">Elective</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>WellStar Kennestone Hospital</strong></td>
+                                    <td>Acute Care Hospital</td>
+                                    <td class="bad">$9,456,778</td>
+                                    <td>2,134</td>
+                                    <td>Emergency Services</td>
+                                    <td class="rendering-providers">
+                                        <div>Dr. Amanda Martinez, MD - Emergency Medicine</div>
+                                        <div>Dr. John Davis, MD - Trauma Surgery</div>
+                                        <div>Dr. Emily Wong, MD - Critical Care</div>
+                                    </td>
+                                    <td><span class="badge non-elective">Non-Elective</span></td>
                                 </tr>
                                 <tr>
                                     <td><strong>Peachtree Advanced Imaging</strong></td>
                                     <td>Imaging Center</td>
                                     <td class="bad">$8,923,441</td>
                                     <td>3,421</td>
-                                    <td>$2,608</td>
                                     <td>MRI / CT Scans</td>
+                                    <td class="rendering-providers">
+                                        <div>Dr. Kevin Lee, MD - Radiology</div>
+                                        <div>Dr. Jennifer Smith, MD - Neuroradiology</div>
+                                    </td>
+                                    <td><span class="badge elective">Elective</span></td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Southern Orthopedic Specialists</strong></td>
-                                    <td>Orthopedic Surgery</td>
-                                    <td class="bad">$7,654,223</td>
+                                    <td><strong>Grady Memorial Hospital</strong></td>
+                                    <td>Trauma Center</td>
+                                    <td class="bad">$7,234,112</td>
                                     <td>892</td>
-                                    <td>$8,582</td>
-                                    <td>Joint Replacement</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Georgia Pain Management Center</strong></td>
-                                    <td>Pain Management</td>
-                                    <td class="bad">$5,234,887</td>
-                                    <td>1,567</td>
-                                    <td>$3,340</td>
-                                    <td>Injections / Procedures</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Metro Neurology Group</strong></td>
-                                    <td>Neurology</td>
-                                    <td class="bad">$4,892,334</td>
-                                    <td>1,098</td>
-                                    <td>$4,456</td>
-                                    <td>Neurology Consults</td>
+                                    <td>Trauma / Emergency</td>
+                                    <td class="rendering-providers">
+                                        <div>Dr. Marcus Johnson, MD - Trauma Surgery</div>
+                                        <div>Dr. Patricia Williams, MD - Emergency Medicine</div>
+                                        <div>Dr. Steven Rodriguez, MD - Neurosurgery</div>
+                                    </td>
+                                    <td><span class="badge non-elective">Non-Elective</span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -1168,8 +1210,30 @@
 
                     <div class="geo-section">
                         <h3>Georgia County Leakage Heat Map</h3>
-                        <div id="leakage-map" class="map-container" style="min-height: 600px; background: #fdfbf7; border-radius: 8px; position: relative;">
-                            <div id="georgia-map-container" style="width: 100%; height: 600px;"></div>
+                        <div class="leakage-map-layout">
+                            <div class="map-column">
+                                <div id="leakage-map" class="map-container" style="min-height: 600px; background: #fdfbf7; border-radius: 8px; position: relative;">
+                                    <div id="georgia-map-container" style="width: 100%; height: 600px;"></div>
+                                </div>
+                            </div>
+                            <div class="county-detail-column" id="county-detail-panel">
+                                <div class="county-detail-header">
+                                    <h4 id="county-detail-title">Hover over a county to see details</h4>
+                                    <p id="county-detail-subtitle" class="muted">Provider and service breakdown will appear here</p>
+                                </div>
+                                <div class="county-detail-content" id="county-detail-content">
+                                    <div class="county-placeholder">
+                                        <div class="placeholder-icon">🗺️</div>
+                                        <p>Select a county on the map to view:</p>
+                                        <ul>
+                                            <li>Top OON rendering providers</li>
+                                            <li>Elective vs. non-elective breakdown</li>
+                                            <li>Primary services driving leakage</li>
+                                            <li>Patient count and total spend</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

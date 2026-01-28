@@ -668,13 +668,21 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     margin-bottom: 2rem;
     display: flex;
-    gap: 1rem;
+    gap: 2rem;
     align-items: center;
+    flex-wrap: wrap;
+}
+
+.leakage-filter-bar .filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
 
 .leakage-filter-bar label {
     font-weight: 600;
     color: #2c3e50;
+    white-space: nowrap;
 }
 
 .filter-btn {
@@ -769,6 +777,257 @@
     font-size: 0.8rem;
     color: #7f8c8d;
     margin-top: 0.25rem;
+}
+
+/* Facilities Header Row */
+.facilities-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.facilities-header-row h3 {
+    margin: 0;
+}
+
+.elective-toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.elective-toggle-container label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.filter-btn.small {
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8rem;
+}
+
+/* Rendering Providers Cell */
+.rendering-providers {
+    font-size: 0.8rem;
+    line-height: 1.6;
+}
+
+.rendering-providers div {
+    padding: 0.15rem 0;
+    color: #5a6c7d;
+}
+
+.rendering-providers div:not(:last-child) {
+    border-bottom: 1px dashed #e9ecef;
+}
+
+/* Elective Status Badges */
+.badge.elective {
+    background: #d4edda;
+    color: #155724;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.badge.non-elective {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+/* Leakage Map Layout */
+.leakage-map-layout {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 1.5rem;
+    min-height: 600px;
+}
+
+.map-column {
+    min-height: 600px;
+}
+
+.county-detail-column {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.county-detail-header {
+    border-bottom: 2px solid #e9ecef;
+    padding-bottom: 1rem;
+    margin-bottom: 1rem;
+}
+
+.county-detail-header h4 {
+    margin: 0 0 0.25rem 0;
+    color: #2c3e50;
+    font-size: 1.1rem;
+}
+
+.county-detail-header .muted {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #7f8c8d;
+}
+
+.county-detail-content {
+    flex: 1;
+}
+
+.county-placeholder {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: #7f8c8d;
+}
+
+.county-placeholder .placeholder-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.county-placeholder ul {
+    text-align: left;
+    margin: 1rem 0 0 0;
+    padding-left: 1.5rem;
+    line-height: 1.8;
+}
+
+.county-provider-list {
+    margin-bottom: 1.5rem;
+}
+
+.county-provider-list h5 {
+    margin: 0 0 0.75rem 0;
+    font-size: 0.9rem;
+    color: #2c3e50;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.county-provider-item {
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+}
+
+.county-provider-item .provider-name {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.25rem;
+}
+
+.county-provider-item .provider-details {
+    color: #7f8c8d;
+    font-size: 0.8rem;
+}
+
+.county-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.county-stat {
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-radius: 6px;
+    text-align: center;
+}
+
+.county-stat .stat-label {
+    font-size: 0.7rem;
+    color: #7f8c8d;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+}
+
+.county-stat .stat-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2c3e50;
+}
+
+.county-stat .stat-value.bad {
+    color: #e74c3c;
+}
+
+.county-breakdown {
+    margin-bottom: 1rem;
+}
+
+.county-breakdown h5 {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.85rem;
+    color: #2c3e50;
+}
+
+.breakdown-bar {
+    height: 8px;
+    background: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+
+.breakdown-bar .elective-fill {
+    height: 100%;
+    background: #27ae60;
+    display: inline-block;
+}
+
+.breakdown-legend {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: #7f8c8d;
+}
+
+@media (max-width: 1024px) {
+    .leakage-map-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .county-detail-column {
+        max-height: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .facilities-header-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .elective-toggle-container {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .leakage-filter-bar .filter-group {
+        width: 100%;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }
 
 /* HCC Styles */

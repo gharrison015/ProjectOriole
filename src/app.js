@@ -2116,12 +2116,16 @@ function removeTableHighlights() {
     });
 }
 
+// Leakage filter state
+let currentLeakageServiceType = 'all';
+let currentElectiveFilter = 'all';
+
 function setLeakageView(view) {
     currentLeakageView = view;
 
-    // Update button states
-    const buttons = document.querySelectorAll('.filter-btn');
-    buttons.forEach(btn => {
+    // Update button states for claim type filter
+    const claimButtons = document.querySelectorAll('.filter-btn[data-filter="claim"]');
+    claimButtons.forEach(btn => {
         btn.classList.remove('active');
         if ((view === 'all' && btn.textContent.includes('All')) ||
             (view === 'parta' && btn.textContent.includes('Part A')) ||
@@ -2132,14 +2136,50 @@ function setLeakageView(view) {
 
     // Update metrics based on view
     updateLeakageDataByPart(view);
+    updateFacilitiesTable();
+}
+
+function setLeakageServiceType(serviceType) {
+    currentLeakageServiceType = serviceType;
+
+    // Update button states for service type filter
+    const serviceButtons = document.querySelectorAll('.filter-btn[data-filter="service"]');
+    serviceButtons.forEach(btn => {
+        btn.classList.remove('active');
+        if ((serviceType === 'all' && btn.textContent.includes('All')) ||
+            (serviceType === 'inpatient' && btn.textContent.includes('Inpatient')) ||
+            (serviceType === 'outpatient' && btn.textContent.includes('Outpatient')) ||
+            (serviceType === 'professional' && btn.textContent.includes('Professional'))) {
+            btn.classList.add('active');
+        }
+    });
+
+    updateFacilitiesTable();
+}
+
+function setElectiveFilter(filter) {
+    currentElectiveFilter = filter;
+
+    // Update button states for elective filter
+    const electiveButtons = document.querySelectorAll('.filter-btn[data-filter="elective"]');
+    electiveButtons.forEach(btn => {
+        btn.classList.remove('active');
+        if ((filter === 'all' && btn.textContent === 'All') ||
+            (filter === 'elective' && btn.textContent.includes('Elective') && !btn.textContent.includes('Non')) ||
+            (filter === 'non-elective' && btn.textContent.includes('Non-Elective'))) {
+            btn.classList.add('active');
+        }
+    });
+
+    updateFacilitiesTable();
 }
 
 function updateLeakageDataByPart(view) {
-    // Simulate Part A/B filtering
+    // Data for Part A/B filtering with proper sizing for Piedmont
     const metrics = {
-        all: { inNetwork: 371.4, oon: 115.3, inPct: 76.3, oonPct: 23.7 },
-        parta: { inNetwork: 245.8, oon: 67.2, inPct: 78.5, oonPct: 21.5 },
-        partb: { inNetwork: 125.6, oon: 48.1, inPct: 72.3, oonPct: 27.7 }
+        all: { inNetwork: 371.4, oon: 115.3, inPct: 76.3, oonPct: 23.7, benchmark: 97.3, repatriation: 18.0 },
+        parta: { inNetwork: 245.8, oon: 67.2, inPct: 78.5, oonPct: 21.5, benchmark: 62.6, repatriation: 4.6 },
+        partb: { inNetwork: 125.6, oon: 48.1, inPct: 72.3, oonPct: 27.7, benchmark: 34.7, repatriation: 13.4 }
     };
 
     const data = metrics[view];
@@ -2149,12 +2189,139 @@ function updateLeakageDataByPart(view) {
     document.getElementById('oon-spend').textContent = '$' + data.oon + 'M';
     document.getElementById('oon-pct').textContent = data.oonPct + '%';
 
+    // Update benchmark and repatriation amounts
+    const benchmarkEl = document.getElementById('leakage-benchmark');
+    const repatriationEl = document.getElementById('repatriation-opportunity');
+    const repatriationNoteEl = document.getElementById('repatriation-note');
+
+    if (benchmarkEl) benchmarkEl.textContent = '$' + data.benchmark + 'M';
+    if (repatriationEl) repatriationEl.textContent = '$' + data.repatriation + 'M';
+    if (repatriationNoteEl) {
+        const viewLabel = view === 'parta' ? 'Part A' : view === 'partb' ? 'Part B' : 'All Claims';
+        repatriationNoteEl.textContent = `${viewLabel} - if reduced to 20% benchmark`;
+    }
+
     // Update pie chart
     if (leakagePieChart) {
         leakagePieChart.data.datasets[0].data = [data.inPct, data.oonPct];
         leakagePieChart.update();
     }
 }
+
+// Facilities data for different filters
+const facilitiesData = {
+    all: {
+        elective: [
+            { name: 'Emory St. Joseph\'s Hospital', type: 'Acute Care Hospital', spend: '$14,892,334', patients: 1456, service: 'Cardiac Surgery', providers: ['Dr. James Wilson, MD - Cardiothoracic', 'Dr. Sarah Kim, MD - Interventional Cardiology', 'Dr. Michael Torres, MD - Cardiac Anesthesia'], elective: true },
+            { name: 'Northside Hospital Atlanta', type: 'Acute Care Hospital', spend: '$11,234,556', patients: 1823, service: 'Orthopedic Surgery', providers: ['Dr. Robert Chen, MD - Orthopedic Surgery', 'Dr. Lisa Patel, MD - Sports Medicine', 'Dr. David Brown, MD - Joint Replacement'], elective: true },
+            { name: 'Peachtree Advanced Imaging', type: 'Imaging Center', spend: '$8,923,441', patients: 3421, service: 'MRI / CT Scans', providers: ['Dr. Kevin Lee, MD - Radiology', 'Dr. Jennifer Smith, MD - Neuroradiology'], elective: true }
+        ],
+        nonElective: [
+            { name: 'WellStar Kennestone Hospital', type: 'Acute Care Hospital', spend: '$9,456,778', patients: 2134, service: 'Emergency Services', providers: ['Dr. Amanda Martinez, MD - Emergency Medicine', 'Dr. John Davis, MD - Trauma Surgery', 'Dr. Emily Wong, MD - Critical Care'], elective: false },
+            { name: 'Grady Memorial Hospital', type: 'Trauma Center', spend: '$7,234,112', patients: 892, service: 'Trauma / Emergency', providers: ['Dr. Marcus Johnson, MD - Trauma Surgery', 'Dr. Patricia Williams, MD - Emergency Medicine', 'Dr. Steven Rodriguez, MD - Neurosurgery'], elective: false }
+        ]
+    },
+    parta: {
+        elective: [
+            { name: 'Emory University Hospital', type: 'Acute Care Hospital', spend: '$9,234,556', patients: 892, service: 'Cardiac Surgery', providers: ['Dr. James Wilson, MD - Cardiothoracic', 'Dr. Anthony Lee, MD - CV Surgery'], elective: true },
+            { name: 'Piedmont Atlanta Hospital', type: 'Acute Care Hospital', spend: '$7,823,441', patients: 734, service: 'Joint Replacement', providers: ['Dr. Robert Chen, MD - Orthopedic Surgery', 'Dr. Maria Santos, MD - Orthopedics'], elective: true },
+            { name: 'Northside Hospital Forsyth', type: 'Acute Care Hospital', spend: '$6,456,223', patients: 612, service: 'Spine Surgery', providers: ['Dr. David Park, MD - Neurosurgery', 'Dr. Lisa Wong, MD - Spine Surgery'], elective: true }
+        ],
+        nonElective: [
+            { name: 'Grady Memorial Hospital', type: 'Level I Trauma', spend: '$5,892,334', patients: 478, service: 'Trauma Services', providers: ['Dr. Marcus Johnson, MD - Trauma Surgery', 'Dr. Patricia Williams, MD - Emergency Medicine'], elective: false },
+            { name: 'WellStar Kennestone Hospital', type: 'Acute Care Hospital', spend: '$4,567,112', patients: 534, service: 'Emergency Admissions', providers: ['Dr. Amanda Martinez, MD - Emergency Medicine', 'Dr. John Davis, MD - Hospitalist'], elective: false }
+        ]
+    },
+    partb: {
+        elective: [
+            { name: 'Peachtree Advanced Imaging', type: 'Imaging Center', spend: '$6,234,556', patients: 4521, service: 'Advanced Imaging', providers: ['Dr. Kevin Lee, MD - Radiology', 'Dr. Jennifer Smith, MD - Neuroradiology'], elective: true },
+            { name: 'Atlanta Cardiology Associates', type: 'Cardiology Group', spend: '$5,892,334', patients: 1823, service: 'Cardiology Consults', providers: ['Dr. William Harris, MD - Cardiology', 'Dr. Susan Miller, MD - Interventional'], elective: true },
+            { name: 'Southern Orthopedic Specialists', type: 'Specialty Group', spend: '$4,567,223', patients: 1456, service: 'Orthopedic Consults', providers: ['Dr. Richard Taylor, MD - Sports Medicine', 'Dr. Nancy Clark, MD - Orthopedics'], elective: true }
+        ],
+        nonElective: [
+            { name: 'Metro Emergency Physicians', type: 'Emergency Group', spend: '$3,456,778', patients: 2134, service: 'ED Professional Fees', providers: ['Dr. John Martinez, MD - Emergency Medicine', 'Dr. Sarah Johnson, MD - Emergency Medicine'], elective: false },
+            { name: 'Georgia Anesthesia Associates', type: 'Anesthesia Group', spend: '$2,892,112', patients: 1567, service: 'Emergency Anesthesia', providers: ['Dr. Michael Torres, MD - Anesthesiology', 'Dr. Karen White, MD - Anesthesiology'], elective: false }
+        ]
+    }
+};
+
+function updateFacilitiesTable() {
+    const tbody = document.getElementById('oon-facilities-tbody');
+    if (!tbody) return;
+
+    const viewData = facilitiesData[currentLeakageView] || facilitiesData.all;
+    let facilities = [];
+
+    if (currentElectiveFilter === 'all') {
+        facilities = [...viewData.elective, ...viewData.nonElective];
+    } else if (currentElectiveFilter === 'elective') {
+        facilities = viewData.elective;
+    } else {
+        facilities = viewData.nonElective;
+    }
+
+    // Sort by spend (descending)
+    facilities.sort((a, b) => {
+        const spendA = parseFloat(a.spend.replace(/[$,]/g, ''));
+        const spendB = parseFloat(b.spend.replace(/[$,]/g, ''));
+        return spendB - spendA;
+    });
+
+    // Take top 5
+    facilities = facilities.slice(0, 5);
+
+    tbody.innerHTML = facilities.map(f => `
+        <tr>
+            <td><strong>${f.name}</strong></td>
+            <td>${f.type}</td>
+            <td class="bad">${f.spend}</td>
+            <td>${f.patients.toLocaleString()}</td>
+            <td>${f.service}</td>
+            <td class="rendering-providers">
+                ${f.providers.map(p => `<div>${p}</div>`).join('')}
+            </td>
+            <td><span class="badge ${f.elective ? 'elective' : 'non-elective'}">${f.elective ? 'Elective' : 'Non-Elective'}</span></td>
+        </tr>
+    `).join('');
+}
+
+// Navigate to a specific tab
+function navigateToTab(tabName) {
+    const navItems = document.querySelectorAll('.nav-item');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    navItems.forEach(nav => nav.classList.remove('active'));
+    tabContents.forEach(tab => tab.classList.remove('active'));
+
+    // Find and activate the target nav item
+    const targetNav = document.querySelector(`.nav-item[data-tab="${tabName}"]`);
+    if (targetNav) {
+        targetNav.classList.add('active');
+    }
+
+    // Activate the target tab
+    const targetTab = document.getElementById(tabName + '-tab');
+    if (targetTab) {
+        targetTab.classList.add('active');
+
+        // Re-render charts when tab becomes visible
+        setTimeout(() => {
+            if (tabName === 'leakage' && leakagePieChart) {
+                leakagePieChart.resize();
+            }
+            if (tabName === 'tcoc' && costPieChart) {
+                costPieChart.resize();
+            }
+        }, 100);
+    }
+
+    // Scroll to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+window.navigateToTab = navigateToTab;
+window.setLeakageServiceType = setLeakageServiceType;
+window.setElectiveFilter = setElectiveFilter;
 
 // Georgia County Leakage Data (FIPS codes for matching with TopoJSON)
 const georgiaCountyLeakageData = {
@@ -2561,7 +2728,129 @@ function showCountyTooltip(event, d) {
         tooltip.style.display = 'block';
         tooltip.style.left = (event.clientX + 15) + 'px';
         tooltip.style.top = (event.clientY - 10) + 'px';
+
+        // Update county detail panel
+        updateCountyDetailPanel(countyData);
     }
+}
+
+function updateCountyDetailPanel(countyData) {
+    const titleEl = document.getElementById('county-detail-title');
+    const subtitleEl = document.getElementById('county-detail-subtitle');
+    const contentEl = document.getElementById('county-detail-content');
+
+    if (!titleEl || !contentEl) return;
+
+    if (!countyData || !countyData.facilities) {
+        titleEl.textContent = 'Hover over a county to see details';
+        subtitleEl.textContent = 'Provider and service breakdown will appear here';
+        contentEl.innerHTML = `
+            <div class="county-placeholder">
+                <div class="placeholder-icon">🗺️</div>
+                <p>Select a county on the map to view:</p>
+                <ul>
+                    <li>Top OON rendering providers</li>
+                    <li>Elective vs. non-elective breakdown</li>
+                    <li>Primary services driving leakage</li>
+                    <li>Patient count and total spend</li>
+                </ul>
+            </div>
+        `;
+        return;
+    }
+
+    // Calculate elective/non-elective totals
+    let electiveTotal = 0;
+    let nonElectiveTotal = 0;
+    let allProviders = [];
+
+    countyData.facilities.forEach(facility => {
+        facility.services.forEach(service => {
+            if (service.isElective) {
+                electiveTotal += service.spend;
+            } else {
+                nonElectiveTotal += service.spend;
+            }
+            allProviders.push({
+                name: service.provider,
+                service: service.name,
+                spend: service.spend,
+                isElective: service.isElective,
+                facility: facility.name
+            });
+        });
+    });
+
+    const totalSpend = electiveTotal + nonElectiveTotal;
+    const electivePct = totalSpend > 0 ? ((electiveTotal / totalSpend) * 100).toFixed(0) : 0;
+
+    // Sort providers by spend
+    allProviders.sort((a, b) => b.spend - a.spend);
+    const topProviders = allProviders.slice(0, 5);
+
+    titleEl.textContent = `${countyData.name} County`;
+    subtitleEl.textContent = `Total OON Leakage: $${(countyData.totalLeakage / 1000000).toFixed(1)}M`;
+
+    contentEl.innerHTML = `
+        <div class="county-stats-grid">
+            <div class="county-stat">
+                <div class="stat-label">Total Spend</div>
+                <div class="stat-value bad">$${(countyData.totalLeakage / 1000000).toFixed(1)}M</div>
+            </div>
+            <div class="county-stat">
+                <div class="stat-label">Leakage Score</div>
+                <div class="stat-value">${(countyData.leakageScore * 100).toFixed(0)}%</div>
+            </div>
+            <div class="county-stat">
+                <div class="stat-label">Elective</div>
+                <div class="stat-value">$${(electiveTotal / 1000000).toFixed(1)}M</div>
+            </div>
+            <div class="county-stat">
+                <div class="stat-label">Non-Elective</div>
+                <div class="stat-value">$${(nonElectiveTotal / 1000000).toFixed(1)}M</div>
+            </div>
+        </div>
+
+        <div class="county-breakdown">
+            <h5>Elective vs. Non-Elective</h5>
+            <div class="breakdown-bar">
+                <span class="elective-fill" style="width: ${electivePct}%;"></span>
+            </div>
+            <div class="breakdown-legend">
+                <span>Elective: ${electivePct}%</span>
+                <span>Non-Elective: ${100 - electivePct}%</span>
+            </div>
+        </div>
+
+        <div class="county-provider-list">
+            <h5>🏥 Top Rendering Providers</h5>
+            ${topProviders.map(p => `
+                <div class="county-provider-item">
+                    <div class="provider-name">${p.name}</div>
+                    <div class="provider-details">
+                        ${p.service} • $${(p.spend / 1000000).toFixed(2)}M •
+                        <span style="color: ${p.isElective ? '#27ae60' : '#e74c3c'};">${p.isElective ? 'Elective' : 'Non-Elective'}</span>
+                    </div>
+                    <div class="provider-details" style="font-size: 0.75rem; opacity: 0.8;">${p.facility}</div>
+                </div>
+            `).join('')}
+        </div>
+
+        <div class="county-provider-list">
+            <h5>📋 Primary Services</h5>
+            ${countyData.facilities.slice(0, 3).map(f => `
+                <div class="county-provider-item">
+                    <div class="provider-name">${f.name}</div>
+                    <div class="provider-details">
+                        ${f.services.map(s => s.name).join(', ')}
+                    </div>
+                    <div class="provider-details" style="font-size: 0.75rem;">
+                        Total: $${(f.spend / 1000000).toFixed(2)}M
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
 }
 
 function hideCountyTooltip() {
