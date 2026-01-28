@@ -4201,12 +4201,12 @@ function showFacilityLeakageDetail(facilityId) {
             electivePct: 78,
             encounters: 2134,
             renderingProviders: [
-                { name: 'Dr. James Wilson, MD', specialty: 'Cardiothoracic Surgery', spend: 4234556, encounters: 312, electivePct: 82 },
-                { name: 'Dr. Sarah Kim, MD', specialty: 'Interventional Cardiology', spend: 3567889, encounters: 456, electivePct: 75 },
-                { name: 'Dr. Michael Torres, MD', specialty: 'Cardiac Anesthesiology', spend: 2234556, encounters: 389, electivePct: 85 },
-                { name: 'Dr. Elizabeth Chen, MD', specialty: 'Cardiac Surgery', spend: 1987334, encounters: 287, electivePct: 79 },
-                { name: 'Dr. Robert Anderson, MD', specialty: 'Vascular Surgery', spend: 1456778, encounters: 234, electivePct: 71 },
-                { name: 'Dr. Jennifer Martinez, MD', specialty: 'Cardiac Imaging', spend: 1411221, encounters: 456, electivePct: 92 }
+                { name: 'Dr. James Wilson, MD', specialty: 'Cardiothoracic Surgery', spend: 4234556, encounters: 312, electivePct: 82, attributedPCPs: ['Dr. Robert Martinez', 'Dr. Amanda Williams', 'Dr. Michael Chen'] },
+                { name: 'Dr. Sarah Kim, MD', specialty: 'Interventional Cardiology', spend: 3567889, encounters: 456, electivePct: 75, attributedPCPs: ['Dr. Sarah Patel', 'Dr. Robert Martinez', 'Dr. David Thompson'] },
+                { name: 'Dr. Michael Torres, MD', specialty: 'Cardiac Anesthesiology', spend: 2234556, encounters: 389, electivePct: 85, attributedPCPs: ['Dr. Amanda Williams', 'Dr. Michael Chen'] },
+                { name: 'Dr. Elizabeth Chen, MD', specialty: 'Cardiac Surgery', spend: 1987334, encounters: 287, electivePct: 79, attributedPCPs: ['Dr. Robert Martinez', 'Dr. Sarah Patel', 'Dr. David Thompson'] },
+                { name: 'Dr. Robert Anderson, MD', specialty: 'Vascular Surgery', spend: 1456778, encounters: 234, electivePct: 71, attributedPCPs: ['Dr. Michael Chen', 'Dr. Amanda Williams'] },
+                { name: 'Dr. Jennifer Martinez, MD', specialty: 'Cardiac Imaging', spend: 1411221, encounters: 456, electivePct: 92, attributedPCPs: ['Dr. Sarah Patel', 'Dr. Robert Martinez', 'Dr. Amanda Williams'] }
             ],
             serviceBreakdown: [
                 { service: 'Cardiac Surgery', spend: 5678900, encounters: 423, electiveEnc: 345, nonElectiveEnc: 78 },
@@ -4225,12 +4225,12 @@ function showFacilityLeakageDetail(facilityId) {
             electivePct: 85,
             encounters: 2567,
             renderingProviders: [
-                { name: 'Dr. Robert Chen, MD', specialty: 'Orthopedic Surgery', spend: 3456789, encounters: 423, electivePct: 89 },
-                { name: 'Dr. Lisa Patel, MD', specialty: 'Sports Medicine', spend: 2345678, encounters: 567, electivePct: 92 },
-                { name: 'Dr. David Brown, MD', specialty: 'Joint Replacement', spend: 2123456, encounters: 389, electivePct: 95 },
-                { name: 'Dr. Amanda Wilson, MD', specialty: 'Spine Surgery', spend: 1567889, encounters: 287, electivePct: 78 },
-                { name: 'Dr. Michael Lee, MD', specialty: 'Hand Surgery', spend: 987334, encounters: 456, electivePct: 88 },
-                { name: 'Dr. Sarah Thompson, MD', specialty: 'Physical Therapy', spend: 753410, encounters: 445, electivePct: 94 }
+                { name: 'Dr. Robert Chen, MD', specialty: 'Orthopedic Surgery', spend: 3456789, encounters: 423, electivePct: 89, attributedPCPs: ['Dr. Amanda Williams', 'Dr. Sarah Patel', 'Dr. Michael Chen'] },
+                { name: 'Dr. Lisa Patel, MD', specialty: 'Sports Medicine', spend: 2345678, encounters: 567, electivePct: 92, attributedPCPs: ['Dr. Sarah Patel', 'Dr. Amanda Williams'] },
+                { name: 'Dr. David Brown, MD', specialty: 'Joint Replacement', spend: 2123456, encounters: 389, electivePct: 95, attributedPCPs: ['Dr. Michael Chen', 'Dr. Amanda Williams', 'Dr. Robert Martinez'] },
+                { name: 'Dr. Amanda Wilson, MD', specialty: 'Spine Surgery', spend: 1567889, encounters: 287, electivePct: 78, attributedPCPs: ['Dr. Sarah Patel', 'Dr. David Thompson'] },
+                { name: 'Dr. Michael Lee, MD', specialty: 'Hand Surgery', spend: 987334, encounters: 456, electivePct: 88, attributedPCPs: ['Dr. Amanda Williams', 'Dr. Michael Chen', 'Dr. Sarah Patel'] },
+                { name: 'Dr. Sarah Thompson, MD', specialty: 'Physical Therapy', spend: 753410, encounters: 445, electivePct: 94, attributedPCPs: ['Dr. Sarah Patel', 'Dr. Amanda Williams'] }
             ],
             serviceBreakdown: [
                 { service: 'Joint Replacement', spend: 3789000, encounters: 312, electiveEnc: 296, nonElectiveEnc: 16 },
@@ -4249,12 +4249,12 @@ function showFacilityLeakageDetail(facilityId) {
             electivePct: 22,
             encounters: 3456,
             renderingProviders: [
-                { name: 'Dr. Amanda Martinez, MD', specialty: 'Emergency Medicine', spend: 2567889, encounters: 856, electivePct: 15 },
-                { name: 'Dr. John Davis, MD', specialty: 'Trauma Surgery', spend: 2123456, encounters: 389, electivePct: 8 },
-                { name: 'Dr. Emily Wong, MD', specialty: 'Critical Care', spend: 1876543, encounters: 567, electivePct: 12 },
-                { name: 'Dr. Kevin Rodriguez, MD', specialty: 'General Surgery', spend: 1345678, encounters: 423, electivePct: 45 },
-                { name: 'Dr. Rachel Kim, MD', specialty: 'Internal Medicine', spend: 987654, encounters: 678, electivePct: 35 },
-                { name: 'Dr. Thomas Brown, MD', specialty: 'Neurology', spend: 555558, encounters: 543, electivePct: 28 }
+                { name: 'Dr. Amanda Martinez, MD', specialty: 'Emergency Medicine', spend: 2567889, encounters: 856, electivePct: 15, attributedPCPs: ['Dr. Robert Martinez', 'Dr. David Thompson', 'Dr. Amanda Williams'] },
+                { name: 'Dr. John Davis, MD', specialty: 'Trauma Surgery', spend: 2123456, encounters: 389, electivePct: 8, attributedPCPs: ['Dr. David Thompson', 'Dr. Robert Martinez'] },
+                { name: 'Dr. Emily Wong, MD', specialty: 'Critical Care', spend: 1876543, encounters: 567, electivePct: 12, attributedPCPs: ['Dr. Amanda Williams', 'Dr. Robert Martinez', 'Dr. Sarah Patel'] },
+                { name: 'Dr. Kevin Rodriguez, MD', specialty: 'General Surgery', spend: 1345678, encounters: 423, electivePct: 45, attributedPCPs: ['Dr. Michael Chen', 'Dr. Sarah Patel', 'Dr. Amanda Williams'] },
+                { name: 'Dr. Rachel Kim, MD', specialty: 'Internal Medicine', spend: 987654, encounters: 678, electivePct: 35, attributedPCPs: ['Dr. Sarah Patel', 'Dr. Michael Chen'] },
+                { name: 'Dr. Thomas Brown, MD', specialty: 'Neurology', spend: 555558, encounters: 543, electivePct: 28, attributedPCPs: ['Dr. David Thompson', 'Dr. Robert Martinez', 'Dr. Amanda Williams'] }
             ],
             serviceBreakdown: [
                 { service: 'Emergency Services', spend: 3234567, encounters: 1234, electiveEnc: 98, nonElectiveEnc: 1136 },
@@ -4273,10 +4273,10 @@ function showFacilityLeakageDetail(facilityId) {
             electivePct: 94,
             encounters: 5678,
             renderingProviders: [
-                { name: 'Dr. Kevin Lee, MD', specialty: 'Diagnostic Radiology', spend: 3234567, encounters: 1856, electivePct: 96 },
-                { name: 'Dr. Jennifer Smith, MD', specialty: 'Neuroradiology', spend: 2567889, encounters: 1234, electivePct: 93 },
-                { name: 'Dr. Mark Johnson, MD', specialty: 'Musculoskeletal Radiology', spend: 1876543, encounters: 1123, electivePct: 95 },
-                { name: 'Dr. Linda Chen, MD', specialty: 'Body Imaging', spend: 1244442, encounters: 1465, electivePct: 92 }
+                { name: 'Dr. Kevin Lee, MD', specialty: 'Diagnostic Radiology', spend: 3234567, encounters: 1856, electivePct: 96, attributedPCPs: ['Dr. Amanda Williams', 'Dr. Sarah Patel', 'Dr. Michael Chen'] },
+                { name: 'Dr. Jennifer Smith, MD', specialty: 'Neuroradiology', spend: 2567889, encounters: 1234, electivePct: 93, attributedPCPs: ['Dr. Michael Chen', 'Dr. Robert Martinez', 'Dr. David Thompson'] },
+                { name: 'Dr. Mark Johnson, MD', specialty: 'Musculoskeletal Radiology', spend: 1876543, encounters: 1123, electivePct: 95, attributedPCPs: ['Dr. Sarah Patel', 'Dr. Amanda Williams'] },
+                { name: 'Dr. Linda Chen, MD', specialty: 'Body Imaging', spend: 1244442, encounters: 1465, electivePct: 92, attributedPCPs: ['Dr. Robert Martinez', 'Dr. Sarah Patel', 'Dr. Amanda Williams'] }
             ],
             serviceBreakdown: [
                 { service: 'MRI Scans', spend: 4123456, encounters: 2345, electiveEnc: 2228, nonElectiveEnc: 117 },
@@ -4294,11 +4294,11 @@ function showFacilityLeakageDetail(facilityId) {
             electivePct: 12,
             encounters: 1678,
             renderingProviders: [
-                { name: 'Dr. Marcus Johnson, MD', specialty: 'Trauma Surgery', spend: 2345678, encounters: 423, electivePct: 8 },
-                { name: 'Dr. Patricia Williams, MD', specialty: 'Emergency Medicine', spend: 1987654, encounters: 567, electivePct: 10 },
-                { name: 'Dr. Steven Rodriguez, MD', specialty: 'Neurosurgery', spend: 1567890, encounters: 234, electivePct: 15 },
-                { name: 'Dr. Angela Davis, MD', specialty: 'Critical Care', spend: 987654, encounters: 289, electivePct: 12 },
-                { name: 'Dr. Michael Thomas, MD', specialty: 'Orthopedic Trauma', spend: 345236, encounters: 165, electivePct: 18 }
+                { name: 'Dr. Marcus Johnson, MD', specialty: 'Trauma Surgery', spend: 2345678, encounters: 423, electivePct: 8, attributedPCPs: ['Dr. Robert Martinez', 'Dr. David Thompson', 'Dr. Amanda Williams'] },
+                { name: 'Dr. Patricia Williams, MD', specialty: 'Emergency Medicine', spend: 1987654, encounters: 567, electivePct: 10, attributedPCPs: ['Dr. David Thompson', 'Dr. Robert Martinez'] },
+                { name: 'Dr. Steven Rodriguez, MD', specialty: 'Neurosurgery', spend: 1567890, encounters: 234, electivePct: 15, attributedPCPs: ['Dr. Amanda Williams', 'Dr. Michael Chen', 'Dr. Robert Martinez'] },
+                { name: 'Dr. Angela Davis, MD', specialty: 'Critical Care', spend: 987654, encounters: 289, electivePct: 12, attributedPCPs: ['Dr. Robert Martinez', 'Dr. David Thompson'] },
+                { name: 'Dr. Michael Thomas, MD', specialty: 'Orthopedic Trauma', spend: 345236, encounters: 165, electivePct: 18, attributedPCPs: ['Dr. David Thompson', 'Dr. Robert Martinez', 'Dr. Sarah Patel'] }
             ],
             serviceBreakdown: [
                 { service: 'Trauma Surgery', spend: 2789000, encounters: 456, electiveEnc: 36, nonElectiveEnc: 420 },
@@ -4366,11 +4366,12 @@ function showFacilityLeakageDetail(facilityId) {
                 <table class="data-table" style="font-size: 0.85rem;">
                     <thead>
                         <tr>
-                            <th>Provider Name</th>
+                            <th>Rendering Provider</th>
                             <th>Specialty</th>
                             <th>OON Spend</th>
                             <th>Encounters</th>
                             <th>% Elective</th>
+                            <th>Top Attributed PCPs</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -4378,6 +4379,7 @@ function showFacilityLeakageDetail(facilityId) {
 
     data.renderingProviders.forEach(provider => {
         const electiveClass = provider.electivePct >= 70 ? 'good' : provider.electivePct <= 30 ? 'bad' : '';
+        const pcpList = provider.attributedPCPs.map(pcp => `<div>${pcp}</div>`).join('');
         modalContent += `
             <tr>
                 <td><strong>${provider.name}</strong></td>
@@ -4385,6 +4387,7 @@ function showFacilityLeakageDetail(facilityId) {
                 <td class="bad">$${provider.spend.toLocaleString()}</td>
                 <td>${provider.encounters}</td>
                 <td class="${electiveClass}">${provider.electivePct}%</td>
+                <td class="rendering-providers">${pcpList}</td>
             </tr>
         `;
     });
