@@ -972,7 +972,14 @@
                     </div>
 
                     <div class="chart-section">
-                        <h3>Cost Trend Analysis - Last 12 Months</h3>
+                        <div class="chart-header-row">
+                            <h3>Cost Trend Analysis - Last 12 Months</h3>
+                            <div class="chart-type-toggle">
+                                <label>View:</label>
+                                <button class="chart-toggle-btn active" data-chart-type="stacked" onclick="setCostChartType('stacked')">Stacked Bar</button>
+                                <button class="chart-toggle-btn" data-chart-type="line" onclick="setCostChartType('line')">Line Chart</button>
+                            </div>
+                        </div>
                         <div class="chart-wrapper">
                             <canvas id="costTrendChart"></canvas>
                         </div>

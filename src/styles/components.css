@@ -136,6 +136,49 @@
     color: #fff;
 }
 
+/* Chart Type Toggle */
+.chart-type-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.chart-type-toggle label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.chart-toggle-btn {
+    padding: 0.4rem 0.85rem;
+    border: none;
+    background: #e9ecef;
+    color: #6c757d;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.chart-toggle-btn:first-of-type {
+    border-radius: 4px 0 0 4px;
+}
+
+.chart-toggle-btn:last-of-type {
+    border-radius: 0 4px 4px 0;
+}
+
+.chart-toggle-btn:hover {
+    background: #dee2e6;
+    color: #2c3e50;
+}
+
+.chart-toggle-btn.active {
+    background: #667eea;
+    color: #fff;
+}
+
 /* Chart Note */
 .chart-note {
     display: flex;

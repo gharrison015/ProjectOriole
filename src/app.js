@@ -869,7 +869,18 @@ function initQualityTrendChart() {
     });
 }
 
-function initCostTrendChart() {
+// Cost trend chart data (shared between views)
+const costTrendData = {
+    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    inpatient: [16.2, 15.8, 15.4, 15.1, 14.9, 15.2, 15.6, 15.3, 15.7, 16.1, 15.9, 16.0],
+    outpatient: [12.1, 11.9, 12.3, 11.8, 11.6, 11.9, 12.2, 12.0, 12.4, 12.3, 12.1, 12.2],
+    professional: [7.5, 7.4, 7.6, 7.3, 7.2, 7.4, 7.5, 7.4, 7.6, 7.5, 7.4, 7.5],
+    pharmacy: [4.1, 4.0, 4.2, 4.1, 4.0, 4.1, 4.2, 4.1, 4.2, 4.1, 4.0, 4.1]
+};
+
+let currentCostChartType = 'stacked';
+
+function initCostTrendChart(chartType = 'stacked') {
     const ctx = document.getElementById('costTrendChart');
     if (!ctx) return;
 
@@ -877,59 +888,190 @@ function initCostTrendChart() {
         costTrendChart.destroy();
     }
 
-    costTrendChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-            datasets: [{
-                label: 'Inpatient',
-                data: [16.2, 15.8, 15.4, 15.1, 14.9, 15.2, 15.6, 15.3, 15.7, 16.1, 15.9, 16.0],
-                backgroundColor: 'rgba(102, 126, 234, 0.8)',
-                stack: 'stack1'
-            }, {
-                label: 'Outpatient',
-                data: [12.1, 11.9, 12.3, 11.8, 11.6, 11.9, 12.2, 12.0, 12.4, 12.3, 12.1, 12.2],
-                backgroundColor: 'rgba(52, 152, 219, 0.8)',
-                stack: 'stack1'
-            }, {
-                label: 'Professional',
-                data: [7.5, 7.4, 7.6, 7.3, 7.2, 7.4, 7.5, 7.4, 7.6, 7.5, 7.4, 7.5],
-                backgroundColor: 'rgba(46, 204, 113, 0.8)',
-                stack: 'stack1'
-            }, {
-                label: 'Pharmacy',
-                data: [4.1, 4.0, 4.2, 4.1, 4.0, 4.1, 4.2, 4.1, 4.2, 4.1, 4.0, 4.1],
-                backgroundColor: 'rgba(241, 196, 15, 0.8)',
-                stack: 'stack1'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'top',
-                },
-                datalabels: {
-                    display: false // Stacked bar - labels would overlap
-                }
+    currentCostChartType = chartType;
+
+    if (chartType === 'line') {
+        // Line chart view
+        costTrendChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: costTrendData.labels,
+                datasets: [{
+                    label: 'Inpatient',
+                    data: costTrendData.inpatient,
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.3,
+                    fill: false,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    borderWidth: 2
+                }, {
+                    label: 'Outpatient',
+                    data: costTrendData.outpatient,
+                    borderColor: '#3498db',
+                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                    tension: 0.3,
+                    fill: false,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    borderWidth: 2
+                }, {
+                    label: 'Professional',
+                    data: costTrendData.professional,
+                    borderColor: '#2ecc71',
+                    backgroundColor: 'rgba(46, 204, 113, 0.1)',
+                    tension: 0.3,
+                    fill: false,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    borderWidth: 2
+                }, {
+                    label: 'Pharmacy',
+                    data: costTrendData.pharmacy,
+                    borderColor: '#f1c40f',
+                    backgroundColor: 'rgba(241, 196, 15, 0.1)',
+                    tension: 0.3,
+                    fill: false,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    borderWidth: 2
+                }]
             },
-            scales: {
-                x: {
-                    stacked: true
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: {
+                    mode: 'index',
+                    intersect: false
                 },
-                y: {
-                    stacked: true,
-                    ticks: {
-                        callback: function(value) {
-                            return '$' + value + 'M';
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    datalabels: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': $' + context.parsed.y.toFixed(1) + 'M';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value + 'M';
+                            }
                         }
                     }
                 }
             }
+        });
+    } else {
+        // Stacked bar chart view (default)
+        costTrendChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: costTrendData.labels,
+                datasets: [{
+                    label: 'Inpatient',
+                    data: costTrendData.inpatient,
+                    backgroundColor: 'rgba(102, 126, 234, 0.85)',
+                    stack: 'stack1'
+                }, {
+                    label: 'Outpatient',
+                    data: costTrendData.outpatient,
+                    backgroundColor: 'rgba(52, 152, 219, 0.85)',
+                    stack: 'stack1'
+                }, {
+                    label: 'Professional',
+                    data: costTrendData.professional,
+                    backgroundColor: 'rgba(46, 204, 113, 0.85)',
+                    stack: 'stack1'
+                }, {
+                    label: 'Pharmacy',
+                    data: costTrendData.pharmacy,
+                    backgroundColor: 'rgba(241, 196, 15, 0.85)',
+                    stack: 'stack1'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    datalabels: {
+                        display: true,
+                        color: '#fff',
+                        font: {
+                            weight: 'bold',
+                            size: 9
+                        },
+                        anchor: 'center',
+                        align: 'center',
+                        formatter: function(value, context) {
+                            // Only show value if it's large enough to fit
+                            if (value >= 5) {
+                                return '$' + value.toFixed(1) + 'M';
+                            }
+                            return '';
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': $' + context.parsed.y.toFixed(1) + 'M';
+                            },
+                            footer: function(tooltipItems) {
+                                let total = 0;
+                                tooltipItems.forEach(item => {
+                                    total += item.parsed.y;
+                                });
+                                return 'Total: $' + total.toFixed(1) + 'M';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true
+                    },
+                    y: {
+                        stacked: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value + 'M';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+}
+
+// Toggle cost trend chart type
+function setCostChartType(chartType) {
+    // Update button states
+    document.querySelectorAll('.chart-type-toggle .chart-toggle-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.chartType === chartType) {
+            btn.classList.add('active');
         }
     });
+
+    // Reinitialize chart with new type
+    initCostTrendChart(chartType);
 }
+
+window.setCostChartType = setCostChartType;
 
 function initRAFDistChart() {
     const ctx = document.getElementById('rafDistChart');
