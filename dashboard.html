@@ -414,18 +414,18 @@
                                 <input type="range" id="quality-historical-slider" min="0" max="105" value="105" class="date-slider">
                             </div>
                             <div class="pop-cards-row">
-                                <div class="quality-pop-card compact" title="Total completed visits within the selected date range. Includes all encounter types (office visits, telehealth, procedures) where the patient was seen by their attributed PCP or care team member.">
+                                <div class="quality-pop-card compact">
                                     <div class="pop-card-header">
                                         <h4>Total Visits</h4>
-                                        <span class="tooltip-icon">ⓘ</span>
+                                        <span class="tooltip-icon" data-tooltip="Total completed visits within the selected date range. Includes all encounter types (office visits, telehealth, procedures) where the patient was seen by their attributed PCP or care team member.">ⓘ</span>
                                     </div>
                                     <div class="pop-card-value" id="quality-total-visits">38,247</div>
                                     <div class="pop-card-trend positive">↑ 12.3% vs prior</div>
                                 </div>
-                                <div class="quality-pop-card compact" title="Percentage of new patient unique visits against total face-to-face visits. New patients are identified by CPT codes 99201-99205 (New Patient Office Visits) and 99381-99387 (Preventive New Patient). MGMA defines face-to-face visits as direct patient encounters including office visits, consultations, and procedures where the provider has direct patient contact.">
+                                <div class="quality-pop-card compact">
                                     <div class="pop-card-header">
                                         <h4>New Pt %</h4>
-                                        <span class="tooltip-icon">ⓘ</span>
+                                        <span class="tooltip-icon" data-tooltip="Percentage of new patient unique visits against total face-to-face visits. New patients are identified by CPT codes 99201-99205 (New Patient Office Visits) and 99381-99387 (Preventive New Patient). MGMA defines face-to-face visits as direct patient encounters including office visits, consultations, and procedures where the provider has direct patient contact.">ⓘ</span>
                                     </div>
                                     <div class="pop-card-value" id="quality-new-pt-pct">8.4%</div>
                                     <div class="pop-card-trend positive">↑ 1.2 pts YoY</div>
@@ -443,18 +443,18 @@
                                 <input type="range" id="quality-forecast-slider" min="0" max="100" value="100" class="date-slider forecast">
                             </div>
                             <div class="pop-cards-row">
-                                <div class="quality-pop-card compact highlight" title="Attributed patients with scheduled appointments within the selected forecast window. Based on current Epic scheduling data. Used to identify proactive gap closure opportunities before the visit.">
+                                <div class="quality-pop-card compact highlight">
                                     <div class="pop-card-header">
                                         <h4>Upcoming Visits</h4>
-                                        <span class="tooltip-icon">ⓘ</span>
+                                        <span class="tooltip-icon" data-tooltip="Attributed patients with scheduled appointments within the selected forecast window. Based on current Epic scheduling data. Used to identify proactive gap closure opportunities before the visit.">ⓘ</span>
                                     </div>
                                     <div class="pop-card-value" id="quality-upcoming-visits">12,847</div>
                                     <div class="pop-card-sub" id="quality-upcoming-sub">50 pts/day avg</div>
                                 </div>
-                                <div class="quality-pop-card compact opportunity" title="Total care gaps identified for patients with scheduled appointments within the forecast window. Calculated as sum of open quality measures (AWV, screenings, immunizations, chronic disease management). Represents actionable opportunities to close gaps proactively.">
+                                <div class="quality-pop-card compact opportunity">
                                     <div class="pop-card-header">
                                         <h4>Gap Closure Opp</h4>
-                                        <span class="tooltip-icon">ⓘ</span>
+                                        <span class="tooltip-icon" data-tooltip="Total care gaps identified for patients with scheduled appointments within the forecast window. Calculated as sum of open quality measures (AWV, screenings, immunizations, chronic disease management). Represents actionable opportunities to close gaps proactively.">ⓘ</span>
                                     </div>
                                     <div class="pop-card-value" id="quality-gap-closure">18,247</div>
                                     <div class="pop-card-sub" id="quality-gap-sub">1.4 gaps/pt</div>

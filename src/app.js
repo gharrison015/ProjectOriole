@@ -2454,7 +2454,11 @@ function initializeHistoricalSlider() {
 
         const visits = Math.round(baseMetrics.totalVisits * proportion * seedVariance);
         const faceToFace = Math.round(baseMetrics.faceToFaceVisits * proportion * seedVariance);
-        const newPts = Math.round(baseMetrics.newPatients * proportion * seedVariance);
+
+        // New patients have additional seasonal variance (higher in Jan-Feb, Sept-Oct)
+        // This ensures the percentage actually changes with the slider
+        const newPtSeasonalVariance = 1.0 + (Math.sin(proportion * Math.PI * 2) * 0.15); // ±15% seasonal variation
+        const newPts = Math.round(baseMetrics.newPatients * proportion * seedVariance * newPtSeasonalVariance);
 
         // MGMA definition: New Patient % = New Pt Unique Count / Total Face-to-Face Visits
         const newPtPct = faceToFace > 0 ? (newPts / faceToFace * 100).toFixed(1) : '0.0';
