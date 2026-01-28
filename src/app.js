@@ -5803,6 +5803,245 @@ function exportHedisPatientList(measureCode, measureName, providerName) {
 window.showHedisPatientList = showHedisPatientList;
 window.exportHedisPatientList = exportHedisPatientList;
 
+// Export Full Patient Roster for HEDIS Reconciliation
+function exportFullPatientRoster() {
+    // Show loading indicator
+    const loadingModal = document.createElement('div');
+    loadingModal.id = 'export-loading-modal';
+    loadingModal.innerHTML = `
+        <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+            <div style="background: white; padding: 2rem; border-radius: 12px; text-align: center; max-width: 400px;">
+                <div style="font-size: 2rem; margin-bottom: 1rem;">📊</div>
+                <h3 style="margin: 0 0 0.5rem 0; color: #2c3e50;">Generating Patient Roster</h3>
+                <p style="color: #7f8c8d; margin: 0 0 1rem 0;">Compiling 47,832 patient records with all HEDIS care gap statuses...</p>
+                <div style="width: 100%; height: 4px; background: #e9ecef; border-radius: 2px; overflow: hidden;">
+                    <div style="width: 0%; height: 100%; background: linear-gradient(90deg, #3498db, #27ae60); animation: progressBar 2s ease-out forwards;"></div>
+                </div>
+            </div>
+        </div>
+        <style>
+            @keyframes progressBar {
+                0% { width: 0%; }
+                100% { width: 100%; }
+            }
+        </style>
+    `;
+    document.body.appendChild(loadingModal);
+
+    // Generate data asynchronously
+    setTimeout(() => {
+        const patients = generateFullPatientRoster();
+
+        // HEDIS measure codes for columns
+        const hedisMeasures = [
+            { code: 'BCS', name: 'Breast Cancer Screening' },
+            { code: 'COA', name: 'Care for Older Adults - Med Review' },
+            { code: 'COL', name: 'Colorectal Cancer Screening' },
+            { code: 'CBP', name: 'Controlling High Blood Pressure' },
+            { code: 'HBD', name: 'Diabetes - Blood Sugar Controlled' },
+            { code: 'EED', name: 'Eye Exam for Diabetes' },
+            { code: 'FMC', name: 'Follow-up After ED Visit' },
+            { code: 'SPC', name: 'Med Adherence - Cholesterol' },
+            { code: 'SPD', name: 'Med Adherence - Diabetes' },
+            { code: 'SPH', name: 'Med Adherence - Hypertension' },
+            { code: 'OMW', name: 'Osteoporosis Management' },
+            { code: 'PCR', name: 'Plan All-Cause Readmissions' },
+            { code: 'STC', name: 'Statin Therapy - CVD' },
+            { code: 'SUPD', name: 'Statin Use in Diabetes' },
+            { code: 'TRC', name: 'Transitions of Care' }
+        ];
+
+        // Build CSV header
+        let csvContent = 'Subscriber ID,MRN,Last Name,First Name,DOB,Gender,Address,City,State,ZIP,Phone,Email,PCP,Care Manager,Last Visit Date,Next Appt Date,';
+        csvContent += hedisMeasures.map(m => `${m.code} Status`).join(',');
+        csvContent += '\n';
+
+        // Build CSV rows
+        patients.forEach(patient => {
+            const row = [
+                patient.subscriberId,
+                patient.mrn,
+                `"${patient.lastName}"`,
+                `"${patient.firstName}"`,
+                patient.dob,
+                patient.gender,
+                `"${patient.address}"`,
+                `"${patient.city}"`,
+                patient.state,
+                patient.zip,
+                patient.phone,
+                patient.email,
+                `"${patient.pcp}"`,
+                `"${patient.careManager || ''}"`,
+                patient.lastVisitDate || '',
+                patient.nextApptDate || ''
+            ];
+
+            // Add care gap status for each measure
+            hedisMeasures.forEach(measure => {
+                row.push(patient.careGaps[measure.code] || 'N/A');
+            });
+
+            csvContent += row.join(',') + '\n';
+        });
+
+        // Create and download file
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        const today = new Date().toISOString().split('T')[0];
+        link.setAttribute('href', url);
+        link.setAttribute('download', `HEDIS_Full_Patient_Roster_${today}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Remove loading modal
+        document.body.removeChild(loadingModal);
+
+        // Show success message
+        showModal(`
+            <div style="text-align: center; padding: 1rem;">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+                <h2 style="margin: 0 0 1rem 0; color: #27ae60;">Export Complete</h2>
+                <p style="color: #5a6c7d; margin-bottom: 1.5rem;">
+                    Successfully exported <strong>47,832 patient records</strong> with care gap statuses for all 15 HEDIS measures.
+                </p>
+                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; text-align: left; margin-bottom: 1rem;">
+                    <div style="font-weight: 600; margin-bottom: 0.5rem; color: #2c3e50;">📄 File Details:</div>
+                    <ul style="margin: 0; padding-left: 1.25rem; color: #5a6c7d; line-height: 1.8;">
+                        <li>File: HEDIS_Full_Patient_Roster_${today}.csv</li>
+                        <li>Patient demographics (Name, DOB, Address, Phone, etc.)</li>
+                        <li>Subscriber ID and MRN for payer reconciliation</li>
+                        <li>15 HEDIS measure columns with Open/Closed/Excluded status</li>
+                    </ul>
+                </div>
+                <p style="font-size: 0.85rem; color: #7f8c8d;">
+                    Use this file to reconcile against monthly payer care gap closure reports.
+                </p>
+            </div>
+        `);
+    }, 2000);
+}
+
+// Generate full patient roster with demographics and all care gaps
+function generateFullPatientRoster() {
+    const patients = [];
+    const patientCount = 47832;
+
+    const firstNames = ['James', 'Mary', 'Robert', 'Patricia', 'John', 'Jennifer', 'Michael', 'Linda', 'David', 'Barbara',
+                        'William', 'Elizabeth', 'Richard', 'Susan', 'Joseph', 'Jessica', 'Thomas', 'Sarah', 'Charles', 'Karen',
+                        'Christopher', 'Lisa', 'Daniel', 'Nancy', 'Matthew', 'Betty', 'Anthony', 'Margaret', 'Mark', 'Sandra',
+                        'Donald', 'Ashley', 'Steven', 'Kimberly', 'Paul', 'Emily', 'Andrew', 'Donna', 'Joshua', 'Michelle'];
+    const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez',
+                       'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin',
+                       'Lee', 'Perez', 'Thompson', 'White', 'Harris', 'Sanchez', 'Clark', 'Ramirez', 'Lewis', 'Robinson'];
+    const streets = ['Oak St', 'Maple Ave', 'Main St', 'Park Rd', 'Cedar Ln', 'Elm St', 'Pine Dr', 'Lake View Rd', 'Highland Ave', 'Forest Dr'];
+    const cities = ['Atlanta', 'Marietta', 'Alpharetta', 'Roswell', 'Sandy Springs', 'Dunwoody', 'Decatur', 'Lawrenceville', 'Smyrna', 'Kennesaw'];
+    const pcps = ['Dr. Chen', 'Dr. Santos', 'Dr. Williams', 'Dr. Anderson', 'Dr. Brown', 'Dr. Davis', 'Dr. Miller', 'Dr. Wilson', 'Dr. Garcia', 'Dr. Martinez'];
+    const careManagers = ['Jennifer Rodriguez, RN', 'Michael Chen, RN', 'Sarah Thompson, RN', 'David Kim, RN', 'Lisa Patel, RN', null, null, null];
+
+    // HEDIS measures with eligibility criteria (simplified)
+    const measureEligibility = {
+        'BCS': { minAge: 50, maxAge: 74, genderReq: 'F' },           // Women 50-74
+        'COA': { minAge: 66, maxAge: 120 },                          // Adults 66+
+        'COL': { minAge: 45, maxAge: 75 },                           // Adults 45-75
+        'CBP': { minAge: 18, maxAge: 85, chronicCondition: 'HTN' },  // HTN patients 18-85
+        'HBD': { minAge: 18, maxAge: 75, chronicCondition: 'DM' },   // Diabetics 18-75
+        'EED': { minAge: 18, maxAge: 75, chronicCondition: 'DM' },   // Diabetics 18-75
+        'FMC': { minAge: 18, maxAge: 120, chronicCondition: 'MCC' }, // Multiple chronic conditions
+        'SPC': { minAge: 21, maxAge: 120, medication: 'statin' },    // Statin users
+        'SPD': { minAge: 18, maxAge: 120, medication: 'DM_med' },    // DM medication users
+        'SPH': { minAge: 18, maxAge: 120, medication: 'HTN_med' },   // HTN medication users
+        'OMW': { minAge: 67, maxAge: 85, genderReq: 'F' },           // Women 67-85 with fracture
+        'PCR': { minAge: 18, maxAge: 120 },                          // All adults with admission
+        'STC': { minAge: 21, maxAge: 120, chronicCondition: 'CVD' }, // CVD patients
+        'SUPD': { minAge: 40, maxAge: 75, chronicCondition: 'DM' },  // Diabetics 40-75
+        'TRC': { minAge: 18, maxAge: 120 }                           // All adults with discharge
+    };
+
+    for (let i = 0; i < patientCount; i++) {
+        const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+        const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+        const gender = Math.random() > 0.52 ? 'F' : 'M';
+        const birthYear = 1940 + Math.floor(Math.random() * 60);
+        const birthMonth = Math.floor(Math.random() * 12) + 1;
+        const birthDay = Math.floor(Math.random() * 28) + 1;
+        const age = 2026 - birthYear;
+
+        // Randomly assign chronic conditions
+        const hasDM = Math.random() > 0.85;      // ~15% diabetic
+        const hasHTN = Math.random() > 0.70;     // ~30% hypertension
+        const hasCVD = Math.random() > 0.90;     // ~10% CVD
+        const hasMCC = (hasDM && hasHTN) || (hasDM && hasCVD) || (hasHTN && hasCVD);
+        const onStatin = hasCVD || hasDM || Math.random() > 0.80;
+        const onDMMed = hasDM;
+        const onHTNMed = hasHTN;
+        const hadFracture = gender === 'F' && age >= 67 && Math.random() > 0.95;
+        const hadAdmission = Math.random() > 0.90;
+        const hadDischarge = hadAdmission;
+
+        // Generate care gaps for each measure
+        const careGaps = {};
+        Object.entries(measureEligibility).forEach(([code, criteria]) => {
+            // Check eligibility
+            let eligible = age >= criteria.minAge && age <= criteria.maxAge;
+            if (criteria.genderReq && gender !== criteria.genderReq) eligible = false;
+            if (criteria.chronicCondition === 'DM' && !hasDM) eligible = false;
+            if (criteria.chronicCondition === 'HTN' && !hasHTN) eligible = false;
+            if (criteria.chronicCondition === 'CVD' && !hasCVD) eligible = false;
+            if (criteria.chronicCondition === 'MCC' && !hasMCC) eligible = false;
+            if (criteria.medication === 'statin' && !onStatin) eligible = false;
+            if (criteria.medication === 'DM_med' && !onDMMed) eligible = false;
+            if (criteria.medication === 'HTN_med' && !onHTNMed) eligible = false;
+            if (code === 'OMW' && !hadFracture) eligible = false;
+            if (code === 'PCR' && !hadAdmission) eligible = false;
+            if (code === 'TRC' && !hadDischarge) eligible = false;
+
+            if (!eligible) {
+                // Not eligible = Excluded
+                careGaps[code] = 'Excluded';
+            } else {
+                // Eligible - determine if gap is open or closed
+                const closedRate = 0.70 + Math.random() * 0.15; // 70-85% closure rate
+                careGaps[code] = Math.random() < closedRate ? 'Closed' : 'Open';
+            }
+        });
+
+        const hasAppt = Math.random() > 0.5;
+        const apptMonth = Math.floor(Math.random() * 6) + 1;
+        const apptDay = Math.floor(Math.random() * 28) + 1;
+
+        const lastVisitMonth = Math.floor(Math.random() * 12) + 1;
+        const lastVisitDay = Math.floor(Math.random() * 28) + 1;
+
+        patients.push({
+            subscriberId: 'SUB' + String(100000000 + i).padStart(10, '0'),
+            mrn: 'MRN' + String(Math.floor(Math.random() * 900000) + 100000),
+            firstName: firstName,
+            lastName: lastName,
+            dob: `${birthMonth}/${birthDay}/${birthYear}`,
+            gender: gender,
+            address: `${Math.floor(Math.random() * 9999) + 1} ${streets[Math.floor(Math.random() * streets.length)]}`,
+            city: cities[Math.floor(Math.random() * cities.length)],
+            state: 'GA',
+            zip: '30' + String(Math.floor(Math.random() * 900) + 100),
+            phone: `(${Math.floor(Math.random() * 900) + 100}) ${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
+            email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}${Math.floor(Math.random() * 99)}@email.com`,
+            pcp: pcps[Math.floor(Math.random() * pcps.length)],
+            careManager: careManagers[Math.floor(Math.random() * careManagers.length)],
+            lastVisitDate: `${lastVisitMonth}/${lastVisitDay}/2025`,
+            nextApptDate: hasAppt ? `${apptMonth}/${apptDay}/2026` : null,
+            careGaps: careGaps
+        });
+    }
+
+    return patients;
+}
+
+window.exportFullPatientRoster = exportFullPatientRoster;
+
 // Make showHedisMeasureDetail globally available
 window.showHedisMeasureDetail = showHedisMeasureDetail;
 

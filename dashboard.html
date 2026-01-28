@@ -682,7 +682,15 @@
                             <!-- Back: HEDIS-Like Measures -->
                             <div class="flip-card-back">
                                 <div class="table-section">
-                                    <h3>HEDIS-Like Measures <span style="font-size: 0.8rem; color: var(--piedmont-gray); font-weight: normal;">(Population Health / Epic Attribution)</span></h3>
+                                    <div class="hedis-header-row">
+                                        <div>
+                                            <h3 style="margin: 0;">HEDIS-Like Measures <span style="font-size: 0.8rem; color: var(--piedmont-gray); font-weight: normal;">(Population Health / Epic Attribution)</span></h3>
+                                            <div style="font-size: 0.85rem; color: var(--piedmont-gray); margin-top: 0.25rem;">47,832 attributed patients across all measures</div>
+                                        </div>
+                                        <button class="export-btn" onclick="exportFullPatientRoster()" title="Export complete patient roster with all care gap statuses for payer reconciliation">
+                                            📥 Export Full Patient Roster
+                                        </button>
+                                    </div>
                                     <table class="data-table">
                                         <thead>
                                             <tr>
