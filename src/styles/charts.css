@@ -333,6 +333,61 @@
     line-height: 1.5;
 }
 
+/* Scenario Selector Section (inside dark box) */
+.scenario-selector-section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.scenario-selector-section h4 {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem;
+    opacity: 0.9;
+}
+
+.result-card.highlight .scenario-toggle-container {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 4px;
+    border-radius: 8px;
+    display: inline-flex;
+    margin-bottom: 1rem;
+}
+
+.result-card.highlight .scenario-toggle-btn {
+    background: transparent;
+    color: rgba(255, 255, 255, 0.8);
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.result-card.highlight .scenario-toggle-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+}
+
+.result-card.highlight .scenario-toggle-btn.active {
+    background: rgba(255, 255, 255, 0.25);
+    color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.result-card.highlight .scenario-description {
+    font-size: 0.8rem;
+    opacity: 0.85;
+    line-height: 1.4;
+    padding: 0.75rem;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+}
+
 /* Confidence Interval Section */
 .confidence-interval-section {
     margin-top: 2rem;

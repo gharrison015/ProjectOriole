@@ -486,39 +486,66 @@ function switchPerformanceYear(year) {
 // Make switchPerformanceYear available globally for onclick handler
 window.switchPerformanceYear = switchPerformanceYear;
 
-// Monte Carlo scenario descriptions
+// Monte Carlo scenario descriptions with confidence intervals
+// CI values calculated using normal distribution: 2.5% and 97.5% percentiles (mean ± 1.96*stdDev)
+// Benchmark is $498.8M, so spend = benchmark - savings
 const monteCarloScenarios = {
     1: {
         name: 'Base Case',
-        description: '<strong>Scenario 1 - Base Case:</strong> No adjustment for utilization or volume changes. Uses current membership and historical utilization patterns.',
+        description: '<strong>Base Case:</strong> No adjustment for utilization or volume changes. Uses current membership and historical utilization patterns.',
         mean: 9.6,
         stdDev: 3.2,
         color: 'rgba(102, 126, 234, 0.6)',
-        borderColor: '#667eea'
+        borderColor: '#667eea',
+        // CI values for display
+        ciLowSavings: '-$2.1M',      // 2.5% percentile (worst case)
+        ciLowSpend: '$500.9M',
+        ciMeanSavings: '$4.2M - $15.1M',  // 95% range
+        ciMeanSpend: '$483.7M - $494.6M',
+        ciHighSavings: '$20.4M',     // 97.5% percentile (best case)
+        ciHighSpend: '$478.4M'
     },
     2: {
         name: 'Volume Adjustment',
-        description: '<strong>Scenario 2 - Volume Adjustment:</strong> Varies the number of attributed lives from -5% to +10%, simulating membership fluctuations throughout the performance year.',
+        description: '<strong>Volume Adjustment:</strong> Varies the number of attributed lives from -5% to +10%, simulating membership fluctuations throughout the performance year.',
         mean: 8.8,
         stdDev: 4.1,
         color: 'rgba(52, 152, 219, 0.6)',
-        borderColor: '#3498db'
+        borderColor: '#3498db',
+        ciLowSavings: '-$5.2M',
+        ciLowSpend: '$504.0M',
+        ciMeanSavings: '$1.8M - $15.8M',
+        ciMeanSpend: '$483.0M - $497.0M',
+        ciHighSavings: '$22.8M',
+        ciHighSpend: '$476.0M'
     },
     3: {
         name: 'Utilization Variation',
-        description: '<strong>Scenario 3 - Utilization Variation:</strong> Keeps lives constant and varies utilization from -8% to +5%, modeling the impact of care management initiatives.',
+        description: '<strong>Utilization Variation:</strong> Keeps lives constant and varies utilization from -8% to +5%, modeling the impact of care management initiatives.',
         mean: 10.4,
         stdDev: 3.8,
         color: 'rgba(39, 174, 96, 0.6)',
-        borderColor: '#27ae60'
+        borderColor: '#27ae60',
+        ciLowSavings: '-$0.8M',
+        ciLowSpend: '$499.6M',
+        ciMeanSavings: '$4.4M - $16.4M',
+        ciMeanSpend: '$482.4M - $494.4M',
+        ciHighSavings: '$21.6M',
+        ciHighSpend: '$477.2M'
     },
     4: {
         name: 'Risk Corridor (2%)',
-        description: '<strong>Scenario 4 - Risk Corridor:</strong> Applies a 2% risk corridor, limiting both upside gains and downside losses to model symmetric risk sharing.',
+        description: '<strong>Risk Corridor:</strong> Applies a 2% risk corridor, limiting both upside gains and downside losses to model symmetric risk sharing.',
         mean: 7.2,
         stdDev: 2.4,
         color: 'rgba(155, 89, 182, 0.6)',
-        borderColor: '#9b59b6'
+        borderColor: '#9b59b6',
+        ciLowSavings: '$0.2M',
+        ciLowSpend: '$498.6M',
+        ciMeanSavings: '$3.1M - $11.3M',
+        ciMeanSpend: '$487.5M - $495.7M',
+        ciHighSavings: '$14.2M',
+        ciHighSpend: '$484.6M'
     }
 };
 
@@ -661,8 +688,30 @@ function initMonteCarloScenarioToggle() {
 
             const scenario = parseInt(this.dataset.scenario);
             initMonteCarloChart(scenario);
+            updateConfidenceIntervals(scenario);
         });
     });
+}
+
+// Update confidence interval display based on scenario
+function updateConfidenceIntervals(scenario) {
+    const config = monteCarloScenarios[scenario];
+    if (!config) return;
+
+    // Update CI values
+    const ciLowSavings = document.getElementById('ci-low-savings');
+    const ciLowSpend = document.getElementById('ci-low-spend');
+    const ciMeanSavings = document.getElementById('ci-mean-savings');
+    const ciMeanSpend = document.getElementById('ci-mean-spend');
+    const ciHighSavings = document.getElementById('ci-high-savings');
+    const ciHighSpend = document.getElementById('ci-high-spend');
+
+    if (ciLowSavings) ciLowSavings.textContent = config.ciLowSavings;
+    if (ciLowSpend) ciLowSpend.textContent = config.ciLowSpend;
+    if (ciMeanSavings) ciMeanSavings.textContent = config.ciMeanSavings;
+    if (ciMeanSpend) ciMeanSpend.textContent = config.ciMeanSpend;
+    if (ciHighSavings) ciHighSavings.textContent = config.ciHighSavings;
+    if (ciHighSpend) ciHighSpend.textContent = config.ciHighSpend;
 }
 
 function initLeakagePieChart() {

@@ -329,62 +329,45 @@
                         <div class="result-card highlight">
                             <h3>Projected PY2026 Performance</h3>
                             <p class="monte-carlo-note">Based on Monte Carlo simulation with 10,000 iterations. Confidence intervals exclude the extreme 2.5% at each tail—outcomes outside these bounds are statistically unlikely.</p>
-                            <div class="metric-row">
-                                <div class="metric">
-                                    <div class="label">CMS Benchmark</div>
-                                    <div class="value">$498.8M</div>
-                                    <div class="sub">PY2026 Target</div>
+
+                            <div class="scenario-selector-section">
+                                <h4>Select Scenario Model</h4>
+                                <div class="scenario-toggle-container">
+                                    <button class="scenario-toggle-btn active" data-scenario="1">Base Case</button>
+                                    <button class="scenario-toggle-btn" data-scenario="2">Volume Adj</button>
+                                    <button class="scenario-toggle-btn" data-scenario="3">Utilization</button>
+                                    <button class="scenario-toggle-btn" data-scenario="4">Risk Corridor</button>
                                 </div>
-                                <div class="metric">
-                                    <div class="label">Projected Total Spend</div>
-                                    <div class="value" id="proj-spend">$489.2M</div>
-                                    <div class="sub">Expected (Mean)</div>
-                                </div>
-                                <div class="metric success">
-                                    <div class="label">Expected Shared Savings</div>
-                                    <div class="value" id="proj-savings">$9.6M</div>
-                                    <div class="sub">Most Likely Outcome</div>
+                                <div class="scenario-description" id="scenario-description">
+                                    <strong>Base Case:</strong> No adjustment for utilization or volume changes. Uses current membership and historical utilization patterns.
                                 </div>
                             </div>
-                            <div class="confidence-interval-section">
-                                <h4>Monte Carlo Confidence Intervals</h4>
-                                <div class="ci-grid">
-                                    <div class="ci-item pessimistic">
-                                        <div class="ci-label">Least Likely (Low)</div>
-                                        <div class="ci-value" id="ci-low-savings">-$2.1M</div>
-                                        <div class="ci-sub">Bottom 2.5% of scenarios</div>
-                                        <div class="ci-note">Spend: <span id="ci-low-spend">$500.9M</span></div>
-                                    </div>
-                                    <div class="ci-item expected">
-                                        <div class="ci-label">Most Likely Range</div>
-                                        <div class="ci-value" id="ci-mean-savings">$4.2M - $15.1M</div>
-                                        <div class="ci-sub">95% of scenarios fall here</div>
-                                        <div class="ci-note">Spend: <span id="ci-mean-spend">$478.4M - $494.6M</span></div>
-                                    </div>
-                                    <div class="ci-item optimistic">
-                                        <div class="ci-label">Least Likely (High)</div>
-                                        <div class="ci-value" id="ci-high-savings">$20.4M</div>
-                                        <div class="ci-sub">Top 2.5% of scenarios</div>
-                                        <div class="ci-note">Spend: <span id="ci-high-spend">$478.4M</span></div>
-                                    </div>
+
+                            <div class="ci-grid">
+                                <div class="ci-item pessimistic">
+                                    <div class="ci-label">Least Likely (Low)</div>
+                                    <div class="ci-value" id="ci-low-savings">-$2.1M</div>
+                                    <div class="ci-sub">Bottom 2.5% of scenarios</div>
+                                    <div class="ci-note">Spend: <span id="ci-low-spend">$500.9M</span></div>
+                                </div>
+                                <div class="ci-item expected">
+                                    <div class="ci-label">Most Likely Range</div>
+                                    <div class="ci-value" id="ci-mean-savings">$4.2M - $15.1M</div>
+                                    <div class="ci-sub">95% of scenarios fall here</div>
+                                    <div class="ci-note">Spend: <span id="ci-mean-spend">$478.4M - $494.6M</span></div>
+                                </div>
+                                <div class="ci-item optimistic">
+                                    <div class="ci-label">Least Likely (High)</div>
+                                    <div class="ci-value" id="ci-high-savings">$20.4M</div>
+                                    <div class="ci-sub">Top 2.5% of scenarios</div>
+                                    <div class="ci-note">Spend: <span id="ci-high-spend">$478.4M</span></div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="chart-section">
-                        <div class="chart-header-row">
-                            <h3>Monte Carlo Simulation - PY2026 Outcomes (10,000 iterations)</h3>
-                            <div class="scenario-toggle-container">
-                                <button class="scenario-toggle-btn active" data-scenario="1">Base Case</button>
-                                <button class="scenario-toggle-btn" data-scenario="2">Volume Adj</button>
-                                <button class="scenario-toggle-btn" data-scenario="3">Utilization</button>
-                                <button class="scenario-toggle-btn" data-scenario="4">Risk Corridor</button>
-                            </div>
-                        </div>
-                        <div class="scenario-description" id="scenario-description">
-                            <strong>Scenario 1 - Base Case:</strong> No adjustment for utilization or volume changes. Uses current membership and historical utilization patterns.
-                        </div>
+                        <h3>Monte Carlo Simulation - PY2026 Outcomes (10,000 iterations)</h3>
                         <div class="chart-wrapper">
                             <canvas id="monteChart"></canvas>
                         </div>
