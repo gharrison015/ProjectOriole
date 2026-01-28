@@ -952,7 +952,7 @@
                     <div class="tab-header-row">
                         <div class="tab-header">
                             <h2>Leakage</h2>
-                            <p>Comprehensive view of network retention and out-of-network spend with geographic analysis</p>
+                            <p>Comprehensive view of network retention and out-of-network cost with geographic analysis</p>
                         </div>
                         <button class="insights-btn info" onclick="showInsightsModal('leakage')">
                             <svg class="insights-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 0-4 12.75V17a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-2.25A7 7 0 0 0 12 2z"/></svg>
@@ -997,12 +997,12 @@
                             <h3>Key Metrics</h3>
                             <div class="metric-grid">
                                 <div class="metric-item">
-                                    <div class="metric-label">In-Network Spend</div>
+                                    <div class="metric-label">In-Network Cost</div>
                                     <div class="metric-value good" id="in-network-spend">$371.4M</div>
                                     <div class="metric-pct" id="in-network-pct">76.3%</div>
                                 </div>
                                 <div class="metric-item">
-                                    <div class="metric-label">Out-of-Network Spend</div>
+                                    <div class="metric-label">Out-of-Network Cost</div>
                                     <div class="metric-value bad" id="oon-spend">$115.3M</div>
                                     <div class="metric-pct" id="oon-pct">23.7%</div>
                                 </div>
@@ -1015,6 +1015,7 @@
                                     <div class="metric-label">Repatriation Opportunity</div>
                                     <div class="metric-value warning" id="repatriation-opportunity">$18.0M</div>
                                     <div class="metric-note" id="repatriation-note">If reduced to 20% benchmark</div>
+                                    <div class="metric-note" style="font-size: 0.65rem; margin-top: 0.25rem; font-style: italic; color: #95a5a6;">Total Cost × (Current OON% - Benchmark%)</div>
                                 </div>
                             </div>
                         </div>
@@ -1035,7 +1036,7 @@
                                 <tr>
                                     <th class="sortable" data-sort="string">OON Facility</th>
                                     <th class="sortable" data-sort="string">Facility Type</th>
-                                    <th class="sortable" data-sort="currency">Total OON Spend</th>
+                                    <th class="sortable" data-sort="currency">Total OON Cost</th>
                                     <th class="sortable" data-sort="number">Patient Count</th>
                                     <th class="sortable" data-sort="string">Primary Service</th>
                                     <th>Top Rendering Providers</th>
@@ -1125,8 +1126,8 @@
                                     <th class="sortable" data-sort="string">PCP Name</th>
                                     <th class="sortable" data-sort="string">Market</th>
                                     <th class="sortable" data-sort="number">Patients</th>
-                                    <th class="sortable" data-sort="currency">Total Spend</th>
-                                    <th class="sortable" data-sort="currency">OON Spend</th>
+                                    <th class="sortable" data-sort="currency">Total Cost</th>
+                                    <th class="sortable" data-sort="currency">OON Cost</th>
                                     <th class="sortable" data-sort="percent">Leakage %</th>
                                     <th></th>
                                 </tr>

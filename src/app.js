@@ -1013,7 +1013,7 @@ function initLeakagePieChart() {
                         afterBody: function() {
                             const currentData = (leakagePieChart && leakagePieChart._customAmounts) || data;
                             const total = (currentData.inNetwork + currentData.oon).toFixed(1);
-                            return `Total Spend: $${total}M`;
+                            return `Total Cost: $${total}M`;
                         }
                     }
                 }
@@ -2623,10 +2623,10 @@ const leakageFilterMatrix = {
         professional: { inNetwork: 70.6, oon: 24.5, inPct: 74.2, oonPct: 25.8, benchmark: 22.4 }
     },
     parta: {
-        all:          { inNetwork: 245.8, oon: 67.2, inPct: 78.5, oonPct: 21.5, benchmark: 62.6 },
-        inpatient:    { inNetwork: 192.4, oon: 50.8, inPct: 79.1, oonPct: 20.9, benchmark: 41.6 },
-        outpatient:   { inNetwork: 48.2, oon: 14.8, inPct: 76.5, oonPct: 23.5, benchmark: 18.7 },
-        professional: { inNetwork: 5.2, oon: 1.6, inPct: 76.5, oonPct: 23.5, benchmark: 2.3 }
+        all:          { inNetwork: 206.1, oon: 54.6, inPct: 79.1, oonPct: 20.9, benchmark: 52.1 },
+        inpatient:    { inNetwork: 192.4, oon: 50.8, inPct: 79.1, oonPct: 20.9, benchmark: 48.6 },
+        outpatient:   { inNetwork: 8.5, oon: 2.2, inPct: 79.4, oonPct: 20.6, benchmark: 2.1 },
+        professional: { inNetwork: 5.2, oon: 1.6, inPct: 76.5, oonPct: 23.5, benchmark: 1.4 }
     },
     partb: {
         all:          { inNetwork: 125.6, oon: 48.1, inPct: 72.3, oonPct: 27.7, benchmark: 34.7 },
@@ -2653,6 +2653,24 @@ function setLeakageView(view) {
             (view === 'parta' && btn.textContent.includes('Part A')) ||
             (view === 'partb' && btn.textContent.includes('Part B'))) {
             btn.classList.add('active');
+        }
+    });
+
+    // Disable Professional service type when Part A is selected (Part A doesn't pay for professional services)
+    const serviceButtons = document.querySelectorAll('.filter-btn[data-filter="service"]');
+    serviceButtons.forEach(btn => {
+        if (btn.textContent.includes('Professional')) {
+            if (view === 'parta') {
+                btn.disabled = true;
+                btn.classList.add('disabled');
+                // If Professional is currently selected, switch to All Services
+                if (currentLeakageServiceType === 'professional') {
+                    setLeakageServiceType('all');
+                }
+            } else {
+                btn.disabled = false;
+                btn.classList.remove('disabled');
+            }
         }
     });
 
@@ -3245,7 +3263,7 @@ function showCountyTooltip(event, d) {
     if (countyData && countyData.name) {
         tooltip.innerHTML = `
             <div style="font-weight: bold; margin-bottom: 6px; font-size: 14px;">${countyData.name} County</div>
-            <div style="margin-bottom: 4px;">OON Spend: <strong style="color: #e74c3c;">$${(countyData.totalLeakage / 1000000).toFixed(1)}M</strong></div>
+            <div style="margin-bottom: 4px;">OON Cost: <strong style="color: #e74c3c;">$${(countyData.totalLeakage / 1000000).toFixed(1)}M</strong></div>
             <div style="margin-bottom: 4px;">Leakage %: <strong>${(countyData.leakageScore * 100).toFixed(0)}%</strong></div>
             <div style="font-size: 10px; margin-top: 6px; opacity: 0.8; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 6px;">Click for facility details</div>
         `;
@@ -3276,7 +3294,7 @@ function updateCountyDetailPanel(countyData) {
                     <li>Top OON rendering providers</li>
                     <li>Elective vs. non-elective breakdown</li>
                     <li>Primary services driving leakage</li>
-                    <li>Patient count and total spend</li>
+                    <li>Patient count and total cost</li>
                 </ul>
             </div>
         `;
@@ -3313,7 +3331,7 @@ function updateCountyDetailPanel(countyData) {
     const topProviders = allProviders.slice(0, 5);
 
     titleEl.textContent = `${countyData.name} County`;
-    subtitleEl.textContent = `Total Spend: $${(totalSpend / 1000000).toFixed(1)}M`;
+    subtitleEl.textContent = `Total Cost: $${(totalSpend / 1000000).toFixed(1)}M`;
 
     contentEl.innerHTML = `
         <div class="county-stats-grid">
@@ -5318,11 +5336,11 @@ function showProviderLeakageDetail(providerId) {
             <!-- Summary Cards -->
             <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
                 <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
-                    <div style="font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase;">Total Spend</div>
+                    <div style="font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase;">Total Cost</div>
                     <div style="font-size: 1.5rem; font-weight: 700; color: #2c3e50;">$${(data.totalSpend / 1000000).toFixed(1)}M</div>
                 </div>
                 <div style="text-align: center; padding: 1rem; background: #ffeaea; border-radius: 8px;">
-                    <div style="font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase;">OON Spend</div>
+                    <div style="font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase;">OON Cost</div>
                     <div style="font-size: 1.5rem; font-weight: 700; color: #e74c3c;">$${(data.oonSpend / 1000000).toFixed(1)}M</div>
                 </div>
                 <div style="text-align: center; padding: 1rem; background: #ffeaea; border-radius: 8px;">
@@ -5351,13 +5369,13 @@ function showProviderLeakageDetail(providerId) {
 
             <!-- Facility Breakdown Table -->
             <div style="margin-bottom: 1.5rem;">
-                <h4 style="margin: 0 0 1rem 0; color: #2c3e50;">OON Spend by Facility</h4>
+                <h4 style="margin: 0 0 1rem 0; color: #2c3e50;">OON Cost by Facility</h4>
                 <table class="data-table" style="font-size: 0.85rem;">
                     <thead>
                         <tr>
                             <th>Facility</th>
                             <th>Type</th>
-                            <th>OON Spend</th>
+                            <th>OON Cost</th>
                             <th>Primary Services</th>
                             <th>Encounters</th>
                             <th>% Elective</th>
@@ -5392,7 +5410,7 @@ function showProviderLeakageDetail(providerId) {
                     <thead>
                         <tr>
                             <th>Service Line</th>
-                            <th>OON Spend</th>
+                            <th>OON Cost</th>
                             <th>Total Encounters</th>
                             <th>Elective</th>
                             <th>Non-Elective</th>
@@ -5568,7 +5586,7 @@ function showFacilityLeakageDetail(facilityId) {
             <!-- Summary Cards -->
             <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
                 <div style="text-align: center; padding: 1rem; background: #ffeaea; border-radius: 8px;">
-                    <div style="font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase;">Total OON Spend</div>
+                    <div style="font-size: 0.75rem; color: #7f8c8d; text-transform: uppercase;">Total OON Cost</div>
                     <div style="font-size: 1.5rem; font-weight: 700; color: #e74c3c;">$${(data.totalOonSpend / 1000000).toFixed(1)}M</div>
                 </div>
                 <div style="text-align: center; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
@@ -5607,7 +5625,7 @@ function showFacilityLeakageDetail(facilityId) {
                         <tr>
                             <th>Rendering Provider</th>
                             <th>Specialty</th>
-                            <th>OON Spend</th>
+                            <th>OON Cost</th>
                             <th>Encounters</th>
                             <th>% Elective</th>
                             <th>Top Attributed PCPs</th>
@@ -5643,7 +5661,7 @@ function showFacilityLeakageDetail(facilityId) {
                     <thead>
                         <tr>
                             <th>Service Line</th>
-                            <th>OON Spend</th>
+                            <th>OON Cost</th>
                             <th>Total Encounters</th>
                             <th>Elective</th>
                             <th>Non-Elective</th>
