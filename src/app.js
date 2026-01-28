@@ -500,8 +500,8 @@ const monteCarloScenarios = {
         // CI values for display
         ciLowSavings: '-$2.1M',      // 2.5% percentile (worst case)
         ciLowSpend: '$500.9M',
-        ciMeanSavings: '$4.2M - $15.1M',  // 95% range
-        ciMeanSpend: '$483.7M - $494.6M',
+        ciMeanSavings: '$9.6M',      // Mean value
+        ciMeanSpend: '$489.2M',
         ciHighSavings: '$20.4M',     // 97.5% percentile (best case)
         ciHighSpend: '$478.4M'
     },
@@ -514,8 +514,8 @@ const monteCarloScenarios = {
         borderColor: '#3498db',
         ciLowSavings: '-$5.2M',
         ciLowSpend: '$504.0M',
-        ciMeanSavings: '$1.8M - $15.8M',
-        ciMeanSpend: '$483.0M - $497.0M',
+        ciMeanSavings: '$8.8M',
+        ciMeanSpend: '$490.0M',
         ciHighSavings: '$22.8M',
         ciHighSpend: '$476.0M'
     },
@@ -528,8 +528,8 @@ const monteCarloScenarios = {
         borderColor: '#27ae60',
         ciLowSavings: '-$0.8M',
         ciLowSpend: '$499.6M',
-        ciMeanSavings: '$4.4M - $16.4M',
-        ciMeanSpend: '$482.4M - $494.4M',
+        ciMeanSavings: '$10.4M',
+        ciMeanSpend: '$488.4M',
         ciHighSavings: '$21.6M',
         ciHighSpend: '$477.2M'
     },
@@ -542,8 +542,8 @@ const monteCarloScenarios = {
         borderColor: '#9b59b6',
         ciLowSavings: '$0.2M',
         ciLowSpend: '$498.6M',
-        ciMeanSavings: '$3.1M - $11.3M',
-        ciMeanSpend: '$487.5M - $495.7M',
+        ciMeanSavings: '$7.2M',
+        ciMeanSpend: '$491.6M',
         ciHighSavings: '$14.2M',
         ciHighSpend: '$484.6M'
     }
