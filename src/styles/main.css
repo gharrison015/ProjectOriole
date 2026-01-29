@@ -31,6 +31,33 @@ body {
     flex-direction: column;
     height: 100vh;
     overflow: hidden;
+    position: relative;
+}
+
+/* Demo Watermark - Subtle but visible in screenshots */
+.demo-watermark {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+}
+
+.demo-watermark::before {
+    content: 'DEMO';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    font-size: 15rem;
+    font-weight: 900;
+    color: rgba(0, 0, 0, 0.03);
+    letter-spacing: 0.5rem;
+    white-space: nowrap;
+    user-select: none;
 }
 
 /* Header Styles */
