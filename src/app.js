@@ -10155,19 +10155,6 @@ function showMeasureDashboard(measureCode, measureName, performance, benchmark) 
         </div>
     `;
 
-    // PCP with Most Opportunity
-    const topOppPCP = measureData.providers[measureData.providers.length - 1];
-    modalBody += `
-        <div class="alert-box warning">
-            <h4>🎯 Top Opportunity: ${topOppPCP.name}</h4>
-            <p><strong>${topOppPCP.gapCount} patients</strong> with open gaps (${topOppPCP.complianceRate}% compliance rate)</p>
-            <p>If ${topOppPCP.name} closes all gaps, performance would increase by <strong>${(topOppPCP.gapCount / measureData.totalPatients * 100).toFixed(1)}%</strong></p>
-            <button class="btn-small" onclick="showPatientListByProvider('${measureCode}', '${measureName}', '${topOppPCP.name}')" style="margin-top: 1rem;">
-                View ${topOppPCP.name}'s Patient List →
-            </button>
-        </div>
-    `;
-
     modalBody += '</div>';
 
     showModal(modalBody);
