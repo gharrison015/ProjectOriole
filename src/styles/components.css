@@ -2832,11 +2832,13 @@
     border-radius: 10px;
     padding: 0.85rem;
     transition: all 0.2s ease;
+    position: relative;
 }
 
 .ra-card:hover {
     border-color: var(--piedmont-primary);
     box-shadow: 0 3px 10px rgba(200, 78, 40, 0.12);
+    z-index: 100000;
 }
 
 .ra-card.clickable {
