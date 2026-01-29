@@ -193,13 +193,13 @@
 }
 
 /* Band item tooltips */
-.band-item[title] {
+.band-item[data-tooltip] {
     position: relative;
     cursor: help;
 }
 
-.band-item[title]:hover::after {
-    content: attr(title);
+.band-item[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
     position: absolute;
     bottom: 100%;
     left: 50%;
@@ -221,7 +221,7 @@
     letter-spacing: normal;
 }
 
-.band-item[title]:hover::before {
+.band-item[data-tooltip]:hover::before {
     content: '';
     position: absolute;
     bottom: 100%;
