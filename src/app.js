@@ -509,7 +509,10 @@ const monteCarloScenarios = {
         ciMeanSavings: '$9.6M',      // Mean value
         ciMeanSpend: '$489.2M',
         ciHighSavings: '$20.4M',     // 97.5% percentile (best case)
-        ciHighSpend: '$478.4M'
+        ciHighSpend: '$478.4M',
+        // Numeric values for chart annotations
+        ciLow: -2.1,
+        ciHigh: 20.4
     },
     2: {
         name: 'Volume Adjustment',
@@ -523,7 +526,9 @@ const monteCarloScenarios = {
         ciMeanSavings: '$8.8M',
         ciMeanSpend: '$490.0M',
         ciHighSavings: '$22.8M',
-        ciHighSpend: '$476.0M'
+        ciHighSpend: '$476.0M',
+        ciLow: -5.2,
+        ciHigh: 22.8
     },
     3: {
         name: 'Utilization Variation',
@@ -537,7 +542,9 @@ const monteCarloScenarios = {
         ciMeanSavings: '$10.4M',
         ciMeanSpend: '$488.4M',
         ciHighSavings: '$21.6M',
-        ciHighSpend: '$477.2M'
+        ciHighSpend: '$477.2M',
+        ciLow: -0.8,
+        ciHigh: 21.6
     },
     4: {
         name: 'Risk Corridor (2%)',
@@ -551,7 +558,9 @@ const monteCarloScenarios = {
         ciMeanSavings: '$7.2M',
         ciMeanSpend: '$491.6M',
         ciHighSavings: '$14.2M',
-        ciHighSpend: '$484.6M'
+        ciHighSpend: '$484.6M',
+        ciLow: 0.2,
+        ciHigh: 14.2
     }
 };
 
@@ -572,8 +581,8 @@ function initMonteCarloChart(scenario = 1) {
     }
 
     // Calculate dynamic range based on P2.5 and P97.5 with 10% buffer
-    const p25 = scenarioConfig.mean - 1.96 * scenarioConfig.stdDev;
-    const p975 = scenarioConfig.mean + 1.96 * scenarioConfig.stdDev;
+    const p25 = scenarioConfig.ciLow;
+    const p975 = scenarioConfig.ciHigh;
     const range = p975 - p25;
     const buffer = range * 0.1;
     const minValue = Math.floor((p25 - buffer) * 2) / 2; // Round down to nearest 0.5
@@ -664,8 +673,8 @@ function initMonteCarloChart(scenario = 1) {
                         },
                         p25Line: {
                             type: 'line',
-                            xMin: ((scenarioConfig.mean - 1.96 * scenarioConfig.stdDev) - minValue) / binWidth,
-                            xMax: ((scenarioConfig.mean - 1.96 * scenarioConfig.stdDev) - minValue) / binWidth,
+                            xMin: (scenarioConfig.ciLow - minValue) / binWidth,
+                            xMax: (scenarioConfig.ciLow - minValue) / binWidth,
                             borderColor: '#e74c3c',
                             borderWidth: 2,
                             borderDash: [6, 4],
@@ -680,8 +689,8 @@ function initMonteCarloChart(scenario = 1) {
                         },
                         p975Line: {
                             type: 'line',
-                            xMin: ((scenarioConfig.mean + 1.96 * scenarioConfig.stdDev) - minValue) / binWidth,
-                            xMax: ((scenarioConfig.mean + 1.96 * scenarioConfig.stdDev) - minValue) / binWidth,
+                            xMin: (scenarioConfig.ciHigh - minValue) / binWidth,
+                            xMax: (scenarioConfig.ciHigh - minValue) / binWidth,
                             borderColor: '#27ae60',
                             borderWidth: 2,
                             borderDash: [6, 4],

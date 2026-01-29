@@ -445,6 +445,10 @@
     color: white;
 }
 
+.result-card.highlight .scenario-description strong {
+    color: white;
+}
+
 /* Confidence Interval Section */
 .confidence-interval-section {
     margin-top: 2rem;
