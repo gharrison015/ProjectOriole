@@ -536,18 +536,6 @@
         // Start carousel
         startCarousel();
 
-        // Fullscreen functionality
-        function requestFullscreen() {
-            const elem = document.documentElement;
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.webkitRequestFullscreen) { // Safari
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { // IE11
-                elem.msRequestFullscreen();
-            }
-        }
-
         // Login functionality
         function handleLogin(event) {
             event.preventDefault();
@@ -556,28 +544,8 @@
             const errorMessage = document.getElementById('error-message');
 
             if (password === 'Guidehouse1') {
-                // Request fullscreen first
-                const elem = document.documentElement;
-
-                const fullscreenPromise = elem.requestFullscreen ? elem.requestFullscreen() :
-                                         elem.webkitRequestFullscreen ? elem.webkitRequestFullscreen() :
-                                         elem.msRequestFullscreen ? elem.msRequestFullscreen() : null;
-
-                // Wait for fullscreen to activate, then navigate
-                if (fullscreenPromise) {
-                    fullscreenPromise.then(() => {
-                        // Fullscreen successful, navigate after short delay
-                        setTimeout(() => {
-                            window.location.href = 'dashboard.html';
-                        }, 300);
-                    }).catch(() => {
-                        // Fullscreen failed, navigate anyway
-                        window.location.href = 'dashboard.html';
-                    });
-                } else {
-                    // No fullscreen support, just navigate
-                    window.location.href = 'dashboard.html';
-                }
+                // Navigate to dashboard
+                window.location.href = 'dashboard.html';
             } else {
                 errorMessage.classList.add('visible');
                 document.getElementById('password').value = '';
