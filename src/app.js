@@ -7241,6 +7241,9 @@ function generateAWVPatients(count) {
             nextAppt = apptDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
         }
 
+        // MyChart status - 65% active, 35% inactive
+        const myChartStatus = Math.random() > 0.35 ? 'Active' : 'Inactive';
+
         patients.push({
             id: `P${100000 + i}`,
             mrn: `MRN${800000 + i}`,
@@ -7256,12 +7259,167 @@ function generateAWVPatients(count) {
             lastVisit,
             nextAppt,
             awvCompleted: false,
-            missedOpportunity: Math.random() > 0.7 // 30% had missed opportunity
+            missedOpportunity: Math.random() > 0.7, // 30% had missed opportunity
+            myChartStatus
         });
     }
 
     // Sort by Potential RAF descending
     return patients.sort((a, b) => b.rafPotential - a.rafPotential);
+}
+
+// Function to show AWV patient lists with export capability
+function showAWVPatientList(filterType) {
+    const data = awvPatientData;
+
+    // Generate more patients if needed (to represent the full population)
+    // We'll generate 200 patients to show a representative sample
+    const allPatients = generateAWVPatients(200);
+
+    let filteredPatients = [];
+    let listTitle = '';
+    let listDescription = '';
+    let totalCount = 0;
+
+    if (filterType === 'not-scheduled') {
+        filteredPatients = allPatients.filter(p => p.nextAppt === 'Not scheduled');
+        totalCount = data.notScheduled; // 17,887
+        listTitle = 'AWV Incomplete - Not Scheduled';
+        listDescription = `Patients who have not completed their Annual Wellness Visit and have no upcoming PCP appointment. These ${totalCount.toLocaleString()} patients require immediate scheduling outreach. Displaying first ${filteredPatients.length} patients sorted by Potential RAF.`;
+    } else if (filterType === 'awv-incomplete') {
+        filteredPatients = allPatients;
+        totalCount = data.awvIncomplete; // 19,894
+        listTitle = 'AWV Incomplete';
+        listDescription = `All patients who have not completed their Annual Wellness Visit. Total of ${totalCount.toLocaleString()} patients. Displaying first ${filteredPatients.length} patients sorted by Potential RAF.`;
+    }
+
+    const avgRAF = (filteredPatients.reduce((sum, p) => sum + p.rafPotential, 0) / filteredPatients.length).toFixed(2);
+
+    const modalBody = `
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; gap: 1rem; flex-wrap: wrap;">
+            <div>
+                <h2 style="margin: 0;">${listTitle}</h2>
+                <p class="provider-summary" style="margin: 0.25rem 0 0 0;">Risk Adjustment - Annual Wellness Visit Gap List</p>
+            </div>
+            <button onclick="exportAWVPatientList('${filterType}')" class="btn btn-primary" style="background: #27ae60; border: none; color: white; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 0.5rem; white-space: nowrap;">
+                <span>📥</span> Export to CSV
+            </button>
+        </div>
+        <p style="color: #6c757d; font-size: 0.9rem; margin-bottom: 1.5rem;">${listDescription}</p>
+
+        <div style="background: linear-gradient(135deg, #e8f4fd 0%, #d6ebf7 100%); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; border-left: 4px solid #3498db;">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div>
+                    <span style="font-size: 0.85rem; color: #1e5a7d;">Total Patients:</span>
+                    <span style="font-weight: 700; color: #1e5a7d; margin-left: 0.5rem; font-size: 1.3rem;">${totalCount.toLocaleString()}</span>
+                    <span style="font-size: 0.75rem; color: #1e5a7d; margin-left: 0.5rem;">(showing first ${filteredPatients.length})</span>
+                </div>
+                <div>
+                    <span style="font-size: 0.85rem; color: #1e5a7d;">Avg Potential RAF:</span>
+                    <span style="font-weight: 700; color: #1e5a7d; margin-left: 0.5rem; font-size: 1.3rem;">${avgRAF}</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="background: white; border-radius: 12px; padding: 1rem; border: 1px solid #e0e0e0; overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem;">
+                <thead>
+                    <tr style="background: #f8f9fa;">
+                        <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600; white-space: nowrap;">Patient Name</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600; white-space: nowrap;">MRN</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600; white-space: nowrap;">DOB</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600; white-space: nowrap;">Age</th>
+                        <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600; white-space: nowrap;">PCP</th>
+                        <th style="padding: 0.75rem; text-align: left; border-bottom: 2px solid #dee2e6; font-weight: 600; white-space: nowrap;">Region</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600; white-space: nowrap;">RAF Current</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600; white-space: nowrap; background: #fff9e8;">RAF Potential</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600; white-space: nowrap;">RAF Gap</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600; white-space: nowrap;">MyChart</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600; white-space: nowrap;">Last Visit</th>
+                        <th style="padding: 0.75rem; text-align: center; border-bottom: 2px solid #dee2e6; font-weight: 600; white-space: nowrap;">Next Appt</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${filteredPatients.map(p => {
+                        const rafGap = (p.rafPotential - p.rafCurrent).toFixed(2);
+                        const myChartBadge = p.myChartStatus === 'Active'
+                            ? '<span style="background: #d4edda; color: #155724; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Active</span>'
+                            : '<span style="background: #f8d7da; color: #721c24; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">Inactive</span>';
+                        return `
+                        <tr>
+                            <td style="padding: 0.75rem; border-bottom: 1px solid #eee;">
+                                <strong>${p.firstName} ${p.lastName}</strong>
+                            </td>
+                            <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; font-family: monospace; font-size: 0.8rem;">${p.mrn}</td>
+                            <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee;">${p.dob}</td>
+                            <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee;">${p.age}</td>
+                            <td style="padding: 0.75rem; border-bottom: 1px solid #eee;">${p.pcp}</td>
+                            <td style="padding: 0.75rem; border-bottom: 1px solid #eee;">${p.region}</td>
+                            <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; font-weight: 600;">${p.rafCurrent.toFixed(2)}</td>
+                            <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; font-weight: 700; background: #fffbf0; color: #d97706;">${p.rafPotential.toFixed(2)}</td>
+                            <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; font-weight: 600; color: ${parseFloat(rafGap) > 1.0 ? '#e74c3c' : '#f39c12'};">${rafGap}</td>
+                            <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee;">${myChartBadge}</td>
+                            <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; font-size: 0.8rem;">${p.lastVisit}</td>
+                            <td style="padding: 0.75rem; text-align: center; border-bottom: 1px solid #eee; font-size: 0.8rem; ${p.nextAppt === 'Not scheduled' ? 'color: #e74c3c; font-weight: 600;' : ''}">${p.nextAppt}</td>
+                        </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+
+    showModal(modalBody);
+}
+
+// Function to export AWV patient list to CSV
+function exportAWVPatientList(filterType) {
+    // Generate full patient list (we'll generate more patients for export)
+    const allPatients = generateAWVPatients(500);
+
+    let filteredPatients = [];
+    let filename = '';
+
+    if (filterType === 'not-scheduled') {
+        filteredPatients = allPatients.filter(p => p.nextAppt === 'Not scheduled');
+        filename = 'AWV_Not_Scheduled_Patients.csv';
+    } else if (filterType === 'awv-incomplete') {
+        filteredPatients = allPatients;
+        filename = 'AWV_Incomplete_Patients.csv';
+    }
+
+    // Create CSV content
+    const headers = ['Patient Name', 'MRN', 'DOB', 'Age', 'PCP', 'Region', 'RAF Current', 'RAF Potential', 'RAF Gap', 'MyChart Status', 'Last Visit', 'Next Appointment'];
+    const rows = filteredPatients.map(p => [
+        `${p.firstName} ${p.lastName}`,
+        p.mrn,
+        p.dob,
+        p.age,
+        p.pcp,
+        p.region,
+        p.rafCurrent.toFixed(2),
+        p.rafPotential.toFixed(2),
+        (p.rafPotential - p.rafCurrent).toFixed(2),
+        p.myChartStatus,
+        p.lastVisit,
+        p.nextAppt
+    ]);
+
+    let csvContent = headers.join(',') + '\n';
+    rows.forEach(row => {
+        csvContent += row.join(',') + '\n';
+    });
+
+    // Create and trigger download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 // RAF Slider update function
@@ -10371,6 +10529,8 @@ window.updateAWVRAFSlider = updateAWVRAFSlider;
 window.resetAWVRAFSlider = resetAWVRAFSlider;
 window.showHighValueOutreach = showHighValueOutreach;
 window.exportHighValueList = exportHighValueList;
+window.showAWVPatientList = showAWVPatientList;
+window.exportAWVPatientList = exportAWVPatientList;
 
 // Mobile menu toggle function
 function toggleMobileMenu() {
