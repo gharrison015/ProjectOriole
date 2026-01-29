@@ -8520,14 +8520,14 @@ function drillDownEpisode(episodeType) {
             </div>
             <div class="kpi-card" style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border: 1px solid #28a745;">
                 <div class="kpi-label" style="font-size: 0.75rem; color: #155724; text-transform: uppercase;">
-                    Savings Opportunity
+                    Benchmark
                 </div>
                 <div class="kpi-value" style="font-size: 2rem; font-weight: 700; color: #155724; margin: 0.5rem 0;">
                     $${totalOpportunity.toLocaleString()}
                 </div>
                 <div style="font-size: 0.8rem; color: #155724; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(40,167,69,0.3);">
-                    <span>Target:</span>
-                    <span style="font-weight: 600; margin-left: 0.5rem;">$${benchmarkCost.toLocaleString()} (National)</span>
+                    <span>Benchmark:</span>
+                    <span style="font-weight: 600; margin-left: 0.5rem;">$${benchmarkCost.toLocaleString()} (Regional)</span>
                     <div style="font-size: 0.7rem; color: #1e7e34; margin-top: 0.25rem;">
                         ${providersAboveBenchmark} hospitals above benchmark
                     </div>
@@ -8582,25 +8582,6 @@ function drillDownEpisode(episodeType) {
                     </tbody>
                 </table>
             </div>
-        </div>
-    `;
-
-    // Find key drivers for insights
-    const highestCostProvider = providerBreakdown.reduce((max, p) => p.variance > max.variance ? p : max);
-    const highestPostAcute = providerBreakdown.reduce((max, p) => p.postAcuteUtil > max.postAcuteUtil ? p : max);
-    const highestReadmit = providerBreakdown.reduce((max, p) => p.readmitRate > max.readmitRate ? p : max);
-    const lowestCostProvider = providerBreakdown.reduce((min, p) => p.avgCost < min.avgCost ? p : min);
-
-    modalBody += `
-        <div class="alert-box warning" style="margin-top: 1.5rem;">
-            <h4>Cost Variation Drivers & Opportunities</h4>
-            <ul>
-                <li><strong>Highest Cost Variance:</strong> ${highestCostProvider.provider} is +${highestCostProvider.variance}% above benchmark - investigate clinical protocols and post-acute utilization</li>
-                <li><strong>Post-Acute Overutilization:</strong> ${highestPostAcute.provider} uses post-acute care in ${highestPostAcute.postAcuteUtil}% of cases - promote home-based recovery</li>
-                <li><strong>Readmission Driver:</strong> ${highestReadmit.provider} has ${highestReadmit.readmitRate}% readmission rate - strengthen discharge planning</li>
-                <li><strong>Best Practice:</strong> ${lowestCostProvider.provider} demonstrates efficient care at $${lowestCostProvider.avgCost.toLocaleString()} per episode</li>
-                <li><strong>Quick Win:</strong> If ${highestCostProvider.provider} matched benchmark, would save $${Math.round(highestCostProvider.savingsOpp).toLocaleString()} annually</li>
-            </ul>
         </div>
     `;
 

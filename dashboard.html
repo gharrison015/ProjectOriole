@@ -803,13 +803,13 @@
                             <div class="tcoc-detail">47,823 attributed lives</div>
                         </div>
                         <div class="tcoc-card">
-                            <div class="tcoc-label">PMPM (Per Patient Per Month)</div>
-                            <div class="tcoc-value">$847.32</div>
-                            <div class="tcoc-detail good">$19.18 below benchmark</div>
+                            <div class="tcoc-label">PMPM (Per Member Per Month)</div>
+                            <div class="tcoc-value">$848.32</div>
+                            <div class="tcoc-detail good">$18.18 below benchmark</div>
                         </div>
                         <div class="tcoc-card">
-                            <div class="tcoc-label">PMPY (Per Patient Per Year)</div>
-                            <div class="tcoc-value">$10,168</div>
+                            <div class="tcoc-label">PMPY (Per Member Per Year)</div>
+                            <div class="tcoc-value">$10,180</div>
                             <div class="tcoc-detail">CMS benchmark: $10,398</div>
                         </div>
                     </div>
@@ -851,10 +851,11 @@
                                         <span class="category-amount">$48.7M (10.0%)</span>
                                     </div>
                                     <div class="category-pmpm">PMPM: $84.93 | Scripts PMPY: 24.3</div>
+                                    <div style="font-size: 0.7rem; color: #e74c3c; margin-top: 0.5rem; font-weight: 500;">Informational only: Includes Part D retail spend for TCoC visibility; excluded from ACO calculations</div>
                                 </div>
-                                <div class="cost-category-item tooltip-category" title="Post-Acute Care (SNF/HH): Skilled Nursing Facility (SNF) stays and Home Health (HH) services following acute hospitalizations. SNF includes rehabilitation and custodial care. Home Health includes skilled nursing visits, physical therapy, and home health aide services. Key opportunity area for care coordination.">
+                                <div class="cost-category-item tooltip-category" title="Post-Acute Care (SNF/HH/IRF/LTAC): Skilled Nursing Facility (SNF) stays, Home Health (HH) services, Inpatient Rehabilitation Facilities (IRF), and Long-Term Acute Care (LTAC) following acute hospitalizations. SNF includes rehabilitation and custodial care. Home Health includes skilled nursing visits, physical therapy, and home health aide services. Key opportunity area for care coordination.">
                                     <div class="category-header">
-                                        <span class="category-name">Post-Acute Care (SNF/HH) <span class="info-icon">ⓘ</span></span>
+                                        <span class="category-name">Post-Acute Care (SNF/HH/IRF/LTAC) <span class="info-icon">ⓘ</span></span>
                                         <span class="category-amount">$17.6M (3.6%)</span>
                                     </div>
                                     <div class="category-pmpm">PMPM: $30.57 | Days per 1000: 87</div>
@@ -1812,10 +1813,10 @@
                                     <th class="sortable" data-sort="string">Episode Type</th>
                                     <th class="sortable tooltip-header" data-sort="percent" data-tooltip="Percentage of episodes with skilled nursing facility discharge. Benchmark for joint replacement: 28%. Formula: SNF Discharges ÷ Total Episodes × 100">SNF Rate <span class="th-info">ⓘ</span></th>
                                     <th class="sortable tooltip-header" data-sort="number" data-tooltip="Average length of stay in skilled nursing facility. Target: ≤14 days for joint replacement. Formula: Total SNF Days ÷ SNF Admissions">Avg SNF Days <span class="th-info">ⓘ</span></th>
-                                    <th class="sortable tooltip-header" data-sort="currency" data-tooltip="Average SNF cost per member per month for patients using SNF services. Formula: Total SNF Costs ÷ Member Months">SNF Cost PMPM <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="currency" data-tooltip="Average SNF cost per episode for patients using SNF services. Formula: Total SNF Costs ÷ Episodes with SNF">Avg. SNF Cost <span class="th-info">ⓘ</span></th>
                                     <th class="sortable tooltip-header" data-sort="percent" data-tooltip="Percentage of episodes utilizing home health services. Higher rates often indicate appropriate care setting optimization. Formula: HH Episodes ÷ Total Episodes × 100">Home Health Rate <span class="th-info">ⓘ</span></th>
                                     <th class="sortable tooltip-header" data-sort="number" data-tooltip="Average number of home health visits per episode. Formula: Total HH Visits ÷ HH Episodes">Avg HH Visits <span class="th-info">ⓘ</span></th>
-                                    <th class="sortable tooltip-header" data-sort="currency" data-tooltip="Total post-acute care cost including SNF, home health, inpatient rehab, and LTACH. Formula: SNF Cost + Home Health Cost + IRF Cost + LTACH Cost">Total PAC Cost <span class="th-info">ⓘ</span></th>
+                                    <th class="sortable tooltip-header" data-sort="currency" data-tooltip="Average post-acute care cost per episode including SNF, home health, inpatient rehab, and LTACH. Formula: (SNF Cost + Home Health Cost + IRF Cost + LTACH Cost) ÷ Total Episodes">Avg. PAC Cost <span class="th-info">ⓘ</span></th>
                                 </tr>
                             </thead>
                             <tbody>
