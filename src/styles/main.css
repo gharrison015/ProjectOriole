@@ -68,17 +68,17 @@ body {
     right: 0;
     background: #ffc107;
     color: #856404;
-    padding: 0.5rem 1rem;
+    padding: 0.25rem 0.75rem;
     text-align: center;
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     font-weight: 600;
     z-index: 10000;
-    border-top: 2px solid #856404;
-    letter-spacing: 0.5px;
+    border-top: 1px solid #856404;
+    letter-spacing: 0.3px;
 }
 
 .demo-footer-icon {
-    margin-right: 0.5rem;
+    margin-right: 0.35rem;
 }
 
 .demo-footer-text {
