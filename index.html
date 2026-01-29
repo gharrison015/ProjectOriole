@@ -536,6 +536,18 @@
         // Start carousel
         startCarousel();
 
+        // Fullscreen functionality
+        function requestFullscreen() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.webkitRequestFullscreen) { // Safari
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { // IE11
+                elem.msRequestFullscreen();
+            }
+        }
+
         // Login functionality
         function handleLogin(event) {
             event.preventDefault();
@@ -544,7 +556,13 @@
             const errorMessage = document.getElementById('error-message');
 
             if (password === 'Guidehouse1') {
-                window.location.href = 'dashboard.html';
+                // Request fullscreen before navigating
+                requestFullscreen();
+
+                // Small delay to allow fullscreen transition, then navigate
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 100);
             } else {
                 errorMessage.classList.add('visible');
                 document.getElementById('password').value = '';
