@@ -4161,15 +4161,6 @@ function drillDownEDMarket(marketId) {
                 </div>
             </div>
         </div>
-
-        <div class="alert-box success" style="margin-top: 1rem;">
-            <h4>Intervention Strategy for ${marketName}</h4>
-            <ul>
-                <li><strong>Target PCPs:</strong> Focus on ${pcpData[0].pcp} and ${pcpData[1]?.pcp || 'high-utilization PCPs'} for greatest impact ($${(pcpData[0].savingsPotential + (pcpData[1]?.savingsPotential || 0)).toLocaleString()} combined)</li>
-                <li><strong>Patient Engagement:</strong> Activate MyChart for top utilizers and promote telehealth options</li>
-                <li><strong>Network Strategy:</strong> Expand urgent care hours and locations in high-utilization areas</li>
-            </ul>
-        </div>
     `;
 
     showModal(modalBody);
@@ -4869,15 +4860,6 @@ function drillDownAvoidableMarket(marketId) {
                     </p>
                 </div>
             </div>
-        </div>
-
-        <div class="alert-box success" style="margin-top: 1rem;">
-            <h4>Intervention Strategy for ${marketName}</h4>
-            <ul>
-                ${view === 'ed' || view === 'all' ? '<li><strong>ED Diversion:</strong> Expand urgent care access, after-hours nurse line, telehealth for non-emergent conditions</li>' : ''}
-                ${view === 'ip' || view === 'all' ? '<li><strong>IP Prevention:</strong> Chronic disease management programs, transitional care, medication adherence support</li>' : ''}
-                <li><strong>Care Coordination:</strong> High-risk patient identification and proactive outreach</li>
-            </ul>
         </div>
     `;
 
