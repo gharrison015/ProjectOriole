@@ -874,14 +874,28 @@ function initWaterfallChart() {
                 legend: { display: false },
                 datalabels: {
                     display: (ctx) => ctx.datasetIndex === 1,
-                    color: (ctx) => {
-                        // Use dark text for light colored bars, white for others
-                        const type = types[ctx.dataIndex];
-                        return (type === 'end' || type === 'increase') ? '#fff' : '#fff';
-                    },
+                    color: '#fff',
                     font: { weight: 'bold', size: 11 },
-                    anchor: 'center',
-                    align: 'center',
+                    anchor: (ctx) => {
+                        // Position above bar for Gross Savings, CMS Share, Net Earned
+                        const i = ctx.dataIndex;
+                        return (i === 4 || i === 5 || i === 6) ? 'end' : 'center';
+                    },
+                    align: (ctx) => {
+                        // Align to top for the three problem columns
+                        const i = ctx.dataIndex;
+                        return (i === 4 || i === 5 || i === 6) ? 'top' : 'center';
+                    },
+                    backgroundColor: (ctx) => {
+                        // Add transparent grey background for better visibility
+                        const i = ctx.dataIndex;
+                        return (i === 4 || i === 5 || i === 6) ? 'rgba(0, 0, 0, 0.5)' : 'transparent';
+                    },
+                    borderRadius: 4,
+                    padding: (ctx) => {
+                        const i = ctx.dataIndex;
+                        return (i === 4 || i === 5 || i === 6) ? { top: 3, bottom: 3, left: 6, right: 6 } : 0;
+                    },
                     formatter: (val, ctx) => {
                         const origVal = displayValues[ctx.dataIndex];
                         if (origVal < 0) return '-$' + Math.abs(origVal) + 'M';
