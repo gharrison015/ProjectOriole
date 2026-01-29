@@ -9172,6 +9172,10 @@ function showHedisMeasureDetail(measureCode) {
         </div>
     `;
 
+    // Dynamic measures that should not show forecasted compliance
+    const dynamicMeasures = ['HBD', 'CBP', 'SPC', 'SPD', 'SPH', 'PCR', 'TRC'];
+    const isDynamic = dynamicMeasures.includes(measureCode);
+
     // Summary Cards - matching ACO layout exactly
     modalContent += '<div class="measure-summary-grid">';
     modalContent += `
@@ -9190,12 +9194,19 @@ function showHedisMeasureDetail(measureCode) {
             <div class="summary-card-value">${gapCount.toLocaleString()}</div>
             <div class="summary-card-detail">${gapPercent}% of denominator</div>
         </div>
+    `;
+
+    // Only show forecasted compliance for non-dynamic measures
+    if (!isDynamic) {
+        modalContent += `
         <div class="measure-summary-card">
             <div class="summary-card-label">Forecasted Compliance</div>
             <div class="summary-card-value">${forecastedCompliance}%</div>
             <div class="summary-card-detail">${scheduledPatients} scheduled visits</div>
         </div>
-    `;
+        `;
+    }
+
     modalContent += '</div>';
 
     // Charts Section - matching ACO layout
@@ -10045,6 +10056,10 @@ function closeQualityPatientModal() {
 function showMeasureDashboard(measureCode, measureName, performance, benchmark) {
     const measureData = getMeasurePerformanceData(measureCode, measureName, performance, benchmark);
 
+    // Dynamic measures that should not show forecasted compliance
+    const dynamicMeasures = ['Quality-001', 'Quality-236', 'Quality-479'];
+    const isDynamic = dynamicMeasures.includes(measureCode);
+
     let modalBody = '<div class="measure-dashboard">';
 
     // Header
@@ -10073,12 +10088,19 @@ function showMeasureDashboard(measureCode, measureName, performance, benchmark) 
             <div class="summary-card-value">${measureData.gapCount}</div>
             <div class="summary-card-detail">${measureData.gapPercent}% of denominator</div>
         </div>
+    `;
+
+    // Only show forecasted compliance for non-dynamic measures
+    if (!isDynamic) {
+        modalBody += `
         <div class="measure-summary-card">
             <div class="summary-card-label">Forecasted Compliance</div>
             <div class="summary-card-value">${measureData.forecastedCompliance}%</div>
             <div class="summary-card-detail">${measureData.scheduledPatients} scheduled visits</div>
         </div>
-    `;
+        `;
+    }
+
     modalBody += '</div>';
 
     // Charts Section
