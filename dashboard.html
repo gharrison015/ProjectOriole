@@ -495,81 +495,90 @@
                                                 <th class="sortable" data-sort="percent">Performance</th>
                                                 <th class="tooltip-header" data-tooltip="CMS benchmark represents the 30th percentile of national ACO performance, based on historical data. ACOs must meet or exceed this threshold to achieve the measure.">Benchmark <span class="th-info">ⓘ</span></th>
                                                 <th class="sortable" data-sort="number">Gap</th>
+                                                <th class="sortable" data-sort="string">2026 Influence</th>
                                                 <th class="sortable" data-sort="string">Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-08', 'Risk-Standardized All Condition Readmission', 8.7, 9.3)">
-                                                <td><strong>ACO-08</strong></td>
-                                                <td>Risk-Standardized All Condition Readmission</td>
-                                                <td><span class="badge" style="background: #e3f2fd; color: #1565c0;">Claims</span></td>
-                                                <td class="good"><strong>8.7%</strong></td>
-                                                <td>9.3%</td>
-                                                <td class="good">-0.6 pts</td>
-                                                <td><span class="badge success">Achieved</span></td>
-                                            </tr>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-13', 'Falls: Screening for Future Fall Risk', 84.2, 78.5)">
-                                                <td><strong>ACO-13</strong></td>
-                                                <td>Falls: Screening for Future Fall Risk</td>
-                                                <td><span class="badge" style="background: #f3e5f5; color: #6a1b9a;">eCQM</span></td>
-                                                <td class="good"><strong>84.2%</strong></td>
-                                                <td>78.5%</td>
-                                                <td class="good">+5.7 pts</td>
-                                                <td><span class="badge success">Achieved</span></td>
-                                            </tr>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-17', 'Preventive Care and Screening: Breast Cancer Screening', 82.3, 75.8)">
-                                                <td><strong>ACO-17</strong></td>
-                                                <td>Preventive Care and Screening: Breast Cancer Screening</td>
-                                                <td><span class="badge" style="background: #f3e5f5; color: #6a1b9a;">eCQM</span></td>
-                                                <td class="good"><strong>82.3%</strong></td>
-                                                <td>75.8%</td>
-                                                <td class="good">+6.5 pts</td>
-                                                <td><span class="badge success">Achieved</span></td>
-                                            </tr>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-19', 'Preventive Care and Screening: Colorectal Cancer Screening', 76.8, 69.2)">
-                                                <td><strong>ACO-19</strong></td>
-                                                <td>Preventive Care and Screening: Colorectal Cancer Screening</td>
-                                                <td><span class="badge" style="background: #f3e5f5; color: #6a1b9a;">eCQM</span></td>
-                                                <td class="good"><strong>76.8%</strong></td>
-                                                <td>69.2%</td>
-                                                <td class="good">+7.6 pts</td>
-                                                <td><span class="badge success">Achieved</span></td>
-                                            </tr>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-27', 'Diabetes Mellitus: Hemoglobin A1c (HbA1c) Poor Control (>9%)', 18.2, 22.4)">
-                                                <td><strong>ACO-27</strong></td>
-                                                <td>Diabetes Mellitus: Hemoglobin A1c (HbA1c) Poor Control (>9%)</td>
-                                                <td><span class="badge" style="background: #f3e5f5; color: #6a1b9a;">eCQM</span></td>
+                                            <tr class="clickable" onclick="showMeasureDashboard('Quality-001', 'Diabetes: Glycemic Status Assessment > 9.0%', 18.2, 22.4)">
+                                                <td><strong>Quality ID #001</strong></td>
+                                                <td>Diabetes: Glycemic Status Assessment > 9.0%</td>
+                                                <td><span class="badge" style="background: #f3e5f5; color: #6a1b9a; font-size: 0.7rem; padding: 0.25rem 0.5rem;">eCQM / MIPS CQM / Medicare CQM</span></td>
                                                 <td class="good"><strong>18.2%</strong></td>
                                                 <td>22.4%</td>
                                                 <td class="good">-4.2 pts</td>
+                                                <td>Pay-for-Performance</td>
                                                 <td><span class="badge success">Achieved</span></td>
                                             </tr>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-38', 'Risk-Standardized Acute Admission Rates for Patients with Multiple Chronic Conditions', 12.4, 14.2)">
-                                                <td><strong>ACO-38</strong></td>
-                                                <td>Risk-Standardized Acute Admission Rates for Patients with Multiple Chronic Conditions</td>
-                                                <td><span class="badge" style="background: #e3f2fd; color: #1565c0;">Claims</span></td>
+                                            <tr class="clickable" onclick="showMeasureDashboard('Quality-134', 'Depression Screening and Follow-up Plan', 81.2, 74.6)">
+                                                <td><strong>Quality ID #134</strong></td>
+                                                <td>Depression Screening and Follow-up Plan</td>
+                                                <td><span class="badge" style="background: #f3e5f5; color: #6a1b9a; font-size: 0.7rem; padding: 0.25rem 0.5rem;">eCQM / MIPS CQM / Medicare CQM</span></td>
+                                                <td class="good"><strong>81.2%</strong></td>
+                                                <td>74.6%</td>
+                                                <td class="good">+6.6 pts</td>
+                                                <td>Pay-for-Performance</td>
+                                                <td><span class="badge success">Achieved</span></td>
+                                            </tr>
+                                            <tr class="clickable" onclick="showMeasureDashboard('Quality-236', 'Controlling High Blood Pressure', 72.4, 67.8)">
+                                                <td><strong>Quality ID #236</strong></td>
+                                                <td>Controlling High Blood Pressure</td>
+                                                <td><span class="badge" style="background: #f3e5f5; color: #6a1b9a; font-size: 0.7rem; padding: 0.25rem 0.5rem;">eCQM / MIPS CQM / Medicare CQM</span></td>
+                                                <td class="good"><strong>72.4%</strong></td>
+                                                <td>67.8%</td>
+                                                <td class="good">+4.6 pts</td>
+                                                <td>Pay-for-Performance</td>
+                                                <td><span class="badge success">Achieved</span></td>
+                                            </tr>
+                                            <tr class="clickable" onclick="showMeasureDashboard('Quality-112', 'Breast Cancer Screening', 82.3, 75.8)">
+                                                <td><strong>Quality ID #112</strong></td>
+                                                <td>Breast Cancer Screening</td>
+                                                <td><span class="badge" style="background: #f3e5f5; color: #6a1b9a; font-size: 0.7rem; padding: 0.25rem 0.5rem;">eCQM / MIPS CQM / Medicare CQM</span></td>
+                                                <td class="good"><strong>82.3%</strong></td>
+                                                <td>75.8%</td>
+                                                <td class="good">+6.5 pts</td>
+                                                <td>Pay-for-Performance</td>
+                                                <td><span class="badge success">Achieved</span></td>
+                                            </tr>
+                                            <tr class="clickable" onclick="showMeasureDashboard('Quality-113', 'Colorectal Cancer Screening', 76.8, 69.2)">
+                                                <td><strong>Quality ID #113</strong></td>
+                                                <td>Colorectal Cancer Screening</td>
+                                                <td><span class="badge" style="background: #f3e5f5; color: #6a1b9a; font-size: 0.7rem; padding: 0.25rem 0.5rem;">eCQM / MIPS CQM / Medicare CQM</span></td>
+                                                <td class="good"><strong>76.8%</strong></td>
+                                                <td>69.2%</td>
+                                                <td class="good">+7.6 pts</td>
+                                                <td><span class="badge" style="background: #fff9e0; color: #e65100;">Pay-for-Reporting (Phase-In)</span></td>
+                                                <td><span class="badge success">Achieved</span></td>
+                                            </tr>
+                                            <tr class="clickable" onclick="showMeasureDashboard('Quality-479', 'Hospital-Wide, 30-day, All-Cause Unplanned Readmission', 8.7, 9.3)">
+                                                <td><strong>Quality ID #479</strong></td>
+                                                <td>Hospital-Wide, 30-day, All-Cause Unplanned Readmission</td>
+                                                <td><span class="badge" style="background: #e3f2fd; color: #1565c0; font-size: 0.7rem; padding: 0.25rem 0.5rem;">Administrative Claims</span></td>
+                                                <td class="good"><strong>8.7%</strong></td>
+                                                <td>9.3%</td>
+                                                <td class="good">-0.6 pts</td>
+                                                <td>Pay-for-Performance</td>
+                                                <td><span class="badge success">Achieved</span></td>
+                                            </tr>
+                                            <tr class="clickable" onclick="showMeasureDashboard('Quality-484', 'Risk-Standardized Hospital Admission Rates (MCC)', 12.4, 14.2)">
+                                                <td><strong>Quality ID #484</strong></td>
+                                                <td>Risk-Standardized Hospital Admission Rates (MCC)</td>
+                                                <td><span class="badge" style="background: #e3f2fd; color: #1565c0; font-size: 0.7rem; padding: 0.25rem 0.5rem;">Administrative Claims</span></td>
                                                 <td class="good"><strong>12.4%</strong></td>
                                                 <td>14.2%</td>
                                                 <td class="good">-1.8 pts</td>
+                                                <td><span class="badge" style="background: #fff9e0; color: #e65100;">Pay-for-Reporting (Phase-In)</span></td>
                                                 <td><span class="badge success">Achieved</span></td>
                                             </tr>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-43', 'Ambulatory Sensitive Condition Acute Composite (AHRQ PQI #91)', 68.4, 72.8)">
-                                                <td><strong>ACO-43</strong></td>
-                                                <td>Ambulatory Sensitive Condition Acute Composite (AHRQ PQI #91)</td>
-                                                <td><span class="badge" style="background: #e3f2fd; color: #1565c0;">Claims</span></td>
-                                                <td class="warning"><strong>68.4%</strong></td>
-                                                <td>72.8%</td>
-                                                <td class="bad">-4.4 pts</td>
-                                                <td><span class="badge warning pulse-attention">Need Improvement</span></td>
-                                            </tr>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-46', 'Screening for Social Drivers of Health', 52.8, 58.3)">
-                                                <td><strong>ACO-46</strong></td>
-                                                <td>Screening for Social Drivers of Health</td>
-                                                <td><span class="badge" style="background: #fff3e0; color: #e65100;">Web Interface</span></td>
-                                                <td class="warning"><strong>52.8%</strong></td>
-                                                <td>58.3%</td>
-                                                <td class="bad">-5.5 pts</td>
-                                                <td><span class="badge warning pulse-attention">Need Improvement</span></td>
+                                            <tr class="clickable" onclick="showMeasureDashboard('Quality-321', 'CAHPS for MIPS Survey', 89.2, 82.5)">
+                                                <td><strong>Quality ID #321</strong></td>
+                                                <td>CAHPS for MIPS Survey</td>
+                                                <td><span class="badge" style="background: #e8f5e9; color: #2e7d32; font-size: 0.7rem; padding: 0.25rem 0.5rem;">Patient Experience Survey</span></td>
+                                                <td class="good"><strong>89.2%</strong></td>
+                                                <td>82.5%</td>
+                                                <td class="good">+6.7 pts</td>
+                                                <td>Pay-for-Performance</td>
+                                                <td><span class="badge success">Achieved</span></td>
                                             </tr>
                                         </tbody>
                                     </table>
