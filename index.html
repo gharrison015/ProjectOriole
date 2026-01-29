@@ -556,11 +556,28 @@
             const errorMessage = document.getElementById('error-message');
 
             if (password === 'Guidehouse1') {
-                // Set flag for fullscreen on dashboard
-                sessionStorage.setItem('requestFullscreen', 'true');
+                // Request fullscreen first
+                const elem = document.documentElement;
 
-                // Navigate to dashboard
-                window.location.href = 'dashboard.html';
+                const fullscreenPromise = elem.requestFullscreen ? elem.requestFullscreen() :
+                                         elem.webkitRequestFullscreen ? elem.webkitRequestFullscreen() :
+                                         elem.msRequestFullscreen ? elem.msRequestFullscreen() : null;
+
+                // Wait for fullscreen to activate, then navigate
+                if (fullscreenPromise) {
+                    fullscreenPromise.then(() => {
+                        // Fullscreen successful, navigate after short delay
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 300);
+                    }).catch(() => {
+                        // Fullscreen failed, navigate anyway
+                        window.location.href = 'dashboard.html';
+                    });
+                } else {
+                    // No fullscreen support, just navigate
+                    window.location.href = 'dashboard.html';
+                }
             } else {
                 errorMessage.classList.add('visible');
                 document.getElementById('password').value = '';
