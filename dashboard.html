@@ -485,137 +485,87 @@
                             <!-- Front: ACO Measures -->
                             <div class="flip-card-front">
                                 <div class="table-section">
-                                    <h3>ACO Quality Measures by Domain <span style="font-size: 0.8rem; color: var(--piedmont-gray); font-weight: normal;">(Click measure to view performance dashboard)</span></h3>
+                                    <h3>ACO Quality Measures - PY2026 <span style="font-size: 0.8rem; color: var(--piedmont-gray); font-weight: normal;">(Click measure to view performance dashboard)</span></h3>
                                     <table class="data-table">
                                         <thead>
                                             <tr>
-                                                <th>Domain</th>
-                                                <th>Measure</th>
-                                                <th>Performance</th>
-                                                <th>Benchmark</th>
-                                                <th>Gap</th>
-                                                <th>Status</th>
+                                                <th class="sortable" data-sort="string">Measure ID</th>
+                                                <th class="sortable" data-sort="string">Quality Measure Name</th>
+                                                <th class="sortable" data-sort="string">Collection Type</th>
+                                                <th class="sortable" data-sort="percent">Performance</th>
+                                                <th class="tooltip-header" data-tooltip="CMS benchmark represents the 30th percentile of national ACO performance, based on historical data. ACOs must meet or exceed this threshold to achieve the measure.">Benchmark <span class="th-info">ⓘ</span></th>
+                                                <th class="sortable" data-sort="number">Gap</th>
+                                                <th class="sortable" data-sort="string">Status</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr class="domain-header">
-                                                <td colspan="6"><strong>Patient/Caregiver Experience (ACO-01 to ACO-34)</strong></td>
-                                            </tr>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-34', 'Getting Timely Care', 89.2, 82.5)">
-                                                <td></td>
-                                                <td>Getting Timely Care (ACO-34)</td>
-                                                <td class="good"><strong>89.2%</strong></td>
-                                                <td>82.5%</td>
-                                                <td class="good">+6.7 pts</td>
-                                                <td><span class="badge success">Achieved</span></td>
-                                            </tr>
-
-                                            <tr class="domain-header">
-                                                <td colspan="6"><strong>Care Coordination/Patient Safety</strong></td>
-                                            </tr>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-43', 'Risk-Standardized Acute Admission', 12.4, 14.2)">
-                                                <td></td>
-                                                <td>Risk-Standardized Acute Admission (ACO-43)</td>
-                                                <td class="good"><strong>12.4%</strong></td>
-                                                <td>14.2%</td>
-                                                <td class="good">-1.8 pts</td>
-                                                <td><span class="badge success">Achieved</span></td>
-                                            </tr>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-38', 'All-Cause Unplanned Admissions', 8.7, 9.3)">
-                                                <td></td>
-                                                <td>All-Cause Unplanned Admissions (ACO-38)</td>
+                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-08', 'Risk-Standardized All Condition Readmission', 8.7, 9.3)">
+                                                <td><strong>ACO-08</strong></td>
+                                                <td>Risk-Standardized All Condition Readmission</td>
+                                                <td><span class="badge" style="background: #e3f2fd; color: #1565c0;">Claims</span></td>
                                                 <td class="good"><strong>8.7%</strong></td>
                                                 <td>9.3%</td>
                                                 <td class="good">-0.6 pts</td>
                                                 <td><span class="badge success">Achieved</span></td>
                                             </tr>
-
-                                            <tr class="domain-header">
-                                                <td colspan="6"><strong>Preventive Health</strong></td>
+                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-13', 'Falls: Screening for Future Fall Risk', 84.2, 78.5)">
+                                                <td><strong>ACO-13</strong></td>
+                                                <td>Falls: Screening for Future Fall Risk</td>
+                                                <td><span class="badge" style="background: #f3e5f5; color: #6a1b9a;">eCQM</span></td>
+                                                <td class="good"><strong>84.2%</strong></td>
+                                                <td>78.5%</td>
+                                                <td class="good">+5.7 pts</td>
+                                                <td><span class="badge success">Achieved</span></td>
                                             </tr>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-17', 'Breast Cancer Screening', 82.3, 75.8)">
-                                                <td></td>
-                                                <td>Breast Cancer Screening (ACO-17)</td>
+                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-17', 'Preventive Care and Screening: Breast Cancer Screening', 82.3, 75.8)">
+                                                <td><strong>ACO-17</strong></td>
+                                                <td>Preventive Care and Screening: Breast Cancer Screening</td>
+                                                <td><span class="badge" style="background: #f3e5f5; color: #6a1b9a;">eCQM</span></td>
                                                 <td class="good"><strong>82.3%</strong></td>
                                                 <td>75.8%</td>
                                                 <td class="good">+6.5 pts</td>
                                                 <td><span class="badge success">Achieved</span></td>
                                             </tr>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-19', 'Colorectal Cancer Screening', 76.8, 69.2)">
-                                                <td></td>
-                                                <td>Colorectal Cancer Screening (ACO-19)</td>
+                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-19', 'Preventive Care and Screening: Colorectal Cancer Screening', 76.8, 69.2)">
+                                                <td><strong>ACO-19</strong></td>
+                                                <td>Preventive Care and Screening: Colorectal Cancer Screening</td>
+                                                <td><span class="badge" style="background: #f3e5f5; color: #6a1b9a;">eCQM</span></td>
                                                 <td class="good"><strong>76.8%</strong></td>
                                                 <td>69.2%</td>
                                                 <td class="good">+7.6 pts</td>
                                                 <td><span class="badge success">Achieved</span></td>
                                             </tr>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-AWV', 'Annual Wellness Visit', 58.4, 62.1)">
-                                                <td></td>
-                                                <td>Annual Wellness Visit (ACO-43)</td>
-                                                <td class="warning"><strong>58.4%</strong></td>
-                                                <td>62.1%</td>
-                                                <td class="bad">-3.7 pts</td>
-                                                <td><span class="badge warning pulse-attention">Need Improvement</span></td>
-                                            </tr>
-
-                                            <tr class="domain-header">
-                                                <td colspan="6"><strong>At-Risk Population - Diabetes</strong></td>
-                                            </tr>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-16', 'Diabetes: HbA1c Poor Control', 18.2, 22.4)">
-                                                <td></td>
-                                                <td>Diabetes: HbA1c Poor Control (ACO-16)</td>
+                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-27', 'Diabetes Mellitus: Hemoglobin A1c (HbA1c) Poor Control (>9%)', 18.2, 22.4)">
+                                                <td><strong>ACO-27</strong></td>
+                                                <td>Diabetes Mellitus: Hemoglobin A1c (HbA1c) Poor Control (>9%)</td>
+                                                <td><span class="badge" style="background: #f3e5f5; color: #6a1b9a;">eCQM</span></td>
                                                 <td class="good"><strong>18.2%</strong></td>
                                                 <td>22.4%</td>
                                                 <td class="good">-4.2 pts</td>
                                                 <td><span class="badge success">Achieved</span></td>
                                             </tr>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-18', 'Diabetes: Eye Exam', 68.9, 61.3)">
-                                                <td></td>
-                                                <td>Diabetes: Eye Exam (ACO-18)</td>
-                                                <td class="good"><strong>68.9%</strong></td>
-                                                <td>61.3%</td>
-                                                <td class="good">+7.6 pts</td>
+                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-38', 'Risk-Standardized Acute Admission Rates for Patients with Multiple Chronic Conditions', 12.4, 14.2)">
+                                                <td><strong>ACO-38</strong></td>
+                                                <td>Risk-Standardized Acute Admission Rates for Patients with Multiple Chronic Conditions</td>
+                                                <td><span class="badge" style="background: #e3f2fd; color: #1565c0;">Claims</span></td>
+                                                <td class="good"><strong>12.4%</strong></td>
+                                                <td>14.2%</td>
+                                                <td class="good">-1.8 pts</td>
                                                 <td><span class="badge success">Achieved</span></td>
                                             </tr>
-
-                                            <tr class="domain-header">
-                                                <td colspan="6"><strong>At-Risk Population - Hypertension</strong></td>
-                                            </tr>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-08', 'Controlling High Blood Pressure', 72.4, 67.8)">
-                                                <td></td>
-                                                <td>Controlling High Blood Pressure (ACO-08)</td>
-                                                <td class="good"><strong>72.4%</strong></td>
-                                                <td>67.8%</td>
-                                                <td class="good">+4.6 pts</td>
-                                                <td><span class="badge success">Achieved</span></td>
-                                            </tr>
-
-                                            <tr class="domain-header">
-                                                <td colspan="6"><strong>At-Risk Population - Heart Failure</strong></td>
-                                            </tr>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-14', 'Statin Therapy - Cardiovascular Disease', 74.2, 78.5)">
-                                                <td></td>
-                                                <td>Statin Therapy - Cardiovascular Disease (ACO-14)</td>
-                                                <td class="warning"><strong>74.2%</strong></td>
-                                                <td>78.5%</td>
-                                                <td class="bad">-4.3 pts</td>
+                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-43', 'Ambulatory Sensitive Condition Acute Composite (AHRQ PQI #91)', 68.4, 72.8)">
+                                                <td><strong>ACO-43</strong></td>
+                                                <td>Ambulatory Sensitive Condition Acute Composite (AHRQ PQI #91)</td>
+                                                <td><span class="badge" style="background: #e3f2fd; color: #1565c0;">Claims</span></td>
+                                                <td class="warning"><strong>68.4%</strong></td>
+                                                <td>72.8%</td>
+                                                <td class="bad">-4.4 pts</td>
                                                 <td><span class="badge warning pulse-attention">Need Improvement</span></td>
                                             </tr>
-
-                                            <tr class="domain-header">
-                                                <td colspan="6"><strong>Behavioral Health</strong></td>
-                                            </tr>
-                                            <tr class="clickable" onclick="showMeasureDashboard('ACO-40', 'Depression Screening and Follow-up', 81.2, 74.6)">
-                                                <td></td>
-                                                <td>Depression Screening and Follow-up (ACO-40)</td>
-                                                <td class="good"><strong>81.2%</strong></td>
-                                                <td>74.6%</td>
-                                                <td class="good">+6.6 pts</td>
-                                                <td><span class="badge success">Achieved</span></td>
-                                            </tr>
                                             <tr class="clickable" onclick="showMeasureDashboard('ACO-46', 'Screening for Social Drivers of Health', 52.8, 58.3)">
-                                                <td></td>
-                                                <td>Screening for Social Drivers of Health (ACO-46)</td>
+                                                <td><strong>ACO-46</strong></td>
+                                                <td>Screening for Social Drivers of Health</td>
+                                                <td><span class="badge" style="background: #fff3e0; color: #e65100;">Web Interface</span></td>
                                                 <td class="warning"><strong>52.8%</strong></td>
                                                 <td>58.3%</td>
                                                 <td class="bad">-5.5 pts</td>
