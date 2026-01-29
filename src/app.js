@@ -9462,6 +9462,9 @@ function showHedisPatientList(measureCode, measureName, providerName) {
         </div>
     `;
 
+    // Check if TRC measure to show discharge date column
+    const isTRC = measureCode === 'TRC';
+
     // Patient List Table
     modalBody += `
         <div style="max-height: 60vh; overflow-y: auto;">
@@ -9472,6 +9475,7 @@ function showHedisPatientList(measureCode, measureName, providerName) {
                         <th>MRN</th>
                         <th>DOB</th>
                         <th>PCP</th>
+                        ${isTRC ? '<th>Discharge Date</th>' : ''}
                         <th>Compliant</th>
                         <th>Gap Status</th>
                         <th>Last Service Date</th>
@@ -9491,6 +9495,7 @@ function showHedisPatientList(measureCode, measureName, providerName) {
                 <td>${patient.mrn}</td>
                 <td>${patient.dob}</td>
                 <td>${patient.pcp}</td>
+                ${isTRC ? `<td>${patient.dischargeDate || '<span style="color: #ccc;">—</span>'}</td>` : ''}
                 <td><span class="compliant-badge ${patient.compliant ? 'yes' : 'no'}">${patient.compliant ? 'Yes' : 'No'}</span></td>
                 <td>
                     <span class="gap-indicator ${patient.gapStatus}">${patient.gapStatus === 'open' ? '✗ Open' : '✓ Closed'}</span>
@@ -9523,6 +9528,9 @@ function generateHedisPatientListData(measureCode, measureName, providerName) {
     const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez', 'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore', 'Jackson', 'Martin'];
     const caseManagers = ['Jennifer Rodriguez, RN', 'Michael Chen, RN', 'Sarah Thompson, RN', null, null];
 
+    const isTRC = measureCode === 'TRC';
+    const today = new Date('2026-01-29');
+
     for (let i = 0; i < patientCount; i++) {
         const isCompliant = Math.random() > 0.3;
         const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
@@ -9536,16 +9544,34 @@ function generateHedisPatientListData(measureCode, measureName, providerName) {
         const apptDay = Math.floor(Math.random() * 28) + 1;
         const apptHour = Math.floor(Math.random() * 8) + 8;
 
+        // For TRC measure, generate discharge dates and determine gap status based on 30-day window
+        let dischargeDate = null;
+        let gapStatus = isCompliant ? 'closed' : 'open';
+
+        if (isTRC) {
+            // Generate random discharge date between 1-60 days ago
+            const daysAgo = Math.floor(Math.random() * 60) + 1;
+            const discharge = new Date(today);
+            discharge.setDate(discharge.getDate() - daysAgo);
+            dischargeDate = `${discharge.getMonth() + 1}/${discharge.getDate()}/2026`;
+
+            // Gap is only open if within 30 days of discharge
+            if (!isCompliant) {
+                gapStatus = daysAgo <= 30 ? 'open' : 'closed';
+            }
+        }
+
         patients.push({
             name: `${lastName}, ${firstName}`,
             mrn: 'MRN' + String(Math.floor(Math.random() * 900000) + 100000),
             dob: `${birthMonth}/${birthDay}/${birthYear}`,
             pcp: providerName,
             compliant: isCompliant,
-            gapStatus: isCompliant ? 'closed' : 'open',
+            gapStatus: gapStatus,
             lastServiceDate: isCompliant ? `${Math.floor(Math.random() * 12) + 1}/15/2026` : null,
             dueDate: !isCompliant ? `${Math.floor(Math.random() * 6) + 1}/1/2026` : null,
             caseManager: caseManagers[Math.floor(Math.random() * caseManagers.length)],
+            dischargeDate: dischargeDate,
             nextAppt: hasAppt ? {
                 date: `${apptMonth}/${apptDay}/2026`,
                 time: `${apptHour}:00 AM`
@@ -9559,12 +9585,19 @@ function generateHedisPatientListData(measureCode, measureName, providerName) {
 // Export HEDIS patient list to CSV
 function exportHedisPatientList(measureCode, measureName, providerName) {
     const patients = generateHedisPatientListData(measureCode, measureName, providerName);
+    const isTRC = measureCode === 'TRC';
 
-    let csvContent = 'Patient Name,MRN,DOB,PCP,Compliant,Gap Status,Last Service Date,Due Date,Case Manager,Next Appt\n';
+    let csvContent = isTRC
+        ? 'Patient Name,MRN,DOB,PCP,Discharge Date,Compliant,Gap Status,Last Service Date,Due Date,Case Manager,Next Appt\n'
+        : 'Patient Name,MRN,DOB,PCP,Compliant,Gap Status,Last Service Date,Due Date,Case Manager,Next Appt\n';
 
     patients.forEach(patient => {
         const nextApptStr = patient.nextAppt ? `${patient.nextAppt.date} ${patient.nextAppt.time}` : '';
-        csvContent += `"${patient.name}","${patient.mrn}","${patient.dob}","${patient.pcp}","${patient.compliant ? 'Yes' : 'No'}","${patient.gapStatus}","${patient.lastServiceDate || ''}","${patient.dueDate || ''}","${patient.caseManager || ''}","${nextApptStr}"\n`;
+        if (isTRC) {
+            csvContent += `"${patient.name}","${patient.mrn}","${patient.dob}","${patient.pcp}","${patient.dischargeDate || ''}","${patient.compliant ? 'Yes' : 'No'}","${patient.gapStatus}","${patient.lastServiceDate || ''}","${patient.dueDate || ''}","${patient.caseManager || ''}","${nextApptStr}"\n`;
+        } else {
+            csvContent += `"${patient.name}","${patient.mrn}","${patient.dob}","${patient.pcp}","${patient.compliant ? 'Yes' : 'No'}","${patient.gapStatus}","${patient.lastServiceDate || ''}","${patient.dueDate || ''}","${patient.caseManager || ''}","${nextApptStr}"\n`;
+        }
     });
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
