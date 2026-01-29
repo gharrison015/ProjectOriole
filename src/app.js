@@ -8445,47 +8445,65 @@ function initAWVEncountersMonthlyChart(data) {
 
     // Generate 12 months of rolling data
     const months = [];
-    const encounterCounts = [];
     const currentDate = new Date();
 
     for (let i = 11; i >= 0; i--) {
         const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
         const monthName = date.toLocaleString('default', { month: 'short', year: '2-digit' });
         months.push(monthName);
-
-        // Generate realistic encounter counts (1500-2800 per month)
-        const baseCount = 2000;
-        const variance = Math.sin(i * 0.5) * 400 + Math.random() * 300;
-        encounterCounts.push(Math.floor(baseCount + variance));
     }
+
+    // Region colors and names
+    const regions = [
+        { name: 'Atlanta North', color: 'rgba(102, 126, 234, 0.8)', borderColor: '#667eea' },
+        { name: 'Atlanta South', color: 'rgba(52, 152, 219, 0.8)', borderColor: '#3498db' },
+        { name: 'Columbus', color: 'rgba(46, 204, 113, 0.8)', borderColor: '#27ae60' },
+        { name: 'Augusta', color: 'rgba(243, 156, 18, 0.8)', borderColor: '#f39c12' },
+        { name: 'Macon', color: 'rgba(155, 89, 182, 0.8)', borderColor: '#9b59b6' }
+    ];
+
+    // Generate encounter data for each region by month
+    const datasets = regions.map((region, regionIndex) => {
+        const monthlyData = [];
+        for (let i = 0; i < 12; i++) {
+            // Base count varies by region size
+            const baseCount = [450, 480, 350, 320, 300][regionIndex]; // Proportional to region size
+            const variance = Math.sin(i * 0.5) * 80 + Math.random() * 60;
+            monthlyData.push(Math.floor(baseCount + variance));
+        }
+        return {
+            label: region.name,
+            data: monthlyData,
+            backgroundColor: region.color,
+            borderColor: region.borderColor,
+            borderWidth: 1
+        };
+    });
 
     new Chart(ctx, {
         type: 'bar',
         data: {
             labels: months,
-            datasets: [{
-                label: 'AWV Encounters',
-                data: encounterCounts,
-                backgroundColor: 'rgba(102, 126, 234, 0.7)',
-                borderColor: '#667eea',
-                borderWidth: 1
-            }]
+            datasets: datasets
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             plugins: {
-                legend: { display: false },
+                legend: {
+                    display: true,
+                    position: 'bottom'
+                },
                 datalabels: {
-                    color: '#2c3e50',
-                    font: { weight: 'bold', size: 9 },
-                    anchor: 'end',
-                    align: 'top',
-                    formatter: (value) => value.toLocaleString()
+                    display: false // Disable individual labels on stacked bars
                 }
             },
             scales: {
+                x: {
+                    stacked: true
+                },
                 y: {
+                    stacked: true,
                     beginAtZero: true,
                     title: { display: true, text: 'Encounters' },
                     ticks: {
