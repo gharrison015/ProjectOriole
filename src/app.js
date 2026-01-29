@@ -7743,10 +7743,18 @@ function showAWVComplianceModal(section = 'overview') {
                 </div>
             </div>
             <div style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.25rem;">
-                <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50;">Top Providers by AWV Rate</h3>
+                <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50;">Annual Wellness Encounters - Rolling 12 Months</h3>
                 <div style="height: 200px;">
-                    <canvas id="awv-provider-chart"></canvas>
+                    <canvas id="awv-encounters-monthly-chart"></canvas>
                 </div>
+            </div>
+        </div>
+
+        <!-- Provider Chart Section -->
+        <div style="background: white; border: 1px solid #e0e0e0; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
+            <h3 style="margin: 0 0 1rem 0; font-size: 1rem; color: #2c3e50;">Top Providers by AWV Rate</h3>
+            <div style="height: 300px;">
+                <canvas id="awv-provider-chart"></canvas>
             </div>
         </div>
 
@@ -7757,6 +7765,7 @@ function showAWVComplianceModal(section = 'overview') {
     // Initialize charts after modal is shown
     setTimeout(() => {
         initAWVRegionChart(data);
+        initAWVEncountersMonthlyChart(data);
         initAWVProviderChart(data);
 
         // Enable pointer events on the sliders after modal is shown
@@ -8430,11 +8439,71 @@ function initAWVRegionChart(data) {
     });
 }
 
+function initAWVEncountersMonthlyChart(data) {
+    const ctx = document.getElementById('awv-encounters-monthly-chart');
+    if (!ctx) return;
+
+    // Generate 12 months of rolling data
+    const months = [];
+    const encounterCounts = [];
+    const currentDate = new Date();
+
+    for (let i = 11; i >= 0; i--) {
+        const date = new Date(currentDate.getFullYear(), currentDate.getMonth() - i, 1);
+        const monthName = date.toLocaleString('default', { month: 'short', year: '2-digit' });
+        months.push(monthName);
+
+        // Generate realistic encounter counts (1500-2800 per month)
+        const baseCount = 2000;
+        const variance = Math.sin(i * 0.5) * 400 + Math.random() * 300;
+        encounterCounts.push(Math.floor(baseCount + variance));
+    }
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: months,
+            datasets: [{
+                label: 'AWV Encounters',
+                data: encounterCounts,
+                backgroundColor: 'rgba(102, 126, 234, 0.7)',
+                borderColor: '#667eea',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                datalabels: {
+                    color: '#2c3e50',
+                    font: { weight: 'bold', size: 9 },
+                    anchor: 'end',
+                    align: 'top',
+                    formatter: (value) => value.toLocaleString()
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: { display: true, text: 'Encounters' },
+                    ticks: {
+                        callback: function(value) {
+                            return value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+
 function initAWVProviderChart(data) {
     const ctx = document.getElementById('awv-provider-chart');
     if (!ctx) return;
 
-    const topProviders = data.providers.slice(0, 6).sort((a, b) => b.rate - a.rate);
+    const topProviders = data.providers.slice(0, 10).sort((a, b) => b.rate - a.rate);
 
     awvProviderChartInstance = new Chart(ctx, {
         type: 'bar',
