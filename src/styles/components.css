@@ -2474,10 +2474,11 @@
 .tooltip-header[data-tooltip]:hover::after,
 .tooltip-trigger[data-tooltip]:hover::after,
 .quality-pop-card[title]:hover::after,
-.hcc-summary-card[title]:hover::after {
+.hcc-summary-card[title]:hover::after,
+.ra-card[title]:hover::after {
     content: attr(title);
     position: absolute;
-    bottom: 100%;
+    top: 100%;
     left: 50%;
     transform: translateX(-50%);
     background: #2c3e50;
@@ -2495,7 +2496,7 @@
     z-index: 99999;
     box-shadow: 0 4px 16px rgba(0,0,0,0.25);
     line-height: 1.5;
-    margin-bottom: 10px;
+    margin-top: 10px;
 }
 
 .tooltip-header[data-tooltip]:hover::after {
@@ -2512,14 +2513,15 @@
 .tooltip-header[data-tooltip]:hover::before,
 .tooltip-trigger[data-tooltip]:hover::before,
 .quality-pop-card[title]:hover::before,
-.hcc-summary-card[title]:hover::before {
+.hcc-summary-card[title]:hover::before,
+.ra-card[title]:hover::before {
     content: '';
     position: absolute;
-    bottom: 100%;
+    top: 100%;
     left: 50%;
-    transform: translateX(-50%) translateY(10px);
+    transform: translateX(-50%) translateY(-10px);
     border: 8px solid transparent;
-    border-top-color: #2c3e50;
+    border-bottom-color: #2c3e50;
     z-index: 100000;
 }
 
@@ -2909,45 +2911,6 @@
     color: var(--piedmont-primary);
     margin-top: 0.4rem;
     font-weight: 500;
-}
-
-/* RA Card Tooltips - consistent with other tabs */
-.ra-card[title] {
-    position: relative;
-}
-
-.ra-card[title]:hover::after {
-    content: attr(title);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #2c3e50;
-    color: white;
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    font-weight: 400;
-    white-space: normal;
-    width: 260px;
-    text-align: left;
-    z-index: 9999;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-    line-height: 1.5;
-    margin-bottom: 10px;
-    text-transform: none;
-    letter-spacing: normal;
-}
-
-.ra-card[title]:hover::before {
-    content: '';
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%) translateY(10px);
-    border: 8px solid transparent;
-    border-top-color: #2c3e50;
-    z-index: 10000;
 }
 
 /* Mobile responsive for RA groups */
