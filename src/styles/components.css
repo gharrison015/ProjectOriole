@@ -518,7 +518,7 @@
 /* Table Section */
 .table-section {
     background: white;
-    padding: 2rem;
+    padding: 1.5rem;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     margin-bottom: 2rem;
@@ -2775,7 +2775,7 @@
 
 .ra-group {
     flex: 1;
-    padding: 1.25rem;
+    padding: 1rem;
 }
 
 .ra-group-hcc {
@@ -2817,14 +2817,14 @@
 .ra-cards-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
+    gap: 0.6rem;
 }
 
 .ra-card {
     background: #fff;
     border: 1px solid #e0e4e8;
     border-radius: 10px;
-    padding: 1rem;
+    padding: 0.85rem;
     transition: all 0.2s ease;
 }
 
@@ -2951,7 +2951,7 @@
 }
 
 /* Mobile responsive for RA groups */
-@media (max-width: 1200px) {
+@media (max-width: 1400px) {
     .ra-cards-grid {
         grid-template-columns: repeat(2, 1fr);
     }
