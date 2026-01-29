@@ -1338,11 +1338,17 @@
                                 </div>
                                 <div class="ra-card danger clickable" onclick="showAWVPatientList('not-scheduled')" title="Patients AWV non-compliant with no upcoming PCP appointments. Require immediate scheduling outreach.">
                                     <div class="ra-card-label">Not Scheduled <span class="tooltip-icon">ⓘ</span></div>
-                                    <div class="ra-card-value bad" id="not-scheduled-count">
-                                        17,887
-                                        <span style="display: block; font-size: 0.5rem; color: #7f8c8d; margin-top: 0.25rem; font-weight: 500;">
-                                            <span style="border-bottom: 1px dotted #7f8c8d; padding-bottom: 1px;">↓</span> 11,269 active on MyChart
-                                        </span>
+                                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin: 0.5rem 0;">
+                                        <div style="flex: 0 0 auto;">
+                                            <div class="ra-card-value bad" id="not-scheduled-count">17,887</div>
+                                        </div>
+                                        <div style="flex: 1; border-top: 2px dotted #95a5a6; position: relative; min-width: 20px;">
+                                            <span style="position: absolute; right: -4px; top: -6px; color: #95a5a6; font-size: 0.7rem;">→</span>
+                                        </div>
+                                        <div style="flex: 0 0 auto; text-align: center;">
+                                            <div style="font-size: 1.3rem; font-weight: 700; color: #27ae60; line-height: 1.2;">11,269</div>
+                                            <div style="font-size: 0.65rem; color: #7f8c8d; margin-top: 0.15rem; text-transform: uppercase; letter-spacing: 0.3px;">Active on MyChart</div>
+                                        </div>
                                     </div>
                                     <div class="ra-card-detail">No upcoming appt</div>
                                     <div class="ra-card-action">Click for list →</div>
