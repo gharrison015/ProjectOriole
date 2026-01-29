@@ -7500,7 +7500,7 @@ function showAWVComplianceModal(section = 'overview') {
                                 <th style="padding: 0.5rem; text-align: center; font-weight: 600;">Count</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="awv-completion-region-tbody">
                             ${data.regions.map(r => `
                                 <tr onclick="showAWVRegionDrilldown('${r.name}', 'completion')" style="cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;" onmouseover="this.style.background='#e8f5e9'" onmouseout="this.style.background='white'">
                                     <td style="padding: 0.5rem;"><strong>${r.name}</strong></td>
@@ -7526,7 +7526,7 @@ function showAWVComplianceModal(section = 'overview') {
                                 <th style="padding: 0.5rem; text-align: center; font-weight: 600;">Scheduled</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="awv-forecast-region-tbody">
                             ${data.regions.map(r => `
                                 <tr onclick="showAWVRegionDrilldown('${r.name}', 'forecast')" style="cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;" onmouseover="this.style.background='#e3f2fd'" onmouseout="this.style.background='white'">
                                     <td style="padding: 0.5rem;"><strong>${r.name}</strong></td>
@@ -7552,7 +7552,7 @@ function showAWVComplianceModal(section = 'overview') {
                                 <th style="padding: 0.5rem; text-align: center; font-weight: 600;">Visits</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="awv-missed-region-tbody">
                             ${data.regions.map(r => `
                                 <tr onclick="showAWVRegionDrilldown('${r.name}', 'missed')" style="cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;" onmouseover="this.style.background='#ffebee'" onmouseout="this.style.background='white'">
                                     <td style="padding: 0.5rem;"><strong>${r.name}</strong></td>
@@ -7582,27 +7582,6 @@ function showAWVComplianceModal(section = 'overview') {
             </div>
         </div>
 
-        <!-- Missed Opportunity Detail -->
-        <div style="background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%); border: 1px solid #e74c3c; border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h3 style="margin: 0; font-size: 1rem; color: #c62828;">Missed Opportunity Analysis</h3>
-                <span id="awv-modal-missed-banner" style="background: #e74c3c; color: white; padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600;">$${(missedRevenue / 1000).toFixed(0)}K Lost Revenue</span>
-            </div>
-            <p id="awv-modal-missed-description" style="font-size: 0.9rem; color: #6c757d; margin-bottom: 1rem;">
-                These ${data.missedOpportunityVisits.toLocaleString()} patients had a <strong>non-acute visit</strong> after becoming due for their Annual Wellness Visit,
-                but <strong>no AWV code was billed</strong>. This represents operational leakage where the patient was already in the exam room.
-            </p>
-            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.75rem; text-align: center;">
-                ${data.regions.map(r => `
-                    <div onclick="showAWVRegionDrilldown('${r.name}', 'missed')" style="background: rgba(255,255,255,0.7); padding: 0.75rem; border-radius: 8px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='none'; this.style.boxShadow='none'">
-                        <div style="font-size: 0.75rem; color: #6c757d;">${r.name}</div>
-                        <div style="font-size: 1.25rem; font-weight: 700; color: #c62828;">${r.missed.toLocaleString()}</div>
-                        <div style="font-size: 0.7rem; color: #856404;">$${(r.missed * data.weightedAvgAWV / 1000).toFixed(0)}K</div>
-                        <div style="font-size: 0.65rem; color: #667eea; margin-top: 0.25rem;">Click to drill down →</div>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
     `;
 
     showModal(modalBody);
@@ -7671,6 +7650,10 @@ function resetAWVRAFSlider() {
     updateAWVRAFSlider();
 }
 
+// Store chart instances globally
+let awvRegionChartInstance = null;
+let awvProviderChartInstance = null;
+
 function updateAWVModalData(minVal, maxVal) {
     const data = awvPatientData;
     const fullRange = 5.0 - 0.5;
@@ -7713,15 +7696,66 @@ function updateAWVModalData(minVal, maxVal) {
     if (missedRevenueEl) missedRevenueEl.textContent = `$${(filteredMissedRevenue / 1000).toFixed(0)}K`;
     if (missedVisitsEl) missedVisitsEl.textContent = `${filteredMissed.toLocaleString()} visits without AWV`;
 
-    // Update missed opportunity analysis section
-    const missedBannerEl = document.getElementById('awv-modal-missed-banner');
-    const missedDescEl = document.getElementById('awv-modal-missed-description');
+    // Filter regional data
+    const filteredRegions = data.regions.map(r => ({
+        ...r,
+        completed: Math.round(r.completed * patientPct),
+        total: Math.round(r.total * patientPct),
+        scheduled: Math.round(r.scheduled * patientPct),
+        missed: Math.round(r.missed * patientPct * (minVal > 1.5 ? 1.2 : 1)),
+        rate: r.rate // Keep original rate
+    }));
 
-    if (missedBannerEl) missedBannerEl.textContent = `$${(filteredMissedRevenue / 1000).toFixed(0)}K Lost Revenue`;
-    if (missedDescEl) {
-        missedDescEl.innerHTML = `These ${filteredMissed.toLocaleString()} patients had a <strong>non-acute visit</strong> after becoming due for their Annual Wellness Visit,
-            but <strong>no AWV code was billed</strong>. This represents operational leakage where the patient was already in the exam room.`;
+    // Update regional tables
+    const completionTbody = document.getElementById('awv-completion-region-tbody');
+    const forecastTbody = document.getElementById('awv-forecast-region-tbody');
+    const missedTbody = document.getElementById('awv-missed-region-tbody');
+
+    if (completionTbody) {
+        completionTbody.innerHTML = filteredRegions.map(r => `
+            <tr onclick="showAWVRegionDrilldown('${r.name}', 'completion')" style="cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;" onmouseover="this.style.background='#e8f5e9'" onmouseout="this.style.background='white'">
+                <td style="padding: 0.5rem;"><strong>${r.name}</strong></td>
+                <td style="padding: 0.5rem; text-align: center; font-weight: 600; color: ${r.rate >= 50 ? '#27ae60' : '#e74c3c'};">${r.rate}%</td>
+                <td style="padding: 0.5rem; text-align: center; color: #6c757d;">${r.completed.toLocaleString()}</td>
+            </tr>
+        `).join('');
     }
+
+    if (forecastTbody) {
+        forecastTbody.innerHTML = filteredRegions.map(r => `
+            <tr onclick="showAWVRegionDrilldown('${r.name}', 'forecast')" style="cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;" onmouseover="this.style.background='#e3f2fd'" onmouseout="this.style.background='white'">
+                <td style="padding: 0.5rem;"><strong>${r.name}</strong></td>
+                <td style="padding: 0.5rem; text-align: center; font-weight: 600; color: #3498db;">$${(r.scheduled * data.weightedAvgAWV / 1000).toFixed(0)}K</td>
+                <td style="padding: 0.5rem; text-align: center; color: #6c757d;">${r.scheduled.toLocaleString()}</td>
+            </tr>
+        `).join('');
+    }
+
+    if (missedTbody) {
+        missedTbody.innerHTML = filteredRegions.map(r => `
+            <tr onclick="showAWVRegionDrilldown('${r.name}', 'missed')" style="cursor: pointer; border-bottom: 1px solid #eee; transition: background 0.2s;" onmouseover="this.style.background='#ffebee'" onmouseout="this.style.background='white'">
+                <td style="padding: 0.5rem;"><strong>${r.name}</strong></td>
+                <td style="padding: 0.5rem; text-align: center; font-weight: 600; color: #e74c3c;">$${(r.missed * data.weightedAvgAWV / 1000).toFixed(0)}K</td>
+                <td style="padding: 0.5rem; text-align: center; color: #6c757d;">${r.missed.toLocaleString()}</td>
+            </tr>
+        `).join('');
+    }
+
+    // Destroy existing charts if they exist
+    if (awvRegionChartInstance) {
+        awvRegionChartInstance.destroy();
+    }
+    if (awvProviderChartInstance) {
+        awvProviderChartInstance.destroy();
+    }
+
+    // Recreate charts with filtered data
+    const filteredData = {
+        ...data,
+        regions: filteredRegions
+    };
+    initAWVRegionChart(filteredData);
+    initAWVProviderChart(filteredData);
 }
 
 // ============================================
@@ -8194,7 +8228,7 @@ function initAWVRegionChart(data) {
     const ctx = document.getElementById('awv-region-chart');
     if (!ctx) return;
 
-    new Chart(ctx, {
+    awvRegionChartInstance = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: data.regions.map(r => r.name),
@@ -8234,7 +8268,7 @@ function initAWVProviderChart(data) {
 
     const topProviders = data.providers.slice(0, 6).sort((a, b) => b.rate - a.rate);
 
-    new Chart(ctx, {
+    awvProviderChartInstance = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: topProviders.map(p => p.name.replace('Dr. ', '')),
