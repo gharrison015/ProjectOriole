@@ -3588,16 +3588,6 @@ function showLeakDetailModal(leakData) {
                 <div class="kpi-value">${leakData.fromPCP}</div>
             </div>
         </div>
-
-        <div class="alert-box warning" style="margin-top: 2rem;">
-            <h4>Intervention Opportunity</h4>
-            <ul>
-                <li><strong>Root Cause:</strong> ${leakData.fromPCP.replace(' PCPs', '')} market lacks in-network ${leakData.serviceLine} providers with adequate capacity</li>
-                <li><strong>Network Strategy:</strong> Recruit or contract with ${leakData.serviceLine} specialist group in this region</li>
-                <li><strong>Savings Potential:</strong> Recapturing 60% could save $${(leakData.leaked * 0.6 / 1000000).toFixed(1)}M annually</li>
-                <li><strong>Provider Engagement:</strong> Educate PCPs on in-network ${leakData.serviceLine} options and referral pathways</li>
-            </ul>
-        </div>
     `;
 
     showModal(modalBody);
@@ -3713,15 +3703,6 @@ function drillDownMarket(marketId) {
             </tbody>
         </table>
 
-        <div class="alert-box" style="margin-top: 2rem;">
-            <h4>Insights & Recommended Actions</h4>
-            <ul>
-                <li><strong>High Performers:</strong> ${market.providers[0].name} shows strong cost control and quality</li>
-                <li><strong>Opportunities:</strong> Focus on reducing leakage at providers with >25% OON referrals</li>
-                <li><strong>Next Steps:</strong> Drill down to service line level to identify specific leakage drivers</li>
-            </ul>
-        </div>
-
         <style>
             .market-summary { color: #7f8c8d; margin-bottom: 2rem; font-size: 1.1rem; }
             .market-kpi-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin: 1.5rem 0; }
@@ -3799,16 +3780,6 @@ function drillDownProvider(providerName, lives) {
     modalBody += `
             </tbody>
         </table>
-
-        <div class="alert-box success" style="margin-top: 2rem;">
-            <h4>Recommended Interventions</h4>
-            <ul>
-                <li><strong>Urgent Care Steering:</strong> Redirect non-emergent visits to lower-cost urgent care (Est. savings: $${(totalCost * 0.6).toLocaleString()})</li>
-                <li><strong>Telehealth Expansion:</strong> Promote virtual visits for URI, headache, minor issues (Est. savings: $${(totalCost * 0.3).toLocaleString()})</li>
-                <li><strong>Patient Education:</strong> Targeted outreach to high utilizers about appropriate care settings</li>
-                <li><strong>After-Hours Access:</strong> Extend PCP hours to capture after-hours non-emergent needs</li>
-            </ul>
-        </div>
 
         <style>
             .provider-summary { color: #7f8c8d; margin-bottom: 2rem; font-size: 1.1rem; }
@@ -3911,15 +3882,6 @@ function showPatientList(reason, providerName) {
     modalBody += `
             </tbody>
         </table>
-
-        <div class="alert-box warning" style="margin-top: 2rem;">
-            <h4>Recommended Patient Interventions</h4>
-            <ul>
-                <li><strong>MyChart Inactive:</strong> ${patients.filter(p => p.myChartStatus === 'Inactive').length} patients need MyChart activation for better engagement</li>
-                <li><strong>High Utilizers:</strong> ${patients.filter(p => p.visitCount >= 3).length} patients with 3+ visits need care management outreach</li>
-                <li><strong>Cost Opportunity:</strong> Steering these patients to urgent care could save ~${Math.floor(patients.reduce((sum, p) => sum + p.totalCost, 0) * 0.65).toLocaleString()}</li>
-            </ul>
-        </div>
     `;
 
     showModal(modalBody);
@@ -6823,17 +6785,6 @@ function drillDownHCC(providerId) {
             </div>
         </div>
 
-        <div class="alert-box success" style="margin-top: 1rem;">
-            <h4>Recommended Actions to Close Gaps</h4>
-            <ul>
-                <li><strong>AWV Outreach:</strong> Schedule ${patients.filter(p => !p.awvCompleted).length} patients for Annual Wellness Visit immediately</li>
-                <li><strong>Chart Review:</strong> Review claims history for suspected HCCs and document in next visit note</li>
-                <li><strong>Appointment Priority:</strong> Focus on patients with "Not scheduled" - highest revenue opportunity</li>
-                <li><strong>Provider Education:</strong> Train on proper HCC documentation and coding requirements</li>
-                <li><strong>Quick Win:</strong> Start with ${patients[0].firstName} ${patients[0].lastName} (${patients[0].mrn}) - $${patients[0].revenueOpp.toLocaleString()} opportunity</li>
-            </ul>
-        </div>
-
         <style>
             .tooltip-hover {
                 position: relative;
@@ -7150,21 +7101,6 @@ function showHCCPatientList(providerId, filterType) {
                 </table>
             </div>
         `}
-
-        <div class="alert-box warning" style="margin-top: 1.5rem;">
-            <h4>Recommended Actions</h4>
-            <ul>
-                ${filterType === 'awv-incomplete' ? `
-                    <li><strong>Schedule AWV:</strong> Contact these ${filteredPatients.length} patients to schedule Annual Wellness Visit</li>
-                    <li><strong>Pre-Visit Planning:</strong> Generate patient-specific uncoded dx documentation for each scheduled visit</li>
-                    <li><strong>Care Team Alert:</strong> Notify care coordinators to prioritize outreach</li>
-                ` : `
-                    <li><strong>Urgent Outreach:</strong> Contact these ${filteredPatients.length} patients immediately to schedule PCP appointments</li>
-                    <li><strong>Alternative Contact:</strong> Try multiple contact methods (phone, patient portal, mail)</li>
-                    <li><strong>Transportation:</strong> Assess if transportation barriers are preventing scheduling</li>
-                `}
-            </ul>
-        </div>
 
         ${!isAllProviders ? `
         <div style="margin-top: 1rem; text-align: center;">
@@ -8405,16 +8341,6 @@ function showHighValueOutreach() {
                     ` : ''}
                 </tbody>
             </table>
-        </div>
-
-        <div class="alert-box info" style="margin-top: 1.5rem; background: #e8f4fd; border-left-color: #3498db;">
-            <h4>Care Coordinator Action Items</h4>
-            <ul>
-                <li><strong>Priority Outreach:</strong> Contact top 20 patients within 48 hours</li>
-                <li><strong>Schedule AWV:</strong> Book Annual Wellness Visit for all contacted patients</li>
-                <li><strong>Pre-Visit Prep:</strong> Generate HCC documentation checklist for each patient</li>
-                <li><strong>Transportation:</strong> Offer transportation assistance for patients with access barriers</li>
-            </ul>
         </div>
     `;
 
