@@ -10224,8 +10224,24 @@ function showMeasureDashboard(measureCode, measureName, performance, benchmark) 
 function getMeasurePerformanceData(measureCode, measureName, performance, benchmark) {
     // Mock data generator - in production, fetch from API
     const totalPatients = Math.floor(Math.random() * 500) + 800;
-    const compliant = Math.floor(totalPatients * (performance / 100));
-    const gapCount = totalPatients - compliant;
+
+    // Inverted measures where LOWER percentage is better (measure tracks BAD outcomes)
+    const invertedMeasures = ['Quality-001']; // HbA1c Poor Control >9%
+    const isInverted = invertedMeasures.includes(measureCode);
+
+    // For inverted measures, performance % represents non-compliant patients
+    // For normal measures, performance % represents compliant patients
+    let compliant, gapCount;
+    if (isInverted) {
+        // Performance % = patients with poor outcome (non-compliant)
+        gapCount = Math.floor(totalPatients * (performance / 100));
+        compliant = totalPatients - gapCount;
+    } else {
+        // Performance % = patients with good outcome (compliant)
+        compliant = Math.floor(totalPatients * (performance / 100));
+        gapCount = totalPatients - compliant;
+    }
+
     const scheduledPatients = Math.floor(gapCount * 0.4);
     const forecastedCompliance = performance + (scheduledPatients / totalPatients * 100);
 
@@ -10243,7 +10259,7 @@ function getMeasurePerformanceData(measureCode, measureName, performance, benchm
         forecastedCompliance: forecastedCompliance.toFixed(1),
         monthlyData: generateMonthlyData(performance),
         regionalData: generateRegionalData(performance),
-        providers: generateProviderRankings(totalPatients, performance)
+        providers: generateProviderRankings(totalPatients, performance, isInverted)
     };
 }
 
@@ -10264,7 +10280,7 @@ function generateRegionalData(avgPerformance) {
     }));
 }
 
-function generateProviderRankings(totalPatients, avgPerformance) {
+function generateProviderRankings(totalPatients, avgPerformance, isInverted = false) {
     const providers = [
         'Dr. Chen',
         'Dr. Santos',
@@ -10279,15 +10295,26 @@ function generateProviderRankings(totalPatients, avgPerformance) {
     return providers.map(name => {
         const providerPatients = Math.floor(Math.random() * 150) + 80;
         const complianceVariance = Math.random() * 30 - 15;
-        const complianceRate = Math.max(50, Math.min(100, avgPerformance + complianceVariance));
-        const compliantPatients = Math.floor(providerPatients * (complianceRate / 100));
-        const gapCount = providerPatients - compliantPatients;
+        const providerPerformance = Math.max(5, Math.min(95, avgPerformance + complianceVariance));
+
+        let compliantPatients, gapCount, complianceRate;
+        if (isInverted) {
+            // For inverted measures, providerPerformance % = non-compliant patients
+            gapCount = Math.floor(providerPatients * (providerPerformance / 100));
+            compliantPatients = providerPatients - gapCount;
+            complianceRate = ((compliantPatients / providerPatients) * 100).toFixed(1);
+        } else {
+            // For normal measures, providerPerformance % = compliant patients
+            complianceRate = providerPerformance.toFixed(1);
+            compliantPatients = Math.floor(providerPatients * (complianceRate / 100));
+            gapCount = providerPatients - compliantPatients;
+        }
 
         return {
             name: name,
             totalPatients: providerPatients,
             compliantPatients: compliantPatients,
-            complianceRate: complianceRate.toFixed(1),
+            complianceRate: complianceRate,
             gapCount: gapCount
         };
     }).sort((a, b) => parseFloat(b.complianceRate) - parseFloat(a.complianceRate));
