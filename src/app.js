@@ -1227,6 +1227,7 @@ const costTrendData = {
 };
 
 let currentCostChartType = 'stacked';
+let showPharmacy = false;
 
 function initCostTrendChart(chartType = 'stacked') {
     const ctx = document.getElementById('costTrendChart');
@@ -1240,51 +1241,58 @@ function initCostTrendChart(chartType = 'stacked') {
 
     if (chartType === 'line') {
         // Line chart view
+        const datasets = [{
+            label: 'Inpatient',
+            data: costTrendData.inpatient,
+            borderColor: '#667eea',
+            backgroundColor: 'rgba(102, 126, 234, 0.1)',
+            tension: 0.3,
+            fill: false,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            borderWidth: 2
+        }, {
+            label: 'Outpatient',
+            data: costTrendData.outpatient,
+            borderColor: '#3498db',
+            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+            tension: 0.3,
+            fill: false,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            borderWidth: 2
+        }, {
+            label: 'Professional',
+            data: costTrendData.professional,
+            borderColor: '#2ecc71',
+            backgroundColor: 'rgba(46, 204, 113, 0.1)',
+            tension: 0.3,
+            fill: false,
+            pointRadius: 4,
+            pointHoverRadius: 6,
+            borderWidth: 2
+        }];
+
+        // Conditionally add pharmacy if toggle is on
+        if (showPharmacy) {
+            datasets.push({
+                label: 'Pharmacy',
+                data: costTrendData.pharmacy,
+                borderColor: '#f1c40f',
+                backgroundColor: 'rgba(241, 196, 15, 0.1)',
+                tension: 0.3,
+                fill: false,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+                borderWidth: 2
+            });
+        }
+
         costTrendChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: costTrendData.labels,
-                datasets: [{
-                    label: 'Inpatient',
-                    data: costTrendData.inpatient,
-                    borderColor: '#667eea',
-                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
-                    tension: 0.3,
-                    fill: false,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    borderWidth: 2
-                }, {
-                    label: 'Outpatient',
-                    data: costTrendData.outpatient,
-                    borderColor: '#3498db',
-                    backgroundColor: 'rgba(52, 152, 219, 0.1)',
-                    tension: 0.3,
-                    fill: false,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    borderWidth: 2
-                }, {
-                    label: 'Professional',
-                    data: costTrendData.professional,
-                    borderColor: '#2ecc71',
-                    backgroundColor: 'rgba(46, 204, 113, 0.1)',
-                    tension: 0.3,
-                    fill: false,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    borderWidth: 2
-                }, {
-                    label: 'Pharmacy',
-                    data: costTrendData.pharmacy,
-                    borderColor: '#f1c40f',
-                    backgroundColor: 'rgba(241, 196, 15, 0.1)',
-                    tension: 0.3,
-                    fill: false,
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    borderWidth: 2
-                }]
+                datasets: datasets
             },
             options: {
                 responsive: true,
@@ -1322,31 +1330,38 @@ function initCostTrendChart(chartType = 'stacked') {
         });
     } else {
         // Stacked bar chart view (default)
+        const datasets = [{
+            label: 'Inpatient',
+            data: costTrendData.inpatient,
+            backgroundColor: 'rgba(102, 126, 234, 0.85)',
+            stack: 'stack1'
+        }, {
+            label: 'Outpatient',
+            data: costTrendData.outpatient,
+            backgroundColor: 'rgba(52, 152, 219, 0.85)',
+            stack: 'stack1'
+        }, {
+            label: 'Professional',
+            data: costTrendData.professional,
+            backgroundColor: 'rgba(46, 204, 113, 0.85)',
+            stack: 'stack1'
+        }];
+
+        // Conditionally add pharmacy if toggle is on
+        if (showPharmacy) {
+            datasets.push({
+                label: 'Pharmacy',
+                data: costTrendData.pharmacy,
+                backgroundColor: 'rgba(241, 196, 15, 0.85)',
+                stack: 'stack1'
+            });
+        }
+
         costTrendChart = new Chart(ctx, {
             type: 'bar',
             data: {
                 labels: costTrendData.labels,
-                datasets: [{
-                    label: 'Inpatient',
-                    data: costTrendData.inpatient,
-                    backgroundColor: 'rgba(102, 126, 234, 0.85)',
-                    stack: 'stack1'
-                }, {
-                    label: 'Outpatient',
-                    data: costTrendData.outpatient,
-                    backgroundColor: 'rgba(52, 152, 219, 0.85)',
-                    stack: 'stack1'
-                }, {
-                    label: 'Professional',
-                    data: costTrendData.professional,
-                    backgroundColor: 'rgba(46, 204, 113, 0.85)',
-                    stack: 'stack1'
-                }, {
-                    label: 'Pharmacy',
-                    data: costTrendData.pharmacy,
-                    backgroundColor: 'rgba(241, 196, 15, 0.85)',
-                    stack: 'stack1'
-                }]
+                datasets: datasets
             },
             options: {
                 responsive: true,
@@ -1419,7 +1434,17 @@ function setCostChartType(chartType) {
     initCostTrendChart(chartType);
 }
 
+// Toggle pharmacy visibility in cost trend chart
+function togglePharmacy() {
+    const checkbox = document.getElementById('pharmacy-toggle');
+    showPharmacy = checkbox ? checkbox.checked : false;
+
+    // Reinitialize chart with current type and new pharmacy state
+    initCostTrendChart(currentCostChartType);
+}
+
 window.setCostChartType = setCostChartType;
+window.togglePharmacy = togglePharmacy;
 
 function initRAFDistChart() {
     const ctx = document.getElementById('rafDistChart');

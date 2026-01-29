@@ -933,11 +933,19 @@
 
                     <div class="chart-section">
                         <div class="chart-header-row">
-                            <h3>Cost Trend Analysis - Last 12 Months</h3>
-                            <div class="chart-type-toggle">
-                                <label>View:</label>
-                                <button class="chart-toggle-btn active" data-chart-type="stacked" onclick="setCostChartType('stacked')">Stacked Bar</button>
-                                <button class="chart-toggle-btn" data-chart-type="line" onclick="setCostChartType('line')">Line Chart</button>
+                            <h3>Cost Trend Analysis - Rolling 12 Months</h3>
+                            <div style="display: flex; gap: 2rem; align-items: center;">
+                                <div class="chart-type-toggle">
+                                    <label>View:</label>
+                                    <button class="chart-toggle-btn active" data-chart-type="stacked" onclick="setCostChartType('stacked')">Stacked Bar</button>
+                                    <button class="chart-toggle-btn" data-chart-type="line" onclick="setCostChartType('line')">Line Chart</button>
+                                </div>
+                                <div class="chart-type-toggle">
+                                    <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                        <input type="checkbox" id="pharmacy-toggle" onchange="togglePharmacy()" style="cursor: pointer; width: 16px; height: 16px;">
+                                        <span>Include Pharmacy</span>
+                                    </label>
+                                </div>
                             </div>
                         </div>
                         <div class="chart-wrapper">
