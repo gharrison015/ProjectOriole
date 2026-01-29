@@ -9307,9 +9307,11 @@ function showHedisMeasureDetail(measureCode) {
 
     // For HBD measure, add breakdown cards
     if (measureCode === 'HBD') {
-        const hba1cAbove9 = Math.floor(gapCount * 0.45); // 45% have HbA1c >9
-        const twelveMonthLapse = Math.floor(gapCount * 0.38); // 38% are lapsed
-        const prospectiveLapse = Math.floor(gapCount * 0.17); // 17% will lapse soon
+        // HbA1c >9 and 12 Month Lapse should sum to Gap Opportunity
+        const hba1cAbove9 = Math.floor(gapCount * 0.55); // 55% have HbA1c >9
+        const twelveMonthLapse = gapCount - hba1cAbove9; // Remaining patients are lapsed (ensures sum = gapCount)
+        // Prospective lapse is separate - patients who will become non-compliant next month
+        const prospectiveLapse = Math.floor(data.denominator * 0.08); // ~8% will lapse soon
         modalContent += `
         <div class="measure-summary-card breakdown-container">
             <div class="breakdown-stack">
@@ -10504,9 +10506,11 @@ function getMeasurePerformanceData(measureCode, measureName, performance, benchm
     // Generate breakdown data for HbA1c measure
     let breakdown = null;
     if (measureCode === 'Quality-001') {
-        const hba1cAbove9 = Math.floor(gapCount * 0.45); // 45% have HbA1c >9
-        const twelveMonthLapse = Math.floor(gapCount * 0.38); // 38% are lapsed
-        const prospectiveLapse = Math.floor(gapCount * 0.17); // 17% will lapse soon
+        // HbA1c >9 and 12 Month Lapse should sum to Gap Opportunity
+        const hba1cAbove9 = Math.floor(gapCount * 0.55); // 55% have HbA1c >9
+        const twelveMonthLapse = gapCount - hba1cAbove9; // Remaining patients are lapsed (ensures sum = gapCount)
+        // Prospective lapse is separate - patients who will become non-compliant next month
+        const prospectiveLapse = Math.floor(totalPatients * 0.08); // ~8% will lapse soon
         breakdown = {
             hba1cAbove9: hba1cAbove9,
             twelveMonthLapse: twelveMonthLapse,
