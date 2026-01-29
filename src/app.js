@@ -11,8 +11,49 @@ let episodeCostChart = null;
 let currentLeakageView = 'all';
 let showingOONOnly = false;
 
+// Helper function to add disclaimer to CSV exports
+function generateCSVWithDisclaimer(headers, rows) {
+    const today = new Date().toLocaleDateString();
+    let csvContent = '';
+    csvContent += '*** SYNTHETIC DATA - NOT REAL PHI ***\n';
+    csvContent += `Generated: ${today}\n`;
+    csvContent += 'For demonstration purposes only - All patient data is artificially generated\n';
+    csvContent += '\n';
+    csvContent += headers.join(',') + '\n';
+    rows.forEach(row => {
+        csvContent += row.join(',') + '\n';
+    });
+    return csvContent;
+}
+
+// Terms of Use Modal - Show on first visit
+function checkAndShowTerms() {
+    const hasAcceptedTerms = localStorage.getItem('demoTermsAccepted');
+    if (!hasAcceptedTerms) {
+        const termsModal = document.getElementById('terms-modal');
+        if (termsModal) {
+            termsModal.style.display = 'flex';
+        }
+    }
+}
+
+function acceptTerms() {
+    localStorage.setItem('demoTermsAccepted', 'true');
+    localStorage.setItem('demoTermsAcceptedDate', new Date().toISOString());
+    const termsModal = document.getElementById('terms-modal');
+    if (termsModal) {
+        termsModal.style.display = 'none';
+    }
+}
+
+// Make acceptTerms available globally
+window.acceptTerms = acceptTerms;
+
 // Tab Navigation
 document.addEventListener('DOMContentLoaded', function() {
+    // Check and show terms modal if needed
+    checkAndShowTerms();
+
     initializeTabs();
     initializeCharts();
     initPerformanceOverviewDefaults();
@@ -7163,10 +7204,7 @@ function exportHCCPatientList(providerId, filterType) {
         p.nextAppt
     ]);
 
-    let csvContent = headers.join(',') + '\n';
-    rows.forEach(row => {
-        csvContent += row.join(',') + '\n';
-    });
+    const csvContent = generateCSVWithDisclaimer(headers, rows);
 
     // Create and trigger download
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -7430,10 +7468,7 @@ function exportAWVPatientList(filterType) {
         p.nextAppt
     ]);
 
-    let csvContent = headers.join(',') + '\n';
-    rows.forEach(row => {
-        csvContent += row.join(',') + '\n';
-    });
+    const csvContent = generateCSVWithDisclaimer(headers, rows);
 
     // Create and trigger download
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -8555,10 +8590,7 @@ function exportHighValueList() {
         p.lastVisit
     ]);
 
-    let csvContent = headers.join(',') + '\n';
-    rows.forEach(row => {
-        csvContent += row.join(',') + '\n';
-    });
+    const csvContent = generateCSVWithDisclaimer(headers, rows);
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');

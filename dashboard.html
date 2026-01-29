@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Healthcare Analytics Platform - MSSP ACO Dashboard</title>
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="description" content="Demo environment with 100% synthetic data for demonstration purposes only">
+    <title>[DEMO] Healthcare Analytics Platform - MSSP ACO Dashboard</title>
 </head>
 <body>
     <div class="dashboard-container">
@@ -1876,6 +1878,47 @@
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <!-- Demo Environment Footer -->
+    <div class="demo-footer">
+        <span class="demo-footer-icon">⚠️</span>
+        <span class="demo-footer-text">DEMO ENVIRONMENT - 100% Synthetic Data - Not Real PHI</span>
+    </div>
+
+    <!-- Terms of Use Modal -->
+    <div id="terms-modal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <h2 style="margin-bottom: 1.5rem; color: #2c3e50;">⚠️ Terms of Use - Demo Environment</h2>
+
+            <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                <h3 style="color: #856404; margin-bottom: 1rem;">Important Disclaimers</h3>
+                <ul style="color: #856404; line-height: 1.8; margin-left: 1.5rem;">
+                    <li><strong>100% Synthetic Data:</strong> All patient information, clinical data, and healthcare metrics displayed in this platform are artificially generated for demonstration purposes only.</li>
+                    <li><strong>No Real PHI:</strong> This system contains no actual Protected Health Information (PHI) or confidential patient data.</li>
+                    <li><strong>Demo Purpose Only:</strong> This platform is intended solely for product demonstration and evaluation.</li>
+                </ul>
+            </div>
+
+            <h3 style="margin-bottom: 1rem; color: #2c3e50;">Terms & Conditions</h3>
+            <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; max-height: 300px; overflow-y: auto; margin-bottom: 1.5rem;">
+                <p style="margin-bottom: 1rem; line-height: 1.6;">By accessing this demonstration environment, you acknowledge and agree to the following:</p>
+                <ol style="line-height: 1.8; margin-left: 1.5rem;">
+                    <li>All data presented is synthetically generated and does not represent real patients, healthcare providers, or organizations.</li>
+                    <li>Screenshots, exports, or reproductions of this demo should not be represented as containing real healthcare data.</li>
+                    <li>This platform is for evaluation and demonstration purposes only and should not be used for actual clinical or operational decisions.</li>
+                    <li>You will not redistribute, copy, or share demo content as if it were real healthcare information.</li>
+                    <li>Access to this demo may be monitored for security and usage analytics.</li>
+                    <li>Guidehouse reserves the right to terminate demo access at any time.</li>
+                </ol>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button onclick="acceptTerms()" style="background: #27ae60; color: white; border: none; padding: 1rem 2rem; border-radius: 6px; cursor: pointer; font-size: 1rem; font-weight: 600;">
+                    I Understand and Accept
+                </button>
+            </div>
         </div>
     </div>
 

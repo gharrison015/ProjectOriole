@@ -60,6 +60,31 @@ body {
     user-select: none;
 }
 
+/* Demo Environment Footer */
+.demo-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: #ffc107;
+    color: #856404;
+    padding: 0.5rem 1rem;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    z-index: 10000;
+    border-top: 2px solid #856404;
+    letter-spacing: 0.5px;
+}
+
+.demo-footer-icon {
+    margin-right: 0.5rem;
+}
+
+.demo-footer-text {
+    text-transform: uppercase;
+}
+
 /* Header Styles */
 .top-header {
     background: var(--piedmont-white);
@@ -380,4 +405,28 @@ body {
 .tab-header p {
     color: #7f8c8d;
     font-size: 1rem;
+}
+
+/* Print Styles - Ensure watermark and disclaimers appear */
+@media print {
+    .demo-watermark::before {
+        color: rgba(0, 0, 0, 0.15) !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .demo-footer {
+        position: fixed;
+        bottom: 0;
+        background: #ffc107 !important;
+        color: #856404 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* Ensure synthetic data warnings print */
+    [style*="background: #fff3cd"] {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
 }
