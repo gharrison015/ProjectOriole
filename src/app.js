@@ -9236,8 +9236,31 @@ function showHedisMeasureDetail(measureCode) {
         </div>
     `;
 
-    // Only show forecasted compliance for non-dynamic measures
-    if (!isDynamic) {
+    // For HBD measure, add breakdown cards
+    if (measureCode === 'HBD') {
+        const hba1cAbove9 = Math.floor(gapCount * 0.45); // 45% have HbA1c >9
+        const twelveMonthLapse = Math.floor(gapCount * 0.38); // 38% are lapsed
+        const prospectiveLapse = Math.floor(gapCount * 0.17); // 17% will lapse soon
+        modalContent += `
+        <div class="measure-summary-card breakdown-container">
+            <div class="breakdown-stack">
+                <div class="breakdown-card">
+                    <div class="breakdown-label">HbA1c >9</div>
+                    <div class="breakdown-value">${hba1cAbove9}</div>
+                </div>
+                <div class="breakdown-card">
+                    <div class="breakdown-label">12 Month Lapse</div>
+                    <div class="breakdown-value">${twelveMonthLapse}</div>
+                </div>
+                <div class="breakdown-card">
+                    <div class="breakdown-label">Prospective Lapse</div>
+                    <div class="breakdown-value">${prospectiveLapse}</div>
+                </div>
+            </div>
+        </div>
+        `;
+    } else if (!isDynamic) {
+        // Only show forecasted compliance for non-dynamic, non-HBD measures
         modalContent += `
         <div class="measure-summary-card">
             <div class="summary-card-label">Forecasted Compliance</div>
@@ -10267,8 +10290,28 @@ function showMeasureDashboard(measureCode, measureName, performance, benchmark) 
         </div>
     `;
 
-    // Only show forecasted compliance for non-dynamic measures
-    if (!isDynamic) {
+    // For HbA1c measure, add breakdown cards
+    if (measureCode === 'Quality-001') {
+        modalBody += `
+        <div class="measure-summary-card breakdown-container">
+            <div class="breakdown-stack">
+                <div class="breakdown-card">
+                    <div class="breakdown-label">HbA1c >9</div>
+                    <div class="breakdown-value">${measureData.breakdown.hba1cAbove9}</div>
+                </div>
+                <div class="breakdown-card">
+                    <div class="breakdown-label">12 Month Lapse</div>
+                    <div class="breakdown-value">${measureData.breakdown.twelveMonthLapse}</div>
+                </div>
+                <div class="breakdown-card">
+                    <div class="breakdown-label">Prospective Lapse</div>
+                    <div class="breakdown-value">${measureData.breakdown.prospectiveLapse}</div>
+                </div>
+            </div>
+        </div>
+        `;
+    } else if (!isDynamic) {
+        // Only show forecasted compliance for non-dynamic, non-HbA1c measures
         modalBody += `
         <div class="measure-summary-card">
             <div class="summary-card-label">Forecasted Compliance</div>
@@ -10389,6 +10432,19 @@ function getMeasurePerformanceData(measureCode, measureName, performance, benchm
     const scheduledPatients = Math.floor(gapCount * 0.4);
     const forecastedCompliance = performance + (scheduledPatients / totalPatients * 100);
 
+    // Generate breakdown data for HbA1c measure
+    let breakdown = null;
+    if (measureCode === 'Quality-001') {
+        const hba1cAbove9 = Math.floor(gapCount * 0.45); // 45% have HbA1c >9
+        const twelveMonthLapse = Math.floor(gapCount * 0.38); // 38% are lapsed
+        const prospectiveLapse = Math.floor(gapCount * 0.17); // 17% will lapse soon
+        breakdown = {
+            hba1cAbove9: hba1cAbove9,
+            twelveMonthLapse: twelveMonthLapse,
+            prospectiveLapse: prospectiveLapse
+        };
+    }
+
     return {
         code: measureCode,
         name: measureName,
@@ -10401,6 +10457,7 @@ function getMeasurePerformanceData(measureCode, measureName, performance, benchm
         gapPercent: ((gapCount / totalPatients) * 100).toFixed(1),
         scheduledPatients: scheduledPatients,
         forecastedCompliance: forecastedCompliance.toFixed(1),
+        breakdown: breakdown,
         monthlyData: generateMonthlyData(performance),
         regionalData: generateRegionalData(performance),
         providers: generateProviderRankings(totalPatients, performance, isInverted)
@@ -10613,6 +10670,7 @@ function showQualityPatientList(measureCode, measureName, filterType, filterValu
                         <th>PCP</th>
                         <th>Compliant</th>
                         <th>${measureName}<br/><span style="font-size: 0.7rem; font-weight: normal;">(Primary Gap)</span></th>
+                        ${measureCode === 'Quality-001' ? '<th>Most Recent<br/>HbA1c Value</th><th>HbA1c Test<br/>Date</th>' : ''}
                         <th>Breast Cancer<br/>Screening</th>
                         <th>Colorectal<br/>Screening</th>
                         <th>Annual<br/>Wellness</th>
@@ -10638,6 +10696,14 @@ function showQualityPatientList(measureCode, measureName, filterType, filterValu
                     <span class="gap-indicator ${patient.primaryGap.status}">${patient.primaryGap.status === 'open' ? '✗' : '✓'}</span>
                     ${patient.primaryGap.status === 'open' ? '<div class="gap-date">Due: ' + patient.primaryGap.dueDate + '</div>' : ''}
                 </td>
+                ${measureCode === 'Quality-001' ? `
+                <td>
+                    <strong style="color: ${patient.hba1cValue > 9 ? '#e74c3c' : patient.hba1cValue > 7 ? '#f39c12' : '#27ae60'};">${patient.hba1cValue}%</strong>
+                </td>
+                <td>
+                    <div>${patient.hba1cDate}</div>
+                </td>
+                ` : ''}
                 <td>
                     <span class="gap-indicator ${patient.gaps.breastCancer}">${patient.gaps.breastCancer === 'open' ? '✗' : '✓'}</span>
                 </td>
@@ -10684,6 +10750,26 @@ function generatePatientListData(measureCode, measureName, filterType, filterVal
         const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
         const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
 
+        // Generate HbA1c data for Quality-001 measure
+        let hba1cValue = null;
+        let hba1cDate = null;
+        if (measureCode === 'Quality-001') {
+            // Generate realistic HbA1c values (5.0% to 12.0%)
+            // Non-compliant patients tend to have higher values
+            if (!isCompliant) {
+                hba1cValue = (Math.random() * 4 + 8).toFixed(1); // 8.0-12.0% for non-compliant
+            } else {
+                hba1cValue = (Math.random() * 3 + 5).toFixed(1); // 5.0-8.0% for compliant
+            }
+
+            // Generate test date within last 13 months
+            const monthsAgo = Math.floor(Math.random() * 13);
+            const testMonth = (new Date().getMonth() - monthsAgo + 12) % 12 + 1;
+            const testDay = Math.floor(Math.random() * 28) + 1;
+            const testYear = monthsAgo > new Date().getMonth() ? 2025 : 2026;
+            hba1cDate = testMonth + '/' + testDay + '/' + testYear;
+        }
+
         patients.push({
             name: firstName + ' ' + lastName,
             mrn: 'PHC-' + Math.floor(Math.random() * 900000 + 100000),
@@ -10701,6 +10787,8 @@ function generatePatientListData(measureCode, measureName, filterType, filterVal
                 diabetesEye: Math.random() > 0.5 ? 'closed' : 'open',
                 hba1c: Math.random() > 0.6 ? 'closed' : 'open'
             },
+            hba1cValue: hba1cValue,
+            hba1cDate: hba1cDate,
             caseManager: caseManagers[Math.floor(Math.random() * caseManagers.length)],
             nextAppt: Math.random() > 0.3 ? {
                 date: (Math.floor(Math.random() * 3) + 2) + '/' + (Math.floor(Math.random() * 28) + 1) + '/2026',
