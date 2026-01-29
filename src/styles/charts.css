@@ -293,7 +293,7 @@
 
 .result-card {
     background: white;
-    padding: 0.9rem;
+    padding: 0.75rem;
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
@@ -304,8 +304,8 @@
 }
 
 .result-card h3 {
-    margin-bottom: 0.5rem;
-    font-size: 1.2rem;
+    margin-bottom: 0.35rem;
+    font-size: 1.15rem;
 }
 
 .metric-row {
@@ -384,24 +384,24 @@
 
 /* Monte Carlo Note */
 .monte-carlo-note {
-    font-size: 0.8rem;
+    font-size: 0.72rem;
     opacity: 0.9;
-    margin-bottom: 0.5rem;
-    line-height: 1.4;
+    margin-bottom: 0.35rem;
+    line-height: 1.25;
 }
 
 /* Scenario Selector Section (inside dark box) */
 .scenario-selector-section {
-    margin-bottom: 0.75rem;
-    padding-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.5rem;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .scenario-selector-section h4 {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    margin-bottom: 0.65rem;
+    margin-bottom: 0.4rem;
     opacity: 0.9;
 }
 
@@ -410,7 +410,7 @@
     padding: 4px;
     border-radius: 8px;
     display: inline-flex;
-    margin-bottom: 0.65rem;
+    margin-bottom: 0.4rem;
 }
 
 .result-card.highlight .scenario-toggle-btn {
@@ -437,9 +437,9 @@
 }
 
 .result-card.highlight .scenario-description {
-    font-size: 0.8rem;
-    line-height: 1.4;
-    padding: 0.5rem;
+    font-size: 0.75rem;
+    line-height: 1.3;
+    padding: 0.4rem 0.5rem;
     background: rgba(255, 255, 255, 0.08);
     border-radius: 6px;
     color: white;
@@ -465,12 +465,12 @@
 .ci-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 0.5rem;
+    gap: 0.4rem;
 }
 
 .ci-item {
     background: rgba(255, 255, 255, 0.12);
-    padding: 0.6rem;
+    padding: 0.5rem;
     border-radius: 8px;
     text-align: center;
 }
@@ -489,17 +489,17 @@
 }
 
 .ci-label {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     opacity: 0.9;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
 }
 
 .ci-value {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 700;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.15rem;
 }
 
 .ci-item.pessimistic .ci-value {
@@ -515,13 +515,14 @@
 }
 
 .ci-sub {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     opacity: 0.8;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.3rem;
+    line-height: 1.2;
 }
 
 .ci-note {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     opacity: 0.7;
 }
 
