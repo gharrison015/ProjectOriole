@@ -170,11 +170,11 @@
             border-color: #fff;
         }
 
-        /* Login Section - Centered */
+        /* Login Section - Left-aligned to avoid overlap with carousel text */
         .login-section {
             position: fixed;
             top: 50%;
-            left: 50%;
+            left: 35%;
             transform: translate(-50%, -50%);
             z-index: 50;
             padding: 2rem;
@@ -517,7 +517,7 @@
         }
 
         function startCarousel() {
-            slideInterval = setInterval(nextSlide, 5000);
+            slideInterval = setInterval(nextSlide, 3500);
         }
 
         function stopCarousel() {
