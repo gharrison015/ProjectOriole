@@ -1872,6 +1872,25 @@
         </div>
     </div>
 
+    <script>
+        // Check if fullscreen was requested from login page
+        if (sessionStorage.getItem('requestFullscreen') === 'true') {
+            // Clear the flag
+            sessionStorage.removeItem('requestFullscreen');
+
+            // Request fullscreen
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(err => {
+                    console.log('Fullscreen request failed:', err);
+                });
+            } else if (elem.webkitRequestFullscreen) { // Safari
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { // IE11
+                elem.msRequestFullscreen();
+            }
+        }
+    </script>
     <script type="module" src="/src/main.js"></script>
 </body>
 </html>

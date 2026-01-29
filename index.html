@@ -556,13 +556,11 @@
             const errorMessage = document.getElementById('error-message');
 
             if (password === 'Guidehouse1') {
-                // Request fullscreen before navigating
-                requestFullscreen();
+                // Set flag for fullscreen on dashboard
+                sessionStorage.setItem('requestFullscreen', 'true');
 
-                // Small delay to allow fullscreen transition, then navigate
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 100);
+                // Navigate to dashboard
+                window.location.href = 'dashboard.html';
             } else {
                 errorMessage.classList.add('visible');
                 document.getElementById('password').value = '';
