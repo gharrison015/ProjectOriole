@@ -9034,14 +9034,19 @@ function showHedisMeasureDetail(measureCode) {
             gaps: ['2,718 patients with uncontrolled BP', '892 patients need medication adjustment', '456 patients lost to follow-up']
         },
         'HBD': {
-            name: 'Diabetes Care - Blood Sugar Controlled',
-            description: 'The percentage of patients 18-75 with diabetes whose HbA1c was <8.0% during the measurement year.',
+            name: 'Diabetes: Hemoglobin A1c (HbA1c) Poor Control (>9%)',
+            description: 'The percentage of patients 18-75 with diabetes whose HbA1c was >9.0% during the measurement year. Lower is better.',
             denominator: 6234,
-            numerator: 5099,
-            compliance: 81.8,
-            benchmark: 78.0,
-            stars: 5,
-            gaps: ['1,135 patients with HbA1c ≥8%', '234 patients without HbA1c in past 12 months']
+            numerator: 1135,  // patients with poor control (inverted)
+            compliance: 18.2,  // % with poor control (inverted - lower is better)
+            benchmark: 15.0,
+            stars: 2,
+            gaps: ['1,135 patients with HbA1c >9%', '234 patients without HbA1c in past 12 months'],
+            isInverted: true,
+            thresholds: {
+                'gt9': { numerator: 1135, compliance: 18.2, description: '>9.0%' },
+                'gt8': { numerator: 1867, compliance: 29.95, description: '>8.0%' }
+            }
         },
         'EED': {
             name: 'Eye Exam for Patients with Diabetes',
@@ -9148,8 +9153,21 @@ function showHedisMeasureDetail(measureCode) {
     const data = hedisData[measureCode];
     if (!data) return;
 
+    // For inverted measures (like HBD), numerator represents non-compliant patients
+    const isInverted = data.isInverted || false;
+
     // Calculate derived metrics to match ACO layout
-    const gapCount = data.denominator - data.numerator;
+    let gapCount, compliantPatients;
+    if (isInverted) {
+        // For inverted measures: numerator = patients with poor outcome (non-compliant)
+        gapCount = data.numerator;
+        compliantPatients = data.denominator - data.numerator;
+    } else {
+        // For normal measures: numerator = compliant patients
+        compliantPatients = data.numerator;
+        gapCount = data.denominator - data.numerator;
+    }
+
     const gapPercent = ((gapCount / data.denominator) * 100).toFixed(1);
     const scheduledPatients = Math.floor(gapCount * 0.4);
     const forecastedCompliance = (data.compliance + (scheduledPatients / data.denominator * 100)).toFixed(1);
@@ -9160,39 +9178,61 @@ function showHedisMeasureDetail(measureCode) {
     // Generate data for charts
     const monthlyData = generateMonthlyData(data.compliance);
     const regionalData = generateRegionalData(data.compliance);
-    const providers = generateHedisProviderRankings(data.denominator, data.compliance);
+    const providers = generateHedisProviderRankings(data.denominator, data.compliance, isInverted);
 
     let modalContent = '<div class="measure-dashboard">';
 
-    // Header - matching ACO style
+    // Header - matching ACO style with toggle for HBD
     modalContent += `
         <div class="measure-header">
-            <div class="measure-title">${data.name}</div>
+            <div class="measure-title" id="measure-title-${measureCode}">${data.name}</div>
             <div class="measure-code">${measureCode}</div>
         </div>
     `;
+
+    // Add threshold toggle for HBD
+    if (measureCode === 'HBD' && data.thresholds) {
+        modalContent += `
+            <div style="margin-bottom: 1.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span style="font-weight: 600; color: #2c3e50;">HbA1c Threshold:</span>
+                    <div class="scenario-toggle-container">
+                        <button class="scenario-toggle-btn active" onclick="toggleHbA1cThreshold('HBD', 'gt9', event)">
+                            >9.0%
+                        </button>
+                        <button class="scenario-toggle-btn" onclick="toggleHbA1cThreshold('HBD', 'gt8', event)">
+                            >8.0%
+                        </button>
+                    </div>
+                </div>
+                <div style="margin-top: 0.75rem; font-size: 0.85rem; color: #7f8c8d;">
+                    Toggle between poor control thresholds. Lower percentage is better for this inverted measure.
+                </div>
+            </div>
+        `;
+    }
 
     // Dynamic measures that should not show forecasted compliance
     const dynamicMeasures = ['HBD', 'CBP', 'SPC', 'SPD', 'SPH', 'PCR', 'TRC'];
     const isDynamic = dynamicMeasures.includes(measureCode);
 
     // Summary Cards - matching ACO layout exactly
-    modalContent += '<div class="measure-summary-grid">';
+    modalContent += '<div class="measure-summary-grid" id="hbd-summary-cards">';
     modalContent += `
         <div class="measure-summary-card">
             <div class="summary-card-label">Current Performance</div>
-            <div class="summary-card-value">${data.compliance}%</div>
+            <div class="summary-card-value" id="hbd-performance">${data.compliance}%</div>
             <div class="summary-card-detail">${trend}</div>
         </div>
         <div class="measure-summary-card">
             <div class="summary-card-label">Total Patients</div>
             <div class="summary-card-value">${data.denominator.toLocaleString()}</div>
-            <div class="summary-card-detail">${data.numerator.toLocaleString()} compliant</div>
+            <div class="summary-card-detail" id="hbd-compliant">${compliantPatients.toLocaleString()} compliant</div>
         </div>
         <div class="measure-summary-card">
             <div class="summary-card-label">Gap Opportunity</div>
-            <div class="summary-card-value">${gapCount.toLocaleString()}</div>
-            <div class="summary-card-detail">${gapPercent}% of denominator</div>
+            <div class="summary-card-value" id="hbd-gap">${gapCount.toLocaleString()}</div>
+            <div class="summary-card-detail" id="hbd-gap-percent">${gapPercent}% of denominator</div>
         </div>
     `;
 
@@ -9411,8 +9451,97 @@ function showHedisPatientListByRegion(measureCode, measureName) {
 window.showHedisPatientListByMonth = showHedisPatientListByMonth;
 window.showHedisPatientListByRegion = showHedisPatientListByRegion;
 
+// Toggle HbA1c threshold between >9% and >8%
+function toggleHbA1cThreshold(measureCode, threshold, event) {
+    const data = hedisData[measureCode];
+    if (!data || !data.thresholds) return;
+
+    const thresholdData = data.thresholds[threshold];
+    if (!thresholdData) return;
+
+    // Calculate updated values for inverted measure
+    const compliantPatients = data.denominator - thresholdData.numerator;
+    const gapPercent = ((thresholdData.numerator / data.denominator) * 100).toFixed(1);
+
+    // Update summary card values
+    const performanceEl = document.getElementById('hbd-performance');
+    const gapEl = document.getElementById('hbd-gap');
+    const gapPercentEl = document.getElementById('hbd-gap-percent');
+    const compliantEl = document.getElementById('hbd-compliant');
+
+    if (performanceEl) performanceEl.textContent = thresholdData.compliance + '%';
+    if (gapEl) gapEl.textContent = thresholdData.numerator.toLocaleString();
+    if (gapPercentEl) gapPercentEl.textContent = gapPercent + '% of denominator';
+    if (compliantEl) compliantEl.textContent = compliantPatients.toLocaleString() + ' compliant';
+
+    // Update button active states
+    document.querySelectorAll('.scenario-toggle-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    if (event && event.target) {
+        event.target.classList.add('active');
+    }
+
+    // Update the data object for chart regeneration
+    data.numerator = thresholdData.numerator;
+    data.compliance = thresholdData.compliance;
+
+    // Regenerate monthly and regional data
+    const monthlyData = generateHedisMonthlyData(data.compliance);
+    const regionalData = generateHedisRegionalData(data.compliance);
+
+    // Destroy existing charts
+    const monthlyChartCanvas = document.getElementById('hedisMonthlyTrendChart-' + measureCode);
+    const regionalChartCanvas = document.getElementById('hedisRegionalChart-' + measureCode);
+
+    if (monthlyChartCanvas) {
+        const existingMonthlyChart = Chart.getChart(monthlyChartCanvas);
+        if (existingMonthlyChart) existingMonthlyChart.destroy();
+    }
+
+    if (regionalChartCanvas) {
+        const existingRegionalChart = Chart.getChart(regionalChartCanvas);
+        if (existingRegionalChart) existingRegionalChart.destroy();
+    }
+
+    // Re-render charts with new data
+    renderHedisMonthlyTrendChart(measureCode, monthlyData);
+    renderHedisRegionalChart(measureCode, regionalData);
+
+    // Update provider rankings table
+    const providers = generateHedisProviderRankings(data.denominator, data.compliance, true);
+    const rankingTable = document.querySelector('.ranking-table tbody');
+    if (rankingTable) {
+        let rankingHTML = '';
+        providers.forEach((provider, index) => {
+            const rankClass = index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : '';
+            const oppClass = provider.gapCount > 20 ? 'high' : provider.gapCount > 10 ? 'medium' : 'low';
+            const oppLabel = provider.gapCount > 20 ? 'High' : provider.gapCount > 10 ? 'Medium' : 'Low';
+
+            rankingHTML += `
+                <tr onclick="showHedisPatientList('${measureCode}', '${data.name}', '${provider.name}')" style="cursor: pointer;">
+                    <td><span class="rank-badge ${rankClass}">${index + 1}</span></td>
+                    <td><strong>${provider.name}</strong></td>
+                    <td>${provider.totalPatients}</td>
+                    <td>${provider.compliantPatients}</td>
+                    <td>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${provider.complianceRate}%">${provider.complianceRate}%</div>
+                        </div>
+                    </td>
+                    <td><strong>${provider.gapCount}</strong></td>
+                    <td><span class="opportunity-badge ${oppClass}">${oppLabel}</span></td>
+                </tr>
+            `;
+        });
+        rankingTable.innerHTML = rankingHTML;
+    }
+}
+
+window.toggleHbA1cThreshold = toggleHbA1cThreshold;
+
 // Generate provider rankings for HEDIS measures
-function generateHedisProviderRankings(totalDenominator, avgCompliance) {
+function generateHedisProviderRankings(totalDenominator, avgCompliance, isInverted = false) {
     const providers = [
         'Dr. Chen',
         'Dr. Santos',
@@ -9428,8 +9557,17 @@ function generateHedisProviderRankings(totalDenominator, avgCompliance) {
         const providerPatients = Math.floor(Math.random() * 150) + 80;
         const complianceVariance = Math.random() * 30 - 15;
         const complianceRate = Math.max(50, Math.min(100, avgCompliance + complianceVariance));
-        const compliantPatients = Math.floor(providerPatients * (complianceRate / 100));
-        const gapCount = providerPatients - compliantPatients;
+
+        let compliantPatients, gapCount;
+        if (isInverted) {
+            // For inverted measures: complianceRate = % with poor outcome (non-compliant)
+            gapCount = Math.floor(providerPatients * (complianceRate / 100));
+            compliantPatients = providerPatients - gapCount;
+        } else {
+            // For normal measures: complianceRate = % compliant
+            compliantPatients = Math.floor(providerPatients * (complianceRate / 100));
+            gapCount = providerPatients - compliantPatients;
+        }
 
         return {
             name: name,
@@ -9438,7 +9576,13 @@ function generateHedisProviderRankings(totalDenominator, avgCompliance) {
             complianceRate: complianceRate.toFixed(1),
             gapCount: gapCount
         };
-    }).sort((a, b) => parseFloat(b.complianceRate) - parseFloat(a.complianceRate));
+    }).sort((a, b) => {
+        // For inverted measures: lower rate is better (ascending)
+        // For normal measures: higher rate is better (descending)
+        return isInverted
+            ? parseFloat(a.complianceRate) - parseFloat(b.complianceRate)
+            : parseFloat(b.complianceRate) - parseFloat(a.complianceRate);
+    });
 }
 
 // Show HEDIS patient list with export capability
