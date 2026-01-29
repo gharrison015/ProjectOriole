@@ -3828,6 +3828,11 @@ function showPatientList(reason, providerName) {
         <h2>Patient List: ${reason}</h2>
         <p class="provider-summary">${providerName} - ${numPatients} patients with avoidable ED visits</p>
 
+        <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 1rem; margin: 1.5rem 0; text-align: center;">
+            <strong style="color: #856404; font-size: 0.9rem;">⚠️ SYNTHETIC DATA - NOT REAL PHI</strong>
+            <div style="color: #856404; font-size: 0.75rem; margin-top: 0.25rem;">Patient-level data is synthetically generated for demonstration purposes only.</div>
+        </div>
+
         <div class="market-kpi-row" style="grid-template-columns: repeat(3, 1fr);">
             <div class="kpi-box">
                 <div class="kpi-label">Total Patients</div>
@@ -4202,6 +4207,11 @@ function showEDPatientDetail(marketId, pcpId, pcpName, avoidableCount, costPerVi
     let modalBody = `
         <h2>Patient Detail - Avoidable ED Visits</h2>
         <p class="provider-summary">${pcpName} | ${marketName} Market</p>
+
+        <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 1rem; margin: 1.5rem 0; text-align: center;">
+            <strong style="color: #856404; font-size: 0.9rem;">⚠️ SYNTHETIC DATA - NOT REAL PHI</strong>
+            <div style="color: #856404; font-size: 0.75rem; margin-top: 0.25rem;">Patient-level data is synthetically generated for demonstration purposes only.</div>
+        </div>
 
         <!-- Summary Stats -->
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
@@ -5014,6 +5024,11 @@ function showAvoidablePatientDetail(marketId, pcpId, pcpName, avoidableCount, co
     let modalBody = `
         <h2>Patient Detail - Avoidable ${isED ? 'ED Visits' : 'IP Admissions'}</h2>
         <p class="provider-summary">${pcpName} | ${marketName} Market</p>
+
+        <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 1rem; margin: 1.5rem 0; text-align: center;">
+            <strong style="color: #856404; font-size: 0.9rem;">⚠️ SYNTHETIC DATA - NOT REAL PHI</strong>
+            <div style="color: #856404; font-size: 0.75rem; margin-top: 0.25rem;">Patient-level data is synthetically generated for demonstration purposes only.</div>
+        </div>
 
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
             <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; text-align: center;">
@@ -7033,6 +7048,11 @@ function showHCCPatientList(providerId, filterType) {
         </div>
         <p style="color: #6c757d; font-size: 0.9rem; margin-bottom: 1.5rem;">${listDescription}</p>
 
+        <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; text-align: center;">
+            <strong style="color: #856404; font-size: 0.9rem;">⚠️ SYNTHETIC DATA - NOT REAL PHI</strong>
+            <div style="color: #856404; font-size: 0.75rem; margin-top: 0.25rem;">Patient-level data is synthetically generated for demonstration purposes only.</div>
+        </div>
+
         <div style="background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; border-left: 4px solid #27ae60;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                 <div>
@@ -7306,6 +7326,11 @@ function showAWVPatientList(filterType) {
             </button>
         </div>
         <p style="color: #6c757d; font-size: 0.9rem; margin-bottom: 1.5rem;">${listDescription}</p>
+
+        <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; text-align: center;">
+            <strong style="color: #856404; font-size: 0.9rem;">⚠️ SYNTHETIC DATA - NOT REAL PHI</strong>
+            <div style="color: #856404; font-size: 0.75rem; margin-top: 0.25rem;">Patient-level data is synthetically generated for demonstration purposes only.</div>
+        </div>
 
         <div style="background: linear-gradient(135deg, #e8f4fd 0%, #d6ebf7 100%); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; border-left: 4px solid #3498db;">
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
@@ -8441,6 +8466,11 @@ function showHighValueOutreach() {
             Patients ranked by Potential RAF who are AWV incomplete and have no scheduled appointments.
             These represent the highest-value outreach opportunities for care coordinators.
         </p>
+
+        <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; text-align: center;">
+            <strong style="color: #856404; font-size: 0.9rem;">⚠️ SYNTHETIC DATA - NOT REAL PHI</strong>
+            <div style="color: #856404; font-size: 0.75rem; margin-top: 0.25rem;">Patient-level data is synthetically generated for demonstration purposes only.</div>
+        </div>
 
         <!-- Summary Stats -->
         <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
@@ -10315,6 +10345,14 @@ function showQualityPatientList(measureCode, measureName, filterType, filterValu
             <button class="export-btn" onclick="exportPatientList('${measureCode}', '${measureName}', '${filterType}', '${filterValue}')">
                 📥 Export to Excel
             </button>
+        </div>
+    `;
+
+    // Synthetic data disclaimer
+    modalBody += `
+        <div style="background: #fff3cd; border: 2px solid #ffc107; border-radius: 8px; padding: 1rem; margin: 1.5rem 0; text-align: center;">
+            <strong style="color: #856404; font-size: 0.9rem;">⚠️ SYNTHETIC DATA - NOT REAL PHI</strong>
+            <div style="color: #856404; font-size: 0.75rem; margin-top: 0.25rem;">Patient-level data is synthetically generated for demonstration purposes only.</div>
         </div>
     `;
 
